@@ -7,6 +7,9 @@ import ManagementSignInPage from "../Pages/Auth/ManagementSignInPage";
 import CustomerTablePage from "../Pages/Customer/CustomerTablePage";
 import ManageCustomerPage from "../Pages/Customer/ManageCustomerPage";
 import ClientRegistrationPage from "../Pages/Auth/ClientRegistrationPage";
+import EmployeeDashboardPage from "../Pages/EmployeeDashboard/EmployeeDashboardPae";
+import AddInspectionPage from "../Pages/Inspection/AddInspectionPage";
+import AddCustomerPage from "../Pages/Customer/AddCustomerPage";
 
 const RoutesContent: React.FC = () => {
   return (
