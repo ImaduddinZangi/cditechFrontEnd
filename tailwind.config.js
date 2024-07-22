@@ -24,6 +24,7 @@ export default {
       },
       accentColor: {
         purple: ["#6941C6"],
+        darkpurple: ["#7F56D9"],
       },
       colors: {
         'custom-bg-color': '#F9F5FF',

@@ -4,7 +4,7 @@ import ClientDashboard from "../../Components/ClientDashboard/ClientDashboard";
 
 const ClientDashboardPage: React.FC = () => {
   return (
-    <ClientLayout>
+    <ClientLayout breadcrumb="Manage Client">
       <ClientDashboard />
     </ClientLayout>
   );

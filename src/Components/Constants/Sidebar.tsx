@@ -1,5 +1,8 @@
 import React, { ReactNode, useState } from "react";
 import AuthFooter from "./AuthFooter";
+import { FiLogOut } from "react-icons/fi";
+import { useLogoutMutation } from "../../redux/api/authApi";
+import { useNavigate } from "react-router-dom";
 
 interface SidebarProps {
   children: ReactNode;
@@ -17,6 +20,20 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
     { title: "Files ", src: "Folder", gap: true },
     { title: "Setting", src: "Setting" },
   ];
+
+  const [logout] = useLogoutMutation();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout().unwrap();
+      localStorage.removeItem("token");
+      window.location.reload();
+      navigate('/client-login');
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
 
   return (
     <div className="flex">
@@ -48,13 +65,32 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
                 index === 0 && "bg-light-white"
               } `}
             >
-              <img src={`/assets/${Menu.src}.png`} className="w-[2vw] h-[2vw]" />
+              <img
+                src={`/assets/${Menu.src}.png`}
+                className="w-[2vw] h-[2vw]"
+              />
               <span className={`${!open && "hidden"} origin-left duration-300`}>
                 {Menu.title}
               </span>
             </li>
           ))}
         </ul>
+        <div>
+          <button onClick={handleLogout} className="flex flex-row items-center justify-center bg-purple-0 w-full p-[0.9vw] mt-[5vw] rounded-[0.5vw]">
+            <FiLogOut
+              className={`text-white font-bold ${
+                open ? "mr-[1vw]" : "mr-0"
+              } text-[1.4vw]`}
+            />
+            <p
+              className={`text-white font-inter text-[1.1vw] font-semibold ${
+                open ? "block" : "hidden"
+              }`}
+            >
+              Logout
+            </p>
+          </button>
+        </div>
       </div>
       <div
         className={`flex-1 min-h-screen bg-lightgray-0 overflow-auto ${

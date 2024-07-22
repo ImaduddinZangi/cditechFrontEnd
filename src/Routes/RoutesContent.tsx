@@ -7,6 +7,8 @@ import ManagementSignInPage from "../Pages/Auth/ManagementSignInPage";
 import CustomerTablePage from "../Pages/Customer/CustomerTablePage";
 import ManageCustomerPage from "../Pages/Customer/ManageCustomerPage";
 import ClientRegistrationPage from "../Pages/Auth/ClientRegistrationPage";
+import AddInspectionPage from "../Pages/Inspection/AddInspectionPage";
+import AddCustomerPage from "../Pages/Customer/AddCustomerPage";
 
 const RoutesContent: React.FC = () => {
   return (
@@ -22,6 +24,22 @@ const RoutesContent: React.FC = () => {
         element={
           <ProtectedRoute isAuthenticated={true}>
             <ClientDashboardPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/add-inspection"
+        element={
+          <ProtectedRoute isAuthenticated={true}>
+            <AddInspectionPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/add-customer"
+        element={
+          <ProtectedRoute isAuthenticated={true}>
+            <AddCustomerPage />
           </ProtectedRoute>
         }
       />

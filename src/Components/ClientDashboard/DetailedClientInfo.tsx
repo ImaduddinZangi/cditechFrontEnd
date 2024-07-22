@@ -38,7 +38,7 @@ const DetailedClientInfo: React.FC = () => {
               Status:
             </p>
             <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {client.status}
+              {client.account_status}
             </p>
           </div>
           <div>

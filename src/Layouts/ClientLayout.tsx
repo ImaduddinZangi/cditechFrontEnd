@@ -4,12 +4,16 @@ import ClientHeader from "../Components/Constants/ClientHeader";
 
 interface ClientLayoutProps {
   children: React.ReactNode;
+  breadcrumb: string;
 }
 
-const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
+const ClientLayout: React.FC<ClientLayoutProps> = ({
+  children,
+  breadcrumb,
+}) => {
   return (
     <Sidebar>
-      <ClientHeader />
+      <ClientHeader breadcrumb={breadcrumb} />
       {children}
     </Sidebar>
   );

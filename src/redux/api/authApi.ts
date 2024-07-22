@@ -1,4 +1,3 @@
-// api/authApi.ts
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 interface AuthResponse {
@@ -53,7 +52,7 @@ interface ClientRegisterRequest {
 
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_BASE_URL,
-  prepareHeaders: (headers: Headers, {}: { getState: () => any }) => {
+  prepareHeaders: (headers: Headers) => {
     const token = localStorage.getItem("token");
     if (token) {
       headers.set("Authorization", `Bearer ${token}`);
@@ -116,6 +115,15 @@ export const authApi = createApi({
         body: newClient,
       }),
     }),
+    logout: builder.mutation<void, void>({
+      query: () => ({
+        url: "auth/logout",
+        method: "POST",
+      }),
+      async onQueryStarted() {
+        localStorage.removeItem("token");
+      },
+    }),
   }),
 });
 
@@ -124,4 +132,5 @@ export const {
   useLoginClientMutation,
   useRegisterUserMutation,
   useRegisterClientMutation,
+  useLogoutMutation,
 } = authApi;

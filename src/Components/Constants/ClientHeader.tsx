@@ -4,7 +4,11 @@ import { getUserId } from "../../utils/utils";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const ClientHeader: React.FC = () => {
+interface ClientHeaderProps {
+  breadcrumb: string;
+}
+
+const ClientHeader: React.FC<ClientHeaderProps> = ({ breadcrumb }) => {
   const clientId = getUserId();
   const {
     data: client,
@@ -32,7 +36,7 @@ const ClientHeader: React.FC = () => {
         <img src="/assets/chevron-right.png" alt="icon" />
         &nbsp;&nbsp;&nbsp;&nbsp;
         <span className="text-[2.5vw] md:text-[1vw] font-inter font-semibold text-darkgray-0">
-          Manage Client
+          {breadcrumb}
         </span>
       </div>
       <div className="flex items-center">
@@ -49,18 +53,18 @@ const ClientHeader: React.FC = () => {
             {client?.email}
           </p>
         </div>
+        <ToastContainer
+          position="top-right"
+          autoClose={1000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       </div>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
     </div>
   );
 };
