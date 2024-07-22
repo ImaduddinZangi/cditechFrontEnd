@@ -1,7 +1,9 @@
 import React from "react";
-import ActiveBadge from "../Constants/ActiveBadge";
-import PreviousButton from "../Constants/PreviousButton";
-import NextButton from "../Constants/NextButton";
+import Sidebar from "../Constants/Sidebar";
+import ClientHeader from "../Constants/ClientHeader";
+import NextButton from "./Constants/NextButton";
+import PreviousButton from "./Constants/PreviousButton";
+import ActiveBadge from "./Constants/ActiveBadge";
 
 interface Customer {
   name: string;
