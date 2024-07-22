@@ -7,8 +7,6 @@ import ManagementSignInPage from "../Pages/Auth/ManagementSignInPage";
 import CustomerTablePage from "../Pages/Customer/CustomerTablePage";
 import ManageCustomerPage from "../Pages/Customer/ManageCustomerPage";
 import ClientRegistrationPage from "../Pages/Auth/ClientRegistrationPage";
-import AddInspectionPage from "../Pages/Inspection/AddInspectionPage";
-import AddCustomerPage from "../Pages/Customer/AddCustomerPage";
 
 const RoutesContent: React.FC = () => {
   return (
@@ -19,6 +17,7 @@ const RoutesContent: React.FC = () => {
       <Route path="/client-registration" element={<ClientRegistrationPage />} />
       <Route path="/table" element={<CustomerTablePage />} />
       <Route path="/customer" element={<ManageCustomerPage />} />
+      <Route path="/cust" element={<EmployeeDashboardPage />} />
       <Route
         path="/client-dashboard"
         element={

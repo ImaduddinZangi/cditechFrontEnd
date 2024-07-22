@@ -3,7 +3,7 @@ import Image from "/assets/Content.png";
 
 const AuthFooter: React.FC = () => {
   return (
-    <div className="w-full h-[5vh]  md:h-[10vh] border-t px-[2vw] flex flex-row items-center justify-between">
+    <div className="w-full h-[5vh] bg-lightgray-0 md:h-[10vh] border-t px-[2vw] flex flex-row items-center justify-between">
       <img
         src={Image}
         alt="icon"

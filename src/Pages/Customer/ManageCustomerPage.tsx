@@ -3,7 +3,10 @@ import ManageCustomer from '../../Components/Customer/ManageCustomer'
 
 const ManageCustomerPage:React.FC = () => {
   return (
-    <ManageCustomer />
+    <div>
+
+      <ManageCustomer />
+    </div>
   )
 }
 
