@@ -243,7 +243,7 @@ const ClientRegistration: React.FC<ClientRegistrationProps> = ({
           </div>
           <div className="text-center text-[2.5vw] md:text-[1vw] flex flex-row w-full items-center justify-center">
             <p className="text-gray-0">Already have an account?&nbsp;</p>
-            <a href="/sign-in" className="text-purple-0 font font-semibold">
+            <a href="/client-login" className="text-purple-0 font font-semibold">
               Login
             </a>
           </div>

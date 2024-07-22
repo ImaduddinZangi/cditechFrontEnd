@@ -1,6 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useGetClientByIdQuery } from "../../redux/api/clientApi";
+import { getUserId } from "../../utils/utils";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ClientHeader: React.FC = () => {
+  const clientId = getUserId();
+  const {
+    data: client,
+    error,
+    isLoading,
+  } = useGetClientByIdQuery(clientId || "");
+
+  useEffect(() => {
+    if (error) {
+      toast.error("Error loading client details");
+    }
+  }, [error]);
+
+  if (isLoading) return <p>Loading...</p>;
+
   return (
     <div className="flex justify-between items-center p-[4vw] md:p-[2vw]">
       <div className="flex items-center">
@@ -22,15 +41,26 @@ const ClientHeader: React.FC = () => {
           src="https://via.placeholder.com/150"
           alt="Oliver Ray"
         />
-        <div className="text-sm">
+        <div>
           <p className="text-darkgray-0 text-[2.5vw] md:text-[1vw] font-semibold leading-none font-inter">
-            Oliver Ray
+            {client?.name}
           </p>
           <p className="text-gray-0 text-[2.5vw] md:text-[1vw] font-inter">
-            Oliverray@inspection.com
+            {client?.email}
           </p>
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };

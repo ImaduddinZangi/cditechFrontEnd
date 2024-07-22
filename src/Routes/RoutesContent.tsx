@@ -13,14 +13,14 @@ const RoutesContent: React.FC = () => {
   return (
     <Routes>
       <Route path="/" element={<ClientSignInPage />} />
-      <Route path="/sign-in" element={<ClientSignInPage />} />
-      <Route path="/sign" element={<ManagementSignInPage />} />
-      <Route path="/register" element={<ClientRegistrationPage />} />
+      <Route path="/client-login" element={<ClientSignInPage />} />
+      <Route path="/management-login" element={<ManagementSignInPage />} />
+      <Route path="/client-registration" element={<ClientRegistrationPage />} />
       <Route path="/table" element={<CustomerTablePage />} />
       <Route path="/customer" element={<ManageCustomerPage />} />
       <Route path="/cust" element={<EmployeeDashboardPage />} />
       <Route
-        path="/dashboard"
+        path="/client-dashboard"
         element={
           <ProtectedRoute isAuthenticated={true}>
             <ClientDashboardPage />

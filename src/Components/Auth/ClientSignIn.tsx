@@ -96,7 +96,7 @@ const ClientSignIn: React.FC<ClientSignInProps> = ({ onSubmit }) => {
           </div>
           <div className="text-center text-[2.5vw] md:text-[1vw] flex flex-row w-full items-center justify-center">
             <p className="text-gray-0">Don't have an account?&nbsp;</p>
-            <a href="/register" className="text-purple-0 font font-semibold">
+            <a href="/client-registration" className="text-purple-0 font font-semibold">
               Sign up
             </a>
           </div>
