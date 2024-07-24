@@ -10,6 +10,8 @@ import ClientRegistrationPage from "../Pages/Auth/ClientRegistrationPage";
 import EmployeeDashboardPage from "../Pages/EmployeeDashboard/EmployeeDashboardPae";
 import AddInspectionPage from "../Pages/Inspection/AddInspectionPage";
 import AddCustomerPage from "../Pages/Customer/AddCustomerPage";
+import AddAssetsPage from "../Pages/Asset/AddAssetsPage";
+import AddAssetTypePage from "../Pages/Asset/AddAssetTypePage";
 
 const RoutesContent: React.FC = () => {
   return (
@@ -18,7 +20,6 @@ const RoutesContent: React.FC = () => {
       <Route path="/client-login" element={<ClientSignInPage />} />
       <Route path="/management-login" element={<ManagementSignInPage />} />
       <Route path="/client-registration" element={<ClientRegistrationPage />} />
-      <Route path="/table" element={<CustomerTablePage />} />
       <Route path="/customer" element={<ManageCustomerPage />} />
       <Route path="/cust" element={<EmployeeDashboardPage />} />
       <Route
@@ -42,6 +43,30 @@ const RoutesContent: React.FC = () => {
         element={
           <ProtectedRoute isAuthenticated={true}>
             <AddCustomerPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/customer-table"
+        element={
+          <ProtectedRoute isAuthenticated={true}>
+            <CustomerTablePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/add-asset"
+        element={
+          <ProtectedRoute isAuthenticated={true}>
+            <AddAssetsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/add-asset-type"
+        element={
+          <ProtectedRoute isAuthenticated={true}>
+            <AddAssetTypePage />
           </ProtectedRoute>
         }
       />

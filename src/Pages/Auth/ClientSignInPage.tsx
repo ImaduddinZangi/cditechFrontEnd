@@ -1,5 +1,3 @@
-// File path: src/pages/ClientSignInPage.tsx
-
 import React from "react";
 import ClientSignIn from "../../Components/Auth/ClientSignIn";
 import { useLoginClientMutation } from "../../redux/api/authApi";

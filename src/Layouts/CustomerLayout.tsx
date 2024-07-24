@@ -6,7 +6,7 @@ interface ClientLayoutProps {
   children: React.ReactNode;
 }
 
-const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
+const CustomerLayout: React.FC<ClientLayoutProps> = ({ children }) => {
   return (
     <Sidebar>
       <CustomerHeader />
@@ -15,4 +15,4 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({ children }) => {
   );
 };
 
-export default ClientLayout;
+export default CustomerLayout;

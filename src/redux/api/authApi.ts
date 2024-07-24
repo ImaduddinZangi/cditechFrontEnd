@@ -19,7 +19,7 @@ interface AuthResponse {
     billing_address: string;
     payment_method: string;
     type: string;
-    status: string;
+    account_status: string;
     next_bill_date: string;
   };
 }

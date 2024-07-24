@@ -1,5 +1,3 @@
-// File path: src/pages/ClientRegistrationPage.tsx
-
 import React from "react";
 import { useRegisterClientMutation } from "../../redux/api/authApi";
 import { useDispatch } from "react-redux";
