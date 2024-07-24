@@ -12,6 +12,7 @@ import AddInspectionPage from "../Pages/Inspection/AddInspectionPage";
 import AddCustomerPage from "../Pages/Customer/AddCustomerPage";
 import AddAssetsPage from "../Pages/Asset/AddAssetsPage";
 import AddAssetTypePage from "../Pages/Asset/AddAssetTypePage";
+import ManageCustomers from "../Pages/Customer/ManageCustomers";
 
 const RoutesContent: React.FC = () => {
   return (
@@ -67,6 +68,14 @@ const RoutesContent: React.FC = () => {
         element={
           <ProtectedRoute isAuthenticated={true}>
             <AddAssetTypePage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/manage-customer"
+        element={
+          <ProtectedRoute isAuthenticated={true}>
+            <ManageCustomers/>
           </ProtectedRoute>
         }
       />
