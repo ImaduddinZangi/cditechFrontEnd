@@ -1,112 +1,99 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useGetAssetsQuery } from "../../redux/api/assetApi";
 
-interface AssetDetailsProps {
-  assetName: string;
-  assetType: string;
-  size: string;
-  rails: string;
-  floats: number;
-  smart: string;
-  inspectionInterval: string;
-  lastInspectionDate: string;
-  power: string;
-  assetId: string;
-  pipeDia: string;
-  material: string;
-}
+const AssetDetails: React.FC = () => {
+  const { data: assets } = useGetAssetsQuery();
+  const [assetData, setAssetData] = useState<any[]>([]);
 
-const AssetDetails: React.FC<AssetDetailsProps> = ({
-  assetName,
-  assetType,
-  size,
-  rails,
-  floats,
-  smart,
-  inspectionInterval,
-  lastInspectionDate,
-  power,
-  assetId,
-  pipeDia,
-  material,
-}) => {
+  useEffect(() => {
+    if (assets) {
+      setAssetData(assets);
+    }
+  }, [assets]);
+
   return (
-    <div className="p-4 bg-white shadow rounded-lg">
-      <div className="flex space-x-2 mb-4">
-        <button className="flex-1 py-2 bg-gray-200 rounded text-center">
+    <div className="p-[1vw] m-[2vw] bg-white shadow-lg rounded-lg">
+      <div className="flex justify-between border-b pb-[0.5vw]">
+        <button className="flex-1 py-[0.5vw] text-center border-b-[0.5vw] border-blue-500">
           Assets
         </button>
-        <button className="flex-1 py-2 bg-gray-200 rounded text-center">
+        <button className="flex-1 py-[0.5vw] text-center">
           Inspection History
         </button>
-        <button className="flex-1 py-2 bg-gray-200 rounded text-center">
+        <button className="flex-1 py-[0.5vw] text-center">
           Up-Coming Inspection
         </button>
-        <button className="flex-1 py-2 bg-gray-200 rounded text-center">
-          Photos
-        </button>
-        <button className="flex-1 py-2 bg-gray-200 rounded text-center">
-          Notes
-        </button>
+        <button className="flex-1 py-[0.5vw] text-center">Photos</button>
+        <button className="flex-1 py-[0.5vw] text-center">Notes</button>
       </div>
-      <div className="grid grid-cols-2 gap-4 text-gray-700">
-        <div className="flex flex-row">
-          <div className="flex flex-row justify-between">
-            <strong>Asset Name:</strong> {assetName}
+      {assetData.map((asset: any) => (
+        <div key={asset.id} className="border rounded p-[1vw] mt-[1vw]">
+          <div className="grid grid-cols-5 gap-y-[3vw] gap-x-[1vw] w-full text-darkgray-0">
+            <div>
+              <p className="text-[1vw] font-semibold">Asset Name:</p>
+              <p className="text-[1vw]">{asset.name || "N/A"}</p>
+            </div>
+            <div>
+              <p className="text-[1vw] font-semibold">Asset Type:</p>
+              <p className="text-[1vw]">{asset.type?.name || "N/A"}</p>
+            </div>
+            <div>
+              <p className="text-[1vw] font-semibold">Size:</p>
+              <p className="text-[1vw]">{asset.size || "N/A"}</p>
+            </div>
+            <div>
+              <p className="text-[1vw] font-semibold">Pumps:</p>
+              <p className="text-[1vw]">{asset.pumps !== null ? asset.pumps : "N/A"}</p>
+            </div>
+            <div>
+              <p className="text-[1vw] font-semibold">Asset ID:</p>
+              <p className="text-[1vw]">{asset.id || "N/A"}</p>
+            </div>
+            <div>
+              <p className="text-[1vw] font-semibold">Rails:</p>
+              <p className="text-[1vw]">{asset.rails || "N/A"}</p>
+            </div>
+            <div>
+              <p className="text-[1vw] font-semibold">Floats:</p>
+              <p className="text-[1vw]">{asset.float !== null ? asset.float : "N/A"}</p>
+            </div>
+            <div>
+              <p className="text-[1vw] font-semibold">Smart:</p>
+              <p className="text-[1vw]">{asset.smart || "N/A"}</p>
+            </div>
+            <div>
+              <p className="text-[1vw] font-semibold">Pipe Diameter:</p>
+              <p className="text-[1vw]">{asset.pipeDia !== null ? `${asset.pipeDia} in` : "N/A"}</p>
+            </div>
+            <div>
+              <p className="text-[1vw] font-semibold">Material:</p>
+              <p className="text-[1vw]">{asset.material || "N/A"}</p>
+            </div>
+            <div>
+              <p className="text-[1vw] font-semibold">Inspection Interval:</p>
+              <p className="text-[1vw]">{asset.inspectionInterval || "N/A"}</p>
+            </div>
+            <div>
+              <p className="text-[1vw] font-semibold">Status:</p>
+              <p className="text-[1vw]">{asset.status || "N/A"}</p>
+            </div>
           </div>
-          <div>
-            <strong>Asset Type:</strong> {assetType}
-          </div>
-          <div>
-            <strong>Size:</strong> {size}
-          </div>
-          <div>
-            <strong>Power:</strong> {power}
+          <div className="flex justify-between mt-[1vw]">
+            <button className="flex-1 py-[0.5vw] mx-1 bg-white border rounded text-center">
+              Asset Details
+            </button>
+            <button className="flex-1 py-[0.5vw] mx-1 bg-white border rounded text-center">
+              Map Asset
+            </button>
+            <button className="flex-1 py-[0.5vw] mx-1 bg-white border rounded text-center">
+              Asset Photos
+            </button>
+            <button className="flex-1 py-[0.5vw] mx-1 bg-white border rounded text-center">
+              Manage Asset
+            </button>
           </div>
         </div>
-        <div className="flex flex-row">
-          <div>
-            <strong>Asset ID:</strong> {assetId}
-          </div>
-          <div>
-            <strong>Rails:</strong> {rails}
-          </div>
-          <div>
-            <strong>Floats:</strong> {floats}
-          </div>
-          <div>
-            <strong>Smart:</strong> {smart}
-          </div>
-        </div>
-
-        <div className="flex flex-row justify-between">
-          <div >
-            <strong>Pipe Dia:</strong> {pipeDia}
-          </div>
-          <div>
-            <strong>Material:</strong> {material}
-          </div>
-          <div>
-            <strong>Inspection Interval:</strong> {inspectionInterval}
-          </div>
-          <div>
-            <strong>Last Inspection Date:</strong> {lastInspectionDate}
-          </div>
-        </div>
-      </div>
-      <div className="flex space-x-2 mt-4">
-        <button className="flex-1 py-2 bg-blue-500 text-white rounded text-center">
-          Asset Details
-        </button>
-        <button className="flex-1 py-2 bg-blue-500 text-white rounded text-center">
-          Map Asset
-        </button>
-        <button className="flex-1 py-2 bg-blue-500 text-white rounded text-center">
-          Asset Photos
-        </button>
-        <button className="flex-1 py-2 bg-blue-500 text-white rounded text-center">
-          Manage Asset
-        </button>
-      </div>
+      ))}
     </div>
   );
 };

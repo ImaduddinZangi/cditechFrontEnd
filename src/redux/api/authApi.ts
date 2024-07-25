@@ -21,7 +21,12 @@ interface AuthResponse {
     type: string;
     account_status: string;
     next_bill_date: string;
+    user: User;
   };
+}
+
+interface User {
+  two_factor_enabled: boolean;
 }
 
 interface LoginRequest {

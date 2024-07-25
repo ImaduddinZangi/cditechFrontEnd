@@ -19,11 +19,18 @@ const ClientSignInPage: React.FC = () => {
       dispatch(setToken(result.access_token));
       if (result.client) {
         dispatch(setClient(result.client));
+        if (result.client.user.two_factor_enabled) {
+          toast.success("Login successful!", {
+            onClose: () => navigate("/client-dashboard"),
+            autoClose: 1000,
+          });
+        } else {
+          toast.success("Two-factor authentication required!", {
+            onClose: () => navigate("/2fa"),
+            autoClose: 1000,
+          });
+        }
       }
-      toast.success("Login successful!", {
-        onClose: () => navigate("/client-dashboard"),
-        autoClose: 1000,
-      });
     } catch (error) {
       if (error instanceof Error) {
         toast.error("Login error: " + error.message);

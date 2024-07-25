@@ -31,8 +31,8 @@ interface AddAssetProps {
 
 const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
   const clientId = getUserId();
-  const { data: assetTypes, isLoading: assetTypesLoading } = useGetAssetTypesQuery();
-  const { data: customers, isLoading: customersLoading } = useGetCustomersQuery();
+  const { data: assetTypes } = useGetAssetTypesQuery();
+  const { data: customers } = useGetCustomersQuery();
 
   const [formState, setFormState] = useState({
     name: "",
@@ -54,13 +54,15 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
     duty: "",
     rails: "No",
     float: 0,
-    pumps: 0
+    pumps: 0,
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     setFormState({
       ...formState,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -91,13 +93,12 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
     );
   };
 
-  if (assetTypesLoading || customersLoading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <form className="grid grid-cols-1 sm:grid-cols-2 gap-4" onSubmit={handleSubmit}>
+      <form
+        className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+        onSubmit={handleSubmit}
+      >
         <div>
           <label className="block text-darkgray-0">Asset Name:</label>
           <input
