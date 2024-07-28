@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useGetAssetsQuery } from "../../redux/api/assetApi";
+import { useGetAssetsQuery } from "../../../redux/api/assetApi";
 
 const AssetDetails: React.FC = () => {
   const { data: assets } = useGetAssetsQuery();
@@ -12,22 +12,22 @@ const AssetDetails: React.FC = () => {
   }, [assets]);
 
   return (
-    <div className="p-[1vw] m-[2vw] bg-white shadow-lg rounded-lg">
-      <div className="flex justify-between border-b pb-[0.5vw]">
-        <button className="flex-1 py-[0.5vw] text-center border-b-[0.5vw] border-blue-500">
+    <div className="p-[1vw] m-[2vw] font-inter bg-white shadow-lg rounded-lg">
+      <div className="flex p-[0.2vw] justify-between bg-textpurple-0 rounded-[0.5vw] bg-opacity-5 font-semibold">
+        <button className="flex-1 py-[0.5vw] text-[1vw] text-darkgray-0 text-center shadow-lg rounded-[0.5vw] bg-white">
           Assets
         </button>
-        <button className="flex-1 py-[0.5vw] text-center">
+        <button className="flex-1 py-[0.5vw] text-[1vw] text-darkgray-0 text-center">
           Inspection History
         </button>
-        <button className="flex-1 py-[0.5vw] text-center">
+        <button className="flex-1 py-[0.5vw] text-[1vw] text-darkgray-0 text-center">
           Up-Coming Inspection
         </button>
-        <button className="flex-1 py-[0.5vw] text-center">Photos</button>
-        <button className="flex-1 py-[0.5vw] text-center">Notes</button>
+        <button className="flex-1 py-[0.5vw] text-[1vw] text-darkgray-0 text-center">Photos</button>
+        <button className="flex-1 py-[0.5vw] text-[1vw] text-darkgray-0 text-center">Notes</button>
       </div>
       {assetData.map((asset: any) => (
-        <div key={asset.id} className="border rounded p-[1vw] mt-[1vw]">
+        <div key={asset.id} className="border rounded p-[1vw] mt-[1vw] relative">
           <div className="grid grid-cols-5 gap-y-[3vw] gap-x-[1vw] w-full text-darkgray-0">
             <div>
               <p className="text-[1vw] font-semibold">Asset Name:</p>
@@ -78,17 +78,17 @@ const AssetDetails: React.FC = () => {
               <p className="text-[1vw]">{asset.status || "N/A"}</p>
             </div>
           </div>
-          <div className="flex justify-between mt-[1vw]">
-            <button className="flex-1 py-[0.5vw] mx-1 bg-white border rounded text-center">
+          <div className="flex justify-between mt-[1vw] w-1/2 absolute bottom-[1vw] right-[1vw]">
+            <button className="flex-1 py-[0.5vw] mx-[0.2vw] text-[1vw] font-semibold text-darkgray-0 bg-white border rounded text-center">
               Asset Details
             </button>
-            <button className="flex-1 py-[0.5vw] mx-1 bg-white border rounded text-center">
+            <button className="flex-1 py-[0.5vw] mx-[0.2vw] text-[1vw] font-semibold text-darkgray-0 bg-white border rounded text-center">
               Map Asset
             </button>
-            <button className="flex-1 py-[0.5vw] mx-1 bg-white border rounded text-center">
+            <button className="flex-1 py-[0.5vw] mx-[0.2vw] text-[1vw] font-semibold text-darkgray-0 bg-white border rounded text-center">
               Asset Photos
             </button>
-            <button className="flex-1 py-[0.5vw] mx-1 bg-white border rounded text-center">
+            <button className="flex-1 py-[0.5vw] mx-[0.2vw] text-[1vw] font-semibold text-darkgray-0 bg-white border rounded text-center">
               Manage Asset
             </button>
           </div>

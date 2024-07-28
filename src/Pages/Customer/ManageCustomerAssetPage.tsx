@@ -1,7 +1,7 @@
 import React from "react";
 import ClientLayout from "../../Layouts/ClientLayout";
 import DetailedCustomerInfo from "../../Components/Customer/DetailedCustomerInfo";
-import AssetDetails from "../../Components/Customer/AssetDetails";
+import AssetDetails from "../../Components/Customer/Asset/AssetDetails";
 
 const ManageCustomerAssetPage: React.FC = () => {
   return (

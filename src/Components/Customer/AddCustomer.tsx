@@ -76,7 +76,7 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit }) => {
   }, [selectedState, billingState]);
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
+    <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg">
       <form className="space-y-6" onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>

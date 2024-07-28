@@ -9,10 +9,9 @@ import ClientRegistrationPage from "../Pages/Auth/ClientRegistrationPage";
 import EmployeeDashboardPage from "../Pages/EmployeeDashboard/EmployeeDashboardPae";
 import AddInspectionPage from "../Pages/Inspection/AddInspectionPage";
 import AddCustomerPage from "../Pages/Customer/AddCustomerPage";
-import AddAssetsPage from "../Pages/Asset/AddAssetsPage";
-import AddAssetTypePage from "../Pages/Asset/AddAssetTypePage";
-import AddPumpBrandPage from "../Pages/Pump/AddPumpBrandPage";
-import AddPumpPage from "../Pages/Pump/AddPumpPage";
+import AddAssetsPage from "../Pages/Customer/Asset/AddAssetsPage";
+import AddAssetTypePage from "../Pages/Customer/Asset/AddAssetTypePage";
+import AddPumpBrandPage from "../Pages/Customer/Pump/AddPumpBrandPage";
 import ManageCustomerAssetPage from "../Pages/Customer/ManageCustomerAssetPage";
 import ManageCustomerPumpPage from "../Pages/Customer/ManageCustomerPumpPage";
 import AddPhotosPage from "../Pages/Customer/AddPhotosPage";
@@ -95,14 +94,6 @@ const RoutesContent: React.FC = () => {
         element={
           <ProtectedRoute isAuthenticated={true}>
             <AddAssetTypePage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/add-pump"
-        element={
-          <ProtectedRoute isAuthenticated={true}>
-            <AddPumpPage />
           </ProtectedRoute>
         }
       />

@@ -40,7 +40,6 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
       src: "Search",
       isDropdown: true,
       dropdownItems: [
-        { title: "Add Pump", href: "/add-pump" },
         { title: "Add Pump Brand", href: "/add-pump-brand" },
       ],
     },

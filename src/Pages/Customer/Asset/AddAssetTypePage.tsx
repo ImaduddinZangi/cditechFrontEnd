@@ -1,7 +1,7 @@
 import React from 'react';
-import ClientLayout from '../../Layouts/ClientLayout';
-import AddAssetType from '../../Components/Asset/AddAssetType';
-import { useCreateAssetTypeMutation } from '../../redux/api/assetTypeApi';
+import ClientLayout from '../../../Layouts/ClientLayout';
+import AddAssetType from '../../../Components/Customer/Asset/AddAssetType';
+import { useCreateAssetTypeMutation } from '../../../redux/api/assetTypeApi';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';

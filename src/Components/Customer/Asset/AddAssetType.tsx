@@ -13,16 +13,16 @@ const AddAssetType: React.FC<AddAssetTypeProps> = ({ onSubmit }) => {
     onSubmit(name, description);
   };
   return (
-    <div className="max-w-4xl mx-auto p-[1.5vw] bg-white rounded-[0.5vw] shadow-[1vw]">
+    <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
       <form
-        className="grid grid-cols-1 sm:grid-cols-2 gap-[1vw]"
+        className="grid grid-cols-1 sm:grid-cols-2 gap-[1vw] relative pb-[5vw]"
         onSubmit={handleSubmit}
       >
         <div>
-          <label className="block text-darkgray-0">Asset Type Name:</label>
+          <label className="block text-darkgray-0 font-medium text-[1vw]">Asset Type Name:</label>
           <input
             type="text"
-            className="mt-[0.2vw] block w-full border-gray-300 rounded-md shadow-sm"
+            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
             placeholder="Enter asset type name"
             required
             value={name}
@@ -30,10 +30,10 @@ const AddAssetType: React.FC<AddAssetTypeProps> = ({ onSubmit }) => {
           />
         </div>
         <div>
-          <label className="block text-darkgray-0">Description:</label>
+          <label className="block text-darkgray-0 font-medium text-[1vw]">Description:</label>
           <input
             type="text"
-            className="mt-[0.2vw] block w-full border-gray-300 rounded-md shadow-sm"
+            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
             placeholder="Enter description"
             required
             value={description}
@@ -42,7 +42,7 @@ const AddAssetType: React.FC<AddAssetTypeProps> = ({ onSubmit }) => {
         </div>
         <button
           type="submit"
-          className="px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-md shadow-sm"
+          className="px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-[0.4vw] absolute bottom-0 right-0"
         >
           Create
         </button>

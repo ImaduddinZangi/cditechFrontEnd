@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useGetAssetsQuery } from "../../redux/api/assetApi";
-import { useGetPumpBrandsQuery } from "../../redux/api/pumpBrandApi";
+import { useGetAssetsQuery } from "../../../redux/api/assetApi";
+import { useGetPumpBrandsQuery } from "../../../redux/api/pumpBrandApi";
 
 interface AddPumpProps {
+  isModalOpen: boolean;
+  onClose: () => void;
   onSubmit: (
     assetId: string,
+    name: string,
     brandId: string,
     serial: string,
     warranty: string,
@@ -16,7 +19,7 @@ interface AddPumpProps {
   ) => void;
 }
 
-const AddPump: React.FC<AddPumpProps> = ({ onSubmit }) => {
+const AddPump: React.FC<AddPumpProps> = ({ isModalOpen, onClose, onSubmit }) => {
   const { data: assets } = useGetAssetsQuery();
   const { data: pumpBrands } = useGetPumpBrandsQuery();
 
@@ -24,6 +27,7 @@ const AddPump: React.FC<AddPumpProps> = ({ onSubmit }) => {
     assetId: "",
     brandId: "",
     serial: "",
+    name: "",
     warranty: "1 Year",
     installedDate: "",
     avgAmps: 0,
@@ -38,7 +42,10 @@ const AddPump: React.FC<AddPumpProps> = ({ onSubmit }) => {
     const { name, value } = e.target;
     setFormState((prevState) => ({
       ...prevState,
-      [name]: name === "avgAmps" || name === "maxAmps" || name === "hp" ? Number(value) : value,
+      [name]:
+        name === "avgAmps" || name === "maxAmps" || name === "hp"
+          ? Number(value)
+          : value,
     }));
   };
 
@@ -46,6 +53,7 @@ const AddPump: React.FC<AddPumpProps> = ({ onSubmit }) => {
     event.preventDefault();
     onSubmit(
       formState.assetId,
+      formState.name,
       formState.brandId,
       formState.serial,
       formState.warranty,
@@ -54,18 +62,52 @@ const AddPump: React.FC<AddPumpProps> = ({ onSubmit }) => {
       formState.maxAmps,
       formState.hp
     );
+    onClose();
   };
 
   const handleCancel = () => {
-    navigate("/client-dashboard");
+    onClose();
+    navigate("/add-asset");
   };
 
+  useEffect(() => {
+    if (!isModalOpen) {
+      setFormState({
+        assetId: "",
+        brandId: "",
+        serial: "",
+        name: "",
+        warranty: "1 Year",
+        installedDate: "",
+        avgAmps: 0,
+        maxAmps: 0,
+        hp: 0,
+      });
+    }
+  }, [isModalOpen]);
+
+  if (!isModalOpen) {
+    return null;
+  }
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50 font-inter">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6">
         <h2 className="text-2xl font-semibold mb-4">Add New Pump</h2>
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block mb-1 font-medium">Pump Name:</label>
+              <input
+                type="text"
+                className="w-full p-2 border border-gray-300 rounded-md"
+                placeholder="Enter name of pump"
+                name="name"
+                value={formState.name}
+                onChange={handleChange}
+                required
+              />
+            </div>
             <div>
               <label className="block mb-1 font-medium">Brand:</label>
               <select

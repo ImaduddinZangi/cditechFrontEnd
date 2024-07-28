@@ -9,12 +9,14 @@ export default {
       textColor: {
         gray: ["#475467"],
         darkgray: ["#344054"],
+        lightgray: ["#667085"],
         dark: ["#101828"],
         purple: ["#6941C6"],
       },
       backgroundColor: {
         purple: ["#7F56D9"],
         lightgray: ["#FCFCFD"],
+        textpurple: ["#6941C6"]
       },
       borderColor: {
         lightgray: ["#D0D5DD"],

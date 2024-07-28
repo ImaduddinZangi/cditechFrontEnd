@@ -1,13 +1,18 @@
-import React from 'react';
-import ClientLayout from '../../Layouts/ClientLayout';
-import AddAsset from '../../Components/Asset/AddAsset';
-import { useCreateAssetMutation } from '../../redux/api/assetApi';
+import React, { useState } from 'react';
+import ClientLayout from '../../../Layouts/ClientLayout';
+import AddAsset from '../../../Components/Customer/Asset/AddAsset';
+import { useCreateAssetMutation } from '../../../redux/api/assetApi';
+import AddPump from "../../../Components/Customer/Pump/AddPump";
+import { useCreatePumpMutation } from "../../../redux/api/pumpApi";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
+import Pumps from '../../../Components/Customer/Pump/Pumps';
 
 const AddAssetsPage: React.FC = () => {
   const [createAsset] = useCreateAssetMutation();
+  const [createPump] = useCreatePumpMutation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleAddAsset = async (
@@ -73,9 +78,63 @@ const AddAssetsPage: React.FC = () => {
     }
   };
 
+  const handleAddPump = async (
+    assetId: string,
+    name: string,
+    brandId: string,
+    serial: string,
+    warranty: string,
+    installedDate: string,
+    avgAmps: number,
+    maxAmps: number,
+    hp: number
+  ) => {
+    try {
+      const result = await createPump({
+        assetId,
+        brandId,
+        name,
+        hp,
+        serial,
+        installedDate,
+        avgAmps,
+        maxAmps,
+        warranty
+      }).unwrap();
+      
+      toast.success("Pump added successfully!", {
+        onClose: () => navigate("/add-asset"),
+        autoClose: 1000,
+      });
+      console.log("Pump created successfully", result);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error("Error adding Pump: " + error.message);
+        console.error("Error adding Pump:", error);
+      } else {
+        toast.error("An unknown error occurred.");
+        console.error("An unknown error occurred:", error);
+      }
+    }
+  };
+
+  const handleModalOpen = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <ClientLayout breadcrumb='Add Asset'>
       <AddAsset onSubmit={handleAddAsset} />
+      <Pumps onClick={handleModalOpen} />
+      <AddPump 
+        isModalOpen={isModalOpen} 
+        onClose={handleModalClose} 
+        onSubmit={handleAddPump} 
+      />
       <ToastContainer
         position="top-right"
         autoClose={1000}

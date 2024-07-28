@@ -1,7 +1,7 @@
 import React from "react";
-import ClientLayout from "../../Layouts/ClientLayout";
-import AddPumpBrand from "../../Components/Pump/AddPumpBrand";
-import { useCreatePumpBrandMutation } from "../../redux/api/pumpBrandApi";
+import ClientLayout from "../../../Layouts/ClientLayout";
+import AddPumpBrand from "../../../Components/Customer/Pump/AddPumpBrand";
+import { useCreatePumpBrandMutation } from "../../../redux/api/pumpBrandApi";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";

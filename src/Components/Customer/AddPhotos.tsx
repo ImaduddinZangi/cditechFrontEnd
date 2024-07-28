@@ -93,16 +93,15 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
 
   return (
     <form
-      className="p-[1vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter"
+      className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter"
       onSubmit={handleSave}
     >
-      <h2 className="text-xl font-semibold mb-6">Add Photos</h2>
       <div className="grid grid-cols-2 gap-6 mb-6">
         <div>
-          <label className="block text-darkgray-0">Select Type:</label>
+          <label className="block text-darkgray-0 font-medium text-[1vw]">Select Type:</label>
           <select
             name="type"
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:outline-none"
+            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
             onChange={handleTypeChange}
             value={selectedType}
           >
@@ -114,7 +113,7 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
         </div>
         {selectedType && (
           <div>
-            <label className="block text-darkgray-0">
+            <label className="block text-darkgray-0 font-medium text-[1vw]">
               {selectedType === "asset"
                 ? "Asset:"
                 : selectedType === "pump"
@@ -123,7 +122,7 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
             </label>
             <select
               name={selectedType}
-              className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:outline-none"
+              className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
               onChange={handleIdChange}
               value={selectedId || ""}
             >
@@ -152,9 +151,9 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
               onChange={handleFileChange}
             />
             <span>📤</span>
-            <span className="ml-2">Click to upload asset photo</span>
+            <span className="ml-[0.2vw] text-[1vw] font-semibold text-darkgray-0">Click to upload asset photo</span>
           </label>
-          <p className="text-gray-500 text-center">
+          <p className="text-gray-0 text-center text-[0.9vw]">
             SVG, PNG, JPG or GIF (max. 800x400px)
           </p>
           {photo && (

@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface Pump {
   id: string;
+  name: string;
   assetId: string;
   brandId: string;
   serial: string;
