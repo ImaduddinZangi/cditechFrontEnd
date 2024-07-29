@@ -5,11 +5,6 @@ import "react-phone-input-2/lib/style.css";
 import cities from "cities.json";
 import { states } from "./Constants/usStates";
 
-interface City {
-  city: string;
-  state: string;
-}
-
 interface Option {
   value: string;
   label: string;
@@ -41,8 +36,11 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit }) => {
   const [billingStreetAddress, setBillingStreetAddress] = useState("");
   const [zipCode, setZipCode] = useState("");
   const [billingZipCode, setBillingZipCode] = useState("");
-  const [citiesOfSelectedState, setCitiesOfSelectedState] = useState<Option[]>([]);
-  const [billingCitiesOfSelectedState, setBillingCitiesOfSelectedState] = useState<Option[]>([]);
+  const [citiesOfSelectedState, setCitiesOfSelectedState] = useState<Option[]>(
+    []
+  );
+  const [billingCitiesOfSelectedState, setBillingCitiesOfSelectedState] =
+    useState<Option[]>([]);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -60,13 +58,13 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit }) => {
   };
 
   useEffect(() => {
-    const getCities = (stateValue: string | null) => {
+    const getCities = (stateValue: string | null): Option[] => {
       return stateValue
-        ? (cities as City[])
-            .filter((city) => city.state === stateValue)
+        ? (cities as any[])
+            .filter((city) => city.admin1 === stateValue)
             .map((city) => ({
-              value: city.city,
-              label: city.city,
+              value: city.name,
+              label: city.name,
             }))
         : [];
     };
@@ -76,21 +74,25 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit }) => {
   }, [selectedState, billingState]);
 
   return (
-    <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg">
+    <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
       <form className="space-y-6" onSubmit={handleSubmit}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 gap-[1.5vw]">
           <div>
-            <label className="block text-sm font-medium text-gray-700">User</label>
+            <label className="block text-darkgray-0 font-medium text-[1vw]">
+              User
+            </label>
             <input
               type="text"
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
               placeholder="Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Service Contact</label>
+            <label className="block text-darkgray-0 font-medium text-[1vw]">
+              Service Contact
+            </label>
             <PhoneInput
               country={"us"}
               value={phone}
@@ -100,21 +102,23 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit }) => {
             />
           </div>
         </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Email Address</label>
-          <input
-            type="email"
-            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-            placeholder="None"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="grid grid-cols-3 gap-[1.5vw]">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Previous Phone Number</label>
+            <label className="block text-darkgray-0 font-medium text-[1vw]">
+              Email Address
+            </label>
+            <input
+              type="email"
+              className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
+              placeholder="None"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="block text-darkgray-0 font-medium text-[1vw]">
+              Previous Phone Number
+            </label>
             <PhoneInput
               country={"us"}
               value={previousPhone}
@@ -124,10 +128,12 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit }) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Gate Code</label>
+            <label className="block text-darkgray-0 font-medium text-[1vw]">
+              Gate Code
+            </label>
             <input
               type="text"
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
               placeholder="None"
               value={gateCode}
               onChange={(e) => setGateCode(e.target.value)}
@@ -135,19 +141,23 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit }) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div className="grid grid-cols-4 gap-[1.5vw]">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Street Address</label>
+            <label className="block text-darkgray-0 font-medium text-[1vw]">
+              Street Address
+            </label>
             <input
               type="text"
               value={streetAddress}
               onChange={(e) => setStreetAddress(e.target.value)}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
               placeholder="123 Main Street"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">State</label>
+            <label className="block text-darkgray-0 font-medium text-[1vw]">
+              State
+            </label>
             <Select
               value={selectedState}
               onChange={(option: SingleValue<Option>) => {
@@ -159,39 +169,49 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit }) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">City</label>
+            <label className="block text-darkgray-0 font-medium text-[1vw]">
+              City
+            </label>
             <Select
               value={selectedCity}
-              onChange={(option: SingleValue<Option>) => setSelectedCity(option)}
+              onChange={(option: SingleValue<Option>) =>
+                setSelectedCity(option)
+              }
               options={citiesOfSelectedState}
               isDisabled={!selectedState}
               placeholder="Select City"
             />
           </div>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Zipcode</label>
+            <label className="block text-darkgray-0 font-medium text-[1vw]">
+              Zipcode
+            </label>
             <input
               type="text"
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
               placeholder="Enter zip code"
               value={zipCode}
               onChange={(e) => setZipCode(e.target.value)}
             />
           </div>
+        </div>
+        <div className="grid grid-cols-4 gap-[1.5vw]">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Billing Address</label>
+            <label className="block text-darkgray-0 font-medium text-[1vw]">
+              Billing Address
+            </label>
             <input
               type="text"
               value={billingStreetAddress}
               onChange={(e) => setBillingStreetAddress(e.target.value)}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
               placeholder="123 Main Street"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">State</label>
+            <label className="block text-darkgray-0 font-medium text-[1vw]">
+              State
+            </label>
             <Select
               value={billingState}
               onChange={(option: SingleValue<Option>) => {
@@ -202,10 +222,10 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit }) => {
               placeholder="Select State"
             />
           </div>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700">City</label>
+            <label className="block text-darkgray-0 font-medium text-[1vw]">
+              City
+            </label>
             <Select
               value={billingCity}
               onChange={(option: SingleValue<Option>) => setBillingCity(option)}
@@ -215,10 +235,12 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit }) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Zipcode</label>
+            <label className="block text-darkgray-0 font-medium text-[1vw]">
+              Zipcode
+            </label>
             <input
               type="text"
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+              className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
               placeholder="Enter zip code"
               value={billingZipCode}
               onChange={(e) => setBillingZipCode(e.target.value)}
@@ -227,16 +249,16 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit }) => {
         </div>
         <div className="flex justify-end space-x-4">
           <button
-            type="button"
-            className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-700"
-          >
-            Do Not Save And Cancel
-          </button>
-          <button
             type="submit"
-            className="px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-700"
+            className="px-[2vw] py-[1vw] bg-purple-0 text-white rounded-md text-[1vw]"
           >
             Save & create user
+          </button>
+          <button
+            type="button"
+            className="px-[2vw] py-[1vw] bg-white text-black rounded-md border text-[1vw]"
+          >
+            Do Not Save And Cancel
           </button>
         </div>
       </form>
