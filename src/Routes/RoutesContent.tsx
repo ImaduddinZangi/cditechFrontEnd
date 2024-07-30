@@ -16,6 +16,7 @@ import ManageCustomerAssetPage from "../Pages/Customer/ManageCustomerAssetPage";
 import ManageCustomerPumpPage from "../Pages/Customer/ManageCustomerPumpPage";
 import AddPhotosPage from "../Pages/Customer/AddPhotosPage";
 import TwoFactorAuthPage from "../Pages/Auth/twoFactorAuthPage";
+import EditCustomerPage from "../Pages/Customer/EditCustomerPage";
 
 const RoutesContent: React.FC = () => {
   return (
@@ -70,6 +71,14 @@ const RoutesContent: React.FC = () => {
         element={
           <ProtectedRoute isAuthenticated={true}>
             <AddCustomerPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/edit-customer/:customerId"
+        element={
+          <ProtectedRoute isAuthenticated={true}>
+            <EditCustomerPage />
           </ProtectedRoute>
         }
       />

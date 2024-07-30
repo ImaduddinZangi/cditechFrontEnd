@@ -1,7 +1,6 @@
 import React, { ReactNode, useState } from "react";
 import AuthFooter from "./AuthFooter";
 import { FiLogOut } from "react-icons/fi";
-import { useLogoutMutation } from "../../redux/api/authApi";
 import { useNavigate } from "react-router-dom";
 
 interface SidebarProps {
@@ -21,41 +20,34 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
       src: "User",
       isDropdown: true,
       dropdownItems: [
-        { title: "Manage Customer Assets", href: "/manage-customer-asset" },
-        { title: "Manage Customer Pumps", href: "/manage-customer-pump" },
+        { title: "Customers Table", href: "/customer-table" },
         { title: "Add Customer", href: "/add-customer" },
+        { title: "Manage Customer Pumps", href: "/manage-customer-pump" },
       ],
     },
     {
       title: "Assets",
       src: "User",
       isDropdown: true,
-      dropdownItems: [
-        { title: "Add Asset", href: "/add-asset" },
-        { title: "Add Asset Types", href: "/add-asset-type" },
-      ],
+      dropdownItems: [{ title: "Add Asset Types", href: "/add-asset-type" }],
     },
     {
       title: "Pumps",
       src: "Search",
       isDropdown: true,
-      dropdownItems: [
-        { title: "Add Pump Brand", href: "/add-pump-brand" },
-      ],
+      dropdownItems: [{ title: "Add Pump Brand", href: "/add-pump-brand" }],
     },
     { title: "Add Photos", src: "Folder", href: "/add-photos" },
     { title: "Files ", src: "Folder", gap: true },
     { title: "Setting", src: "Setting" },
   ];
 
-  const [logout] = useLogoutMutation();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
-      await logout().unwrap();
       localStorage.removeItem("token");
-      window.location.reload();
+      // window.location.reload();
       navigate("/client-login");
     } catch (error) {
       console.error("Logout error:", error);
@@ -79,7 +71,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex font-inter">
       <div
         className={` ${
           open ? "w-[18vw]" : "w-[6vw]"
@@ -114,7 +106,10 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
                     Menu.isDropdown ? handleDropdownClick(Menu.title) : null
                   }
                 >
-                  <a href={Menu.href} className="flex items-center gap-x-[1vw] w-full">
+                  <a
+                    href={Menu.href}
+                    className="flex items-center gap-x-[1vw] w-full"
+                  >
                     <img
                       src={`/assets/${Menu.src}.png`}
                       className="w-[2vw] h-[2vw]"

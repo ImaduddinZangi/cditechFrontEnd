@@ -8,6 +8,7 @@ export interface Client {
   address: string;
   billing_address: string;
   payment_method: string;
+  industry: string;
   type: string;
   account_status: string;
   next_bill_date: string;

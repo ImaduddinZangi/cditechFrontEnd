@@ -4,6 +4,7 @@ import Select, { SingleValue } from "react-select";
 import "react-phone-input-2/lib/style.css";
 import cities from "cities.json";
 import { states } from "./Constants/usStates";
+import { useNavigate } from "react-router-dom";
 
 interface Option {
   value: string;
@@ -20,42 +21,34 @@ interface AddCustomerProps {
     streetAddress: string;
     billingAddress: string;
   }) => void;
+  initialData?: {
+    name: string;
+    email: string;
+    phone: string;
+    gate_code: string;
+    previous_phone_number: string;
+    address: string;
+    billing_address: string;
+  };
 }
 
-const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit }) => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [gateCode, setGateCode] = useState("");
-  const [previousPhone, setPreviousPhone] = useState("");
+const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
+  const [name, setName] = useState(initialData?.name || "");
+  const [email, setEmail] = useState(initialData?.email || "");
+  const [phone, setPhone] = useState(initialData?.phone || "");
+  const [gateCode, setGateCode] = useState(initialData?.gate_code || "");
+  const [previousPhone, setPreviousPhone] = useState(initialData?.previous_phone_number || "");
+  const [streetAddress, setStreetAddress] = useState(initialData?.address || "");
+  const [billingStreetAddress, setBillingStreetAddress] = useState(initialData?.billing_address || "");
   const [selectedState, setSelectedState] = useState<Option | null>(null);
   const [selectedCity, setSelectedCity] = useState<Option | null>(null);
   const [billingState, setBillingState] = useState<Option | null>(null);
   const [billingCity, setBillingCity] = useState<Option | null>(null);
-  const [streetAddress, setStreetAddress] = useState("");
-  const [billingStreetAddress, setBillingStreetAddress] = useState("");
   const [zipCode, setZipCode] = useState("");
   const [billingZipCode, setBillingZipCode] = useState("");
-  const [citiesOfSelectedState, setCitiesOfSelectedState] = useState<Option[]>(
-    []
-  );
-  const [billingCitiesOfSelectedState, setBillingCitiesOfSelectedState] =
-    useState<Option[]>([]);
-
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    const combinedStreetAddress = `${zipCode}, ${streetAddress}, ${selectedCity?.label}, ${selectedState?.label}`;
-    const combinedBillingAddress = `${billingZipCode}, ${billingStreetAddress}, ${billingCity?.label}, ${billingState?.label}`;
-    onSubmit({
-      name,
-      email,
-      gate_code: gateCode,
-      phone,
-      previousPhone,
-      streetAddress: combinedStreetAddress,
-      billingAddress: combinedBillingAddress,
-    });
-  };
+  const [citiesOfSelectedState, setCitiesOfSelectedState] = useState<Option[]>([]);
+  const [billingCitiesOfSelectedState, setBillingCitiesOfSelectedState] = useState<Option[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getCities = (stateValue: string | null): Option[] => {
@@ -72,6 +65,47 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit }) => {
     setCitiesOfSelectedState(getCities(selectedState?.value || null));
     setBillingCitiesOfSelectedState(getCities(billingState?.value || null));
   }, [selectedState, billingState]);
+
+  useEffect(() => {
+    if (initialData) {
+      const addressParts = initialData.address.split(", ");
+      const billingAddressParts = initialData.billing_address.split(", ");
+
+      setName(initialData.name);
+      setEmail(initialData.email);
+      setPhone(initialData.phone);
+      setGateCode(initialData.gate_code);
+      setPreviousPhone(initialData.previous_phone_number);
+      setStreetAddress(addressParts.slice(1, -2).join(", "));
+      setSelectedCity({ value: addressParts[addressParts.length - 2], label: addressParts[addressParts.length - 2] });
+      setSelectedState({ value: addressParts[addressParts.length - 1], label: addressParts[addressParts.length - 1] });
+      setZipCode(addressParts[0]);
+
+      setBillingStreetAddress(billingAddressParts.slice(1, -2).join(", "));
+      setBillingCity({ value: billingAddressParts[billingAddressParts.length - 2], label: billingAddressParts[billingAddressParts.length - 2] });
+      setBillingState({ value: billingAddressParts[billingAddressParts.length - 1], label: billingAddressParts[billingAddressParts.length - 1] });
+      setBillingZipCode(billingAddressParts[0]);
+    }
+  }, [initialData]);
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    const combinedStreetAddress = `${zipCode}, ${streetAddress}, ${selectedCity?.label}, ${selectedState?.label}`;
+    const combinedBillingAddress = `${billingZipCode}, ${billingStreetAddress}, ${billingCity?.label}, ${billingState?.label}`;
+    onSubmit({
+      name,
+      email,
+      gate_code: gateCode,
+      phone,
+      previousPhone,
+      streetAddress: combinedStreetAddress,
+      billingAddress: combinedBillingAddress,
+    });
+  };
+
+  const handleCancel = () => {
+    navigate('/manage-customer-asset')
+  }
 
   return (
     <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
@@ -256,6 +290,7 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit }) => {
           </button>
           <button
             type="button"
+            onClick={handleCancel}
             className="px-[2vw] py-[1vw] bg-white text-black rounded-md border text-[1vw]"
           >
             Do Not Save And Cancel

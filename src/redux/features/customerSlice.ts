@@ -18,11 +18,13 @@ export interface Customer {
 interface CustomerState {
   token: string | null;
   customer: Customer | null;
+  selectedCustomerId: string | null;
 }
 
 const initialState: CustomerState = {
   token: null,
   customer: null,
+  selectedCustomerId: localStorage.getItem('selectedCustomerId'),
 };
 
 const customerSlice = createSlice({
@@ -39,8 +41,12 @@ const customerSlice = createSlice({
       state.token = null;
       state.customer = null;
     },
+    setSelectedCustomerId: (state, action: PayloadAction<string>) => {
+      state.selectedCustomerId = action.payload;
+      localStorage.setItem('selectedCustomerId', action.payload); // Update local storage
+    },
   },
 });
 
-export const { setCustomer, setToken, logout } = customerSlice.actions;
+export const { setCustomer, setToken, logout, setSelectedCustomerId } = customerSlice.actions;
 export default customerSlice.reducer;

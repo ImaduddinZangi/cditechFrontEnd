@@ -1,29 +1,47 @@
-
-import React from "react";
-import { useGetClientByIdQuery } from "../../redux/api/clientApi";
-import { getUserId } from "../../utils/utils";
+import React, { useEffect } from "react";
+import { useGetCustomerByIdQuery } from "../../redux/api/customerApi";
+import { useAppSelector } from "../../redux/store";
 
 const DetailedCustomerInfo: React.FC = () => {
-  const clientId = getUserId();
+  const selectedCustomerId = useAppSelector(
+    (state) => state.customer.selectedCustomerId
+  );
   const {
-    data: client,
+    data: customer,
     error,
     isLoading,
-  } = useGetClientByIdQuery(clientId || "");
+  } = useGetCustomerByIdQuery(selectedCustomerId || "");
+
+  useEffect(() => {
+    if (!selectedCustomerId) {
+      const idFromStorage = localStorage.getItem("selectedCustomerId");
+      if (idFromStorage) {
+        // Dispatch action to set selectedCustomerId from local storage if necessary
+      }
+    }
+  }, [selectedCustomerId]);
 
   if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error loading client details</p>;
+  if (error) return <p>Error loading customer details</p>;
 
   return (
     <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg">
-      {client && (
+      {customer && (
         <div className="grid grid-cols-4 gap-4">
           <div>
             <p className="text-[1vw] text-gray-0 font-medium font-inter">
-              Client Name:
+              Name:
             </p>
             <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {client.name}
+              {customer.name}
+            </p>
+          </div>
+          <div>
+            <p className="text-[1vw] text-gray-0 font-medium font-inter">
+              Service Address:
+            </p>
+            <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
+              {customer.service_address}
             </p>
           </div>
           <div>
@@ -31,7 +49,7 @@ const DetailedCustomerInfo: React.FC = () => {
               Type:
             </p>
             <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {client.type}
+              {customer.type}
             </p>
           </div>
           <div>
@@ -39,23 +57,7 @@ const DetailedCustomerInfo: React.FC = () => {
               Status:
             </p>
             <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {client.account_status}
-            </p>
-          </div>
-          <div>
-            <p className="text-[1vw] text-gray-0 font-medium font-inter">
-              Client ID:
-            </p>
-            <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {client.id}
-            </p>
-          </div>
-          <div>
-            <p className="text-[1vw] text-gray-0 font-medium font-inter">
-              Client Address:
-            </p>
-            <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {client.address}
+              {customer.status}
             </p>
           </div>
           <div>
@@ -63,39 +65,31 @@ const DetailedCustomerInfo: React.FC = () => {
               Billing Address:
             </p>
             <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {client.billing_address}
+              {customer.billing_address}
             </p>
           </div>
           <div>
             <p className="text-[1vw] text-gray-0 font-medium font-inter">
-              Phone:
+              Service Contact:
             </p>
             <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {client.phone}
+              {customer.service_contact}
             </p>
           </div>
           <div>
             <p className="text-[1vw] text-gray-0 font-medium font-inter">
-              Client Email:
+              Gate Code:
             </p>
             <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {client.email}
+              {customer.gate_code}
             </p>
           </div>
           <div>
             <p className="text-[1vw] text-gray-0 font-medium font-inter">
-              Payment method:
+              Previous Phone Number:
             </p>
             <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {client.payment_method}
-            </p>
-          </div>
-          <div>
-            <p className="text-[1vw] text-gray-0 font-medium font-inter">
-              Next bill date:
-            </p>
-            <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {client.next_bill_date}
+              {customer.previous_phone_number}
             </p>
           </div>
         </div>

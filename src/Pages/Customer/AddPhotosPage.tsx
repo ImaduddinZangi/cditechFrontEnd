@@ -22,7 +22,7 @@ const AddPhotosPage: React.FC = () => {
       await uploadPhoto(formData).unwrap();
       toast.success("Photo uploaded successfully!", {
         onClose: () => navigate("/client-dashboard"),
-        autoClose: 1000,
+        autoClose: 500,
       });
     } catch (error) {
       toast.error("Failed to upload photo.");
@@ -34,7 +34,7 @@ const AddPhotosPage: React.FC = () => {
       <AddPhotos onSubmit={handlePhotoUpload} />
       <ToastContainer
         position="top-right"
-        autoClose={1000}
+        autoClose={500}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { getUserId } from "../../../utils/utils";
 import { useGetAssetTypesQuery } from "../../../redux/api/assetTypeApi";
 import { useGetCustomersQuery } from "../../../redux/api/customerApi";
+import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
 
 interface AddAssetProps {
   onSubmit: (
@@ -28,6 +29,8 @@ interface AddAssetProps {
     pumps: number
   ) => void;
 }
+
+const libraries: ("places" | "drawing")[] = ["places"];
 
 const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
   const clientId = getUserId();
@@ -56,6 +59,33 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
     float: 0,
     pumps: 0,
   });
+
+  const { isLoaded, loadError } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API,
+    libraries,
+  });
+
+  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const onLoad = (autocomplete: google.maps.places.Autocomplete) => {
+    autocompleteRef.current = autocomplete;
+  };
+
+  const onPlaceChanged = () => {
+    if (autocompleteRef.current !== null) {
+      const place = autocompleteRef.current.getPlace();
+      if (place.geometry && place.geometry.location) {
+        setFormState({
+          ...formState,
+          location: place.formatted_address || "",
+          latitude: place.geometry.location.lat(),
+          longitude: place.geometry.location.lng(),
+        });
+      }
+    }
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -92,6 +122,9 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
       formState.pumps
     );
   };
+
+  if (loadError) return <div>Error loading maps</div>;
+  if (!isLoaded) return <div>Loading Maps</div>;
 
   return (
     <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg">
@@ -143,14 +176,19 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
         </div>
         <div>
           <label className="block text-darkgray-0 font-medium text-[1vw]">Location:</label>
-          <input
-            type="text"
-            name="location"
-            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-            placeholder="Enter asset location"
-            value={formState.location}
-            onChange={handleChange}
-          />
+          {isLoaded && (
+            <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
+              <input
+                ref={inputRef}
+                type="text"
+                name="location"
+                className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
+                placeholder="Enter asset location"
+                value={formState.location}
+                onChange={handleChange}
+              />
+            </Autocomplete>
+          )}
         </div>
         <div>
           <label className="block text-darkgray-0 font-medium text-[1vw]">Latitude:</label>
@@ -161,6 +199,7 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
             placeholder="Enter latitude"
             value={formState.latitude}
             onChange={handleChange}
+            disabled
           />
         </div>
         <div>
@@ -172,6 +211,7 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
             placeholder="Enter longitude"
             value={formState.longitude}
             onChange={handleChange}
+            disabled
           />
         </div>
         <div>

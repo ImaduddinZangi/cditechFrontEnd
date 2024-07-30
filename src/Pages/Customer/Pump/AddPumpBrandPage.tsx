@@ -27,7 +27,7 @@ const AddPumpBrandPage: React.FC = () => {
       }).unwrap();
       toast.success("Pump Brand added successfully!", {
         onClose: () => navigate("/add-pump"),
-        autoClose: 1000,
+        autoClose: 500,
       });
       console.log("Pump created successfully", result);
     } catch (error) {
@@ -46,7 +46,7 @@ const AddPumpBrandPage: React.FC = () => {
       <AddPumpBrand onSubmit={handleAddPumpBrand} />
       <ToastContainer
         position="top-right"
-        autoClose={1000}
+        autoClose={500}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

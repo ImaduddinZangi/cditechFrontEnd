@@ -24,7 +24,7 @@ const ManagementSignInPage: React.FC = () => {
       }
       toast.success("Login successful!", {
         onClose: () => navigate("/dashboard"),
-        autoClose: 1000,
+        autoClose: 500,
       });
     } catch (error) {
       if (error instanceof Error) {
@@ -42,7 +42,7 @@ const ManagementSignInPage: React.FC = () => {
       <ManagementSignIn onSubmit={handleLogin} />
       <ToastContainer
         position="top-right"
-        autoClose={1000}
+        autoClose={500}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

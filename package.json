@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-google-maps/api": "^2.19.3",
     "@reduxjs/toolkit": "^2.2.5",
     "cities": "^2.0.0",
     "cities.json": "^1.1.38",

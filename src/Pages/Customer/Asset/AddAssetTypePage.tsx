@@ -15,7 +15,7 @@ const AddAssetTypePage: React.FC = () => {
       const result = await createAssetType({ name, description }).unwrap();
       toast.success("Asset Type added successfully!", {
         onClose: () => navigate("/add-asset"),
-        autoClose: 1000,
+        autoClose: 500,
       });
       console.log("Asset created successfully", result);
     } catch (error) {
@@ -34,7 +34,7 @@ const AddAssetTypePage: React.FC = () => {
       <AddAssetType onSubmit={handleAddAssetType} />
       <ToastContainer
         position="top-right"
-        autoClose={1000}
+        autoClose={500}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

@@ -64,7 +64,7 @@ const AddAssetsPage: React.FC = () => {
       }).unwrap();
       toast.success("Asset added successfully!", {
         onClose: () => navigate("/client-dashboard"),
-        autoClose: 1000,
+        autoClose: 500,
       });
       console.log("Asset created successfully", result);
     } catch (error) {
@@ -104,7 +104,7 @@ const AddAssetsPage: React.FC = () => {
       
       toast.success("Pump added successfully!", {
         onClose: () => navigate("/add-asset"),
-        autoClose: 1000,
+        autoClose: 500,
       });
       console.log("Pump created successfully", result);
     } catch (error) {
@@ -137,7 +137,7 @@ const AddAssetsPage: React.FC = () => {
       />
       <ToastContainer
         position="top-right"
-        autoClose={1000}
+        autoClose={500}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

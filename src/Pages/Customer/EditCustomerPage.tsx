@@ -1,13 +1,15 @@
 import React from "react";
-import ClientLayout from "../../Layouts/ClientLayout";
-import AddCustomer from "../../Components/Customer/AddCustomer";
-import { useCreateCustomerMutation } from "../../redux/api/customerApi";
-import { useNavigate } from "react-router-dom";
+import { useGetCustomerByIdQuery, useUpdateCustomerMutation } from "../../redux/api/customerApi";
+import { useParams, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AddCustomer from "../../Components/Customer/AddCustomer";
+import ClientLayout from "../../Layouts/ClientLayout";
 
-const AddCustomerPage: React.FC = () => {
-  const [createCustomer] = useCreateCustomerMutation();
+const EditCustomerPage: React.FC = () => {
+  const { customerId } = useParams<{ customerId: string }>();
+  const { data: customer, error, isLoading } = useGetCustomerByIdQuery(customerId || "");
+  const [updateCustomer] = useUpdateCustomerMutation();
   const navigate = useNavigate();
 
   const handleSubmit = async (data: {
@@ -30,6 +32,7 @@ const AddCustomerPage: React.FC = () => {
     } = data;
 
     const customerData = {
+      id: customerId,
       name,
       email,
       phone,
@@ -44,15 +47,15 @@ const AddCustomerPage: React.FC = () => {
     };
 
     try {
-      await createCustomer(customerData).unwrap();
-      toast.success("Customer added successfully!", {
+      await updateCustomer(customerData).unwrap();
+      toast.success("Customer updated successfully!", {
         onClose: () => navigate("/client-dashboard"),
         autoClose: 500,
       });
     } catch (error) {
       if (error instanceof Error) {
-        toast.error("Error adding customer: " + error.message);
-        console.error("Error adding customer:", error);
+        toast.error("Error updating customer: " + error.message);
+        console.error("Error updating customer:", error);
       } else {
         toast.error("An unknown error occurred.");
         console.error("An unknown error occurred:", error);
@@ -60,9 +63,12 @@ const AddCustomerPage: React.FC = () => {
     }
   };
 
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading customer details</div>;
+
   return (
-    <ClientLayout breadcrumb="Add Customer">
-      <AddCustomer onSubmit={handleSubmit} />
+    <ClientLayout breadcrumb="Edit Customer">
+      <AddCustomer onSubmit={handleSubmit} initialData={customer} />
       <ToastContainer
         position="top-right"
         autoClose={500}
@@ -78,4 +84,4 @@ const AddCustomerPage: React.FC = () => {
   );
 };
 
-export default AddCustomerPage;
+export default EditCustomerPage;

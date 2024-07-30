@@ -1,10 +1,13 @@
 import React from "react";
+import { useGetCustomersQuery } from "../../redux/api/customerApi";
+import { useAppDispatch } from "../../redux/store";
+import { setSelectedCustomerId } from "../../redux/features/customerSlice";
 import NextButton from "./Constants/NextButton";
 import PreviousButton from "./Constants/PreviousButton";
 import ActiveBadge from "./Constants/ActiveBadge";
-import { useGetCustomersQuery } from "../../redux/api/customerApi";
+import { useNavigate } from "react-router-dom";
 
-const truncateAddress = (address: string, maxLength: number = 25) => {
+const truncateAddress = (address: any, maxLength = 25) => {
   if (address.length > maxLength) {
     return `${address.slice(0, maxLength)}...`;
   }
@@ -13,10 +16,13 @@ const truncateAddress = (address: string, maxLength: number = 25) => {
 
 const CustomerTable: React.FC = () => {
   const { data, error, isLoading } = useGetCustomersQuery();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-  console.log("Loading:", isLoading);
-  console.log("Error:", error);
-  console.log("Data:", data);
+  const handleClickManageCustomer = (customerId: any) => {
+    dispatch(setSelectedCustomerId(customerId));
+    navigate("/manage-customer-asset")
+  };
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -31,11 +37,11 @@ const CustomerTable: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto h-auto pb-[3vw]">
+    <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
       <div className="overflow-x-auto">
         <div className="flex flex-col items-center justify-center overflow-hidden">
-          <div className="w-full lg:w-5/6">
-            <div className="bg-white shadow-md rounded my-[1.5vw]">
+          <div className="w-full">
+            <div className="bg-white my-[1.5vw]">
               <div className="flex justify-between items-center px-[1.5vw] py-[1vw]">
                 <div className="flex space-x-[1vw]">
                   <button className="w-[12vw] h-[3vw] text-white font-inter font-semibold text-[1vw] bg-purple-0 text-purple-600 border border-purple-600 rounded hover:bg-purple-200">
@@ -46,7 +52,7 @@ const CustomerTable: React.FC = () => {
                   </button>
                 </div>
               </div>
-              <div className="flex justify-between border items-center px-[1.5vw] py-[1vw]">
+              <div className="flex justify-between border-t border-b items-center px-[1.5vw] py-[1vw]">
                 <h2 className="text-[1.5vw] font-semibold">
                   Customers
                   <span className="bg-custom-bg-color px-[0.5vw] py-[0.2vw] ml-[1vw] border rounded-[1vw] text-[1vw] text-purple-0 ">
@@ -82,7 +88,7 @@ const CustomerTable: React.FC = () => {
               </div>
               <table className="min-w-max w-full table-auto">
                 <thead>
-                  <tr className="h-[3vw] text-darkgray-0 border uppercase text-[1vw] leading-normal">
+                  <tr className="h-[3vw] text-darkgray-0 border-b uppercase text-[1vw] leading-normal">
                     <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
                       Name
                     </th>
@@ -136,7 +142,10 @@ const CustomerTable: React.FC = () => {
                         <ActiveBadge />
                       </td>
                       <td className="py-[1vw] px-[1.5vw] text-center">
-                        <button className="w-[12vw] h-[3vw] gap-[16px] font-inter font-semibold text-[1vw] text-white bg-purple-0 border border-purple-600 shadow-sm rounded-[8px]">
+                        <button
+                          onClick={() => handleClickManageCustomer(customer.id)}
+                          className="w-[12vw] h-[3vw] gap-[16px] font-inter font-semibold text-[1vw] text-white bg-purple-0 border border-purple-0 shadow-sm rounded-[8px]"
+                        >
                           Manage Customer
                         </button>
                       </td>

@@ -16,10 +16,11 @@ export default {
       backgroundColor: {
         purple: ["#7F56D9"],
         lightgray: ["#FCFCFD"],
-        textpurple: ["#6941C6"]
+        textpurple: ["#6941C6"],
       },
       borderColor: {
         lightgray: ["#D0D5DD"],
+        purple: ["#6941C6"],
       },
       ringColor: {
         purple: ["#6941C6"],
@@ -29,10 +30,9 @@ export default {
         darkpurple: ["#7F56D9"],
       },
       colors: {
-        'custom-bg-color': '#F9F5FF',
+        "custom-bg-color": "#F9F5FF",
       },
     },
   },
   plugins: [],
 };
-

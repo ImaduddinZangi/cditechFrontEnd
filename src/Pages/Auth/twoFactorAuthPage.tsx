@@ -29,7 +29,7 @@ const TwoFactorAuthPage: React.FC = () => {
       await verifyCode({ code }).unwrap();
       toast.success("2FA verified successfully", {
         onClose: () => navigate("/client-dashboard"),
-        autoClose: 1000,
+        autoClose: 500,
       });
     } catch (error) {
       toast.error("Failed to verify 2FA code.");
@@ -41,7 +41,7 @@ const TwoFactorAuthPage: React.FC = () => {
       {qrCode && <TwoFactorAuthentication src={qrCode} onSubmit={handleSubmit} />}
       <ToastContainer
         position="top-right"
-        autoClose={1000}
+        autoClose={500}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

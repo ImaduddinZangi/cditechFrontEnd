@@ -27,10 +27,10 @@ const DetailedClientInfo: React.FC = () => {
           </div>
           <div>
             <p className="text-[1vw] text-gray-0 font-medium font-inter">
-              Type:
+              Industry:
             </p>
             <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {client.type}
+              {client.industry}
             </p>
           </div>
           <div>
