@@ -3,12 +3,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export interface Client {
   id: string;
   name: string;
+  industry?: string;
   email: string;
   phone: string;
   address: string;
   billing_address: string;
   payment_method: string;
-  industry: string;
   type: string;
   account_status: string;
   next_bill_date: string;

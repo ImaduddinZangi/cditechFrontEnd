@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useGetPumpsQuery } from "../../../redux/api/pumpApi";
+import { useNavigate } from "react-router-dom";
 
 const formatDate = (dateString: string): string => {
   const date = new Date(dateString);
@@ -9,12 +10,17 @@ const formatDate = (dateString: string): string => {
 const PumpDetails: React.FC = () => {
   const { data: pumpsData } = useGetPumpsQuery();
   const [pumps, setPumps] = useState<any[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (pumpsData) {
       setPumps(pumpsData);
     }
   }, [pumpsData]);
+
+  const handlePumpEdit = (pumpId: string) => {
+    navigate(`/edit-pump-${pumpId}`)
+  }
 
   return (
     <div className="p-[1vw] m-[2vw] font-inter bg-white shadow-lg rounded-lg">
@@ -98,7 +104,7 @@ const PumpDetails: React.FC = () => {
               </p>
             </div>
           </div>
-          <button className="bg-purple-0 text-white py-2 px-4 rounded-lg">
+          <button onClick={() => handlePumpEdit(pump.id)} className="bg-purple-0 bg-opacity-5 border border-purple-0 text-[1vw] text-purple-0 font-inter font-medium px-[1vw] py-[0.5vw] rounded-md">
             Edit
           </button>
         </div>

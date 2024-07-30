@@ -13,6 +13,7 @@ interface AuthResponse {
   client?: {
     id: string;
     name: string;
+    industry?: string;
     email: string;
     phone: string;
     address: string;
@@ -45,13 +46,14 @@ interface UserRegisterRequest {
 interface ClientRegisterRequest {
   name: string;
   email: string;
+  industry?: string;
   password: string;
   phone: string;
   address: string;
   billing_address: string;
   payment_method: string;
   type: string;
-  status: string;
+  account_status: string;
   next_bill_date: string;
 }
 

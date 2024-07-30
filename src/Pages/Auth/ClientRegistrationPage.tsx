@@ -19,6 +19,7 @@ const ClientRegistrationPage: React.FC = () => {
     password: string,
     phone: string,
     address: string,
+    industry: string,
     billingAddress: string,
     paymentMethod: string,
     type: string,
@@ -31,11 +32,12 @@ const ClientRegistrationPage: React.FC = () => {
         email,
         password,
         phone,
+        industry,
         address,
         billing_address: billingAddress,
         payment_method: paymentMethod,
         type,
-        status,
+        account_status: status,
         next_bill_date: nextBillDate,
       }).unwrap();
       dispatch(setToken(result.access_token));

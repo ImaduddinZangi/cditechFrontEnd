@@ -4,6 +4,7 @@ interface ClientRegistrationProps {
   onSubmit: (
     name: string,
     email: string,
+    industry: string,
     password: string,
     phone: string,
     address: string,
@@ -20,6 +21,7 @@ const ClientRegistration: React.FC<ClientRegistrationProps> = ({
 }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [industry, setIndustry] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
@@ -34,6 +36,7 @@ const ClientRegistration: React.FC<ClientRegistrationProps> = ({
     onSubmit(
       name,
       email,
+      industry,
       password,
       phone,
       address,
@@ -87,6 +90,24 @@ const ClientRegistration: React.FC<ClientRegistrationProps> = ({
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className="w-full md:w-1/2 px-[1vw] mt-[2vw]">
+              <label
+                htmlFor="email"
+                className="block text-[2.5vw] md:text-[1vw] font-medium text-darkgray-0"
+              >
+                Industry
+              </label>
+              <input
+                id="industry"
+                name="industry"
+                type="industry"
+                required
+                className="w-full px-[1.5vw] md:px-[0.75vw] py-[1.5vw] md:py-[0.5vw] mt-[1vw] md:mt-[0.5vw] border border-lightgray-0 rounded-[1vw] md:rounded-[0.5vw] focus:outline-none placeholder:text-[2.5vw] md:placeholder:text-[1vw] text-[2.5vw] md:text-[1vw]"
+                placeholder="Enter your industry"
+                value={industry}
+                onChange={(e) => setIndustry(e.target.value)}
               />
             </div>
             <div className="w-full md:w-1/2 px-[1vw] mt-[2vw]">
