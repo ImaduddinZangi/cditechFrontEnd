@@ -21,7 +21,6 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
       isDropdown: true,
       dropdownItems: [
         { title: "Customers Table", href: "/customer-table" },
-        { title: "Add Customer", href: "/add-customer" },
         { title: "Manage Customer Pumps", href: "/manage-customer-pump" },
       ],
     },

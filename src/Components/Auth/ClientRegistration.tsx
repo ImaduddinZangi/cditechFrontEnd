@@ -28,7 +28,6 @@ const ClientRegistration: React.FC<ClientRegistrationProps> = ({
   const [billingAddress, setBillingAddress] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [type, setType] = useState("");
-  const [status, setStatus] = useState("");
   const [nextBillDate, setNextBillDate] = useState("");
 
   const handleSubmit = (event: React.FormEvent) => {
@@ -43,7 +42,7 @@ const ClientRegistration: React.FC<ClientRegistrationProps> = ({
       billingAddress,
       paymentMethod,
       type,
-      status,
+      "Inactive",
       nextBillDate
     );
   };
@@ -94,7 +93,7 @@ const ClientRegistration: React.FC<ClientRegistrationProps> = ({
             </div>
             <div className="w-full md:w-1/2 px-[1vw] mt-[2vw]">
               <label
-                htmlFor="email"
+                htmlFor="industry"
                 className="block text-[2.5vw] md:text-[1vw] font-medium text-darkgray-0"
               >
                 Industry
@@ -102,7 +101,7 @@ const ClientRegistration: React.FC<ClientRegistrationProps> = ({
               <input
                 id="industry"
                 name="industry"
-                type="industry"
+                type="text"
                 required
                 className="w-full px-[1.5vw] md:px-[0.75vw] py-[1.5vw] md:py-[0.5vw] mt-[1vw] md:mt-[0.5vw] border border-lightgray-0 rounded-[1vw] md:rounded-[0.5vw] focus:outline-none placeholder:text-[2.5vw] md:placeholder:text-[1vw] text-[2.5vw] md:text-[1vw]"
                 placeholder="Enter your industry"
@@ -216,24 +215,6 @@ const ClientRegistration: React.FC<ClientRegistrationProps> = ({
                 placeholder="Enter your type"
                 value={type}
                 onChange={(e) => setType(e.target.value)}
-              />
-            </div>
-            <div className="w-full md:w-1/2 px-[1vw] mt-[2vw]">
-              <label
-                htmlFor="status"
-                className="block text-[2.5vw] md:text-[1vw] font-medium text-darkgray-0"
-              >
-                Status
-              </label>
-              <input
-                id="status"
-                name="status"
-                type="text"
-                required
-                className="w-full px-[1.5vw] md:px-[0.75vw] py-[1.5vw] md:py-[0.5vw] mt-[1vw] md:mt-[0.5vw] border border-lightgray-0 rounded-[1vw] md:rounded-[0.5vw] focus:outline-none placeholder:text-[2.5vw] md:placeholder:text-[1vw] text-[2.5vw] md:text-[1vw]"
-                placeholder="Enter your status"
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
               />
             </div>
             <div className="w-full md:w-1/2 px-[1vw] mt-[2vw]">

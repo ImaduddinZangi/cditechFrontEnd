@@ -38,7 +38,7 @@ export const pumpBrandApi = createApi({
     updatePumpBrand: builder.mutation<PumpBrand, Partial<PumpBrand>>({
       query: ({ id, ...rest }) => ({
         url: `pump-brands/${id}`,
-        method: "PUT",
+        method: "PATCH",
         body: rest,
       }),
     }),

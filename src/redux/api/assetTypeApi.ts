@@ -38,7 +38,7 @@ export const assetTypeApi = createApi({
     updateAssetType: builder.mutation<AssetType, Partial<AssetType>>({
       query: ({ id, ...rest }) => ({
         url: `asset-types/${id}`,
-        method: "PUT",
+        method: "PATCH",
         body: rest,
       }),
     }),

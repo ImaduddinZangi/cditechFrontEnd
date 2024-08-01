@@ -17,9 +17,21 @@ interface AddPumpProps {
     maxAmps: number,
     hp: number
   ) => void;
+  initialData?: {
+    assetId: string;
+    brandId: string;
+    serial: string;
+    name: string;
+    warranty: string;
+    installedDate: string;
+    avgAmps: number;
+    maxAmps: number;
+    hp: number;
+  } | null;
+  isEditing?: boolean;
 }
 
-const AddPump: React.FC<AddPumpProps> = ({ isModalOpen, onClose, onSubmit }) => {
+const AddPump: React.FC<AddPumpProps> = ({ isModalOpen, onClose, onSubmit, initialData, isEditing }) => {
   const { data: assets } = useGetAssetsQuery();
   const { data: pumpBrands } = useGetPumpBrandsQuery();
 
@@ -34,7 +46,14 @@ const AddPump: React.FC<AddPumpProps> = ({ isModalOpen, onClose, onSubmit }) => 
     maxAmps: 0,
     hp: 0,
   });
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (initialData) {
+      setFormState(initialData);
+    }
+  }, [initialData]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -93,7 +112,7 @@ const AddPump: React.FC<AddPumpProps> = ({ isModalOpen, onClose, onSubmit }) => 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50 font-inter">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6">
-        <h2 className="text-2xl font-semibold mb-4">Add New Pump</h2>
+        <h2 className="text-2xl font-semibold mb-4">{isEditing ? 'Edit Pump' : 'Add New Pump'}</h2>
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -219,16 +238,16 @@ const AddPump: React.FC<AddPumpProps> = ({ isModalOpen, onClose, onSubmit }) => 
           <div className="mt-4 flex justify-end">
             <button
               type="button"
-              className="px-4 py-2 bg-gray-500 text-white rounded-md mr-2"
+              className="px-[1vw] py-[0.5vw] bg-white border text-black rounded-md mr-2"
               onClick={handleCancel}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-purple-0 text-white rounded-md"
+              className="px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-md"
             >
-              Save & Close
+              {isEditing ? 'Save Changes' : 'Save & Close'}
             </button>
           </div>
         </form>

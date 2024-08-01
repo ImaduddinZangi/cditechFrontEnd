@@ -21,7 +21,11 @@ const CustomerTable: React.FC = () => {
 
   const handleClickManageCustomer = (customerId: any) => {
     dispatch(setSelectedCustomerId(customerId));
-    navigate("/manage-customer-asset")
+    navigate("/manage-customer-asset");
+  };
+
+  const handleAddCustomer = () => {
+    navigate("/add-customer");
   };
 
   if (isLoading) {
@@ -44,10 +48,10 @@ const CustomerTable: React.FC = () => {
             <div className="bg-white my-[1.5vw]">
               <div className="flex justify-between items-center px-[1.5vw] py-[1vw]">
                 <div className="flex space-x-[1vw]">
-                  <button className="w-[12vw] h-[3vw] text-white font-inter font-semibold text-[1vw] bg-purple-0 text-purple-600 border border-purple-600 rounded hover:bg-purple-200">
+                  <button onClick={handleAddCustomer} className="w-[12vw] h-[3vw] text-white font-inter font-semibold text-[1vw] bg-purple-0 text-purple-600 border rounded">
                     Add New Customer
                   </button>
-                  <button className="w-[14vw] h-[3vw] text-white font-inter font-semibold text-[1vw] bg-purple-0 text-purple-600 border border-purple-600 rounded hover:bg-purple-200">
+                  <button className="w-[14vw] h-[3vw] text-white font-inter font-semibold text-[1vw] bg-purple-0 text-purple-600 border rounded">
                     Import New Customers
                   </button>
                 </div>

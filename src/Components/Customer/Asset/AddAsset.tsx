@@ -28,36 +28,58 @@ interface AddAssetProps {
     float: number,
     pumps: number
   ) => void;
+  initialData?: Partial<{
+    name: string;
+    type: string;
+    customerId: string;
+    location: string;
+    latitude: number;
+    longitude: number;
+    description: string;
+    status: string;
+    inspectionInterval: string;
+    qrCode: string;
+    nfcCode: string;
+    pipeDia: number;
+    smart: string;
+    size: string;
+    material: string;
+    deleteProtect: string;
+    duty: string;
+    rails: string;
+    float: number;
+    pumps: number;
+  }>;
 }
 
 const libraries: ("places" | "drawing")[] = ["places"];
 
-const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
+const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
   const clientId = getUserId();
   const { data: assetTypes } = useGetAssetTypesQuery();
   const { data: customers } = useGetCustomersQuery();
 
   const [formState, setFormState] = useState({
-    name: "",
-    type: "",
-    customerId: "",
-    location: "",
-    latitude: 0,
-    longitude: 0,
-    description: "",
-    status: "active",
-    inspectionInterval: "Monthly",
-    qrCode: "",
-    nfcCode: "",
-    pipeDia: 0,
-    smart: "No",
-    size: "Medium",
-    material: "Concrete",
-    deleteProtect: "No",
-    duty: "",
-    rails: "No",
-    float: 0,
-    pumps: 0,
+    name: initialData?.name || "",
+    type: initialData?.type || "",
+    customerId: initialData?.customerId || "",
+    location: initialData?.location || "",
+    latitude: initialData?.latitude || 0,
+    longitude: initialData?.longitude || 0,
+    description: initialData?.description || "",
+    status: initialData?.status || "active",
+    inspectionInterval: initialData?.inspectionInterval || "Monthly",
+    qrCode: initialData?.qrCode || "",
+    nfcCode: initialData?.nfcCode || "",
+    pipeDia: initialData?.pipeDia || 0,
+    smart: initialData?.smart || "No",
+    size: initialData?.size || "Medium",
+    material: initialData?.material || "Concrete",
+    deleteProtect: initialData?.deleteProtect || "No",
+    duty: initialData?.duty || "",
+    rails: initialData?.rails || "No",
+    float: initialData?.float || 0,
+    pumps: initialData?.pumps || 0,
   });
 
   const { isLoaded, loadError } = useJsApiLoader({
@@ -133,7 +155,9 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
         onSubmit={handleSubmit}
       >
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">Customer:</label>
+          <label className="block text-darkgray-0 font-medium text-[1vw]">
+            Customer:
+          </label>
           <select
             name="customerId"
             className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
@@ -149,7 +173,9 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
           </select>
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">Asset Type:</label>
+          <label className="block text-darkgray-0 font-medium text-[1vw]">
+            Asset Type:
+          </label>
           <select
             name="type"
             className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
@@ -164,7 +190,9 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
           </select>
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">Asset Name:</label>
+          <label className="block text-darkgray-0 font-medium text-[1vw]">
+            Asset Name:
+          </label>
           <input
             type="text"
             name="name"
@@ -175,7 +203,9 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
           />
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">Location:</label>
+          <label className="block text-darkgray-0 font-medium text-[1vw]">
+            Location:
+          </label>
           {isLoaded && (
             <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
               <input
@@ -191,31 +221,9 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
           )}
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">Latitude:</label>
-          <input
-            type="number"
-            name="latitude"
-            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-            placeholder="Enter latitude"
-            value={formState.latitude}
-            onChange={handleChange}
-            disabled
-          />
-        </div>
-        <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">Longitude:</label>
-          <input
-            type="number"
-            name="longitude"
-            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-            placeholder="Enter longitude"
-            value={formState.longitude}
-            onChange={handleChange}
-            disabled
-          />
-        </div>
-        <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">Description:</label>
+          <label className="block text-darkgray-0 font-medium text-[1vw]">
+            Description:
+          </label>
           <input
             type="text"
             name="description"
@@ -226,7 +234,9 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
           />
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">Status:</label>
+          <label className="block text-darkgray-0 font-medium text-[1vw]">
+            Status:
+          </label>
           <select
             name="status"
             className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
@@ -239,7 +249,9 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
           </select>
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">Inspection Interval:</label>
+          <label className="block text-darkgray-0 font-medium text-[1vw]">
+            Inspection Interval:
+          </label>
           <select
             name="inspectionInterval"
             className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
@@ -253,7 +265,9 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
           </select>
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">QR Code:</label>
+          <label className="block text-darkgray-0 font-medium text-[1vw]">
+            QR Code:
+          </label>
           <input
             type="text"
             name="qrCode"
@@ -264,7 +278,9 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
           />
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">NFC Code:</label>
+          <label className="block text-darkgray-0 font-medium text-[1vw]">
+            NFC Code:
+          </label>
           <input
             type="text"
             name="nfcCode"
@@ -275,7 +291,9 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
           />
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">Pipe Diameter:</label>
+          <label className="block text-darkgray-0 font-medium text-[1vw]">
+            Pipe Diameter:
+          </label>
           <input
             type="number"
             name="pipeDia"
@@ -286,7 +304,9 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
           />
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">Smart:</label>
+          <label className="block text-darkgray-0 font-medium text-[1vw]">
+            Smart:
+          </label>
           <select
             name="smart"
             className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
@@ -298,7 +318,9 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
           </select>
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">Size:</label>
+          <label className="block text-darkgray-0 font-medium text-[1vw]">
+            Size:
+          </label>
           <select
             name="size"
             className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
@@ -313,7 +335,9 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
           </select>
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">Material:</label>
+          <label className="block text-darkgray-0 font-medium text-[1vw]">
+            Material:
+          </label>
           <select
             name="material"
             className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
@@ -327,7 +351,9 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
           </select>
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">Delete Protect:</label>
+          <label className="block text-darkgray-0 font-medium text-[1vw]">
+            Delete Protect:
+          </label>
           <select
             name="deleteProtect"
             className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
@@ -339,7 +365,9 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
           </select>
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">Duty:</label>
+          <label className="block text-darkgray-0 font-medium text-[1vw]">
+            Duty:
+          </label>
           <input
             type="text"
             name="duty"
@@ -350,7 +378,9 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
           />
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">Rails:</label>
+          <label className="block text-darkgray-0 font-medium text-[1vw]">
+            Rails:
+          </label>
           <select
             name="rails"
             className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
@@ -362,7 +392,9 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
           </select>
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">Float:</label>
+          <label className="block text-darkgray-0 font-medium text-[1vw]">
+            Float:
+          </label>
           <input
             type="number"
             name="float"
@@ -373,7 +405,9 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit }) => {
           />
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">Pumps:</label>
+          <label className="block text-darkgray-0 font-medium text-[1vw]">
+            Pumps:
+          </label>
           <input
             type="number"
             name="pumps"

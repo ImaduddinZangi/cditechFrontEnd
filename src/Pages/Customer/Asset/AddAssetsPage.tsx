@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import ClientLayout from '../../../Layouts/ClientLayout';
-import AddAsset from '../../../Components/Customer/Asset/AddAsset';
-import { useCreateAssetMutation } from '../../../redux/api/assetApi';
+import React, { useState } from "react";
+import ClientLayout from "../../../Layouts/ClientLayout";
+import AddAsset from "../../../Components/Customer/Asset/AddAsset";
+import { useCreateAssetMutation } from "../../../redux/api/assetApi";
 import AddPump from "../../../Components/Customer/Pump/AddPump";
 import { useCreatePumpMutation } from "../../../redux/api/pumpApi";
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate } from 'react-router-dom';
-import Pumps from '../../../Components/Customer/Pump/Pumps';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
+import Pumps from "../../../Components/Customer/Pump/Pumps";
 
 const AddAssetsPage: React.FC = () => {
   const [createAsset] = useCreateAssetMutation();
@@ -60,7 +60,7 @@ const AddAssetsPage: React.FC = () => {
         duty,
         rails,
         float,
-        pumps
+        pumps,
       }).unwrap();
       toast.success("Asset added successfully!", {
         onClose: () => navigate("/client-dashboard"),
@@ -99,9 +99,9 @@ const AddAssetsPage: React.FC = () => {
         installedDate,
         avgAmps,
         maxAmps,
-        warranty
+        warranty,
       }).unwrap();
-      
+
       toast.success("Pump added successfully!", {
         onClose: () => navigate("/add-asset"),
         autoClose: 500,
@@ -127,13 +127,13 @@ const AddAssetsPage: React.FC = () => {
   };
 
   return (
-    <ClientLayout breadcrumb='Add Asset'>
+    <ClientLayout breadcrumb="Add Asset">
       <AddAsset onSubmit={handleAddAsset} />
       <Pumps onClick={handleModalOpen} />
-      <AddPump 
-        isModalOpen={isModalOpen} 
-        onClose={handleModalClose} 
-        onSubmit={handleAddPump} 
+      <AddPump
+        isModalOpen={isModalOpen}
+        onClose={handleModalClose}
+        onSubmit={handleAddPump}
       />
       <ToastContainer
         position="top-right"

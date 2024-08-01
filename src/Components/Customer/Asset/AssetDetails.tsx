@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useGetAssetsQuery } from "../../../redux/api/assetApi";
+import { useNavigate } from "react-router-dom";
 
 const AssetDetails: React.FC = () => {
   const { data: assets } = useGetAssetsQuery();
   const [assetData, setAssetData] = useState<any[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (assets) {
       setAssetData(assets);
     }
   }, [assets]);
+
+  const handleEditAsset = (id: string) => {
+    navigate(`/edit-asset/${id}`);
+  };
 
   return (
     <div className="p-[1vw] m-[2vw] font-inter bg-white shadow-lg rounded-lg">
@@ -78,7 +84,13 @@ const AssetDetails: React.FC = () => {
               <p className="text-[1vw]">{asset.status || "N/A"}</p>
             </div>
           </div>
-          <div className="flex justify-between mt-[1vw] w-1/2 absolute bottom-[1vw] right-[1vw]">
+          <div className="flex justify-between mt-[1vw] w-2/3 absolute bottom-[1vw] right-[1vw]">
+            <button 
+              className="flex-1 py-[0.5vw] mx-[0.2vw] text-[1vw] font-semibold text-darkgray-0 bg-white border rounded text-center"
+              onClick={() => handleEditAsset(asset.id)}
+            >
+              Edit Asset
+            </button>
             <button className="flex-1 py-[0.5vw] mx-[0.2vw] text-[1vw] font-semibold text-darkgray-0 bg-white border rounded text-center">
               Asset Details
             </button>

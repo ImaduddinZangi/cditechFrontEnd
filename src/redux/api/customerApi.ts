@@ -38,7 +38,7 @@ export const customerApi = createApi({
     updateCustomer: builder.mutation<Customer, Partial<Customer>>({
       query: ({ id, ...rest }) => ({
         url: `client/customers/${id}`,
-        method: "PUT",
+        method: "PATCH",
         body: rest,
       }),
     }),

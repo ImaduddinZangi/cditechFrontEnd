@@ -42,7 +42,7 @@ export const clientApi = createApi({
     updateClient: builder.mutation<Client, Partial<Client>>({
       query: ({ id, ...rest }) => ({
         url: `clients/${id}`,
-        method: "PUT",
+        method: "PATCH",
         body: rest,
       }),
     }),
