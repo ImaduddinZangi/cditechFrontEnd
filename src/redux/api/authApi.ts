@@ -32,9 +32,9 @@ interface ClientRegisterRequest {
   company_type: string;
   billing_address: string;
   payment_method: string;
-  account_status: string;
   custom_portal_url: string;
   next_bill_date: string;
+  account_status: string;
 }
 
 const baseQuery = fetchBaseQuery({

@@ -24,8 +24,8 @@ const ClientRegistrationPage: React.FC = () => {
     companyType: string,
     billingAddress: string,
     paymentMethod: string,
+    customPortalUrl: string,
     nextBillDate: string,
-    customPortalUrl: string
   ) => {
     try {
       const result = await registerClient({
@@ -39,9 +39,9 @@ const ClientRegistrationPage: React.FC = () => {
         company_type: companyType,
         billing_address: billingAddress,
         payment_method: paymentMethod,
-        account_status: "Inactive",
+        custom_portal_url: customPortalUrl,
         next_bill_date: nextBillDate,
-        custom_portal_url: customPortalUrl
+        account_status: "Inactive",
       }).unwrap();
       dispatch(setToken(result.access_token));
       if (result.client) {
