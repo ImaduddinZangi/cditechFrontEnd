@@ -1,36 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { Client } from "../features/clientSlice";
+import { User } from "../features/userSlice";
 
 interface AuthResponse {
   access_token: string;
-  user?: {
-    id: string;
-    name: string;
-    email: string;
-    username?: string;
-    role?: string;
-    phone?: string;
-  };
-  client?: {
-    id: string;
-    name: string;
-    industry: string;
-    email: string;
-    phone: string;
-    address: string;
-    company_name: string;
-    company_type: string;
-    billing_address: string;
-    payment_method: string;
-    type: string;
-    account_status: string;
-    next_bill_date: string;
-    custom_portal_url: string;
-    user: User;
-  };
-}
-
-interface User {
-  two_factor_enabled: boolean;
+  user?: User;
+  client?: Client;
 }
 
 interface LoginRequest {
