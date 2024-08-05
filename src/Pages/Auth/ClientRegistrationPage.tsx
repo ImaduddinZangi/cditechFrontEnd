@@ -16,15 +16,16 @@ const ClientRegistrationPage: React.FC = () => {
   const handleRegistration = async (
     name: string,
     email: string,
+    industry: string,
     password: string,
     phone: string,
     address: string,
-    industry: string,
+    companyName: string,
+    companyType: string,
     billingAddress: string,
     paymentMethod: string,
-    type: string,
-    status: string,
-    nextBillDate: string
+    nextBillDate: string,
+    customPortalUrl: string
   ) => {
     try {
       const result = await registerClient({
@@ -34,11 +35,13 @@ const ClientRegistrationPage: React.FC = () => {
         phone,
         industry,
         address,
+        company_name: companyName,
+        company_type: companyType,
         billing_address: billingAddress,
         payment_method: paymentMethod,
-        type,
-        account_status: status,
+        account_status: "Inactive",
         next_bill_date: nextBillDate,
+        custom_portal_url: customPortalUrl
       }).unwrap();
       dispatch(setToken(result.access_token));
       if (result.client) {
@@ -46,7 +49,7 @@ const ClientRegistrationPage: React.FC = () => {
       }
       toast.success("Registration successful!", {
         onClose: () => navigate("/client-login"),
-        autoClose: 500,
+        autoClose: 500
       });
     } catch (error) {
       if (error instanceof Error) {
@@ -64,7 +67,7 @@ const ClientRegistrationPage: React.FC = () => {
       <ClientRegistration onSubmit={handleRegistration} />
       <ToastContainer
         position="top-right"
-        autoClose={500}
+        autoClose={5000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

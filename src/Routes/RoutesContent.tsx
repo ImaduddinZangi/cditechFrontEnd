@@ -18,6 +18,7 @@ import AddPhotosPage from "../Pages/Customer/AddPhotosPage";
 import TwoFactorAuthPage from "../Pages/Auth/twoFactorAuthPage";
 import EditCustomerPage from "../Pages/Customer/EditCustomerPage";
 import EditAssetPage from "../Pages/Customer/Asset/EditAssetPage";
+import ClientProfilePage from "../Pages/ClientDashboard/ClientProfilePage";
 
 const RoutesContent: React.FC = () => {
   return (
@@ -40,6 +41,14 @@ const RoutesContent: React.FC = () => {
         element={
           <ProtectedRoute isAuthenticated={true}>
             <ClientDashboardPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/client-profile"
+        element={
+          <ProtectedRoute isAuthenticated={true}>
+            <ClientProfilePage />
           </ProtectedRoute>
         }
       />

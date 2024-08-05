@@ -15,6 +15,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 
   const Menus = [
     { title: "Dashboard", src: "home-line", href: "/client-dashboard" },
+    { title: "Client Profile", src: "home-line", href: "/client-profile" },
     {
       title: "Customers",
       src: "User",

@@ -5,6 +5,11 @@ interface ClientListResponse {
   clients: Client[];
 }
 
+interface QuickBookSignUpLinkResponse {
+  url: string;
+  state: string;
+}
+
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_BASE_URL,
   prepareHeaders: (headers: Headers, {}: { getState: () => any }) => {
@@ -29,6 +34,12 @@ export const clientApi = createApi({
     getClientById: builder.query<Client, string>({
       query: (clientId: string) => ({
         url: `clients/${clientId}`,
+        method: "GET",
+      }),
+    }),
+    getQuickBookSignUpLink: builder.query<QuickBookSignUpLinkResponse, void>({
+      query: () => ({
+        url: `clients/quickbooks/authorize`,
         method: "GET",
       }),
     }),
@@ -58,6 +69,7 @@ export const clientApi = createApi({
 export const {
   useGetClientsQuery,
   useGetClientByIdQuery,
+  useGetQuickBookSignUpLinkQuery,
   useCreateClientMutation,
   useUpdateClientMutation,
   useDeleteClientMutation,

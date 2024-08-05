@@ -43,7 +43,7 @@ const customerSlice = createSlice({
     },
     setSelectedCustomerId: (state, action: PayloadAction<string>) => {
       state.selectedCustomerId = action.payload;
-      localStorage.setItem('selectedCustomerId', action.payload); // Update local storage
+      localStorage.setItem('selectedCustomerId', action.payload);
     },
   },
 });

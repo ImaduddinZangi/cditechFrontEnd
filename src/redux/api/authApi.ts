@@ -13,15 +13,18 @@ interface AuthResponse {
   client?: {
     id: string;
     name: string;
-    industry?: string;
+    industry: string;
     email: string;
     phone: string;
     address: string;
+    company_name: string;
+    company_type: string;
     billing_address: string;
     payment_method: string;
     type: string;
     account_status: string;
     next_bill_date: string;
+    custom_portal_url: string;
     user: User;
   };
 }
@@ -46,14 +49,16 @@ interface UserRegisterRequest {
 interface ClientRegisterRequest {
   name: string;
   email: string;
-  industry?: string;
   password: string;
+  industry: string;
   phone: string;
   address: string;
+  company_name: string;
+  company_type: string;
   billing_address: string;
   payment_method: string;
-  type: string;
   account_status: string;
+  custom_portal_url: string;
   next_bill_date: string;
 }
 
