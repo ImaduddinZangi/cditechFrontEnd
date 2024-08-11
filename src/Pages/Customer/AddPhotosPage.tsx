@@ -8,10 +8,12 @@ import { useNavigate } from "react-router-dom";
 const AddPhotosPage: React.FC = () => {
   const [uploadPhoto] = useUploadPhotoMutation();
   const navigate = useNavigate();
-  const handlePhotoUpload = async (file: File, id: string, type: string) => {
+  const handlePhotoUpload = async (files: File[], id: string, type: string) => {
     try {
       const formData = new FormData();
-      formData.append("file", file);
+      files.forEach((file) => {
+        formData.append("files", file);
+      });
       if (type === "asset") {
         formData.append("assetId", id);
       } else if (type === "pump") {
@@ -20,14 +22,16 @@ const AddPhotosPage: React.FC = () => {
         formData.append("pumpBrandId", id);
       }
       await uploadPhoto(formData).unwrap();
-      toast.success("Photo uploaded successfully!", {
+      toast.success("Photos uploaded successfully!", {
         onClose: () => navigate("/client-dashboard"),
         autoClose: 500,
       });
     } catch (error) {
-      toast.error("Failed to upload photo.");
+      toast.error("Failed to upload photos.");
     }
   };
+  
+  
 
   return (
     <ClientLayout breadcrumb="Add Photos">

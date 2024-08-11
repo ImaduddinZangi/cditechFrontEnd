@@ -23,6 +23,7 @@ import ClientProfilePage from "../Pages/ClientDashboard/ClientProfilePage";
 const RoutesContent: React.FC = () => {
   return (
     <Routes>
+      {/* Authenticatons */}
       <Route path="/" element={<ClientSignInPage />} />
       <Route path="/client-login" element={<ClientSignInPage />} />
       <Route path="/management-login" element={<ManagementSignInPage />} />
@@ -36,6 +37,7 @@ const RoutesContent: React.FC = () => {
           </ProtectedRoute>
         }
       />
+      {/* Client */}
       <Route
         path="/client-dashboard"
         element={
@@ -52,6 +54,7 @@ const RoutesContent: React.FC = () => {
           </ProtectedRoute>
         }
       />
+      {/* Customer */}
       <Route
         path="/manage-customer-asset"
         element={
@@ -65,14 +68,6 @@ const RoutesContent: React.FC = () => {
         element={
           <ProtectedRoute isAuthenticated={true}>
             <ManageCustomerPumpPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/add-inspection"
-        element={
-          <ProtectedRoute isAuthenticated={true}>
-            <AddInspectionPage />
           </ProtectedRoute>
         }
       />
@@ -100,6 +95,7 @@ const RoutesContent: React.FC = () => {
           </ProtectedRoute>
         }
       />
+      {/* Asstes */}
       <Route
         path="/add-asset"
         element={
@@ -124,6 +120,7 @@ const RoutesContent: React.FC = () => {
           </ProtectedRoute>
         }
       />
+      {/* Pumps */}
       <Route
         path="/add-pump-brand"
         element={
@@ -137,6 +134,15 @@ const RoutesContent: React.FC = () => {
         element={
           <ProtectedRoute isAuthenticated={true}>
             <AddPhotosPage />
+          </ProtectedRoute>
+        }
+      />
+      {/* Inspection */}
+      <Route
+        path="/add-inspection"
+        element={
+          <ProtectedRoute isAuthenticated={true}>
+            <AddInspectionPage />
           </ProtectedRoute>
         }
       />

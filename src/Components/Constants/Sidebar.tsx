@@ -14,11 +14,11 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
   const [pumpsOpen, setPumpsOpen] = useState(false);
 
   const Menus = [
-    { title: "Dashboard", src: "home-line", href: "/client-dashboard" },
-    { title: "Client Profile", src: "home-line", href: "/client-profile" },
+    { title: "Dashboard", src: "dashboard", href: "/client-dashboard" },
+    { title: "Client Profile", src: "client", href: "/client-profile" },
     {
       title: "Customers",
-      src: "User",
+      src: "customer",
       isDropdown: true,
       dropdownItems: [
         { title: "Customers Table", href: "/customer-table" },
@@ -27,19 +27,19 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
     },
     {
       title: "Assets",
-      src: "User",
+      src: "asset",
       isDropdown: true,
       dropdownItems: [{ title: "Add Asset Types", href: "/add-asset-type" }],
     },
     {
       title: "Pumps",
-      src: "Search",
+      src: "pump",
       isDropdown: true,
       dropdownItems: [{ title: "Add Pump Brand", href: "/add-pump-brand" }],
     },
-    { title: "Add Photos", src: "Folder", href: "/add-photos" },
-    { title: "Files ", src: "Folder", gap: true },
-    { title: "Setting", src: "Setting" },
+    { title: "Add Photos", src: "photo", href: "/add-photos" },
+    { title: "Files ", src: "files", gap: true },
+    { title: "Setting", src: "setting" },
   ];
 
   const navigate = useNavigate();

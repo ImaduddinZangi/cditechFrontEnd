@@ -7,7 +7,7 @@ export interface UploadPhotoPayload {
   pumpBrandId?: string;
   customerId?: string;
   clientId?: string;
-  file: File;
+  files: File;
 }
 
 interface Photo {
