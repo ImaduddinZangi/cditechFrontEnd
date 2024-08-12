@@ -1,7 +1,8 @@
 import React, { useState } from "react";
+import { useGetChecklistItemsQuery, useUpdateChecklistItemMutation } from "../../redux/api/checkListItemApi";
 
 interface ChecklistItem {
-  name: string;
+  id: string;
   description: string;
   is_completed: boolean;
 }
@@ -9,7 +10,7 @@ interface ChecklistItem {
 interface ChecklistModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (checklist: ChecklistItem[]) => void;
+  onSave: (checklistItemIds: string[]) => void;
 }
 
 const ChecklistModal: React.FC<ChecklistModalProps> = ({
@@ -17,30 +18,42 @@ const ChecklistModal: React.FC<ChecklistModalProps> = ({
   onClose,
   onSave,
 }) => {
-  const [checklist, setChecklist] = useState<ChecklistItem[]>([
-    { name: "", description: "", is_completed: false },
-  ]);
+  const { data: allChecklistItems } = useGetChecklistItemsQuery();
+  const [selectedItems, setSelectedItems] = useState<ChecklistItem[]>([]);
+  const [updateChecklistItem] = useUpdateChecklistItemMutation();
 
-  const handleChange = (index: number, field: keyof ChecklistItem, value: string | boolean) => {
-    const newChecklist = [...checklist];
-    newChecklist[index] = {
-      ...newChecklist[index],
-      [field]: value,
-    };
-    setChecklist(newChecklist);
+  const handleSelectItem = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedItem = allChecklistItems?.find(item => item.id === e.target.value);
+    if (selectedItem && !selectedItems.find(item => item.id === selectedItem.id)) {
+      setSelectedItems([...selectedItems, selectedItem]);
+    }
   };
 
-  const handleAddItem = () => {
-    setChecklist([...checklist, { name: "", description: "", is_completed: false }]);
+  const handleCheckboxChange = async (index: number, isCompleted: boolean) => {
+    const updatedItems = [...selectedItems];
+    const updatedItem = {
+      ...updatedItems[index],
+      is_completed: isCompleted,
+    };
+    
+    try {
+      // Update the item in the backend
+      await updateChecklistItem({ id: updatedItem.id, is_completed: isCompleted }).unwrap();
+      updatedItems[index] = updatedItem;
+      setSelectedItems(updatedItems);
+    } catch (error) {
+      console.error("Failed to update checklist item:", error);
+    }
   };
 
   const handleRemoveItem = (index: number) => {
-    const newChecklist = checklist.filter((_, i) => i !== index);
-    setChecklist(newChecklist);
+    const updatedItems = selectedItems.filter((_, i) => i !== index);
+    setSelectedItems(updatedItems);
   };
 
   const handleSave = () => {
-    onSave(checklist);
+    const checklistItemIds = selectedItems.map(item => item.id);
+    onSave(checklistItemIds);
     onClose();
   };
 
@@ -53,22 +66,31 @@ const ChecklistModal: React.FC<ChecklistModalProps> = ({
       <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6">
         <h2 className="text-2xl font-semibold mb-4">Edit Checklist</h2>
         <form>
+          <div className="grid grid-cols-1 gap-4 mb-4">
+            <select
+              className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
+              onChange={handleSelectItem}
+              defaultValue=""
+            >
+              <option value="" disabled>
+                Select a Checklist Item
+              </option>
+              {allChecklistItems?.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.description}
+                </option>
+              ))}
+            </select>
+          </div>
           <div className="grid grid-cols-1 gap-4">
-            {checklist.map((item, index) => (
+            {selectedItems.map((item, index) => (
               <div
-                key={index}
+                key={item.id}
                 className="flex flex-row items-center justify-between space-x-4"
               >
                 <div className="flex flex-row items-center space-x-[1vw]">
                   <label className="block mb-1 font-medium">Description:</label>
-                  <input
-                    type="text"
-                    className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-                    value={item.description}
-                    onChange={(e) =>
-                      handleChange(index, "description", e.target.value)
-                    }
-                  />
+                  <p className="font-medium">{item.description}</p>
                 </div>
                 <div className="flex items-center space-x-2">
                   <label className="block mb-1 font-medium">Completed:</label>
@@ -77,7 +99,7 @@ const ChecklistModal: React.FC<ChecklistModalProps> = ({
                     className="w-[1vw] h-[1vw] accent-purple-0"
                     checked={item.is_completed}
                     onChange={(e) =>
-                      handleChange(index, "is_completed", e.target.checked)
+                      handleCheckboxChange(index, e.target.checked)
                     }
                   />
                 </div>
@@ -91,13 +113,6 @@ const ChecklistModal: React.FC<ChecklistModalProps> = ({
               </div>
             ))}
           </div>
-          <button
-            type="button"
-            className="mt-[2vw] px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-[0.4vw]"
-            onClick={handleAddItem}
-          >
-            Add Item
-          </button>
         </form>
         <div className="mt-[1vw] flex justify-end space-x-[1vw]">
           <button

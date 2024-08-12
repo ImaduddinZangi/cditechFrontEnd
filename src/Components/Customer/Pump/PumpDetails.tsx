@@ -93,7 +93,9 @@ const PumpDetails: React.FC = () => {
         </button>
       </div>
       {pumps.map((pump, index) => {
-        const pumpPhoto = photosData?.find(photo => photo.pumpId === pump.id);
+        const pumpPhotos = photosData?.filter(photo => photo.pumpId === pump.id);
+        const pumpPhoto = pumpPhotos && pumpPhotos.length > 0 ? pumpPhotos[0] : null;
+
         return (
           <div
             key={pump.id}
@@ -101,11 +103,17 @@ const PumpDetails: React.FC = () => {
           >
             <div className="flex-col w-1/6">
               <div className="font-medium text-[1vw]">Pump #{index + 1}</div>
-              <img
-                src={pumpPhoto?.url}
-                alt={pump.name}
-                className="w-[8vw] h-[8vw] object-cover rounded-md mb-4 md:mb-0"
-              />
+              {pumpPhoto ? (
+                <img
+                  src={`https://inspection-point-s3.s3.us-east-2.amazonaws.com/${pumpPhoto.url}`}
+                  alt={pump.name}
+                  className="w-[8vw] h-[8vw] object-cover rounded-md mb-4 md:mb-0"
+                />
+              ) : (
+                <div className="w-[8vw] h-[8vw] flex items-center justify-center bg-gray-200 rounded-md mb-4 md:mb-0">
+                  <span className="text-gray-500">No Image</span>
+                </div>
+              )}
             </div>
             <div className="grid grid-cols-4 gap-y-[3vw] gap-x-[1vw] w-4/6">
               <div>

@@ -9,21 +9,17 @@ import RouteModal from "../../Components/Inspection/RouteModal";
 import { useCreateChecklistItemMutation } from "../../redux/api/checkListItemApi";
 import { useCreateInspectionMutation } from "../../redux/api/inspectionApi";
 import { Inspection, Scores } from "../../redux/features/inspectionSlice";
-import { ChecklistItem } from "../../redux/features/checkListItemSlice";
 import { toast } from "react-toastify";
 
 const AddInspectionPage: React.FC = () => {
   const [createChecklistItem] = useCreateChecklistItemMutation();
   const [createInspection] = useCreateInspectionMutation();
   const [scores, setScores] = useState<Scores | null>(null);
-  const [checklist, setChecklist] = useState<ChecklistItem[]>([]);
-  const [route, setRoute] = useState<
-    Array<{ latitude: number; longitude: number }>
-  >([]);
+  const [checklistItemIds, setChecklistItemIds] = useState<string[]>([]);
+  const [route, setRoute] = useState<Array<{ latitude: number; longitude: number }>>([]);
   const [isScoreModalOpen, setIsScoreModalOpen] = useState(false);
   const [isChecklistModalOpen, setIsChecklistModalOpen] = useState(false);
-  const [isChecklistItemModalOpen, setIsChecklistItemModalOpen] =
-    useState(false);
+  const [isChecklistItemModalOpen, setIsChecklistItemModalOpen] = useState(false);
   const [isRouteModalOpen, setIsRouteModalOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -33,12 +29,12 @@ const AddInspectionPage: React.FC = () => {
       return;
     }
 
-    if (!checklist || checklist.length === 0) {
+    if (checklistItemIds.length === 0) {
       toast.error("The checklist data is not added.");
       return;
     }
 
-    if (!route || route.length !== 2) {
+    if (route.length !== 2) {
       toast.error("The route data is not added.");
       return;
     }
@@ -51,7 +47,7 @@ const AddInspectionPage: React.FC = () => {
         {
           name: "A Good Name",
           overallScore: "A",
-          items: checklist,
+          checklistItemIds: checklistItemIds,
         },
       ],
       route: route,
@@ -60,7 +56,7 @@ const AddInspectionPage: React.FC = () => {
     try {
       const result = await createInspection(inspectionData).unwrap();
       toast.success("Inspection created successfully!", {
-        onClose: () => navigate("/add-inspection"),
+        onClose: () => navigate("/client-dashboard"),
         autoClose: 500,
       });
       console.log("Inspection created successfully", result);
@@ -79,19 +75,11 @@ const AddInspectionPage: React.FC = () => {
     setScores(scores);
   };
 
-  const handleChecklistModalSave = (checklistItems: ChecklistItem[]) => {
-    setChecklist(
-      checklistItems.map((item) => ({
-        ...item,
-        name: item.name || "",
-        is_completed: item.is_completed ?? false,
-      }))
-    );
+  const handleChecklistModalSave = (selectedChecklistItemIds: string[]) => {
+    setChecklistItemIds(selectedChecklistItemIds);
   };
 
-  const handleRouteModalSave = (
-    selectedRoute: Array<{ latitude: number; longitude: number }>
-  ) => {
+  const handleRouteModalSave = (selectedRoute: Array<{ latitude: number; longitude: number }>) => {
     setRoute(selectedRoute);
   };
 

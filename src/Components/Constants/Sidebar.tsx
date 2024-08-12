@@ -38,6 +38,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
       dropdownItems: [{ title: "Add Pump Brand", href: "/add-pump-brand" }],
     },
     { title: "Add Photos", src: "photo", href: "/add-photos" },
+    { title: "Add Inspection", src: "photo", href: "/add-inspection" },
     { title: "Files ", src: "files", gap: true },
     { title: "Setting", src: "setting" },
   ];

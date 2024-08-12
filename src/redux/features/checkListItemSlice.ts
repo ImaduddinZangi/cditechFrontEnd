@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface ChecklistItem {
-  id?: string;
+  id: string;
   name: string;
   description: string;
   is_completed: boolean;

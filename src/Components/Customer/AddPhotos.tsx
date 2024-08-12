@@ -103,6 +103,21 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
     setSelectedId(event.target.value);
   };
 
+  const getSelectedTypeOptions = () => {
+    switch (selectedType) {
+      case "asset":
+        return assets;
+      case "pump":
+        return pumps;
+      case "pumpBrand":
+        return pumpBrands;
+      default:
+        return [];
+    }
+  };
+
+  const optionsAvailable = getSelectedTypeOptions().length > 0;
+
   return (
     <form
       className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter"
@@ -140,12 +155,7 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
               onChange={handleIdChange}
               value={selectedId || ""}
             >
-              {(selectedType === "asset"
-                ? assets
-                : selectedType === "pump"
-                ? pumps
-                : pumpBrands
-              )?.map((item: any) => (
+              {getSelectedTypeOptions()?.map((item: any) => (
                 <option key={item.id} value={item.id}>
                   {item.name}
                 </option>
@@ -160,7 +170,9 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
           {[...Array(4)].map((_, index) => (
             <label
               key={index}
-              className="bg-purple-200 text-purple-700 py-2 px-4 rounded-lg flex items-center justify-center cursor-pointer"
+              className={`bg-purple-200 text-purple-700 py-2 px-4 rounded-lg flex items-center justify-center cursor-pointer ${
+                !optionsAvailable ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             >
               <input
                 type="file"
@@ -168,7 +180,7 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
                 className="hidden"
                 multiple
                 onChange={handleFileChange}
-                disabled={!selectedId}
+                disabled={!optionsAvailable}
               />
               <span className="ml-[0.2vw] text-[1vw] font-semibold text-darkgray-0">
                 Click to upload photo {index + 1}
@@ -202,7 +214,7 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
         </button>
         <ToastContainer
           position="top-right"
-          autoClose={500}
+          autoClose={1000}
           hideProgressBar={false}
           newestOnTop={false}
           closeOnClick

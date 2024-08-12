@@ -1,15 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface ChecklistItem {
-  description: string;
-  isCompleted?: boolean;
-}
-
 interface Checklist {
   id?: string;
   name: string;
   overallScore: string;
-  items: ChecklistItem[];
+  checklistItemIds?: string[];
   created_at?: string;
   updated_at?: string;
 }
@@ -33,6 +28,9 @@ export interface Scores {
     float1: string;
     float2: string;
   };
+  id?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Inspection {
@@ -40,6 +38,7 @@ export interface Inspection {
   clientId?: string | null;
   customerId?: string;
   assetId?: string;
+  name: string;
   assignedTo: string | null;
   status: string;
   scheduledDate: string;
@@ -81,10 +80,17 @@ const inspectionSlice = createSlice({
     },
     removeInspection: (state, action: PayloadAction<string>) => {
       state.inspections =
-        state.inspections?.filter((inspection) => inspection.id !== action.payload) || null;
+        state.inspections?.filter(
+          (inspection) => inspection.id !== action.payload
+        ) || null;
     },
   },
 });
 
-export const { setInspections, addInspection, updateInspection, removeInspection } = inspectionSlice.actions;
+export const {
+  setInspections,
+  addInspection,
+  updateInspection,
+  removeInspection,
+} = inspectionSlice.actions;
 export default inspectionSlice.reducer;
