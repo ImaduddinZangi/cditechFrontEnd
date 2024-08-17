@@ -3,6 +3,8 @@ import { getUserId } from "../../../utils/utils";
 import { useGetAssetTypesQuery } from "../../../redux/api/assetTypeApi";
 import { useGetCustomersQuery } from "../../../redux/api/customerApi";
 import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
+import { Customer } from "../../../redux/features/customerSlice";
+import { AssetType } from "../../../redux/features/assetTypeSlice";
 
 interface AddAssetProps {
   onSubmit: (
@@ -165,7 +167,7 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
             onChange={handleChange}
           >
             <option value="">Select customer</option>
-            {customers?.map((customer: any) => (
+            {customers?.map((customer: Customer) => (
               <option key={customer.id} value={customer.id}>
                 {customer.name}
               </option>
@@ -182,7 +184,7 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
             value={formState.type}
             onChange={handleChange}
           >
-            {assetTypes?.map((assetType: any) => (
+            {assetTypes?.map((assetType: AssetType) => (
               <option key={assetType.id} value={assetType.id}>
                 {assetType.name}
               </option>

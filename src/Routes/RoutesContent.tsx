@@ -12,13 +12,13 @@ import AddCustomerPage from "../Pages/Customer/AddCustomerPage";
 import AddAssetsPage from "../Pages/Customer/Asset/AddAssetsPage";
 import AddAssetTypePage from "../Pages/Customer/Asset/AddAssetTypePage";
 import AddPumpBrandPage from "../Pages/Customer/Pump/AddPumpBrandPage";
-import ManageCustomerAssetPage from "../Pages/Customer/ManageCustomerAssetPage";
-import ManageCustomerPumpPage from "../Pages/Customer/ManageCustomerPumpPage";
+import ManageCustomerPage from "../Pages/Customer/ManageCustomerPage";
 import AddPhotosPage from "../Pages/Customer/AddPhotosPage";
 import TwoFactorAuthPage from "../Pages/Auth/twoFactorAuthPage";
 import EditCustomerPage from "../Pages/Customer/EditCustomerPage";
 import EditAssetPage from "../Pages/Customer/Asset/EditAssetPage";
 import ClientProfilePage from "../Pages/ClientDashboard/ClientProfilePage";
+import AssetPumps from "../Pages/Customer/Pump/AssetPumps";
 
 const RoutesContent: React.FC = () => {
   return (
@@ -56,18 +56,10 @@ const RoutesContent: React.FC = () => {
       />
       {/* Customer */}
       <Route
-        path="/manage-customer-asset"
+        path="/manage-customer"
         element={
           <ProtectedRoute isAuthenticated={true}>
-            <ManageCustomerAssetPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/manage-customer-pump"
-        element={
-          <ProtectedRoute isAuthenticated={true}>
-            <ManageCustomerPumpPage />
+            <ManageCustomerPage />
           </ProtectedRoute>
         }
       />
@@ -126,6 +118,14 @@ const RoutesContent: React.FC = () => {
         element={
           <ProtectedRoute isAuthenticated={true}>
             <AddPumpBrandPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/asset-pumps"
+        element={
+          <ProtectedRoute isAuthenticated={true}>
+            <AssetPumps />
           </ProtectedRoute>
         }
       />

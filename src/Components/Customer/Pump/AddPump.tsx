@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetAssetsQuery } from "../../../redux/api/assetApi";
 import { useGetPumpBrandsQuery } from "../../../redux/api/pumpBrandApi";
+import { PumpBrand } from "../../../redux/features/pumpBrandSlice";
+import { Asset } from "../../../redux/features/assetSlice";
 
 interface AddPumpProps {
   isModalOpen: boolean;
@@ -86,7 +88,7 @@ const AddPump: React.FC<AddPumpProps> = ({ isModalOpen, onClose, onSubmit, initi
 
   const handleCancel = () => {
     onClose();
-    navigate("/add-asset");
+    navigate("/asset-pumps");
   };
 
   useEffect(() => {
@@ -137,7 +139,7 @@ const AddPump: React.FC<AddPumpProps> = ({ isModalOpen, onClose, onSubmit, initi
                 required
               >
                 <option value="">Select Brand</option>
-                {pumpBrands?.map((pumpBrand: any) => (
+                {pumpBrands?.map((pumpBrand: PumpBrand) => (
                   <option key={pumpBrand.id} value={pumpBrand.id}>
                     {pumpBrand.name}
                   </option>
@@ -154,7 +156,7 @@ const AddPump: React.FC<AddPumpProps> = ({ isModalOpen, onClose, onSubmit, initi
                 required
               >
                 <option value="">Select Asset</option>
-                {assets?.map((asset: any) => (
+                {assets?.map((asset: Asset) => (
                   <option key={asset.id} value={asset.id}>
                     {asset.name}
                   </option>

@@ -3,18 +3,26 @@ import { useGetAssetsQuery } from "../../redux/api/assetApi";
 import { useGetPumpBrandsQuery } from "../../redux/api/pumpBrandApi";
 import { useGetPumpsQuery } from "../../redux/api/pumpApi";
 import { toast, ToastContainer } from "react-toastify";
+import { Asset } from "../../redux/features/assetSlice";
+import { PumpBrand } from "../../redux/features/pumpBrandSlice";
+import { Pump } from "../../redux/features/pumpSlice";
 
 interface AddPhotosProps {
   onSubmit: (files: File[], id: string, type: string) => void;
+}
+
+interface Item {
+  id: string;
+  name: string;
 }
 
 const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
   const [selectedType, setSelectedType] = useState<string>("");
   const [photos, setPhotos] = useState<File[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [assets, setAssets] = useState<any[]>([]);
-  const [pumpBrands, setPumpBrands] = useState<any[]>([]);
-  const [pumps, setPumps] = useState<any[]>([]);
+  const [assets, setAssets] = useState<Asset[]>([]);
+  const [pumpBrands, setPumpBrands] = useState<PumpBrand[]>([]);
+  const [pumps, setPumps] = useState<Pump[]>([]);
   const { data: assetsData } = useGetAssetsQuery();
   const { data: pumpBrandsData } = useGetPumpBrandsQuery();
   const { data: pumpsData } = useGetPumpsQuery();
@@ -155,7 +163,7 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
               onChange={handleIdChange}
               value={selectedId || ""}
             >
-              {getSelectedTypeOptions()?.map((item: any) => (
+              {getSelectedTypeOptions()?.map((item: Item) => (
                 <option key={item.id} value={item.id}>
                   {item.name}
                 </option>

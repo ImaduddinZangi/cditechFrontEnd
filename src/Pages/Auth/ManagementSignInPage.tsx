@@ -1,5 +1,3 @@
-// File path: src/pages/ManagementSignInPage.tsx
-
 import React from "react";
 import ManagementSignIn from "../../Components/Auth/ManagementSignIn";
 import { useLoginUserMutation } from "../../redux/api/authApi";

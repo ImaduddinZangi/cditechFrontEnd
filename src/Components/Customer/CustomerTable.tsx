@@ -7,7 +7,7 @@ import PreviousButton from "./Constants/PreviousButton";
 import ActiveBadge from "./Constants/ActiveBadge";
 import { useNavigate } from "react-router-dom";
 
-const truncateAddress = (address: any, maxLength = 25) => {
+const truncateAddress = (address: string, maxLength = 25) => {
   if (address.length > maxLength) {
     return `${address.slice(0, maxLength)}...`;
   }
@@ -19,7 +19,7 @@ const CustomerTable: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const handleClickManageCustomer = (customerId: any) => {
+  const handleClickManageCustomer = (customerId: string) => {
     dispatch(setSelectedCustomerId(customerId));
     navigate("/manage-customer-asset");
   };

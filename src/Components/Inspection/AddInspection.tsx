@@ -3,6 +3,8 @@ import Select from "react-select";
 import { useGetCustomersQuery } from "../../redux/api/customerApi";
 import { useGetAssetsQuery } from "../../redux/api/assetApi";
 import { getUserId } from "../../utils/utils";
+import { Customer } from "../../redux/features/customerSlice";
+import { Asset } from "../../redux/features/assetSlice";
 
 interface InspectionData {
   clientId: string | null;
@@ -68,7 +70,7 @@ const InspectionForm: React.FC<InspectionFormProps> = ({ onSubmit }) => {
   useEffect(() => {
     if (customersData) {
       setCustomers(
-        customersData.map((customer: any) => ({
+        customersData.map((customer: Customer) => ({
           label: customer.name,
           value: customer.id,
         }))
@@ -79,7 +81,7 @@ const InspectionForm: React.FC<InspectionFormProps> = ({ onSubmit }) => {
   useEffect(() => {
     if (assetsData) {
       setAssets(
-        assetsData.map((asset: any) => ({
+        assetsData.map((asset: Asset) => ({
           label: asset.name,
           value: asset.id,
         }))

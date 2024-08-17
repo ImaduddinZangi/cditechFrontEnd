@@ -11,6 +11,15 @@ interface Option {
   label: string;
 }
 
+interface City {
+  name: string;
+  lat: string;
+  lng: string;
+  country: string;
+  admin1: string;
+  admin2: string;
+}
+
 interface AddCustomerProps {
   onSubmit: (data: {
     name: string;
@@ -37,23 +46,32 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
   const [email, setEmail] = useState(initialData?.email || "");
   const [phone, setPhone] = useState(initialData?.phone || "");
   const [gateCode, setGateCode] = useState(initialData?.gate_code || "");
-  const [previousPhone, setPreviousPhone] = useState(initialData?.previous_phone_number || "");
-  const [streetAddress, setStreetAddress] = useState(initialData?.address || "");
-  const [billingStreetAddress, setBillingStreetAddress] = useState(initialData?.billing_address || "");
+  const [previousPhone, setPreviousPhone] = useState(
+    initialData?.previous_phone_number || ""
+  );
+  const [streetAddress, setStreetAddress] = useState(
+    initialData?.address || ""
+  );
+  const [billingStreetAddress, setBillingStreetAddress] = useState(
+    initialData?.billing_address || ""
+  );
   const [selectedState, setSelectedState] = useState<Option | null>(null);
   const [selectedCity, setSelectedCity] = useState<Option | null>(null);
   const [billingState, setBillingState] = useState<Option | null>(null);
   const [billingCity, setBillingCity] = useState<Option | null>(null);
   const [zipCode, setZipCode] = useState("");
   const [billingZipCode, setBillingZipCode] = useState("");
-  const [citiesOfSelectedState, setCitiesOfSelectedState] = useState<Option[]>([]);
-  const [billingCitiesOfSelectedState, setBillingCitiesOfSelectedState] = useState<Option[]>([]);
+  const [citiesOfSelectedState, setCitiesOfSelectedState] = useState<Option[]>(
+    []
+  );
+  const [billingCitiesOfSelectedState, setBillingCitiesOfSelectedState] =
+    useState<Option[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     const getCities = (stateValue: string | null): Option[] => {
       return stateValue
-        ? (cities as any[])
+        ? (cities as City[])
             .filter((city) => city.admin1 === stateValue)
             .map((city) => ({
               value: city.name,
@@ -77,13 +95,25 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
       setGateCode(initialData.gate_code);
       setPreviousPhone(initialData.previous_phone_number);
       setStreetAddress(addressParts.slice(1, -2).join(", "));
-      setSelectedCity({ value: addressParts[addressParts.length - 2], label: addressParts[addressParts.length - 2] });
-      setSelectedState({ value: addressParts[addressParts.length - 1], label: addressParts[addressParts.length - 1] });
+      setSelectedCity({
+        value: addressParts[addressParts.length - 2],
+        label: addressParts[addressParts.length - 2],
+      });
+      setSelectedState({
+        value: addressParts[addressParts.length - 1],
+        label: addressParts[addressParts.length - 1],
+      });
       setZipCode(addressParts[0]);
 
       setBillingStreetAddress(billingAddressParts.slice(1, -2).join(", "));
-      setBillingCity({ value: billingAddressParts[billingAddressParts.length - 2], label: billingAddressParts[billingAddressParts.length - 2] });
-      setBillingState({ value: billingAddressParts[billingAddressParts.length - 1], label: billingAddressParts[billingAddressParts.length - 1] });
+      setBillingCity({
+        value: billingAddressParts[billingAddressParts.length - 2],
+        label: billingAddressParts[billingAddressParts.length - 2],
+      });
+      setBillingState({
+        value: billingAddressParts[billingAddressParts.length - 1],
+        label: billingAddressParts[billingAddressParts.length - 1],
+      });
       setBillingZipCode(billingAddressParts[0]);
     }
   }, [initialData]);
@@ -104,8 +134,8 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
   };
 
   const handleCancel = () => {
-    navigate('/manage-customer-asset')
-  }
+    navigate("/manage-customer-asset");
+  };
 
   return (
     <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">

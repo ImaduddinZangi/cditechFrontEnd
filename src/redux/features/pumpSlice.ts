@@ -1,16 +1,23 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { PumpBrand } from "./pumpBrandSlice";
+import { Asset } from "./assetSlice";
 
 export interface Pump {
   id: string;
   name: string;
   assetId: string;
   brandId: string;
+  hp: number;
   serial: string;
   warranty: string;
   installedDate: string;
   avgAmps: number;
   maxAmps: number;
-  hp: number;
+  createdAt?: string;
+  updatedAt?: string;
+  photos?: [];
+  asset?: Asset;
+  brand?: PumpBrand;
 }
 
 interface PumpState {

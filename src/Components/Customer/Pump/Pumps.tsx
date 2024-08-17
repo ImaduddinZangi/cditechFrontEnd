@@ -3,10 +3,10 @@ import {
   useGetPumpsQuery,
   useUpdatePumpMutation,
 } from "../../../redux/api/pumpApi";
-import { Pump } from "../../../redux/features/pumpSlice";
-import AddPump from "./AddPump";
 import { useGetPhotosQuery } from "../../../redux/api/uploadPhotosApi";
+import AddPump from "../../../Components/Customer/Pump/AddPump";
 import { toast } from "react-toastify";
+import { Pump } from "../../../redux/features/pumpSlice";
 
 const formatDate = (dateString: string): string => {
   const date = new Date(dateString);
@@ -18,97 +18,91 @@ const PumpCard: React.FC<{
   index: number;
   onEdit: (pump: Pump) => void;
   photoUrl: string;
-}> = ({ pump, index, onEdit, photoUrl }) => {
-  return (
-    <div className="flex items-center justify-between border p-[1vw] mb-[1vw] rounded-lg">
-      <div className="w-1/6">
-        <div className="w-full flex flex-row items-center">
-          <p className="font-semibold">Pump #</p>
-          <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-            {index + 1}
-          </p>
-        </div>
-        <img
-          src={photoUrl || "path/to/default/image.png"}
-          alt={pump.name}
-          className="w-full h-full rounded-full mr-[1vw]"
-        />
+}> = ({ pump, index, onEdit, photoUrl }) => (
+  <div className="flex items-center justify-between border p-[1vw] mb-[1vw] rounded-lg">
+    <div className="w-1/6">
+      <div className="w-full flex flex-row items-center">
+        <p className="font-semibold">Pump #</p>
+        <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
+          {index + 1}
+        </p>
       </div>
-      <div className="flex-1 w-2/3 grid grid-cols-4 gap-[1vw]">
-        <div>
-          <p className="text-gray-0 font-inter font-medium text-[1vw]">
-            Brand:
-          </p>
-          <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-            {pump.name}
-          </p>
-        </div>
-        <div>
-          <p className="text-gray-0 font-inter font-medium text-[1vw]">
-            Avg-AMPS:
-          </p>
-          <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-            {pump.avgAmps}
-          </p>
-        </div>
-        <div>
-          <p className="text-gray-0 font-inter font-medium text-[1vw]">
-            Max-AMPS:
-          </p>
-          <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-            {pump.maxAmps}
-          </p>
-        </div>
-        <div>
-          <p className="text-gray-0 font-inter font-medium text-[1vw]">
-            Pump-ID:
-          </p>
-          <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-            {pump.id}
-          </p>
-        </div>
-        <div>
-          <p className="text-gray-0 font-inter font-medium text-[1vw]">HP:</p>
-          <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-            {pump.hp}
-          </p>
-        </div>
-        <div>
-          <p className="text-gray-0 font-inter font-medium text-[1vw]">
-            Installed:
-          </p>
-          <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-            {formatDate(pump.installedDate)}
-          </p>
-        </div>
-        <div>
-          <p className="text-gray-0 font-inter font-medium text-[1vw]">
-            Warranty:
-          </p>
-          <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-            {pump.warranty}
-          </p>
-        </div>
-        <div>
-          <p className="text-gray-0 font-inter font-medium text-[1vw]">
-            Serial:
-          </p>
-          <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-            {pump.serial}
-          </p>
-        </div>
+      <img
+        src={photoUrl}
+        alt={pump.name}
+        className="w-[8vw] h-[8vw] object-cover rounded-md mb-0"
+      />
+    </div>
+    <div className="flex-1 w-2/3 grid grid-cols-4 gap-[1vw]">
+      <div>
+        <p className="text-gray-0 font-inter font-medium text-[1vw]">Brand:</p>
+        <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
+          {pump.name}
+        </p>
       </div>
-      <div className="w-1/6 flex items-baseline justify-end">
-        <button
-          className="bg-purple-0 bg-opacity-5 border border-purple-0 text-[1vw] text-purple-0 font-inter font-medium px-[1vw] py-[0.5vw] rounded-md"
-          onClick={() => onEdit(pump)}
-        >
-          Edit
-        </button>
+      <div>
+        <p className="text-gray-0 font-inter font-medium text-[1vw]">
+          Avg-AMPS:
+        </p>
+        <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
+          {pump.avgAmps}
+        </p>
+      </div>
+      <div>
+        <p className="text-gray-0 font-inter font-medium text-[1vw]">
+          Max-AMPS:
+        </p>
+        <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
+          {pump.maxAmps}
+        </p>
+      </div>
+      <div>
+        <p className="text-gray-0 font-inter font-medium text-[1vw]">
+          Pump-ID:
+        </p>
+        <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
+          {pump.id}
+        </p>
+      </div>
+      <div>
+        <p className="text-gray-0 font-inter font-medium text-[1vw]">HP:</p>
+        <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
+          {pump.hp}
+        </p>
+      </div>
+      <div>
+        <p className="text-gray-0 font-inter font-medium text-[1vw]">
+          Installed:
+        </p>
+        <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
+          {formatDate(pump.installedDate)}
+        </p>
+      </div>
+      <div>
+        <p className="text-gray-0 font-inter font-medium text-[1vw]">
+          Warranty:
+        </p>
+        <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
+          {pump.warranty}
+        </p>
+      </div>
+      <div>
+        <p className="text-gray-0 font-inter font-medium text-[1vw]">Serial:</p>
+        <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
+          {pump.serial}
+        </p>
       </div>
     </div>
-  );
-};
+    <div className="w-1/6 flex items-baseline justify-end">
+      <button
+        className="bg-purple-0 bg-opacity-5 border border-purple-0 text-[1vw] text-purple-0 font-inter font-medium px-[1vw] py-[0.5vw] rounded-md"
+        onClick={() => onEdit(pump)}
+      >
+        Edit
+      </button>
+    </div>
+  </div>
+);
 
 const Pumps: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   const { data: pumpsData } = useGetPumpsQuery();
@@ -118,12 +112,16 @@ const Pumps: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   const [selectedPump, setSelectedPump] = useState<Pump | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const assetId = localStorage.getItem("assetId");
 
   useEffect(() => {
-    if (pumpsData) {
-      setPumps(pumpsData);
+    if (pumpsData && assetId) {
+      const filteredPumps = pumpsData.filter(
+        (pump) => pump.asset?.id === assetId
+      );
+      setPumps(filteredPumps);
     }
-  }, [pumpsData]);
+  }, [pumpsData, assetId]);
 
   const handleModalClose = () => {
     setIsModalOpen(false);
@@ -187,7 +185,9 @@ const Pumps: React.FC<{ onClick: () => void }> = ({ onClick }) => {
       </button>
       {pumps.map((pump, index) => {
         const pumpPhoto = photosData?.find((photo) => photo.pumpId === pump.id);
-        const photoUrl = pumpPhoto ? pumpPhoto.url : "";
+        const photoUrl = pumpPhoto
+          ? `https://inspection-point-s3.s3.us-east-2.amazonaws.com/${pumpPhoto.url}`
+          : "/assets/no-image.jpg";
 
         return (
           <PumpCard
@@ -204,7 +204,7 @@ const Pumps: React.FC<{ onClick: () => void }> = ({ onClick }) => {
           isModalOpen={isModalOpen}
           onClose={handleModalClose}
           onSubmit={handlePumpSubmit}
-          initialData={isEditing ? selectedPump : null}
+          initialData={selectedPump}
           isEditing={isEditing}
         />
       )}

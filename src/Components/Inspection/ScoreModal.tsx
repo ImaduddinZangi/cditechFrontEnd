@@ -41,22 +41,28 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ isOpen, onClose, onSave }) => {
     },
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    isFloatScore = false
+  ) => {
     const { name, value } = e.target;
-    if (name in scores.floatScores) {
-      setScores((prevScores) => ({
-        ...prevScores,
-        floatScores: {
-          ...prevScores.floatScores,
+
+    setScores((prevScores) => {
+      if (isFloatScore) {
+        return {
+          ...prevScores,
+          floatScores: {
+            ...prevScores.floatScores,
+            [name]: value,
+          },
+        };
+      } else {
+        return {
+          ...prevScores,
           [name]: value,
-        },
-      }));
-    } else {
-      setScores((prevScores) => ({
-        ...prevScores,
-        [name]: value,
-      }));
-    }
+        };
+      }
+    });
   };
 
   const handleSave = () => {
@@ -79,9 +85,9 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ isOpen, onClose, onSave }) => {
             handleSave();
           }}
         >
-          {Object.keys(scores).map((key) =>
-            typeof (scores as any)[key] === "object" ? (
-              Object.keys((scores as any)[key]).map((subKey) => (
+          {Object.entries(scores).map(([key, value]) =>
+            typeof value === "object" ? (
+              Object.entries(value).map(([subKey, subValue]) => (
                 <div key={subKey}>
                   <label
                     htmlFor={subKey}
@@ -92,8 +98,8 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ isOpen, onClose, onSave }) => {
                   <select
                     id={subKey}
                     name={subKey}
-                    value={(scores as any)[key][subKey]}
-                    onChange={handleChange}
+                    value={subValue as string}
+                    onChange={(e) => handleChange(e, true)}
                     className="w-full px-[1.5vw] md:px-[0.75vw] py-[1.5vw] md:py-[0.5vw] mt-[1vw] md:mt-[0.5vw] border border-lightgray-0 rounded-[1vw] md:rounded-[0.5vw] focus:outline-none placeholder:text-[2.5vw] md:placeholder:text-[1vw] text-[2.5vw] md:text-[1vw]"
                   >
                     <option value="A">A</option>
@@ -114,7 +120,7 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ isOpen, onClose, onSave }) => {
                 <select
                   id={key}
                   name={key}
-                  value={(scores as any)[key]}
+                  value={value as string}
                   onChange={handleChange}
                   className="w-full px-[1.5vw] md:px-[0.75vw] py-[1.5vw] md:py-[0.5vw] mt-[1vw] md:mt-[0.5vw] border border-lightgray-0 rounded-[1vw] md:rounded-[0.5vw] focus:outline-none placeholder:text-[2.5vw] md:placeholder:text-[1vw] text-[2.5vw] md:text-[1vw]"
                 >

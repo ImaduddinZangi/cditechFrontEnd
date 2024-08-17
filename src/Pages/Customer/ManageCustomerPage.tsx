@@ -5,7 +5,7 @@ import AssetDetails from "../../Components/Customer/Asset/AssetDetails";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../redux/store";
 
-const ManageCustomerAssetPage: React.FC = () => {
+const ManageCustomerPage: React.FC = () => {
   const navigate = useNavigate();
   const selectedCustomerId = useAppSelector(
     (state) => state.customer.selectedCustomerId
@@ -54,4 +54,4 @@ const ManageCustomerAssetPage: React.FC = () => {
   );
 };
 
-export default ManageCustomerAssetPage;
+export default ManageCustomerPage;

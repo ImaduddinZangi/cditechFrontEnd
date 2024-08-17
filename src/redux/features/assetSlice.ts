@@ -1,5 +1,50 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+export interface Client {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  billing_address: string;
+  company_name: string;
+  company_type: string;
+  industry: string;
+  company_logo: string | null;
+  payment_method: string;
+  account_status: string;
+  custom_portal_url: string;
+  tax_exempt: boolean;
+  protected: boolean;
+  email_verified: boolean;
+  next_bill_date: string;
+  quickbooksAccessToken: string;
+  quickbooksRefreshToken: string;
+  quickbooksRealmId: string;
+  quickbooksTokenExpiresIn: string;
+  quickbooksState: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Customer {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  service_address: string;
+  billing_address: string;
+  type: string;
+  status: string;
+  gate_code: string;
+  previous_phone_number: string;
+  service_contact: string;
+  quickbooksCustomerId: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Asset {
   id: string;
   name: string;
@@ -23,6 +68,10 @@ export interface Asset {
   rails: string;
   float: number;
   pumps: number;
+  createdAt?: string;
+  updatedAt?: string;
+  client?: Client;
+  customer?: Customer;
 }
 
 interface AssetState {
