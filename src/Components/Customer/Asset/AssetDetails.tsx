@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useGetAssetsQuery } from "../../../redux/api/assetApi";
+import { useGetAssetsQuery, useDeleteAssetMutation } from "../../../redux/api/assetApi";
 import { useNavigate } from "react-router-dom";
 import { getUserId } from "../../../utils/utils";
 import { Asset } from "../../../redux/features/assetSlice";
+import { toast } from "react-toastify";
 
 const AssetDetails: React.FC = () => {
   const [assetData, setAssetData] = useState<Asset[] | null>(null);
+  const [deleteAsset] = useDeleteAssetMutation();
   const { data: assets } = useGetAssetsQuery();
   const clientId = getUserId();
   const navigate = useNavigate();
@@ -26,6 +28,20 @@ const AssetDetails: React.FC = () => {
   const handleShowPumps = (id: string) => {
     localStorage.setItem("assetId", id);
     navigate(`/asset-pumps`);
+  };
+
+  const handleDeleteAsset = async (id: string | undefined) => {
+    if (window.confirm("Are you sure you want to delete this Asset?")) {
+      try {
+        await deleteAsset(id || "").unwrap();
+        toast.success("Asset deleted successfully!", {
+          onClose: () => window.location.reload(),
+          autoClose: 500,
+        });
+      } catch (error) {
+        toast.error("Error deleting asset!");
+      }
+    }
   };
 
   return (
@@ -127,8 +143,10 @@ const AssetDetails: React.FC = () => {
             <button className="flex-1 py-[0.5vw] mx-[0.2vw] text-[1vw] font-semibold text-darkgray-0 bg-white border rounded text-center">
               Asset Photos
             </button>
-            <button className="flex-1 py-[0.5vw] mx-[0.2vw] text-[1vw] font-semibold text-darkgray-0 bg-white border rounded text-center">
-              Manage Asset
+            <button className="flex-1 py-[0.5vw] mx-[0.2vw] text-[1vw] font-semibold text-darkgray-0 bg-white border rounded text-center"
+            onClick={() => handleDeleteAsset(asset.id)}
+            >
+              Delete Asset
             </button>
           </div>
         </div>

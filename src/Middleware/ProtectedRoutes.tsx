@@ -1,16 +1,15 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
-interface ProtectedRouteProps {
-  children: React.ReactNode;
-  isAuthenticated: boolean;
-}
+const ProtectedRoute: React.FC = () => {
+  const token = localStorage.getItem("token");
+  const isAuthenticated = Boolean(token);
 
-function ProtectedRoute({ children, isAuthenticated }: ProtectedRouteProps) {
   if (!isAuthenticated) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/client-login" replace />;
   }
-  return children;
-}
+
+  return <Outlet />;
+};
 
 export default ProtectedRoute;

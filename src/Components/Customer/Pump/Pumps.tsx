@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   useGetPumpsQuery,
   useUpdatePumpMutation,
+  useDeletePumpMutation,
 } from "../../../redux/api/pumpApi";
 import { useGetPhotosQuery } from "../../../redux/api/uploadPhotosApi";
 import AddPump from "../../../Components/Customer/Pump/AddPump";
@@ -17,8 +18,9 @@ const PumpCard: React.FC<{
   pump: Pump;
   index: number;
   onEdit: (pump: Pump) => void;
+  onDelete: (id: string | undefined) => void;
   photoUrl: string;
-}> = ({ pump, index, onEdit, photoUrl }) => (
+}> = ({ pump, index, onEdit, photoUrl, onDelete }) => (
   <div className="flex items-center justify-between border p-[1vw] mb-[1vw] rounded-lg">
     <div className="w-1/6">
       <div className="w-full flex flex-row items-center">
@@ -93,12 +95,18 @@ const PumpCard: React.FC<{
         </p>
       </div>
     </div>
-    <div className="w-1/6 flex items-baseline justify-end">
+    <div className="w-1/6 flex justify-center space-x-[1vw]">
       <button
-        className="bg-purple-0 bg-opacity-5 border border-purple-0 text-[1vw] text-purple-0 font-inter font-medium px-[1vw] py-[0.5vw] rounded-md"
+        className="px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-[0.4vw] text-[1vw] font-inter font-medium"
         onClick={() => onEdit(pump)}
       >
         Edit
+      </button>
+      <button
+        className="px-[1vw] py-[0.5vw] border bg-white text-darkgray-0 rounded-[0.4vw]"
+        onClick={() => onDelete(pump.id)}
+      >
+        Delete
       </button>
     </div>
   </div>
@@ -113,6 +121,7 @@ const Pumps: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const assetId = localStorage.getItem("assetId");
+  const [deletePump] = useDeletePumpMutation();
 
   useEffect(() => {
     if (pumpsData && assetId) {
@@ -175,6 +184,20 @@ const Pumps: React.FC<{ onClick: () => void }> = ({ onClick }) => {
     setIsModalOpen(true);
   };
 
+  const handleDeletePump = async (id: string | undefined) => {
+    if (window.confirm("Are you sure you want to delete this Pump?")) {
+      try {
+        await deletePump(id || "").unwrap();
+        toast.success("Pump deleted successfully!", {
+          onClose: () => window.location.reload(),
+          autoClose: 500,
+        });
+      } catch (error) {
+        toast.error("Error deleting pump!");
+      }
+    }
+  };
+
   return (
     <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg relative pt-[6vw]">
       <button
@@ -195,6 +218,7 @@ const Pumps: React.FC<{ onClick: () => void }> = ({ onClick }) => {
             pump={pump}
             index={index}
             onEdit={handlePumpEdit}
+            onDelete={handleDeletePump}
             photoUrl={photoUrl}
           />
         );

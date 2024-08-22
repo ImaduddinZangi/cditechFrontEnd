@@ -5,44 +5,24 @@ import { useGetAssetsQuery } from "../../redux/api/assetApi";
 import { getUserId } from "../../utils/utils";
 import { Customer } from "../../redux/features/customerSlice";
 import { Asset } from "../../redux/features/assetSlice";
-
-interface InspectionData {
-  clientId: string | null;
-  customerId: string;
-  assetId: string;
-  assignedTo: string;
-  status: string;
-  scheduledDate: string;
-  completedDate: string | null;
-  comments: string;
-  serviceFee: number;
-  recording: string;
-}
+import { Inspection } from "../../redux/features/inspectionSlice";
 
 interface InspectionFormProps {
-  onSubmit: (data: InspectionData) => void;
+  onSubmit: (data: Inspection) => void;
+  initialData?: Inspection;
 }
 
-const InspectionForm: React.FC<InspectionFormProps> = ({ onSubmit }) => {
-  const [assets, setAssets] = useState<Array<{ label: string; value: string }>>(
-    []
-  );
-  const [customers, setCustomers] = useState<
-    Array<{ label: string; value: string }>
-  >([]);
-  const [selectedCustomer, setSelectedCustomer] = useState<{
-    label: string;
-    value: string;
-  } | null>(null);
-  const [selectedAsset, setSelectedAsset] = useState<{
-    label: string;
-    value: string;
-  } | null>(null);
-  const [scheduledDate, setScheduledDate] = useState<string>("");
-  const [comments, setComments] = useState<string>("");
-  const [status, setStatus] = useState<string>("");
-  const [serviceFee, setServiceFee] = useState<number>(0);
-  const [recording, setRecording] = useState<string>("no");
+const InspectionForm: React.FC<InspectionFormProps> = ({ onSubmit, initialData }) => {
+  const [assets, setAssets] = useState<Array<{ label: string; value: string }>>([]);
+  const [customers, setCustomers] = useState<Array<{ label: string; value: string }>>([]);
+  const [selectedCustomer, setSelectedCustomer] = useState<{ label: string; value: string } | null>(null);
+  const [selectedAsset, setSelectedAsset] = useState<{ label: string; value: string } | null>(null);
+  const [scheduledDate, setScheduledDate] = useState<string>(initialData?.scheduledDate || "");
+  const [comments, setComments] = useState<string>(initialData?.comments || "");
+  const [status, setStatus] = useState<string>(initialData?.status || "pending");
+  const [serviceFee, setServiceFee] = useState<number>(initialData?.serviceFee || 0);
+  const [recording, setRecording] = useState<string>(initialData?.recording || "no");
+  const [name, setName] = useState<string>(initialData?.name || "");
 
   const { data: customersData } = useGetCustomersQuery();
   const { data: assetsData } = useGetAssetsQuery();
@@ -51,20 +31,25 @@ const InspectionForm: React.FC<InspectionFormProps> = ({ onSubmit }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const inspectionData: InspectionData = {
-      clientId: clientId,
-      customerId: selectedCustomer?.value || "",
-      assetId: selectedAsset?.value || "",
-      assignedTo: "",
+    onSubmit({
+      name,
+      clientId: initialData?.clientId ?? clientId,
+      customerId: selectedCustomer?.value || initialData?.customerId || "",
+      assetId: selectedAsset?.value || initialData?.assetId || "",
+      assignedTo: initialData?.assignedTo || "",
       status,
       scheduledDate,
-      completedDate: null,
+      completedDate: initialData?.completedDate || null,
       comments,
       serviceFee,
       recording,
-    };
-
-    onSubmit(inspectionData);
+      checklists: initialData?.checklists || [],
+      route: initialData?.route || [],
+      scores: initialData?.scores || [],
+      id: initialData?.id,
+      createdAt: initialData?.createdAt,
+      updatedAt: initialData?.updatedAt,
+    });
   };
 
   useEffect(() => {
@@ -95,10 +80,20 @@ const InspectionForm: React.FC<InspectionFormProps> = ({ onSubmit }) => {
         <div className="grid grid-cols-2 gap-[1vw] mb-6">
           <div className="space-y-[1vw]">
             <div>
-              <label
-                htmlFor="customer"
-                className="block text-darkgray-0 font-medium text-[1vw]"
-              >
+              <label htmlFor="name" className="block text-darkgray-0 font-medium text-[1vw]">
+                Name:
+              </label>
+              <input
+                type="name"
+                id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="customer" className="block text-darkgray-0 font-medium text-[1vw]">
                 Customer:
               </label>
               <Select
@@ -107,14 +102,13 @@ const InspectionForm: React.FC<InspectionFormProps> = ({ onSubmit }) => {
                 placeholder="Search"
                 className="mt-1"
                 isClearable
+                value={selectedCustomer || customers.find((c) => c.value === initialData?.customerId)}
                 onChange={setSelectedCustomer}
                 required
               />
             </div>
             <div>
-              <label className="block text-darkgray-0 font-medium text-[1vw]">
-                Status:
-              </label>
+              <label className="block text-darkgray-0 font-medium text-[1vw]">Status:</label>
               <select
                 name="status"
                 className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
@@ -129,10 +123,7 @@ const InspectionForm: React.FC<InspectionFormProps> = ({ onSubmit }) => {
               </select>
             </div>
             <div>
-              <label
-                htmlFor="scheduledDate"
-                className="block text-darkgray-0 font-medium text-[1vw]"
-              >
+              <label htmlFor="scheduledDate" className="block text-darkgray-0 font-medium text-[1vw]">
                 Scheduled Date:
               </label>
               <input
@@ -145,10 +136,7 @@ const InspectionForm: React.FC<InspectionFormProps> = ({ onSubmit }) => {
               />
             </div>
             <div>
-              <label
-                htmlFor="serviceFee"
-                className="block text-darkgray-0 font-medium text-[1vw]"
-              >
+              <label htmlFor="serviceFee" className="block text-darkgray-0 font-medium text-[1vw]">
                 Service Fee:
               </label>
               <input
@@ -163,10 +151,7 @@ const InspectionForm: React.FC<InspectionFormProps> = ({ onSubmit }) => {
           </div>
           <div className="space-y-[1vw]">
             <div>
-              <label
-                htmlFor="asset"
-                className="block text-darkgray-0 font-medium text-[1vw]"
-              >
+              <label htmlFor="asset" className="block text-darkgray-0 font-medium text-[1vw]">
                 Asset:
               </label>
               <Select
@@ -175,15 +160,13 @@ const InspectionForm: React.FC<InspectionFormProps> = ({ onSubmit }) => {
                 placeholder="Search"
                 className="mt-1"
                 isClearable
+                value={selectedAsset || assets.find((a) => a.value === initialData?.assetId)}
                 onChange={setSelectedAsset}
                 required
               />
             </div>
             <div>
-              <label
-                htmlFor="comments"
-                className="block text-darkgray-0 font-medium text-[1vw]"
-              >
+              <label htmlFor="comments" className="block text-darkgray-0 font-medium text-[1vw]">
                 Comments:
               </label>
               <textarea
@@ -195,9 +178,7 @@ const InspectionForm: React.FC<InspectionFormProps> = ({ onSubmit }) => {
               />
             </div>
             <div className="col-span-2 flex items-center">
-              <span className="mr-[1vw] text-sm font-medium text-gray-700">
-                Inspection Recording:
-              </span>
+              <span className="mr-[1vw] text-sm font-medium text-gray-700">Inspection Recording:</span>
               <label className="mr-2">
                 <input
                   type="radio"

@@ -1,30 +1,19 @@
-import React, { useState } from "react";
-
-interface FloatScores {
-  float1: string;
-  float2: string;
-}
-
-interface Scores {
-  structureScore: string;
-  panelScore: string;
-  pipesScore: string;
-  alarmScore: string;
-  alarmLightScore: string;
-  wiresScore: string;
-  breakersScore: string;
-  contactorsScore: string;
-  thermalsScore: string;
-  floatScores: FloatScores;
-}
+import React, { useState, useEffect } from "react";
+import { Scores } from "../../redux/features/inspectionSlice";
 
 interface ScoreModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (scores: Scores) => void;
+  initialScores?: Scores;
 }
 
-const ScoreModal: React.FC<ScoreModalProps> = ({ isOpen, onClose, onSave }) => {
+const ScoreModal: React.FC<ScoreModalProps> = ({
+  isOpen,
+  onClose,
+  onSave,
+  initialScores,
+}) => {
   const [scores, setScores] = useState<Scores>({
     structureScore: "A",
     panelScore: "A",
@@ -40,6 +29,12 @@ const ScoreModal: React.FC<ScoreModalProps> = ({ isOpen, onClose, onSave }) => {
       float2: "A",
     },
   });
+
+  useEffect(() => {
+    if (initialScores) {
+      setScores(initialScores);
+    }
+  }, [initialScores]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLSelectElement>,

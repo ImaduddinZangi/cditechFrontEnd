@@ -38,7 +38,7 @@ export const inspectionApi = createApi({
     updateInspection: builder.mutation<Inspection, Partial<Inspection>>({
       query: ({ id, ...rest }) => ({
         url: `inspections/${id}`,
-        method: "PATCH",
+        method: "PUT",
         body: rest,
       }),
     }),

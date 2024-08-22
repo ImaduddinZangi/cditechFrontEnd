@@ -1,30 +1,44 @@
-import React, { useState } from "react";
-import { useGetChecklistItemsQuery, useUpdateChecklistItemMutation } from "../../redux/api/checkListItemApi";
-
-interface ChecklistItem {
-  id: string;
-  description: string;
-  is_completed: boolean;
-}
+import React, { useState, useEffect } from "react";
+import {
+  useGetChecklistItemsQuery,
+  useUpdateChecklistItemMutation,
+} from "../../redux/api/checkListItemApi";
+import { ChecklistItem } from "../../redux/features/inspectionSlice";
 
 interface ChecklistModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (checklistItemIds: string[]) => void;
+  initialChecklistItemIds?: string[];
 }
 
 const ChecklistModal: React.FC<ChecklistModalProps> = ({
   isOpen,
   onClose,
   onSave,
+  initialChecklistItemIds = [],
 }) => {
   const { data: allChecklistItems } = useGetChecklistItemsQuery();
   const [selectedItems, setSelectedItems] = useState<ChecklistItem[]>([]);
   const [updateChecklistItem] = useUpdateChecklistItemMutation();
 
+  useEffect(() => {
+    if (allChecklistItems && initialChecklistItemIds.length > 0) {
+      const initialItems = allChecklistItems.filter((item) =>
+        initialChecklistItemIds.includes(item.id)
+      );
+      setSelectedItems(initialItems);
+    }
+  }, [allChecklistItems, initialChecklistItemIds]);
+
   const handleSelectItem = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedItem = allChecklistItems?.find(item => item.id === e.target.value);
-    if (selectedItem && !selectedItems.find(item => item.id === selectedItem.id)) {
+    const selectedItem = allChecklistItems?.find(
+      (item) => item.id === e.target.value
+    );
+    if (
+      selectedItem &&
+      !selectedItems.find((item) => item.id === selectedItem.id)
+    ) {
       setSelectedItems([...selectedItems, selectedItem]);
     }
   };
@@ -35,10 +49,13 @@ const ChecklistModal: React.FC<ChecklistModalProps> = ({
       ...updatedItems[index],
       is_completed: isCompleted,
     };
-    
+
     try {
       // Update the item in the backend
-      await updateChecklistItem({ id: updatedItem.id, is_completed: isCompleted }).unwrap();
+      await updateChecklistItem({
+        id: updatedItem.id,
+        is_completed: isCompleted,
+      }).unwrap();
       updatedItems[index] = updatedItem;
       setSelectedItems(updatedItems);
     } catch (error) {
@@ -52,7 +69,7 @@ const ChecklistModal: React.FC<ChecklistModalProps> = ({
   };
 
   const handleSave = () => {
-    const checklistItemIds = selectedItems.map(item => item.id);
+    const checklistItemIds = selectedItems.map((item) => item.id);
     onSave(checklistItemIds);
     onClose();
   };

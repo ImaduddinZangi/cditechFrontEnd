@@ -114,9 +114,9 @@ const AddPump: React.FC<AddPumpProps> = ({ isModalOpen, onClose, onSubmit, initi
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50 font-inter">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6">
-        <h2 className="text-2xl font-semibold mb-4">{isEditing ? 'Edit Pump' : 'Add New Pump'}</h2>
+        <h2 className="text-[1.2vw] font-semibold mb-[1vw]">{isEditing ? 'Edit Pump' : 'Add New Pump'}</h2>
         <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-[1vw]">
             <div>
               <label className="block mb-1 font-medium">Pump Name:</label>
               <input

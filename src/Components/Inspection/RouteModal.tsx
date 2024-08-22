@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   GoogleMap,
   Marker,
@@ -12,6 +12,7 @@ interface RouteModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (route: Array<{ latitude: number; longitude: number }>) => void;
+  initialRoute?: Array<{ latitude: number; longitude: number }>; // Made initialRoute optional
 }
 
 const containerStyle = {
@@ -23,26 +24,40 @@ const initialCenter = { lat: 40.7128, lng: -74.006 };
 
 const libraries: ("places" | "drawing")[] = ["places"];
 
-const RouteModal: React.FC<RouteModalProps> = ({ isOpen, onClose, onSave }) => {
+const RouteModal: React.FC<RouteModalProps> = ({
+  isOpen,
+  onClose,
+  onSave,
+  initialRoute,
+}) => {
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API,
     libraries,
   });
 
+  // Initialize startPoint and endPoint based on optional initialRoute
   const [startPoint, setStartPoint] = useState<{
     lat: number;
     lng: number;
-  } | null>(null);
+  } | null>(initialRoute?.[0] ? { lat: initialRoute[0].latitude, lng: initialRoute[0].longitude } : null);
+
   const [endPoint, setEndPoint] = useState<{ lat: number; lng: number } | null>(
-    null
+    initialRoute?.[1] ? { lat: initialRoute[1].latitude, lng: initialRoute[1].longitude } : null
   );
+
   const [directions, setDirections] =
     useState<google.maps.DirectionsResult | null>(null);
 
   const mapRef = useRef<google.maps.Map | null>(null);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (startPoint && endPoint) {
+      fetchDirections(endPoint);
+    }
+  }, [startPoint, endPoint]);
 
   const onLoad = (autocomplete: google.maps.places.Autocomplete) => {
     autocompleteRef.current = autocomplete;

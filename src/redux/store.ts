@@ -13,6 +13,7 @@ import uploadPhotosReducer from "./features/uploadPhotosSlice";
 import twoFactorAuthReducer from "./features/twoFactorAuthSlice";
 import inspectionReducer from "./features/inspectionSlice";
 import checkListItemReducer from "./features/checkListItemSlice";
+import inspectionReportsReducer from "./features/inspectionReportsSlice";
 
 import { authApi } from "./api/authApi";
 import clientApi from "./api/clientApi";
@@ -25,6 +26,7 @@ import uploadPhotosApi from "./api/uploadPhotosApi";
 import twoFactorAuthApi from "./api/twoFactorAuthApi";
 import inspectionApi from "./api/inspectionApi";
 import checkListItemApi from "./api/checkListItemApi";
+import inspectionReportsApi from "./api/inspectionReportsApi";
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -38,6 +40,7 @@ const rootReducer = combineReducers({
   twoFactorAuth: twoFactorAuthReducer,
   inspection: inspectionReducer,
   checkListItem: checkListItemReducer,
+  inspectionReports: inspectionReportsReducer,
   [authApi.reducerPath]: authApi.reducer,
   [clientApi.reducerPath]: clientApi.reducer,
   [customerApi.reducerPath]: customerApi.reducer,
@@ -48,6 +51,7 @@ const rootReducer = combineReducers({
   [uploadPhotosApi.reducerPath]: uploadPhotosApi.reducer,
   [twoFactorAuthApi.reducerPath]: twoFactorAuthApi.reducer,
   [inspectionApi.reducerPath]: inspectionApi.reducer,
+  [inspectionReportsApi.reducerPath]: inspectionReportsApi.reducer,
   [checkListItemApi.reducerPath]: checkListItemApi.reducer,
 });
 
@@ -64,6 +68,7 @@ const store = configureStore({
       pumpBrandApi.middleware,
       uploadPhotosApi.middleware,
       inspectionApi.middleware,
+      inspectionReportsApi.middleware,
       checkListItemApi.middleware
     ),
 });

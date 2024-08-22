@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 const AddInspectionPage: React.FC = () => {
   const [createChecklistItem] = useCreateChecklistItemMutation();
   const [createInspection] = useCreateInspectionMutation();
-  const [scores, setScores] = useState<Scores | null>(null);
+  const [scores, setScores] = useState<Scores[]>([]);
   const [checklistItemIds, setChecklistItemIds] = useState<string[]>([]);
   const [route, setRoute] = useState<Array<{ latitude: number; longitude: number }>>([]);
   const [isScoreModalOpen, setIsScoreModalOpen] = useState(false);
@@ -24,7 +24,7 @@ const AddInspectionPage: React.FC = () => {
   const navigate = useNavigate();
 
   const handleFormSubmit = async (formValues: Partial<Inspection>) => {
-    if (!scores) {
+    if (scores.length === 0) {
       toast.error("The inspection score data is not added.");
       return;
     }
@@ -42,7 +42,7 @@ const AddInspectionPage: React.FC = () => {
     const inspectionData: Partial<Inspection> = {
       ...formValues,
       clientId: formValues.clientId || undefined,
-      score: scores,
+      scores: scores, // Pass the array of scores here
       checklists: [
         {
           name: "A Good Name",
@@ -72,7 +72,7 @@ const AddInspectionPage: React.FC = () => {
   };
 
   const handleScoreModalSave = (scores: Scores) => {
-    setScores(scores);
+    setScores([scores]);
   };
 
   const handleChecklistModalSave = (selectedChecklistItemIds: string[]) => {

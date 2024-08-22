@@ -1,10 +1,19 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Client } from "./clientSlice";
+import { Asset } from "./assetSlice";
 
-interface Checklist {
+export interface ChecklistItem {
+  id: string;
+  description: string;
+  is_completed: boolean;
+}
+
+export interface Checklist {
   id?: string;
   name: string;
   overallScore: string;
   checklistItemIds?: string[];
+  items?: ChecklistItem[];
   created_at?: string;
   updated_at?: string;
 }
@@ -47,9 +56,12 @@ export interface Inspection {
   comments: string;
   serviceFee: number;
   checklists: Checklist[];
-  score: Scores;
+  scores: Scores[];
+  recording?: string;
   createdAt?: string;
   updatedAt?: string;
+  client?: Client;
+  asset?: Asset;
 }
 
 interface InspectionState {

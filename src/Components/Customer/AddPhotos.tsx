@@ -163,6 +163,7 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
               onChange={handleIdChange}
               value={selectedId || ""}
             >
+              <option>Select an Option</option>
               {getSelectedTypeOptions()?.map((item: Item) => (
                 <option key={item.id} value={item.id}>
                   {item.name}
@@ -210,13 +211,13 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
       <div className="flex justify-center space-x-[1vw] mt-[2vw]">
         <button
           type="submit"
-          className="px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-[0.4vw]"
+          className="px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-[0.4vw] text-[1vw] font-inter font-medium"
         >
           Save & Close
         </button>
         <button
           type="button"
-          className="px-[1vw] py-[0.5vw] border bg-white text-darkgray-0 rounded-[0.4vw]"
+          className="px-[1vw] py-[0.5vw] border bg-white text-darkgray-0 rounded-[0.4vw] text-[1vw] font-inter font-medium"
         >
           Do Not Save And Close
         </button>

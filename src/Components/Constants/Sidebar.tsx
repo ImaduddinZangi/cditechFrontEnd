@@ -1,7 +1,7 @@
 import React, { ReactNode, useState } from "react";
 import AuthFooter from "./AuthFooter";
 import { FiLogOut } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 interface SidebarProps {
   children: ReactNode;
@@ -12,6 +12,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
   const [customersOpen, setCustomersOpen] = useState(false);
   const [assetsOpen, setAssetsOpen] = useState(false);
   const [pumpsOpen, setPumpsOpen] = useState(false);
+  const [inspectionOpen, setInspectionOpen] = useState(false);
 
   const Menus = [
     { title: "Dashboard", src: "dashboard", href: "/client-dashboard" },
@@ -38,18 +39,27 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
       dropdownItems: [{ title: "Add Pump Brand", href: "/add-pump-brand" }],
     },
     { title: "Add Photos", src: "photo", href: "/add-photos" },
-    { title: "Add Inspection", src: "photo", href: "/add-inspection" },
+    {
+      title: "Inspection",
+      src: "customer",
+      isDropdown: true,
+      dropdownItems: [
+        { title: "Add Inspection", href: "/add-inspection" },
+        { title: "Inspection Reports", href: "/inspection-reports" },
+        { title: "Inspection Table", href: "/inspection-table" },
+      ],
+    },
     { title: "Files ", src: "files", gap: true },
     { title: "Setting", src: "setting" },
   ];
 
-  const navigate = useNavigate();
-
   const handleLogout = async () => {
     try {
-      localStorage.removeItem("token");
-      // window.location.reload();
-      navigate("/client-login");
+      localStorage.clear();
+      toast.error("Logging Out the User", {
+        onClose: () => window.location.reload(),
+        autoClose: 500,
+      });
     } catch (error) {
       console.error("Logout error:", error);
     }
@@ -66,6 +76,9 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
       case "Pumps":
         setPumpsOpen(!pumpsOpen);
         break;
+      case "Inspection":
+        setInspectionOpen(!inspectionOpen);
+        break;
       default:
         break;
     }
@@ -75,7 +88,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
     <div className="flex font-inter">
       <div
         className={` ${
-          open ? "w-[18vw]" : "w-[6vw]"
+          open ? "w-[15vw]" : "w-[6vw]"
         } bg-white h-screen fixed border-r p-[1.25vw] pt-[2vw] duration-300`}
       >
         <img
@@ -84,10 +97,10 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
            border rounded-full  ${!open && "rotate-180"}`}
           onClick={() => setOpen(!open)}
         />
-        <div className="flex gap-x-4 items-center">
+        <div className="flex gap-x-[1vw] items-center">
           <img
             src="/assets/Content.png"
-            className={`cursor-pointer w-[2vw] h-[2vw] duration-500 ${
+            className={`cursor-pointer w-[1.5vw] h-[1.5vw] duration-500 ${
               open && "rotate-[360deg]"
             }`}
           />
@@ -96,8 +109,8 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
           {Menus.map((Menu, index) => (
             <React.Fragment key={index}>
               <li
-                className={`flex rounded-md p-[0.5vw] cursor-pointer hover:bg-light-white text-gray-300 text-[1vw] items-center 
-                ${Menu.gap ? "mt-[2.5vw]" : "mt-[0.5vw]"} ${
+                className={`flex rounded-md p-[0.5vw] cursor-pointer hover:bg-light-white text-gray-300 text-[0.9vw] items-center 
+                ${Menu.gap ? "mt-[1.6vw]" : "mt-[0.3vw]"} ${
                   index === 0 && "bg-light-white"
                 } `}
               >
@@ -113,7 +126,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
                   >
                     <img
                       src={`/assets/${Menu.src}.png`}
-                      className="w-[2vw] h-[2vw]"
+                      className="w-[1.7vw] h-[1.7vw]"
                     />
                     <span
                       className={`${
@@ -130,7 +143,8 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
                   className={`${
                     (Menu.title === "Customers" && customersOpen) ||
                     (Menu.title === "Assets" && assetsOpen) ||
-                    (Menu.title === "Pumps" && pumpsOpen)
+                    (Menu.title === "Pumps" && pumpsOpen) ||
+                    (Menu.title === "Inspection" && inspectionOpen)
                       ? "block"
                       : "hidden"
                   } ml-[1.5vw]`}
@@ -159,35 +173,37 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
             </React.Fragment>
           ))}
         </ul>
-        <div>
-          <button
-            onClick={handleLogout}
-            className="flex flex-row items-center justify-center bg-purple-0 w-full p-[0.9vw] mt-[5vw] rounded-[0.5vw]"
-          >
-            <FiLogOut
-              className={`text-white font-bold ${
-                open ? "mr-[1vw]" : "mr-0"
-              } text-[1.4vw]`}
-            />
-            <p
-              className={`text-white font-inter text-[1.1vw] font-semibold ${
-                open ? "block" : "hidden"
-              }`}
-            >
-              Logout
-            </p>
-          </button>
-        </div>
       </div>
+      <button
+        onClick={handleLogout}
+        className={`flex flex-row items-center justify-center fixed ${
+          open ? "bottom-[1.5vw]" : "bottom-[1vw]"
+        } ${open ? "left-[1.5vw]" : "left-[1vw]"} ${
+          open ? "w-[12vw]" : "w-[4vw]"
+        } bg-purple-0 p-[0.9vw] rounded-[0.5vw] transition-all duration-300`}
+      >
+        <FiLogOut
+          className={`text-white font-bold ${
+            open ? "mr-[1vw]" : "mr-0"
+          } text-[1.4vw]`}
+        />
+        <p
+          className={`text-white font-inter text-[1.1vw] font-semibold ${
+            open ? "block" : "hidden"
+          }`}
+        >
+          Logout
+        </p>
+      </button>
       <div
         className={`flex-1 min-h-screen bg-lightgray-0 overflow-auto ${
-          open ? "ml-[18vw]" : "ml-[6vw]"
+          open ? "ml-[15vw]" : "ml-[6vw]"
         } duration-300`}
       >
         {children}
         <div
           className={`fixed bottom-0 ${
-            open ? "w-[82vw]" : "w-[94vw]"
+            open ? "w-[85vw]" : "w-[94vw]"
           } duration-300`}
         >
           <AuthFooter />

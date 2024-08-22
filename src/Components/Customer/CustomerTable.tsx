@@ -1,11 +1,15 @@
 import React from "react";
-import { useGetCustomersQuery } from "../../redux/api/customerApi";
+import {
+  useGetCustomersQuery,
+  useDeleteCustomerMutation,
+} from "../../redux/api/customerApi";
 import { useAppDispatch } from "../../redux/store";
 import { setSelectedCustomerId } from "../../redux/features/customerSlice";
 import NextButton from "./Constants/NextButton";
 import PreviousButton from "./Constants/PreviousButton";
 import ActiveBadge from "./Constants/ActiveBadge";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const truncateAddress = (address: string, maxLength = 25) => {
   if (address.length > maxLength) {
@@ -16,16 +20,31 @@ const truncateAddress = (address: string, maxLength = 25) => {
 
 const CustomerTable: React.FC = () => {
   const { data, error, isLoading } = useGetCustomersQuery();
+  const [deleteCustomer] = useDeleteCustomerMutation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const handleClickManageCustomer = (customerId: string) => {
     dispatch(setSelectedCustomerId(customerId));
-    navigate("/manage-customer-asset");
+    navigate("/manage-customer");
   };
 
   const handleAddCustomer = () => {
     navigate("/add-customer");
+  };
+
+  const handleDeleteCustomer = async (id: string | undefined) => {
+    if (window.confirm("Are you sure you want to delete this Customer?")) {
+      try {
+        await deleteCustomer(id || "").unwrap();
+        toast.success("Customer deleted successfully!", {
+          onClose: () => window.location.reload(),
+          autoClose: 500,
+        });
+      } catch (error) {
+        toast.error("Error deleting customer!");
+      }
+    }
   };
 
   if (isLoading) {
@@ -146,14 +165,20 @@ const CustomerTable: React.FC = () => {
                           <td className="py-[1vw] px-[1.5vw] text-center">
                             <ActiveBadge />
                           </td>
-                          <td className="py-[1vw] px-[1.5vw] text-center">
+                          <td className="flex flex-row items-center gap-x-[1vw] py-[1vw] px-[1.5vw] text-center">
                             <button
                               onClick={() =>
                                 handleClickManageCustomer(customer.id)
                               }
-                              className="w-[12vw] h-[3vw] gap-[16px] font-inter font-semibold text-[1vw] text-white bg-purple-0 border border-purple-0 shadow-sm rounded-[8px]"
+                              className="px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-[0.4vw]"
                             >
-                              Manage Customer
+                              Manage
+                            </button>
+                            <button
+                              onClick={() => handleDeleteCustomer(customer.id)}
+                              className="px-[1vw] py-[0.5vw] border bg-white text-darkgray-0 rounded-[0.4vw]"
+                            >
+                              Delete
                             </button>
                           </td>
                         </tr>
