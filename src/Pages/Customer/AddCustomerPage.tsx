@@ -10,6 +10,16 @@ const AddCustomerPage: React.FC = () => {
   const [createCustomer] = useCreateCustomerMutation();
   const navigate = useNavigate();
 
+  type APIError = {
+    data: {
+      message: string;
+    };
+  };
+
+  const isAPIError = (error: any): error is APIError => {
+    return error && error.data && typeof error.data.message === "string";
+  };
+
   const handleSubmit = async (data: {
     name: string;
     email: string;
@@ -50,13 +60,14 @@ const AddCustomerPage: React.FC = () => {
         autoClose: 500,
       });
     } catch (error) {
-      if (error instanceof Error) {
-        toast.error("Error adding customer: " + error.message);
-        console.error("Error adding customer:", error);
+      if (isAPIError(error)) {
+        toast.error("Error Adding Customer: " + error.data.message);
+      } else if (error instanceof Error) {
+        toast.error("Error Adding Customer: " + error.message);
       } else {
-        toast.error("An unknown error occurred.");
-        console.error("An unknown error occurred:", error);
+        toast.error("An unknown error occurred");
       }
+      console.error("Error Adding Customer:", error);
     }
   };
 

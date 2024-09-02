@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Scores } from "../../redux/features/inspectionSlice";
+import PurpleButton from "../Tags/PurpleButton";
+import WhiteButton from "../Tags/WhiteButton";
 
 interface ScoreModalProps {
   isOpen: boolean;
@@ -32,7 +34,9 @@ const ScoreModal: React.FC<ScoreModalProps> = ({
 
   useEffect(() => {
     if (initialScores) {
-      setScores(initialScores);
+      // Filter out id, createdAt, and updatedAt fields
+      const { id, createdAt, updatedAt, ...filteredScores } = initialScores;
+      setScores(filteredScores as Scores);
     }
   }, [initialScores]);
 
@@ -128,19 +132,8 @@ const ScoreModal: React.FC<ScoreModalProps> = ({
             )
           )}
           <div className="mt-[1vw] flex justify-end space-x-[1vw] col-span-1 md:col-span-3">
-            <button
-              type="submit"
-              className="px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-[0.4vw] text-[1vw] font-inter font-medium"
-            >
-              Save
-            </button>
-            <button
-              type="button"
-              className="px-[1vw] py-[0.5vw] border bg-white text-darkgray-0 rounded-[0.4vw] text-[1vw] font-inter font-medium"
-              onClick={onClose}
-            >
-              Cancel
-            </button>
+            <PurpleButton type="submit" text="Save" />
+            <WhiteButton type="button" text="Cancel" onClick={onClose} />
           </div>
         </form>
       </div>

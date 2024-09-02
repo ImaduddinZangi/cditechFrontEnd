@@ -16,6 +16,16 @@ const EditAssetPage: React.FC = () => {
   const [initialData, setInitialData] = useState(asset);
   const navigate = useNavigate();
 
+  type APIError = {
+    data: {
+      message: string;
+    };
+  };
+
+  const isAPIError = (error: any): error is APIError => {
+    return error && error.data && typeof error.data.message === "string";
+  };
+
   useEffect(() => {
     if (asset) {
       setInitialData(asset);
@@ -78,18 +88,19 @@ const EditAssetPage: React.FC = () => {
         pumps,
       }).unwrap();
       toast.success("Asset updated successfully!", {
-        onClose: () => navigate("/client-dashboard"),
+        onClose: () => navigate("/manage-customer"),
         autoClose: 500,
       });
       console.log("Asset updated successfully", result);
     } catch (error) {
-      if (error instanceof Error) {
-        toast.error("Error updating Asset: " + error.message);
-        console.error("Error updating Asset:", error);
+      if (isAPIError(error)) {
+        toast.error("Error Updating Assets: " + error.data.message);
+      } else if (error instanceof Error) {
+        toast.error("Error Updating Assets: " + error.message);
       } else {
-        toast.error("An unknown error occurred.");
-        console.error("An unknown error occurred:", error);
+        toast.error("An unknown error occurred");
       }
+      console.error("Error Updating Assets:", error);
     }
   };
 

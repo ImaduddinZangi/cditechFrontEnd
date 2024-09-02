@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import InputField from "../Tags/InputField";
 
 interface TwoFactorAuthenticationProps {
   onSubmit: (code: string) => void;
@@ -28,21 +29,17 @@ const TwoFactorAuthentication: React.FC<TwoFactorAuthenticationProps> = ({
           onSubmit={handleSubmit}
         >
           <div>
-            <label
+            <InputField
               htmlFor="code"
-              className="block text-[2.5vw] md:text-[1vw] font-medium text-darkgray-0"
-            >
-              Code
-            </label>
-            <input
+              label="Code"
               id="code"
               name="code"
-              type="text"
-              required
-              className="w-full px-[1.5vw] md:px-[0.75vw] py-[1.5vw] md:py-[0.5vw] mt-[1vw] md:mt-[0.5vw] border border-lightgray-0 rounded-[1vw] md:rounded-[0.5vw] focus:outline-none placeholder:text-[2.5vw] md:placeholder:text-[1vw] text-[2.5vw] md:text-[1vw]"
+              fieldType="text"
+              autoComplete="code"
               placeholder="Enter your code"
               value={code}
               onChange={(e) => setCode(e.target.value)}
+              required
             />
           </div>
           <button

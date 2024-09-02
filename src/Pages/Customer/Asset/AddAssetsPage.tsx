@@ -10,6 +10,16 @@ const AddAssetsPage: React.FC = () => {
   const [createAsset] = useCreateAssetMutation();
   const navigate = useNavigate();
 
+  type APIError = {
+    data: {
+      message: string;
+    };
+  };
+
+  const isAPIError = (error: any): error is APIError => {
+    return error && error.data && typeof error.data.message === "string";
+  };
+
   const handleAddAsset = async (
     name: string,
     type: string,
@@ -58,18 +68,19 @@ const AddAssetsPage: React.FC = () => {
         pumps,
       }).unwrap();
       toast.success("Asset added successfully!", {
-        onClose: () => navigate("/client-dashboard"),
+        onClose: () => navigate("/manage-customer"),
         autoClose: 500,
       });
       console.log("Asset created successfully", result);
     } catch (error) {
-      if (error instanceof Error) {
-        toast.error("Error adding Asset: " + error.message);
-        console.error("Error adding Asset:", error);
+      if (isAPIError(error)) {
+        toast.error("Error Adding Asset: " + error.data.message);
+      } else if (error instanceof Error) {
+        toast.error("Error Adding Asset: " + error.message);
       } else {
-        toast.error("An unknown error occurred.");
-        console.error("An unknown error occurred:", error);
+        toast.error("An unknown error occurred");
       }
+      console.error("Error Adding Asset:", error);
     }
   };
 

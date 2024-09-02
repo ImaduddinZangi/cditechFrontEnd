@@ -13,6 +13,16 @@ const ClientRegistrationPage: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  type APIError = {
+    data: {
+      message: string;
+    };
+  };
+
+  const isAPIError = (error: any): error is APIError => {
+    return error && error.data && typeof error.data.message === "string";
+  };
+
   const handleRegistration = async (
     name: string,
     email: string,
@@ -25,7 +35,7 @@ const ClientRegistrationPage: React.FC = () => {
     billingAddress: string,
     paymentMethod: string,
     customPortalUrl: string,
-    nextBillDate: string,
+    nextBillDate: string
   ) => {
     try {
       const result = await registerClient({
@@ -49,16 +59,17 @@ const ClientRegistrationPage: React.FC = () => {
       }
       toast.success("Registration successful!", {
         onClose: () => navigate("/client-login"),
-        autoClose: 500
+        autoClose: 500,
       });
     } catch (error) {
-      if (error instanceof Error) {
+      if (isAPIError(error)) {
+        toast.error("Registration error: " + error.data.message);
+      } else if (error instanceof Error) {
         toast.error("Registration error: " + error.message);
-        console.error("Registration error:", error);
       } else {
-        toast.error("An unknown error occurred.");
-        console.error("An unknown error occurred:", error);
+        toast.error("An unknown error occurred");
       }
+      console.error("Registration error:", error);
     }
   };
 

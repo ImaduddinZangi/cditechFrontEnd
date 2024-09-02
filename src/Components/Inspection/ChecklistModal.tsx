@@ -4,6 +4,8 @@ import {
   useUpdateChecklistItemMutation,
 } from "../../redux/api/checkListItemApi";
 import { ChecklistItem } from "../../redux/features/inspectionSlice";
+import PurpleButton from "../Tags/PurpleButton";
+import WhiteButton from "../Tags/WhiteButton";
 
 interface ChecklistModalProps {
   isOpen: boolean;
@@ -132,20 +134,8 @@ const ChecklistModal: React.FC<ChecklistModalProps> = ({
           </div>
         </form>
         <div className="mt-[1vw] flex justify-end space-x-[1vw]">
-          <button
-            type="button"
-            className="px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-[0.4vw] text-[1vw] font-inter font-medium"
-            onClick={handleSave}
-          >
-            Save
-          </button>
-          <button
-            type="button"
-            className="px-[1vw] py-[0.5vw] border bg-white text-darkgray-0 rounded-[0.4vw] text-[1vw] font-inter font-medium"
-            onClick={onClose}
-          >
-            Cancel
-          </button>
+          <PurpleButton type="button" text="Save" onClick={handleSave} />
+          <WhiteButton type="button" text="Cancel" onClick={onClose} />
         </div>
       </div>
     </div>

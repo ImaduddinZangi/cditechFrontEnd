@@ -7,6 +7,9 @@ import {
 } from "@react-google-maps/api";
 import { Autocomplete } from "@react-google-maps/api";
 import { toast } from "react-toastify";
+import PurpleButton from "../Tags/PurpleButton";
+import WhiteButton from "../Tags/WhiteButton";
+import InputField from "../Tags/InputField";
 
 interface RouteModalProps {
   isOpen: boolean;
@@ -40,10 +43,16 @@ const RouteModal: React.FC<RouteModalProps> = ({
   const [startPoint, setStartPoint] = useState<{
     lat: number;
     lng: number;
-  } | null>(initialRoute?.[0] ? { lat: initialRoute[0].latitude, lng: initialRoute[0].longitude } : null);
+  } | null>(
+    initialRoute?.[0]
+      ? { lat: initialRoute[0].latitude, lng: initialRoute[0].longitude }
+      : null
+  );
 
   const [endPoint, setEndPoint] = useState<{ lat: number; lng: number } | null>(
-    initialRoute?.[1] ? { lat: initialRoute[1].latitude, lng: initialRoute[1].longitude } : null
+    initialRoute?.[1]
+      ? { lat: initialRoute[1].latitude, lng: initialRoute[1].longitude }
+      : null
   );
 
   const [directions, setDirections] =
@@ -156,15 +165,13 @@ const RouteModal: React.FC<RouteModalProps> = ({
       <div className="bg-white rounded-lg shadow-lg w-full max-w-xl p-6">
         <h2 className="text-2xl mb-4">Select Route</h2>
         <div className="mb-4">
-          <label className="block text-darkgray-0 font-medium text-[1vw]">
-            Search Location:
-          </label>
           <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
-            <input
+            <InputField
               ref={inputRef}
-              type="text"
-              className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
+              fieldType="text"
               placeholder="Enter a location to center the map"
+              id="location"
+              name="location"
             />
           </Autocomplete>
         </div>
@@ -204,20 +211,8 @@ const RouteModal: React.FC<RouteModalProps> = ({
           </GoogleMap>
         </div>
         <div className="mt-4 flex justify-end space-x-2">
-          <button
-            type="button"
-            className="px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-[0.4vw] text-[1vw] font-inter font-medium"
-            onClick={handleSave}
-          >
-            Save Route
-          </button>
-          <button
-            type="button"
-            className="px-[1vw] py-[0.5vw] border bg-white text-darkgray-0 rounded-[0.4vw] text-[1vw] font-inter font-medium"
-            onClick={onClose}
-          >
-            Cancel
-          </button>
+          <PurpleButton type="button" text="Save Route" onClick={handleSave} />
+          <WhiteButton type="button" text="Cancel" onClick={onClose} />
         </div>
       </div>
     </div>

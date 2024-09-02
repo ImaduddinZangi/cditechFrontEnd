@@ -10,6 +10,9 @@ import { getUserId } from "../../utils/utils";
 import { pdf } from "@react-pdf/renderer";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import Loader from "../Constants/Loader";
+import PurpleButton from "../Tags/PurpleButton";
+import WhiteButton from "../Tags/WhiteButton";
 
 const GenerateReports: React.FC = () => {
   const { data: inspections } = useGetInspectionsQuery();
@@ -97,7 +100,11 @@ const GenerateReports: React.FC = () => {
           ))}
         </select>
       </div>
-      {isLoading && <p>Loading inspection data...</p>}
+      {isLoading && (
+        <p>
+          <Loader />
+        </p>
+      )}
       {inspection && (
         <>
           <div className="mb-4 border rounded-lg overflow-hidden shadow-lg">
@@ -106,41 +113,31 @@ const GenerateReports: React.FC = () => {
             </PDFViewer>
           </div>
           <div className="flex justify-center space-x-4">
-            <button
+            <PurpleButton
+              type="button"
+              text={loading ? "Uploading..." : "Upload"}
               onClick={handleUpload}
-              className={`px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-[0.4vw] text-[1vw] font-inter font-medium${
-                loading ? "bg-opacity-90" : "bg-opacity-100"
-              }`}
               disabled={loading}
-            >
-              {loading ? "Uploading..." : "Upload"}
-            </button>
+            />
             <PDFDownloadLink
               document={<MyDocument data={inspection} />}
               fileName="inspection_report.pdf"
             >
               {({ loading: pdfLoading }) => (
-                <button
-                  className="px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-[0.4vw] text-[1vw] font-inter font-medium"
+                <PurpleButton
+                  type="button"
+                  text={pdfLoading ? "Generating..." : "Download"}
                   onClick={handleDownload}
                   disabled={pdfLoading}
-                >
-                  {pdfLoading ? "Generating..." : "Download"}
-                </button>
+                />
               )}
             </PDFDownloadLink>
-            <button
+            <PurpleButton
+              type="button"
+              text="Edit"
               onClick={() => alert("Edit functionality is not implemented yet")}
-              className="px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-[0.4vw]  text-[1vw] font-inter font-medium"
-            >
-              Edit
-            </button>
-            <button
-              onClick={handleCancel}
-              className="px-[1vw] py-[0.5vw] border bg-white text-darkgray-0 rounded-[0.4vw] text-[1vw] font-inter font-medium"
-            >
-              Cancel
-            </button>
+            />
+            <WhiteButton type="button" text="Cancel" onClick={handleCancel} />
           </div>
         </>
       )}

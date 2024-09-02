@@ -1,7 +1,17 @@
 import React, { useState } from "react";
+import InputField from "../../Tags/InputField";
+import PurpleButton from "../../Tags/PurpleButton";
+import WhiteButton from "../../Tags/WhiteButton";
+import { useNavigate } from "react-router-dom";
 
 interface AddPumpBrandProps {
-  onSubmit: (name: string, model: string, phone: string, address: string, madeInUsa: boolean) => void;
+  onSubmit: (
+    name: string,
+    model: string,
+    phone: string,
+    address: string,
+    madeInUsa: boolean
+  ) => void;
 }
 
 const AddPumpBrand: React.FC<AddPumpBrandProps> = ({ onSubmit }) => {
@@ -10,10 +20,15 @@ const AddPumpBrand: React.FC<AddPumpBrandProps> = ({ onSubmit }) => {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [madeInUsa, setMadeInUsa] = useState(true);
+  const navigate = useNavigate();
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     onSubmit(name, model, phone, address, madeInUsa);
+  };
+
+  const handleCancel = () => {
+    navigate("customer-table");
   };
 
   return (
@@ -22,52 +37,46 @@ const AddPumpBrand: React.FC<AddPumpBrandProps> = ({ onSubmit }) => {
         className="grid grid-cols-1 sm:grid-cols-2 gap-[1vw] relative pb-[4vw]"
         onSubmit={handleSubmit}
       >
-        <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">Brand Name:</label>
-          <input
-            type="text"
-            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-            placeholder="Enter pump brand name"
-            required
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
-        <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">Model:</label>
-          <input
-            type="text"
-            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-            placeholder="Enter model"
-            required
-            value={model}
-            onChange={(e) => setModel(e.target.value)}
-          />
-        </div>
-        <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">Phone No:</label>
-          <input
-            type="text"
-            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-            placeholder="Enter phone no"
-            required
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-        </div>
-        <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">Address:</label>
-          <input
-            type="text"
-            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-            placeholder="Enter Address"
-            required
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-          />
-        </div>
+        <InputField
+          label="Brand Name"
+          name="name"
+          fieldType="text"
+          value={name}
+          placeholder="Enter pump brand name"
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+        <InputField
+          label="Model"
+          name="model"
+          fieldType="text"
+          value={model}
+          placeholder="Enter model"
+          onChange={(e) => setModel(e.target.value)}
+          required
+        />
+        <InputField
+          label="Phone No"
+          name="phone"
+          fieldType="text"
+          value={phone}
+          placeholder="Enter phone no"
+          onChange={(e) => setPhone(e.target.value)}
+          required
+        />
+        <InputField
+          label="Address"
+          name="address"
+          fieldType="text"
+          value={address}
+          placeholder="Enter Address"
+          onChange={(e) => setAddress(e.target.value)}
+          required
+        />
         <div className="flex flex-row items-center gap-x-[1vw] mt-[0.5vw]">
-          <label className="block text-darkgray-0 font-medium text-[1vw]">Made In USA:</label>
+          <label className="block text-darkgray-0 font-medium text-[1vw]">
+            Made In USA:
+          </label>
           <input
             type="checkbox"
             className="mt-[0.2vw] block accent-purple-0 border-gray-300 rounded-md shadow-sm cursor-pointer"
@@ -75,12 +84,10 @@ const AddPumpBrand: React.FC<AddPumpBrandProps> = ({ onSubmit }) => {
             onChange={(e) => setMadeInUsa(e.target.checked)}
           />
         </div>
-        <button
-          type="submit"
-          className="px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-[0.4vw] absolute bottom-0 right-0"
-        >
-          Create
-        </button>
+        <div className="mt-[1vw] flex justify-end">
+          <PurpleButton type="submit" text="Create" className="mr-[1vw]" />
+          <WhiteButton type="button" text="Cancel" onClick={handleCancel} />
+        </div>
       </form>
     </div>
   );

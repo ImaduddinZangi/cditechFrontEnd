@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import PurpleButton from "../Tags/PurpleButton";
+import WhiteButton from "../Tags/WhiteButton";
 
 interface AddCheckListItemProps {
   onSubmit: (data: {
@@ -82,19 +84,8 @@ const AddCheckListItem: React.FC<AddCheckListItemProps> = ({
             />
           </div>
           <div className="mt-[1vw] flex justify-end space-x-[1vw]">
-            <button
-              type="submit"
-              className="px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-[0.4vw] text-[1vw] font-inter font-medium"
-            >
-              Save
-            </button>
-            <button
-              type="button"
-              className="px-[1vw] py-[0.5vw] border bg-white text-darkgray-0 rounded-[0.4vw] text-[1vw] font-inter font-medium"
-              onClick={onClose}
-            >
-              Cancel
-            </button>
+            <PurpleButton type="submit" text="Save" />
+            <WhiteButton type="button" text="Cancel" onClick={onClose} />
           </div>
         </form>
       </div>

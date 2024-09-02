@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import InputField from "../Tags/InputField";
 
 interface ClientSignInProps {
   onSubmit: (email: string, password: string) => void;
@@ -25,41 +26,34 @@ const ClientSignIn: React.FC<ClientSignInProps> = ({ onSubmit }) => {
         <p className="text-[2.2vw] md:text-[1vw] text-gray-0 text-center">
           Welcome back! Please enter your details
         </p>
-        <form className="space-y-[3vw] md:space-y-[1.5vw]" onSubmit={handleSubmit}>
+        <form
+          className="space-y-[3vw] md:space-y-[1.5vw]"
+          onSubmit={handleSubmit}
+        >
           <div className="mt-[4vw] md:mt-[2vw]">
-            <label
-              htmlFor="email"
-              className="block text-[2.5vw] md:text-[1vw] font-medium text-darkgray-0"
-            >
-              Email
-            </label>
-            <input
+            <InputField
+              label="Email"
               id="email"
               name="email"
-              type="email"
-              required
-              className="w-full px-[1.5vw] md:px-[0.75vw] py-[1.5vw] md:py-[0.5vw] mt-[1vw] md:mt-[0.5vw] border border-lightgray-0 rounded-[1vw] md:rounded-[0.5vw] focus:outline-none placeholder:text-[2.5vw] md:placeholder:text-[1vw] text-[2.5vw] md:text-[1vw]"
+              fieldType="email"
+              autoComplete="email"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
           <div>
-            <label
-              htmlFor="password"
-              className="block text-[2.5vw] md:text-[1vw] font-medium text-darkgray-0"
-            >
-              Password
-            </label>
-            <input
+            <InputField
+              label="Password"
               id="password"
               name="password"
-              type="password"
-              required
-              className="w-full px-[1.5vw] md:px-[0.75vw] py-[1.5vw] md:py-[0.5vw] mt-[1vw] md:mt-[0.5vw] border border-lightgray-0 rounded-[1vw] md:rounded-[0.5vw] focus:outline-none placeholder:text-[2.5vw] md:placeholder:text-[1vw] text-[2.5vw] md:text-[1vw]"
+              fieldType="password"
+              autoComplete="current-password"
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
           <div className="flex items-center justify-between">
@@ -96,7 +90,10 @@ const ClientSignIn: React.FC<ClientSignInProps> = ({ onSubmit }) => {
           </div>
           <div className="text-center text-[2.5vw] md:text-[1vw] flex flex-row w-full items-center justify-center">
             <p className="text-gray-0">Don't have an account?&nbsp;</p>
-            <a href="/client-registration" className="text-purple-0 font font-semibold">
+            <a
+              href="/client-registration"
+              className="text-purple-0 font font-semibold"
+            >
               Sign up
             </a>
           </div>

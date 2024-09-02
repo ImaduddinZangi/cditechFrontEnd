@@ -21,17 +21,25 @@ const EditInspectionPage: React.FC = () => {
     error,
   } = useGetInspectionByIdQuery(inspectionId || "");
   const [updateInspection] = useUpdateInspectionMutation();
-  const navigate = useNavigate();
-
-  // State management for modals and their data
   const [scores, setScores] = useState<Scores[]>([]);
   const [checklistItemIds, setChecklistItemIds] = useState<string[]>([]);
   const [route, setRoute] = useState<
-    Array<{ latitude: number; longitude: number }>
+  Array<{ latitude: number; longitude: number }>
   >([]);
   const [isScoreModalOpen, setIsScoreModalOpen] = useState(false);
   const [isChecklistModalOpen, setIsChecklistModalOpen] = useState(false);
   const [isRouteModalOpen, setIsRouteModalOpen] = useState(false);
+  const navigate = useNavigate();
+
+  type APIError = {
+    data: {
+      message: string;
+    };
+  };
+
+  const isAPIError = (error: any): error is APIError => {
+    return error && error.data && typeof error.data.message === "string";
+  };
 
   useEffect(() => {
     if (inspection) {
@@ -67,8 +75,14 @@ const EditInspectionPage: React.FC = () => {
         autoClose: 500,
       });
     } catch (error) {
-      toast.error("Error updating inspection.");
-      console.error("Error updating inspection:", error);
+      if (isAPIError(error)) {
+        toast.error("Error Updating Inspection: " + error.data.message);
+      } else if (error instanceof Error) {
+        toast.error("Error Updating Inspection: " + error.message);
+      } else {
+        toast.error("An unknown error occurred");
+      }
+      console.error("Error Updating Inspection:", error);
     }
   };
 

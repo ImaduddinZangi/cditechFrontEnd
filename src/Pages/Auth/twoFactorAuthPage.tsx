@@ -10,7 +10,7 @@ const TwoFactorAuthPage: React.FC = () => {
   const [verifyCode] = useVerifyCodeMutation();
   const [qrCode, setQrCode] = useState<string>("");
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     const fetchQrCode = async () => {
       try {

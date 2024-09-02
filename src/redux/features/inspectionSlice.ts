@@ -18,7 +18,7 @@ export interface Checklist {
   updated_at?: string;
 }
 
-interface RoutePoint {
+export interface RoutePoint {
   latitude: number;
   longitude: number;
 }

@@ -11,6 +11,16 @@ const AssetPumps: React.FC = () => {
   const [createPump] = useCreatePumpMutation();
   const navigate = useNavigate();
 
+  type APIError = {
+    data: {
+      message: string;
+    };
+  };
+
+  const isAPIError = (error: any): error is APIError => {
+    return error && error.data && typeof error.data.message === "string";
+  };
+
   const handleAddPump = async (
     assetId: string,
     name: string,
@@ -41,13 +51,14 @@ const AssetPumps: React.FC = () => {
       });
       console.log("Pump created successfully", result);
     } catch (error) {
-      if (error instanceof Error) {
-        toast.error("Error adding Pump: " + error.message);
-        console.error("Error adding Pump:", error);
+      if (isAPIError(error)) {
+        toast.error("Error Creating Pump: " + error.data.message);
+      } else if (error instanceof Error) {
+        toast.error("Error Creating Pump: " + error.message);
       } else {
-        toast.error("An unknown error occurred.");
-        console.error("An unknown error occurred:", error);
+        toast.error("An unknown error occurred");
       }
+      console.error("Error Creating Pump:", error);
     }
   };
 

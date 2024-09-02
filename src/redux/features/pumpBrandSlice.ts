@@ -8,6 +8,7 @@ export interface PumpBrand {
   phone: string;
   address: string;
   madeInUsa: boolean;
+  photos?: [];
 }
 
 interface PumpBrandState {

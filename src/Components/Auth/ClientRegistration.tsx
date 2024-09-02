@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import InputField from "../Tags/InputField";
 
 interface ClientRegistrationProps {
   onSubmit: (
@@ -58,130 +59,161 @@ const ClientRegistration: React.FC<ClientRegistrationProps> = ({
     );
   };
 
-  const renderInputField = (
-    id: string,
-    label: string,
-    type: string,
-    value: string,
-    placeholder: string,
-    required: boolean = true
-  ) => (
-    <div className="w-full md:w-1/2 px-[1vw] mt-[2vw]">
-      <label
-        htmlFor={id}
-        className="block text-[2.5vw] md:text-[1vw] font-medium text-darkgray-0"
-      >
-        {label}
-      </label>
-      <input
-        id={id}
-        name={id}
-        type={type}
-        required={required}
-        className="w-full px-[1.5vw] md:px-[0.75vw] py-[1.5vw] md:py-[0.5vw] mt-[1vw] md:mt-[0.5vw] border border-lightgray-0 rounded-[1vw] md:rounded-[0.5vw] focus:outline-none placeholder:text-[2.5vw] md:placeholder:text-[1vw] text-[2.5vw] md:text-[1vw]"
-        placeholder={placeholder}
-        value={value}
-        onChange={handleChange}
-      />
-    </div>
-  );
-
   return (
     <div className="flex w-full my-[3vw] font-inter items-center justify-center h-full">
       <div className="w-full max-w-[80vw] md:max-w-[50vw] p-[4vw] md:p-[2vw] space-y-[0.5vh] bg-white rounded shadow-lg">
-        <p className="text-[5vw] md:text-[2.5vw] text-dark-0 font-semibold text-center">
-          Client Portal
+        <p className="text-[2vw] text-dark-0 font-semibold text-center">
+          Client Registration
         </p>
         <form
-          className="space-y-[3vw] md:space-y-[1.5vw]"
+          className="space-y-[1.5vw]"
           onSubmit={handleSubmit}
         >
-          <div className="flex flex-wrap -mx-[1vw]">
-            {renderInputField(
-              "name",
-              "Name",
-              "text",
-              formData.name,
-              "Enter your name"
-            )}
-            {renderInputField(
-              "email",
-              "Email",
-              "email",
-              formData.email,
-              "Enter your email"
-            )}
-            {renderInputField(
-              "industry",
-              "Industry",
-              "text",
-              formData.industry,
-              "Enter your industry"
-            )}
-            {renderInputField(
-              "password",
-              "Password",
-              "password",
-              formData.password,
-              "Enter your password"
-            )}
-            {renderInputField(
-              "phone",
-              "Phone",
-              "text",
-              formData.phone,
-              "Enter your phone number"
-            )}
-            {renderInputField(
-              "address",
-              "Address",
-              "text",
-              formData.address,
-              "Enter your address"
-            )}
-            {renderInputField(
-              "companyName",
-              "Company Name",
-              "text",
-              formData.companyName,
-              "Enter your company name"
-            )}
-            {renderInputField(
-              "companyType",
-              "Company Type",
-              "text",
-              formData.companyType,
-              "Enter your company type"
-            )}
-            {renderInputField(
-              "billingAddress",
-              "Billing Address",
-              "text",
-              formData.billingAddress,
-              "Enter your billing address"
-            )}
-            {renderInputField(
-              "paymentMethod",
-              "Payment Method",
-              "text",
-              formData.paymentMethod,
-              "Enter your payment method"
-            )}
-            {renderInputField(
-              "customPortalUrl",
-              "Custom Portal URL",
-              "text",
-              formData.customPortalUrl,
-              "Enter your custom portal URL"
-            )}
-            {renderInputField(
-              "nextBillDate",
-              "Next Bill Date",
-              "date",
-              formData.nextBillDate,
-              "",
-              false
-            )}
+          <div className="grid grid-cols-2">
+            <div className="w-full px-[1vw] mt-[2vw]">
+              <InputField
+                id="name"
+                label="Name"
+                name="name"
+                fieldType="text"
+                value={formData.name}
+                placeholder="Enter your name"
+                autoComplete="name"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="w-full px-[1vw] mt-[2vw]">
+              <InputField
+                id="email"
+                label="Email"
+                name="email"
+                fieldType="email"
+                value={formData.email}
+                placeholder="Enter your email"
+                autoComplete="email"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="w-full px-[1vw] mt-[2vw]">
+              <InputField
+                id="industry"
+                label="Industry"
+                name="industry"
+                fieldType="text"
+                value={formData.industry}
+                placeholder="Enter your industry"
+                autoComplete="industry"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="w-full px-[1vw] mt-[2vw]">
+              <InputField
+                id="password"
+                label="Password"
+                name="password"
+                fieldType="password"
+                value={formData.password}
+                placeholder="Enter your password"
+                autoComplete="current-password"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="w-full px-[1vw] mt-[2vw]">
+              <InputField
+                id="phone"
+                label="Phone"
+                name="phone"
+                fieldType="text"
+                value={formData.phone}
+                placeholder="Enter your phone number"
+                autoComplete="tel"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="w-full px-[1vw] mt-[2vw]">
+              <InputField
+                id="address"
+                label="Address"
+                name="address"
+                fieldType="text"
+                value={formData.address}
+                placeholder="Enter your address"
+                autoComplete="street-address"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="w-full px-[1vw] mt-[2vw]">
+              <InputField
+                id="companyName"
+                label="Company Name"
+                name="companyName"
+                fieldType="text"
+                value={formData.companyName}
+                placeholder="Enter your company name"
+                autoComplete="organization"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="w-full px-[1vw] mt-[2vw]">
+              <InputField
+                id="companyType"
+                label="Company Type"
+                name="companyType"
+                fieldType="text"
+                value={formData.companyType}
+                placeholder="Enter your company type"
+                autoComplete="organization"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="w-full px-[1vw] mt-[2vw]">
+              <InputField
+                id="billingAddress"
+                label="Billing Address"
+                name="billingAddress"
+                fieldType="text"
+                value={formData.billingAddress}
+                placeholder="Enter your billing address"
+                autoComplete="billing street-address"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="w-full px-[1vw] mt-[2vw]">
+              <InputField
+                id="paymentMethod"
+                label="Payment Method"
+                name="paymentMethod"
+                fieldType="text"
+                value={formData.paymentMethod}
+                placeholder="Enter your payment method"
+                autoComplete="cc-number"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="w-full px-[1vw] mt-[2vw]">
+              <InputField
+                id="customPortalUrl"
+                label="Custom Portal URL"
+                name="customPortalUrl"
+                fieldType="text"
+                value={formData.customPortalUrl}
+                placeholder="Enter your custom portal URL"
+                autoComplete="url"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="w-full px-[1vw] mt-[2vw]">
+              <InputField
+                id="nextBillDate"
+                label="Next Bill Date"
+                name="nextBillDate"
+                fieldType="date"
+                value={formData.nextBillDate}
+                placeholder=""
+                autoComplete="off"
+                onChange={handleChange}
+              />
+            </div>
           </div>
           <div>
             <button

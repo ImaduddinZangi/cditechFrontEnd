@@ -13,6 +13,8 @@ export interface Customer {
   gate_code: string;
   previous_phone_number: string;
   service_contact: string;
+  quickbooksCustomerId?: string;
+  photo?: string;
 }
 
 interface CustomerState {

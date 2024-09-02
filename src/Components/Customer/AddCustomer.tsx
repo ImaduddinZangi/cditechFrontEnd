@@ -5,6 +5,9 @@ import "react-phone-input-2/lib/style.css";
 import cities from "cities.json";
 import { states } from "./Constants/usStates";
 import { useNavigate } from "react-router-dom";
+import InputField from "../Tags/InputField";
+import PurpleButton from "../Tags/PurpleButton";
+import WhiteButton from "../Tags/WhiteButton";
 
 interface Option {
   value: string;
@@ -134,7 +137,7 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
   };
 
   const handleCancel = () => {
-    navigate("/manage-customer-asset");
+    navigate("/customer-table");
   };
 
   return (
@@ -142,14 +145,12 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
       <form className="space-y-6" onSubmit={handleSubmit}>
         <div className="grid grid-cols-2 gap-[1.5vw]">
           <div>
-            <label className="block text-darkgray-0 font-medium text-[1vw]">
-              User
-            </label>
-            <input
-              type="text"
-              className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-              placeholder="Name"
+            <InputField
+              label="User"
+              name="name"
+              fieldType="text"
               value={name}
+              placeholder="Name"
               onChange={(e) => setName(e.target.value)}
             />
           </div>
@@ -168,14 +169,12 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
         </div>
         <div className="grid grid-cols-3 gap-[1.5vw]">
           <div>
-            <label className="block text-darkgray-0 font-medium text-[1vw]">
-              Email Address
-            </label>
-            <input
-              type="email"
-              className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-              placeholder="None"
+            <InputField
+              label="Email Address"
+              name="email"
+              fieldType="email"
               value={email}
+              placeholder="None"
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
@@ -192,14 +191,12 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
             />
           </div>
           <div>
-            <label className="block text-darkgray-0 font-medium text-[1vw]">
-              Gate Code
-            </label>
-            <input
-              type="text"
-              className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-              placeholder="None"
+            <InputField
+              label="Gate Code"
+              name="gateCode"
+              fieldType="text"
               value={gateCode}
+              placeholder="None"
               onChange={(e) => setGateCode(e.target.value)}
             />
           </div>
@@ -207,15 +204,13 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
 
         <div className="grid grid-cols-4 gap-[1.5vw]">
           <div>
-            <label className="block text-darkgray-0 font-medium text-[1vw]">
-              Street Address
-            </label>
-            <input
-              type="text"
+            <InputField
+              label="Street Address"
+              name="streetAddress"
+              fieldType="text"
               value={streetAddress}
-              onChange={(e) => setStreetAddress(e.target.value)}
-              className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
               placeholder="123 Main Street"
+              onChange={(e) => setStreetAddress(e.target.value)}
             />
           </div>
           <div>
@@ -247,29 +242,25 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
             />
           </div>
           <div>
-            <label className="block text-darkgray-0 font-medium text-[1vw]">
-              Zipcode
-            </label>
-            <input
-              type="text"
-              className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-              placeholder="Enter zip code"
+            <InputField
+              label="Zipcode"
+              name="zipCode"
+              fieldType="text"
               value={zipCode}
+              placeholder="Enter zip code"
               onChange={(e) => setZipCode(e.target.value)}
             />
           </div>
         </div>
         <div className="grid grid-cols-4 gap-[1.5vw]">
           <div>
-            <label className="block text-darkgray-0 font-medium text-[1vw]">
-              Billing Address
-            </label>
-            <input
-              type="text"
+            <InputField
+              label="Billing Address"
+              name="billingStreetAddress"
+              fieldType="text"
               value={billingStreetAddress}
-              onChange={(e) => setBillingStreetAddress(e.target.value)}
-              className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
               placeholder="123 Main Street"
+              onChange={(e) => setBillingStreetAddress(e.target.value)}
             />
           </div>
           <div>
@@ -299,32 +290,19 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
             />
           </div>
           <div>
-            <label className="block text-darkgray-0 font-medium text-[1vw]">
-              Zipcode
-            </label>
-            <input
-              type="text"
-              className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-              placeholder="Enter zip code"
+            <InputField
+              label="Zipcode"
+              name="billingZipCode"
+              fieldType="text"
               value={billingZipCode}
+              placeholder="Enter zip code"
               onChange={(e) => setBillingZipCode(e.target.value)}
             />
           </div>
         </div>
-        <div className="flex justify-end space-x-4">
-          <button
-            type="submit"
-            className="px-[2vw] py-[1vw] bg-purple-0 text-white rounded-md text-[1vw]"
-          >
-            Save & create user
-          </button>
-          <button
-            type="button"
-            onClick={handleCancel}
-            className="px-[2vw] py-[1vw] bg-white text-black rounded-md border text-[1vw]"
-          >
-            Do Not Save And Cancel
-          </button>
+        <div className="flex justify-end space-x-[1vw]">
+          <PurpleButton type="submit" text="Create" />
+          <WhiteButton type="button" text="Cancel" onClick={handleCancel} />
         </div>
       </form>
     </div>

@@ -1,10 +1,37 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { getUserId } from "../../../utils/utils";
 import { useGetAssetTypesQuery } from "../../../redux/api/assetTypeApi";
 import { useGetCustomersQuery } from "../../../redux/api/customerApi";
 import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
-import { Customer } from "../../../redux/features/customerSlice";
-import { AssetType } from "../../../redux/features/assetTypeSlice";
+import Select from "react-select";
+import InputField from "../../Tags/InputField";
+import PurpleButton from "../../Tags/PurpleButton";
+import WhiteButton from "../../Tags/WhiteButton";
+import Loader from "../../Constants/Loader";
+import { useNavigate } from "react-router-dom";
+
+interface InitialData {
+  name?: string;
+  type?: { id: string; name: string };
+  customer?: { id: string; name: string };
+  location?: string;
+  latitude?: number;
+  longitude?: number;
+  description?: string;
+  status?: string;
+  inspectionInterval?: string;
+  qrCode?: string;
+  nfcCode?: string;
+  pipeDia?: number;
+  smart?: string;
+  size?: string;
+  material?: string;
+  deleteProtect?: string;
+  duty?: string;
+  rails?: string;
+  float?: number;
+  pumps?: number;
+}
 
 interface AddAssetProps {
   onSubmit: (
@@ -30,41 +57,35 @@ interface AddAssetProps {
     float: number,
     pumps: number
   ) => void;
-  initialData?: Partial<{
-    name: string;
-    type: string;
-    customerId: string;
-    location: string;
-    latitude: number;
-    longitude: number;
-    description: string;
-    status: string;
-    inspectionInterval: string;
-    qrCode: string;
-    nfcCode: string;
-    pipeDia: number;
-    smart: string;
-    size: string;
-    material: string;
-    deleteProtect: string;
-    duty: string;
-    rails: string;
-    float: number;
-    pumps: number;
-  }>;
+  initialData?: Partial<InitialData>;
 }
 
 const libraries: ("places" | "drawing")[] = ["places"];
 
 const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
+  const [customers, setCustomers] = useState<
+    Array<{ label: string; value: string }>
+  >([]);
+  const [selectedCustomer, setSelectedCustomer] = useState<{
+    label: string;
+    value: string;
+  } | null>(null);
+  const [assetType, setAssetType] = useState<
+    Array<{ label: string; value: string }>
+  >([]);
+  const [selectedAssetType, setSelectedAssetType] = useState<{
+    label: string;
+    value: string;
+  } | null>(null);
   const clientId = getUserId();
-  const { data: assetTypes } = useGetAssetTypesQuery();
-  const { data: customers } = useGetCustomersQuery();
+  const navigate = useNavigate();
+  const { data: assetTypeData } = useGetAssetTypesQuery();
+  const { data: customersData } = useGetCustomersQuery();
 
   const [formState, setFormState] = useState({
     name: initialData?.name || "",
-    type: initialData?.type || "",
-    customerId: initialData?.customerId || "",
+    type: initialData?.type?.id || "",
+    customerId: initialData?.customer?.id || "",
     location: initialData?.location || "",
     latitude: initialData?.latitude || 0,
     longitude: initialData?.longitude || 0,
@@ -120,6 +141,74 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
     });
   };
 
+  const handleCustomerChange = (selectedOption: any) => {
+    setSelectedCustomer(selectedOption);
+    setFormState((prevState) => ({
+      ...prevState,
+      customerId: selectedOption?.value || "",
+    }));
+  };
+
+  const handleAssetTypeChange = (selectedOption: any) => {
+    setSelectedAssetType(selectedOption);
+    setFormState((prevState) => ({
+      ...prevState,
+      type: selectedOption?.value || "",
+    }));
+  };
+
+  useEffect(() => {
+    if (customersData) {
+      setCustomers(
+        customersData.map((customer) => ({
+          label: customer.name,
+          value: customer.id,
+        }))
+      );
+    }
+  }, [customersData]);
+
+  useEffect(() => {
+    if (assetTypeData) {
+      setAssetType(
+        assetTypeData.map((assetType) => ({
+          label: assetType.name,
+          value: assetType.id,
+        }))
+      );
+    }
+  }, [assetTypeData]);
+
+  useEffect(() => {
+    if (initialData && customers.length > 0) {
+      const selectedCustomerData = customers.find(
+        (c) => c.value === initialData.customer?.id
+      );
+      setSelectedCustomer(selectedCustomerData || null);
+      setFormState((prevState) => ({
+        ...prevState,
+        customerId: initialData.customer?.id || "",
+      }));
+    }
+  }, [initialData, customers]);
+
+  useEffect(() => {
+    if (initialData && assetType.length > 0) {
+      const selectedAssetTypeData = assetType.find(
+        (a) => a.value === initialData.type?.id
+      );
+      setSelectedAssetType(selectedAssetTypeData || null);
+      setFormState((prevState) => ({
+        ...prevState,
+        type: initialData.type?.id || "",
+      }));
+    }
+  }, [initialData, assetType]);
+
+  const handleCancel = () => {
+    navigate("/customer-table");
+  };
+
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     onSubmit(
@@ -148,10 +237,15 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
   };
 
   if (loadError) return <div>Error loading maps</div>;
-  if (!isLoaded) return <div>Loading Maps</div>;
+  if (!isLoaded)
+    return (
+      <div>
+        <Loader />
+      </div>
+    );
 
   return (
-    <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg">
+    <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
       <form
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[1vw] relative pb-[5vw]"
         onSubmit={handleSubmit}
@@ -160,78 +254,64 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
           <label className="block text-darkgray-0 font-medium text-[1vw]">
             Customer:
           </label>
-          <select
-            name="customerId"
-            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-            value={formState.customerId}
-            onChange={handleChange}
-          >
-            <option value="">Select customer</option>
-            {customers?.map((customer: Customer) => (
-              <option key={customer.id} value={customer.id}>
-                {customer.name}
-              </option>
-            ))}
-          </select>
+          <Select
+            id="customer"
+            options={customers}
+            placeholder="Search"
+            className="mt-1"
+            isClearable
+            value={selectedCustomer}
+            onChange={handleCustomerChange}
+            required
+          />
         </div>
         <div>
           <label className="block text-darkgray-0 font-medium text-[1vw]">
             Asset Type:
           </label>
-          <select
-            name="type"
-            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-            value={formState.type}
-            onChange={handleChange}
-          >
-            {assetTypes?.map((assetType: AssetType) => (
-              <option key={assetType.id} value={assetType.id}>
-                {assetType.name}
-              </option>
-            ))}
-          </select>
+          <Select
+            id="type"
+            options={assetType}
+            placeholder="Search"
+            className="mt-1"
+            isClearable
+            value={selectedAssetType}
+            onChange={handleAssetTypeChange}
+            required
+          />
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">
-            Asset Name:
-          </label>
-          <input
-            type="text"
+          <InputField
+            label="Asset Name"
             name="name"
-            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-            placeholder="Enter asset name"
+            fieldType="text"
             value={formState.name}
+            placeholder="Enter asset name"
             onChange={handleChange}
           />
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">
-            Location:
-          </label>
           {isLoaded && (
             <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
-              <input
+              <InputField
                 ref={inputRef}
-                type="text"
+                label="Location"
                 name="location"
-                className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-                placeholder="Enter asset location"
+                fieldType="text"
                 value={formState.location}
+                placeholder="Enter asset location"
                 onChange={handleChange}
               />
             </Autocomplete>
           )}
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">
-            Description:
-          </label>
-          <input
-            type="text"
+          <InputField
+            label="Description"
             name="description"
-            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-            placeholder="Enter description"
+            fieldType="text"
             value={formState.description}
+            placeholder="Enter description"
             onChange={handleChange}
           />
         </div>
@@ -267,41 +347,32 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
           </select>
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">
-            QR Code:
-          </label>
-          <input
-            type="text"
+          <InputField
+            label="QR Code"
             name="qrCode"
-            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-            placeholder="Enter QR code"
+            fieldType="text"
             value={formState.qrCode}
+            placeholder="Enter QR code"
             onChange={handleChange}
           />
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">
-            NFC Code:
-          </label>
-          <input
-            type="text"
+          <InputField
+            label="NFC Code"
             name="nfcCode"
-            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-            placeholder="Enter NFC code"
+            fieldType="text"
             value={formState.nfcCode}
+            placeholder="Enter NFC code"
             onChange={handleChange}
           />
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">
-            Pipe Diameter:
-          </label>
-          <input
-            type="number"
+          <InputField
+            label="Pipe Diameter"
             name="pipeDia"
-            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-            placeholder="Enter pipe diameter"
+            fieldType="number"
             value={formState.pipeDia}
+            placeholder="Enter pipe diameter"
             onChange={handleChange}
           />
         </div>
@@ -367,15 +438,12 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
           </select>
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">
-            Duty:
-          </label>
-          <input
-            type="text"
+          <InputField
+            label="Duty"
             name="duty"
-            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-            placeholder="Enter duty"
+            fieldType="text"
             value={formState.duty}
+            placeholder="Enter duty"
             onChange={handleChange}
           />
         </div>
@@ -394,44 +462,28 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
           </select>
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">
-            Float:
-          </label>
-          <input
-            type="number"
+          <InputField
+            label="Float"
             name="float"
-            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-            placeholder="Enter float"
+            fieldType="number"
             value={formState.float}
+            placeholder="Enter float"
             onChange={handleChange}
           />
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">
-            Pumps:
-          </label>
-          <input
-            type="number"
+          <InputField
+            label="Pumps"
             name="pumps"
-            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-            placeholder="Enter pumps"
+            fieldType="number"
             value={formState.pumps}
+            placeholder="Enter pumps"
             onChange={handleChange}
           />
         </div>
         <div className="col-span-2 absolute bottom-0 right-0 flex justify-end space-x-[1vw]">
-          <button
-            type="submit"
-            className="px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-[0.4vw]"
-          >
-            Save & Close
-          </button>
-          <button
-            type="button"
-            className="px-[1vw] py-[0.5vw] border bg-white text-darkgray-0 rounded-[0.4vw]"
-          >
-            Do Not Save & Cancel
-          </button>
+          <PurpleButton type="submit" text="Save" />
+          <WhiteButton type="button" text="Cancel" onClick={handleCancel} />
         </div>
       </form>
     </div>

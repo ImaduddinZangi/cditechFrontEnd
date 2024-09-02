@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 const AddPhotosPage: React.FC = () => {
   const [uploadPhoto] = useUploadPhotoMutation();
   const navigate = useNavigate();
+  
   const handlePhotoUpload = async (files: File[], id: string, type: string) => {
     try {
       const formData = new FormData();

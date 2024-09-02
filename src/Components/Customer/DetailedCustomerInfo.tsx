@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useGetCustomerByIdQuery } from "../../redux/api/customerApi";
 import { useAppSelector } from "../../redux/store";
+import Loader from "../Constants/Loader";
 
 const DetailedCustomerInfo: React.FC = () => {
   const selectedCustomerId = useAppSelector(
@@ -21,7 +22,12 @@ const DetailedCustomerInfo: React.FC = () => {
     }
   }, [selectedCustomerId]);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading)
+    return (
+      <p>
+        <Loader />
+      </p>
+    );
   if (error) return <p>Error loading customer details</p>;
 
   return (

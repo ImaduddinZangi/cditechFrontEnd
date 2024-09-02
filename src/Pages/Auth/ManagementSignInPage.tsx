@@ -13,6 +13,16 @@ const ManagementSignInPage: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  type APIError = {
+    data: {
+      message: string;
+    };
+  };
+
+  const isAPIError = (error: any): error is APIError => {
+    return error && error.data && typeof error.data.message === "string";
+  };
+
   const handleLogin = async (email: string, password: string) => {
     try {
       const result = await loginUser({ email, password }).unwrap();
@@ -25,13 +35,14 @@ const ManagementSignInPage: React.FC = () => {
         autoClose: 500,
       });
     } catch (error) {
-      if (error instanceof Error) {
+      if (isAPIError(error)) {
+        toast.error("Login error: " + error.data.message);
+      } else if (error instanceof Error) {
         toast.error("Login error: " + error.message);
-        console.error("Login error:", error);
       } else {
-        toast.error("An unknown error occurred.");
-        console.error("An unknown error occurred:", error);
+        toast.error("An unknown error occurred");
       }
+      console.error("Login error:", error);
     }
   };
 

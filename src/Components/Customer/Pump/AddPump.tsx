@@ -4,6 +4,9 @@ import { useGetAssetsQuery } from "../../../redux/api/assetApi";
 import { useGetPumpBrandsQuery } from "../../../redux/api/pumpBrandApi";
 import { PumpBrand } from "../../../redux/features/pumpBrandSlice";
 import { Asset } from "../../../redux/features/assetSlice";
+import InputField from "../../Tags/InputField";
+import WhiteButton from "../../Tags/WhiteButton";
+import PurpleButton from "../../Tags/PurpleButton";
 
 interface AddPumpProps {
   isModalOpen: boolean;
@@ -33,7 +36,13 @@ interface AddPumpProps {
   isEditing?: boolean;
 }
 
-const AddPump: React.FC<AddPumpProps> = ({ isModalOpen, onClose, onSubmit, initialData, isEditing }) => {
+const AddPump: React.FC<AddPumpProps> = ({
+  isModalOpen,
+  onClose,
+  onSubmit,
+  initialData,
+  isEditing,
+}) => {
   const { data: assets } = useGetAssetsQuery();
   const { data: pumpBrands } = useGetPumpBrandsQuery();
 
@@ -114,25 +123,24 @@ const AddPump: React.FC<AddPumpProps> = ({ isModalOpen, onClose, onSubmit, initi
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50 font-inter">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6">
-        <h2 className="text-[1.2vw] font-semibold mb-[1vw]">{isEditing ? 'Edit Pump' : 'Add New Pump'}</h2>
+        <p className="text-[1.2vw] font-semibold mb-[1vw]">
+          {isEditing ? "Edit Pump" : "Add New Pump"}
+        </p>
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-[1vw]">
-            <div>
-              <label className="block mb-1 font-medium">Pump Name:</label>
-              <input
-                type="text"
-                className="w-full p-2 border border-gray-300 rounded-md"
-                placeholder="Enter name of pump"
-                name="name"
-                value={formState.name}
-                onChange={handleChange}
-                required
-              />
-            </div>
+            <InputField
+              label="Pump Name"
+              name="name"
+              fieldType="text"
+              value={formState.name}
+              placeholder="Enter name of pump"
+              onChange={handleChange}
+              required
+            />
             <div>
               <label className="block mb-1 font-medium">Brand:</label>
               <select
-                className="w-full p-2 border border-gray-300 rounded-md"
+                className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
                 name="brandId"
                 value={formState.brandId}
                 onChange={handleChange}
@@ -149,7 +157,7 @@ const AddPump: React.FC<AddPumpProps> = ({ isModalOpen, onClose, onSubmit, initi
             <div>
               <label className="block mb-1 font-medium">Asset:</label>
               <select
-                className="w-full p-2 border border-gray-300 rounded-md"
+                className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
                 name="assetId"
                 value={formState.assetId}
                 onChange={handleChange}
@@ -163,58 +171,46 @@ const AddPump: React.FC<AddPumpProps> = ({ isModalOpen, onClose, onSubmit, initi
                 ))}
               </select>
             </div>
-            <div>
-              <label className="block mb-1 font-medium">AVG-Amps:</label>
-              <input
-                type="number"
-                className="w-full p-2 border border-gray-300 rounded-md"
-                placeholder="Enter number of AVG-Amps"
-                name="avgAmps"
-                value={formState.avgAmps}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div>
-              <label className="block mb-1 font-medium">Max-Amps:</label>
-              <input
-                type="number"
-                className="w-full p-2 border border-gray-300 rounded-md"
-                placeholder="Enter number of pump"
-                name="maxAmps"
-                value={formState.maxAmps}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div>
-              <label className="block mb-1 font-medium">HP:</label>
-              <input
-                type="number"
-                className="w-full p-2 border border-gray-300 rounded-md"
-                placeholder="Enter number of HP"
-                name="hp"
-                value={formState.hp}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div>
-              <label className="block mb-1 font-medium">Serial:</label>
-              <input
-                type="text"
-                className="w-full p-2 border border-gray-300 rounded-md"
-                placeholder="Enter serial"
-                name="serial"
-                value={formState.serial}
-                onChange={handleChange}
-                required
-              />
-            </div>
+            <InputField
+              label="AVG-Amps"
+              name="avgAmps"
+              fieldType="number"
+              value={formState.avgAmps}
+              placeholder="Enter number of AVG-Amps"
+              onChange={handleChange}
+              required
+            />
+            <InputField
+              label="Max-Amps"
+              name="maxAmps"
+              fieldType="number"
+              value={formState.maxAmps}
+              placeholder="Enter number of Max-Amps"
+              onChange={handleChange}
+              required
+            />
+            <InputField
+              label="HP"
+              name="hp"
+              fieldType="number"
+              value={formState.hp}
+              placeholder="Enter number of HP"
+              onChange={handleChange}
+              required
+            />
+            <InputField
+              label="Serial"
+              name="serial"
+              fieldType="text"
+              value={formState.serial}
+              placeholder="Enter serial"
+              onChange={handleChange}
+              required
+            />
             <div>
               <label className="block mb-1 font-medium">Warranty:</label>
               <select
-                className="w-full p-2 border border-gray-300 rounded-md"
+                className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
                 name="warranty"
                 value={formState.warranty}
                 onChange={handleChange}
@@ -225,32 +221,22 @@ const AddPump: React.FC<AddPumpProps> = ({ isModalOpen, onClose, onSubmit, initi
                 <option value="3 Years">3 Years</option>
               </select>
             </div>
-            <div>
-              <label className="block mb-1 font-medium">Installed Date:</label>
-              <input
-                type="date"
-                className="w-full p-2 border border-gray-300 rounded-md"
-                name="installedDate"
-                value={formState.installedDate}
-                onChange={handleChange}
-                required
-              />
-            </div>
+            <InputField
+              label="Installed Date"
+              name="installedDate"
+              fieldType="date"
+              value={formState.installedDate}
+              onChange={handleChange}
+              required
+            />
           </div>
-          <div className="mt-4 flex justify-end">
-            <button
-              type="button"
-              className="px-[1vw] py-[0.5vw] bg-white border text-black rounded-md mr-2"
-              onClick={handleCancel}
-            >
-              Cancel
-            </button>
-            <button
+          <div className="mt-[1vw] flex justify-end">
+            <PurpleButton
+              text={isEditing ? "Save Changes" : "Save"}
               type="submit"
-              className="px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-md"
-            >
-              {isEditing ? 'Save Changes' : 'Save & Close'}
-            </button>
+              className="mr-[1vw]"
+            />
+            <WhiteButton text="Cancel" type="button" onClick={handleCancel} />
           </div>
         </form>
       </div>

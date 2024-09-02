@@ -10,6 +10,16 @@ const AddAssetTypePage: React.FC = () => {
   const [createAssetType] = useCreateAssetTypeMutation();
   const navigate = useNavigate();
 
+  type APIError = {
+    data: {
+      message: string;
+    };
+  };
+
+  const isAPIError = (error: any): error is APIError => {
+    return error && error.data && typeof error.data.message === "string";
+  };
+
   const handleAddAssetType = async (name: string, description: string) => {
     try {
       const result = await createAssetType({ name, description }).unwrap();
@@ -19,13 +29,14 @@ const AddAssetTypePage: React.FC = () => {
       });
       console.log("Asset created successfully", result);
     } catch (error) {
-      if (error instanceof Error) {
-        toast.error("Error adding Asset Type: " + error.message);
-        console.error("Error adding Asset Type:", error);
+      if (isAPIError(error)) {
+        toast.error("Error Adding Asset Type: " + error.data.message);
+      } else if (error instanceof Error) {
+        toast.error("Error Adding Asset Type: " + error.message);
       } else {
-        toast.error("An unknown error occurred.");
-        console.error("An unknown error occurred:", error);
+        toast.error("An unknown error occurred");
       }
+      console.error("Error Adding Asset Type:", error);
     }
   };
 

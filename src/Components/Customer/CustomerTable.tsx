@@ -1,15 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   useGetCustomersQuery,
   useDeleteCustomerMutation,
 } from "../../redux/api/customerApi";
 import { useAppDispatch } from "../../redux/store";
 import { setSelectedCustomerId } from "../../redux/features/customerSlice";
-import NextButton from "./Constants/NextButton";
-import PreviousButton from "./Constants/PreviousButton";
 import ActiveBadge from "./Constants/ActiveBadge";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import ConfirmationModal from "../Constants/ConfirmationModal";
+import Loader from "../Constants/Loader";
+import { FiSearch } from "react-icons/fi"; // Import the search icon from react-icons
+import PurpleButton from "../Tags/PurpleButton";
+import WhiteButton from "../Tags/WhiteButton";
 
 const truncateAddress = (address: string, maxLength = 25) => {
   if (address.length > maxLength) {
@@ -18,11 +21,61 @@ const truncateAddress = (address: string, maxLength = 25) => {
   return address;
 };
 
+const highlightText = (text: string, searchTerm: string) => {
+  if (!searchTerm) return text;
+  const regex = new RegExp(`(${searchTerm})`, "gi");
+  return text.split(regex).map((part, i) =>
+    regex.test(part) ? (
+      <span key={i} className="bg-yellow-200">
+        {part}
+      </span>
+    ) : (
+      part
+    )
+  );
+};
+
 const CustomerTable: React.FC = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { data, error, isLoading } = useGetCustomersQuery();
   const [deleteCustomer] = useDeleteCustomerMutation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [customerIdToDelete, setCustomerIdToDelete] = useState<string | null>(
+    null
+  );
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const customersPerPage = 10;
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredData = data?.filter(
+    (customer) =>
+      customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      customer.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      customer.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      customer.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      customer.quickbooksCustomerId
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase())
+  );
+
+  const totalPages = Math.ceil((filteredData?.length || 0) / customersPerPage);
+  const paginatedData = filteredData?.slice(
+    (currentPage - 1) * customersPerPage,
+    currentPage * customersPerPage
+  );
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
 
   const handleClickManageCustomer = (customerId: string) => {
     dispatch(setSelectedCustomerId(customerId));
@@ -33,22 +86,35 @@ const CustomerTable: React.FC = () => {
     navigate("/add-customer");
   };
 
-  const handleDeleteCustomer = async (id: string | undefined) => {
-    if (window.confirm("Are you sure you want to delete this Customer?")) {
+  const handleOpenDeleteModal = (id: string) => {
+    setCustomerIdToDelete(id);
+    setIsModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (customerIdToDelete) {
       try {
-        await deleteCustomer(id || "").unwrap();
+        await deleteCustomer(customerIdToDelete).unwrap();
         toast.success("Customer deleted successfully!", {
           onClose: () => window.location.reload(),
           autoClose: 500,
         });
       } catch (error) {
         toast.error("Error deleting customer!");
+      } finally {
+        setIsModalOpen(false);
+        setCustomerIdToDelete(null);
       }
     }
   };
 
+  const handleCancelDelete = () => {
+    setIsModalOpen(false);
+    setCustomerIdToDelete(null);
+  };
+
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   if (error) {
@@ -73,46 +139,28 @@ const CustomerTable: React.FC = () => {
                     Import New Customers
                   </button>
                 </div>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    placeholder="Search"
+                    className="px-[1vw] py-[0.2vw] border rounded-[0.5vw] placeholder:text-[1vw] text-[1vw] focus:outline-none"
+                  />
+                  <FiSearch
+                    className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500"
+                    size={16}
+                  />
+                </div>
               </div>
-              {data && data.length > 0 ? (
+              {paginatedData && paginatedData.length > 0 ? (
                 <>
-                  <div className="flex justify-between border-t border-b items-center px-[1.5vw] py-[1vw]">
-                    <h2 className="text-[1.5vw] font-semibold">
-                      Customers
-                      <span className="bg-custom-bg-color px-[0.5vw] py-[0.2vw] ml-[1vw] border rounded-[1vw] text-[1vw] text-purple-0 ">
-                        Total={data.length}
-                      </span>
-                    </h2>
-                    <div className="flex items-center space-x-[1vw]">
-                      <div className="relative">
-                        <input
-                          type="text"
-                          placeholder="Search"
-                          className="px-[1vw] py-[0.2vw] border rounded-[0.5vw] placeholder:text-[1vw] text-[1vw] focus:outline-none"
-                        />
-                        <svg
-                          className="w-[1vw] h-[1vw] absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                          />
-                        </svg>
-                      </div>
-                      <button className="px-[1vw] py-[0.2vw] rounded-[0.5vw] font-inter text-[1vw] font-semibold bg-purple-100 text-purple-0 border border-purple-600 hover:bg-purple-0 hover:text-white">
-                        Sort By
-                      </button>
-                    </div>
-                  </div>
                   <table className="min-w-max w-full table-auto">
                     <thead>
                       <tr className="h-[3vw] text-darkgray-0 border-b uppercase text-[1vw] leading-normal">
+                        <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
+                          ID
+                        </th>
                         <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
                           Name
                         </th>
@@ -131,73 +179,112 @@ const CustomerTable: React.FC = () => {
                       </tr>
                     </thead>
                     <tbody className="text-gray-600 text-[1vw] font-light">
-                      {data.map((customer, index) => (
+                      {paginatedData.map((customer) => (
                         <tr
                           key={customer.id}
                           className="border-b border-gray-200 hover:bg-gray-100"
                         >
+                          <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
+                            {highlightText(
+                              customer.quickbooksCustomerId ?? "",
+                              searchTerm
+                            )}
+                          </td>
                           <td className="py-[1vw] px-[1.5vw] text-left whitespace-nowrap">
                             <div className="flex items-center">
-                              <input
-                                id="remember-me"
-                                name="remember-me"
-                                type="checkbox"
-                                className="w-[2.5vw] md:w-[1vw] h-[2.5vw] md:h-[1vw] accent-purple-0 border-lightgray-0 rounded focus:ring-offset-white focus:ring-purple-0 cursor-pointer mr-2"
-                              />
                               <div className="mr-2">
                                 <img
                                   className="w-6 h-6 rounded-full"
-                                  src={`https://i.pravatar.cc/150?img=${index}`}
+                                  src={
+                                    customer.photo
+                                      ? customer.photo
+                                      : "/assets/no-image.jpg"
+                                  }
                                   alt={customer.name}
                                 />
                               </div>
                               <span className="font-inter font-medium text-[1vw]">
-                                {customer.name}
+                                {highlightText(customer.name, searchTerm)}
                               </span>
                             </div>
                           </td>
                           <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                            {truncateAddress(customer.address)}
+                            {highlightText(
+                              truncateAddress(customer.address),
+                              searchTerm
+                            )}
                           </td>
                           <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                            {customer.type}
+                            {highlightText(customer.type, searchTerm)}
                           </td>
                           <td className="py-[1vw] px-[1.5vw] text-center">
-                            <ActiveBadge />
+                            <ActiveBadge
+                              iconColor={
+                                customer.status === "active"
+                                  ? "bg-green-500"
+                                  : "bg-red-500"
+                              }
+                              bgColor={
+                                customer.status === "active"
+                                  ? "bg-green-100"
+                                  : "bg-red-100"
+                              }
+                              textColor={
+                                customer.status === "active"
+                                  ? "text-green-800"
+                                  : "text-red-800"
+                              }
+                              text={customer.status}
+                            />
                           </td>
                           <td className="flex flex-row items-center gap-x-[1vw] py-[1vw] px-[1.5vw] text-center">
-                            <button
+                            <PurpleButton
+                              type="button"
+                              text="Manage"
                               onClick={() =>
                                 handleClickManageCustomer(customer.id)
                               }
-                              className="px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-[0.4vw]"
-                            >
-                              Manage
-                            </button>
-                            <button
-                              onClick={() => handleDeleteCustomer(customer.id)}
-                              className="px-[1vw] py-[0.5vw] border bg-white text-darkgray-0 rounded-[0.4vw]"
-                            >
-                              Delete
-                            </button>
+                            />
+                            <WhiteButton
+                              type="button"
+                              text="Delete"
+                              onClick={() => handleOpenDeleteModal(customer.id)}
+                            />
                           </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                   <div className="flex items-center justify-between py-[1vw] px-[1.5vw]">
-                    <PreviousButton />
+                    <button
+                      onClick={handlePreviousPage}
+                      disabled={currentPage === 1}
+                      className="px-[1vw] py-[0.5vw] border bg-white text-darkgray-0 rounded-[0.4vw] text-[1vw] font-inter font-medium"
+                    >
+                      Previous
+                    </button>
                     <div className="flex space-x-1">
-                      {[...Array(10).keys()].map((page) => (
+                      {[...Array(totalPages).keys()].map((page) => (
                         <button
                           key={page}
-                          className="bg-gray-300 text-gray-600 py-1 px-3 rounded"
+                          onClick={() => setCurrentPage(page + 1)}
+                          className={`${
+                            currentPage === page + 1
+                              ? "bg-purple-0 text-white"
+                              : "bg-gray-300 text-gray-600"
+                          } py-1 px-3 rounded`}
                         >
                           {page + 1}
                         </button>
                       ))}
                     </div>
-                    <NextButton />
+                    <button
+                      onClick={handleNextPage}
+                      disabled={currentPage === totalPages}
+                      className="px-[1vw] py-[0.5vw] border bg-white text-darkgray-0 rounded-[0.4vw] text-[1vw] font-inter font-medium"
+                    >
+                      Next
+                    </button>
                   </div>
                 </>
               ) : (
@@ -211,6 +298,12 @@ const CustomerTable: React.FC = () => {
           </div>
         </div>
       </div>
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        message="Are you sure you want to delete this customer?"
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      />
     </div>
   );
 };

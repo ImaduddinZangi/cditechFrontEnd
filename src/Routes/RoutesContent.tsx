@@ -21,6 +21,7 @@ import AssetPumps from "../Pages/Customer/Pump/AssetPumps";
 import InspectionReportsPage from "../Pages/Inspection/InspectionReportsPage";
 import InspectionTablePage from "../Pages/Inspection/InspectionTablePage";
 import EditInspectionPage from "../Pages/Inspection/EditInspectionPage";
+import PumpBrandsTablePage from "../Pages/Customer/Pump/PumpBrandsTablePage";
 
 const RoutesContent: React.FC = () => {
   return (
@@ -52,6 +53,7 @@ const RoutesContent: React.FC = () => {
         {/* Pump */}
         <Route path="/add-pump-brand" element={<AddPumpBrandPage />} />
         <Route path="/asset-pumps" element={<AssetPumps />} />
+        <Route path="/pump-brands-table" element={<PumpBrandsTablePage />} />
         {/* Photo */}
         <Route path="/add-photos" element={<AddPhotosPage />} />
         {/* Inspection */}

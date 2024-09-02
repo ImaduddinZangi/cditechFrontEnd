@@ -1,11 +1,17 @@
-// src/components/ActiveBadge.tsx
 import React from 'react';
 
-const ActiveBadge: React.FC = () => {
+interface ActiveBadgeProps {
+  iconColor: string;
+  bgColor: string;
+  textColor: string;
+  text: string;
+}
+
+const ActiveBadge: React.FC<ActiveBadgeProps> = ({iconColor, bgColor, text, textColor}) => {
   return (
-    <div className="flex items-center space-x-2 bg-green-100 rounded-full px-3 py-1">
-      <span className="bg-green-500 rounded-full w-2.5 h-2.5"></span>
-      <span className="text-green-800 font-medium">Active</span>
+    <div className={`flex items-center space-x-2 ${bgColor} rounded-full px-3 py-1`}>
+      <span className={`${iconColor} rounded-full w-2.5 h-2.5`}></span>
+      <span className={`${textColor} font-medium`}>{text}</span>
     </div>
   );
 };
