@@ -22,6 +22,7 @@ import EditInspectionPage from "../Pages/Inspection/EditInspectionPage";
 import PumpBrandsTablePage from "../Pages/Customer/Pump/PumpBrandsTablePage";
 import InspectionDetailsPage from "../Pages/Inspection/InspectionDetailsPage";
 import AssetDetailsPage from "../Pages/Customer/Asset/AssetDetailsPage";
+import AddUserGroupPage from "../Pages/UserGroups/Groups/AddUserGroupPage";
 
 const RoutesContent: React.FC = () => {
   return (
@@ -66,6 +67,11 @@ const RoutesContent: React.FC = () => {
         <Route
           path="/inspection-details/:inspectionId"
           element={<InspectionDetailsPage />}
+        />
+        {/* UserGroups */}
+        <Route
+          path="/add-user-group"
+          element={<AddUserGroupPage />}
         />
       </Route>
     </Routes>

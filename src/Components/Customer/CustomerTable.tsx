@@ -5,6 +5,7 @@ import {
 } from "../../redux/api/customerApi";
 import { useAppDispatch } from "../../redux/store";
 import { setSelectedCustomerId } from "../../redux/features/customerSlice";
+import { useGetPhotosQuery } from "../../redux/api/uploadPhotosApi";
 import ActiveBadge from "./Constants/ActiveBadge";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -37,7 +38,8 @@ const highlightText = (text: string, searchTerm: string) => {
 
 const CustomerTable: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { data, isLoading } = useGetCustomersQuery();
+  const { data: customersData, isLoading } = useGetCustomersQuery();
+  const { data: photosData } = useGetPhotosQuery(); // Fetch photos
   const [deleteCustomer] = useDeleteCustomerMutation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -52,7 +54,7 @@ const CustomerTable: React.FC = () => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredData = data?.filter(
+  const filteredData = customersData?.filter(
     (customer) =>
       customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       customer.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -189,80 +191,85 @@ const CustomerTable: React.FC = () => {
                     )}
                   {!isLoading &&
                     paginatedData &&
-                    paginatedData.map((customer) => (
-                      <tr
-                        key={customer.id}
-                        className="border-b border-gray-200 hover:bg-gray-100"
-                      >
-                        <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                          {highlightText(
-                            customer.quickbooksCustomerId ?? "",
-                            searchTerm
-                          )}
-                        </td>
-                        <td className="py-[1vw] px-[1.5vw] text-left whitespace-nowrap">
-                          <div className="flex items-center">
-                            <div className="mr-2">
-                              <img
-                                className="w-6 h-6 rounded-full"
-                                src={
-                                  customer.photo
-                                    ? customer.photo
-                                    : "/assets/no-image.jpg"
-                                }
-                                alt={customer.name}
-                              />
+                    paginatedData.map((customer) => {
+                      const customerPhoto = photosData?.find(
+                        (photo) => photo.customerId === customer.id
+                      );
+                      const photoUrl = customerPhoto
+                        ? `https://inspection-point-s3.s3.us-east-2.amazonaws.com/${customerPhoto.url}`
+                        : "/assets/no-image.jpg";
+
+                      return (
+                        <tr
+                          key={customer.id}
+                          className="border-b border-gray-200 hover:bg-gray-100"
+                        >
+                          <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
+                            {highlightText(
+                              customer.quickbooksCustomerId ?? "",
+                              searchTerm
+                            )}
+                          </td>
+                          <td className="py-[1vw] px-[1.5vw] text-left whitespace-nowrap">
+                            <div className="flex items-center">
+                              <div className="mr-2">
+                                <img
+                                  className="w-6 h-6 rounded-full"
+                                  src={photoUrl} // Use matched photo URL
+                                  alt={customer.name}
+                                />
+                              </div>
+                              <span className="font-inter font-medium text-[1vw]">
+                                {highlightText(customer.name, searchTerm)}
+                              </span>
                             </div>
-                            <span className="font-inter font-medium text-[1vw]">
-                              {highlightText(customer.name, searchTerm)}
-                            </span>
-                          </div>
-                        </td>
-                        <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                          {highlightText(
-                            truncateAddress(customer.address),
-                            searchTerm
-                          )}
-                        </td>
-                        <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                          {highlightText(customer.type, searchTerm)}
-                        </td>
-                        <td className="py-[1vw] px-[1.5vw] text-center">
-                          <ActiveBadge
-                            iconColor={
-                              customer.status === "active" ||"Active"
-                                ? "bg-green-500"
-                                : "bg-red-500"
-                            }
-                            bgColor={
-                              customer.status === "active" || "Active"
-                                ? "bg-green-100"
-                                : "bg-red-100"
-                            }
-                            textColor={
-                              customer.status === "active" || "Active"
-                                ? "text-green-800"
-                                : "text-red-800"
-                            }
-                            text={customer.status}
-                          />
-                        </td>
-                        <td className="flex flex-row items-center gap-x-[1vw] py-[1vw] px-[1.5vw] text-center">
-                          <PurpleButton
-                            type="button"
-                            text="Manage"
-                            onClick={() =>
-                              handleClickManageCustomer(customer.id)
-                            }
-                          />
-                          <WhiteButton
-                            type="button"
-                            text="Delete"
-                            onClick={() => handleOpenDeleteModal(customer.id)}
-                          />
-                        </td>
-                      </tr>
-                    ))}
+                          </td>
+                          <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
+                            {highlightText(
+                              truncateAddress(customer.address),
+                              searchTerm
+                            )}
+                          </td>
+                          <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
+                            {highlightText(customer.type, searchTerm)}
+                          </td>
+                          <td className="py-[1vw] px-[1.5vw] text-center">
+                            <ActiveBadge
+                              iconColor={
+                                customer.status === "active"
+                                  ? "bg-green-500"
+                                  : "bg-red-500"
+                              }
+                              bgColor={
+                                customer.status === "active"
+                                  ? "bg-green-100"
+                                  : "bg-red-100"
+                              }
+                              textColor={
+                                customer.status === "active"
+                                  ? "text-green-800"
+                                  : "text-red-800"
+                              }
+                              text={customer.status}
+                            />
+                          </td>
+                          <td className="flex flex-row items-center gap-x-[1vw] py-[1vw] px-[1.5vw] text-center">
+                            <PurpleButton
+                              type="button"
+                              text="Manage"
+                              onClick={() =>
+                                handleClickManageCustomer(customer.id)
+                              }
+                            />
+                            <WhiteButton
+                              type="button"
+                              text="Delete"
+                              onClick={() => handleOpenDeleteModal(customer.id)}
+                            />
+                          </td>
+                        </tr>
+                      );
+                    })}
                 </tbody>
               </table>
 

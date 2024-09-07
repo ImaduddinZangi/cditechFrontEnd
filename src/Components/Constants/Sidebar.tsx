@@ -38,6 +38,14 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
       ],
     },
     {
+      title: "User Groups",
+      src: "group",
+      isDropdown: true,
+      dropdownItems: [
+        { title: "Add User Group", src: "group", href: "/add-user-group" },
+      ],
+    },
+    {
       title: "Files",
       src: "files",
       isDropdown: true,

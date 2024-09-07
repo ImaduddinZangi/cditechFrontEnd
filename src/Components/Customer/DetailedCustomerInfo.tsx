@@ -17,16 +17,16 @@ const DetailedCustomerInfo: React.FC = () => {
     if (!selectedCustomerId) {
       const idFromStorage = localStorage.getItem("selectedCustomerId");
       if (idFromStorage) {
-        // Dispatch action to set selectedCustomerId from local storage if necessary
+       
       }
     }
   }, [selectedCustomerId]);
 
   if (isLoading)
     return (
-      <p>
+      <div>
         <Loader />
-      </p>
+      </div>
     );
   if (error) return <p>Error loading customer details</p>;
 
