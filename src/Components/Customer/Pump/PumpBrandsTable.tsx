@@ -3,13 +3,15 @@ import { FiSearch } from "react-icons/fi";
 import PurpleButton from "../../Tags/PurpleButton";
 import WhiteButton from "../../Tags/WhiteButton";
 import { useGetPumpBrandsQuery } from "../../../redux/api/pumpBrandApi";
+import { useGetPhotosQuery } from "../../../redux/api/uploadPhotosApi";
 import { PumpBrand } from "../../../redux/features/pumpBrandSlice";
 import Loader from "../../Constants/Loader";
 import { useNavigate } from "react-router-dom";
 
 const PumpBrandsTable: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const { data: brands, isLoading, error } = useGetPumpBrandsQuery();
+  const { data: brands, isLoading } = useGetPumpBrandsQuery();
+  const { data: photosData } = useGetPhotosQuery();
   const navigate = useNavigate();
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,9 +36,6 @@ const PumpBrandsTable: React.FC = () => {
     );
   };
 
-  if (isLoading) return <div><Loader /></div>;
-  if (error) return <div>Error loading pump brands.</div>;
-
   const filteredBrands = brands?.filter(
     (brand: PumpBrand) =>
       brand.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -46,7 +45,7 @@ const PumpBrandsTable: React.FC = () => {
 
   const handleAddNewPumpButton = () => {
     navigate("/add-pump-brand");
-  }
+  };
 
   return (
     <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
@@ -97,36 +96,64 @@ const PumpBrandsTable: React.FC = () => {
             </tr>
           </thead>
           <tbody className="text-gray-600 text-[1vw] font-light">
-            {filteredBrands?.map((brand: PumpBrand) => (
-              <tr
-                key={brand.id}
-                className="border-b border-gray-200 hover:bg-gray-100"
-              >
-                <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                  <img
-                    src={"/assets/no-image.jpg"}
-                    alt={`${brand.name} logo`}
-                    className="w-10 h-10 rounded-full"
-                  />
-                </td>
-                <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                  {highlightText(brand.name, searchTerm)}
-                </td>
-                <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                  {highlightText(brand.model, searchTerm)}
-                </td>
-                <td className="flex flex-row items-center gap-x-[1vw] py-[1vw] px-[1.5vw] text-center">
-                  <PurpleButton
-                    text="Brand Detail"
-                    onClick={() => alert(`Viewing details for ${brand.name}`)}
-                  />
-                  <WhiteButton
-                    text="Edit"
-                    onClick={() => alert(`Editing brand ${brand.name}`)}
-                  />
+            {isLoading && (
+              <tr>
+                <td colSpan={4} className="text-center py-[2vw]">
+                  <Loader />
                 </td>
               </tr>
-            ))}
+            )}
+            {!isLoading && (!filteredBrands || filteredBrands.length === 0) && (
+              <tr>
+                <td colSpan={4} className="text-center py-[2vw]">
+                  <p className="text-[1.5vw] font-semibold">
+                    No pump brands found
+                  </p>
+                </td>
+              </tr>
+            )}
+            {!isLoading &&
+              filteredBrands &&
+              filteredBrands.map((brand: PumpBrand) => {
+                const brandPhoto = photosData?.find(
+                  (photo) => photo.pumpBrandId === brand.id
+                );
+                const photoUrl = brandPhoto
+                  ? `https://inspection-point-s3.s3.us-east-2.amazonaws.com/${brandPhoto.url}`
+                  : "/assets/no-image.jpg";
+                return (
+                  <tr
+                    key={brand.id}
+                    className="border-b border-gray-200 hover:bg-gray-100"
+                  >
+                    <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
+                      <img
+                        src={photoUrl}
+                        alt={`${brand.name} logo`}
+                        className="w-10 h-10 rounded-full"
+                      />
+                    </td>
+                    <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
+                      {highlightText(brand.name, searchTerm)}
+                    </td>
+                    <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
+                      {highlightText(brand.model, searchTerm)}
+                    </td>
+                    <td className="flex flex-row items-center gap-x-[1vw] py-[1vw] px-[1.5vw] text-center">
+                      <PurpleButton
+                        text="Brand Detail"
+                        onClick={() =>
+                          alert(`Brand Details Coming Soon!...`)
+                        }
+                      />
+                      <WhiteButton
+                        text="Edit"
+                        onClick={() => alert(`Brand Editing Coming Soon!...`)}
+                      />
+                    </td>
+                  </tr>
+                );
+              })}
           </tbody>
         </table>
       </div>

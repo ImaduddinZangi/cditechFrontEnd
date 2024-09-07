@@ -28,7 +28,7 @@ const AddPumpBrand: React.FC<AddPumpBrandProps> = ({ onSubmit }) => {
   };
 
   const handleCancel = () => {
-    navigate("customer-table");
+    navigate("/pump-brands-table");
   };
 
   return (

@@ -39,7 +39,7 @@ const highlightText = (text: string, searchTerm: string) => {
 const CustomerTable: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: customersData, isLoading } = useGetCustomersQuery();
-  const { data: photosData } = useGetPhotosQuery(); // Fetch photos
+  const { data: photosData } = useGetPhotosQuery();
   const [deleteCustomer] = useDeleteCustomerMutation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
