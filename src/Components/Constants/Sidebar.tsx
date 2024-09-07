@@ -1,6 +1,6 @@
 import React, { ReactNode, useState } from "react";
 import AuthFooter from "./AuthFooter";
-import { FiLogOut } from "react-icons/fi";
+import { FiLogOut, FiChevronDown, FiChevronRight } from "react-icons/fi";
 import { toast } from "react-toastify";
 
 interface SidebarProps {
@@ -9,47 +9,47 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ children }) => {
   const [open, setOpen] = useState(true);
-  const [customersOpen, setCustomersOpen] = useState(false);
-  const [assetsOpen, setAssetsOpen] = useState(false);
-  const [pumpsOpen, setPumpsOpen] = useState(false);
-  const [inspectionOpen, setInspectionOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   const Menus = [
     { title: "Dashboard", src: "dashboard", href: "/client-dashboard" },
     { title: "Client Profile", src: "client", href: "/client-profile" },
     {
+      title: "Pump Brands Table",
+      src: "table",
+      href: "pump-brands-table",
+    },
+    {
+      title: "Inspection Table",
+      src: "table",
+      href: "inspection-table",
+    },
+    {
       title: "Customers",
       src: "customer",
       isDropdown: true,
       dropdownItems: [
-        { title: "Customers Table", href: "/customer-table" },
-        { title: "Manage Customer", href: "/manage-customer" },
+        { title: "Customers Table", src: "table", href: "/customer-table" },
+        {
+          title: "Manage Customer",
+          src: "manage-customer",
+          href: "/manage-customer",
+        },
       ],
     },
     {
-      title: "Assets",
-      src: "asset",
-      isDropdown: true,
-      dropdownItems: [{ title: "Add Asset Types", href: "/add-asset-type" }],
-    },
-    {
-      title: "Pumps",
-      src: "pump",
-      isDropdown: true,
-      dropdownItems: [{ title: "Pump Brands Table", href: "pump-brands-table" }],
-    },
-    { title: "Add Photos", src: "photo", href: "/add-photos" },
-    {
-      title: "Inspection",
-      src: "customer",
+      title: "Files",
+      src: "files",
       isDropdown: true,
       dropdownItems: [
-        { title: "Add Inspection", href: "/add-inspection" },
-        { title: "Inspection Reports", href: "/inspection-reports" },
-        { title: "Inspection Table", href: "/inspection-table" },
+        {
+          title: "Inspection Reports",
+          src: "reports",
+          href: "/inspection-reports",
+        },
+        { title: "Add Photos", src: "photo", href: "/add-photos" },
       ],
     },
-    { title: "Files ", src: "files", gap: true },
     { title: "Setting", src: "setting" },
   ];
 
@@ -66,22 +66,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
   };
 
   const handleDropdownClick = (menuTitle: string) => {
-    switch (menuTitle) {
-      case "Customers":
-        setCustomersOpen(!customersOpen);
-        break;
-      case "Assets":
-        setAssetsOpen(!assetsOpen);
-        break;
-      case "Pumps":
-        setPumpsOpen(!pumpsOpen);
-        break;
-      case "Inspection":
-        setInspectionOpen(!inspectionOpen);
-        break;
-      default:
-        break;
-    }
+    setActiveDropdown(activeDropdown === menuTitle ? null : menuTitle);
   };
 
   return (
@@ -109,8 +94,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
           {Menus.map((Menu, index) => (
             <React.Fragment key={index}>
               <li
-                className={`flex rounded-md p-[0.5vw] cursor-pointer hover:bg-light-white text-gray-300 text-[0.9vw] items-center 
-                ${Menu.gap ? "mt-[1.6vw]" : "mt-[0.3vw]"} ${
+                className={`flex rounded-md p-[0.5vw] cursor-pointer hover:bg-light-white text-gray-300 text-[0.9vw] items-center mt-[0.3vw] ${
                   index === 0 && "bg-light-white"
                 } `}
               >
@@ -131,9 +115,18 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
                     <span
                       className={`${
                         !open && "hidden"
-                      } origin-left duration-300`}
+                      } origin-left duration-300 flex items-center`}
                     >
                       {Menu.title}
+                      {Menu.isDropdown && (
+                        <span className="ml-[0.5vw]">
+                          {activeDropdown === Menu.title ? (
+                            <FiChevronDown className="text-[1.2vw]" />
+                          ) : (
+                            <FiChevronRight className="text-[1.2vw]" />
+                          )}
+                        </span>
+                      )}
                     </span>
                   </a>
                 </div>
@@ -141,12 +134,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
               {Menu.isDropdown && Menu.dropdownItems && (
                 <ul
                   className={`${
-                    (Menu.title === "Customers" && customersOpen) ||
-                    (Menu.title === "Assets" && assetsOpen) ||
-                    (Menu.title === "Pumps" && pumpsOpen) ||
-                    (Menu.title === "Inspection" && inspectionOpen)
-                      ? "block"
-                      : "hidden"
+                    activeDropdown === Menu.title ? "block" : "hidden"
                   } ml-[1.5vw]`}
                 >
                   {Menu.dropdownItems.map((dropdownItem, idx) => (
@@ -158,6 +146,10 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
                         href={dropdownItem.href}
                         className="flex items-center gap-x-[1vw]"
                       >
+                        <img
+                          src={`/assets/${dropdownItem.src}.png`}
+                          className="w-[1.5vw] h-[1.5vw]"
+                        />
                         <span
                           className={`${
                             !open && "hidden"

@@ -12,6 +12,8 @@ import RouteModal from "../../Components/Inspection/RouteModal";
 import { Scores, Inspection } from "../../redux/features/inspectionSlice";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Loader from "../../Components/Constants/Loader";
+import PurpleButton from "../../Components/Tags/PurpleButton";
 
 const EditInspectionPage: React.FC = () => {
   const { inspectionId } = useParams<{ inspectionId: string }>();
@@ -22,9 +24,10 @@ const EditInspectionPage: React.FC = () => {
   } = useGetInspectionByIdQuery(inspectionId || "");
   const [updateInspection] = useUpdateInspectionMutation();
   const [scores, setScores] = useState<Scores[]>([]);
+  const [checklistName, setChecklistName] = useState<string>("");
   const [checklistItemIds, setChecklistItemIds] = useState<string[]>([]);
   const [route, setRoute] = useState<
-  Array<{ latitude: number; longitude: number }>
+    Array<{ latitude: number; longitude: number }>
   >([]);
   const [isScoreModalOpen, setIsScoreModalOpen] = useState(false);
   const [isChecklistModalOpen, setIsChecklistModalOpen] = useState(false);
@@ -44,18 +47,49 @@ const EditInspectionPage: React.FC = () => {
   useEffect(() => {
     if (inspection) {
       setScores(inspection.scores || []);
-      setChecklistItemIds(
-        inspection.checklists.flatMap((cl) => cl.checklistItemIds || [])
+      setChecklistName(inspection.checklists[0]?.name || "");
+
+      // Extract checklist item IDs from the nested structure
+      const extractedItemIds = inspection.checklists.flatMap(
+        (checklist) => checklist.items?.map((item) => item.id) || []
       );
+      setChecklistItemIds(extractedItemIds);
+
       setRoute(inspection.route || []);
     }
   }, [inspection]);
 
-  const handleScoreModalSave = (newScores: Scores) => {
-    setScores([newScores]);
+  const calculateOverallScore = (scores: Scores): string => {
+    const scoreValues = Object.values(scores).filter(
+      (value) => typeof value === "string"
+    ) as string[];
+    const gradeValues = scoreValues.map((score) => {
+      switch (score) {
+        case "A":
+          return 4;
+        case "B":
+          return 3;
+        case "C":
+          return 2;
+        case "D":
+          return 1;
+        default:
+          return 0;
+      }
+    });
+    const average =
+      gradeValues.reduce((a: number, b: number) => a + b, 0) /
+      gradeValues.length;
+
+    if (average >= 3.5) return "A";
+    if (average >= 2.5) return "B";
+    if (average >= 1.5) return "C";
+    return "D";
   };
 
   const handleSubmit = async (data: Inspection) => {
+    const overallScore = calculateOverallScore(scores[0]);
+
     try {
       await updateInspection({
         ...data,
@@ -63,8 +97,9 @@ const EditInspectionPage: React.FC = () => {
         scores,
         checklists: [
           {
-            name: inspection?.checklists[0]?.name || "Checklist",
-            overallScore: inspection?.checklists[0]?.overallScore || "A",
+            name:
+              checklistName || inspection?.checklists[0]?.name || "Checklist",
+            overallScore,
             checklistItemIds,
           },
         ],
@@ -86,12 +121,37 @@ const EditInspectionPage: React.FC = () => {
     }
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  // Save scores from ScoreModal
+  const handleScoreModalSave = (newScores: Scores) => {
+    setScores([newScores]);
+  };
+
+  // Save checklist name and item IDs from ChecklistModal
+  const handleChecklistModalSave = (
+    name: string,
+    selectedChecklistItemIds: string[]
+  ) => {
+    setChecklistName(name);
+    setChecklistItemIds(selectedChecklistItemIds);
+  };
+
+  const handleRouteModalSave = (
+    selectedRoute: Array<{ latitude: number; longitude: number }>
+  ) => {
+    setRoute(selectedRoute);
+  };
+
+  if (isLoading)
+    return (
+      <div>
+        <Loader />
+      </div>
+    );
   if (error) return <div>Error loading inspection details.</div>;
 
   const initialData: Inspection = {
     ...inspection!,
-    clientId: inspection?.clientId ?? null,
+    clientId: inspection?.client?.id ?? null,
   };
 
   return (
@@ -99,27 +159,21 @@ const EditInspectionPage: React.FC = () => {
       {inspection && (
         <div>
           <div className="space-x-[1vw] m-[2vw]">
-            <button
+            <PurpleButton
+              text="CheckList"
               type="button"
-              className="px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-[0.4vw] text-[1vw] font-inter font-medium"
               onClick={() => setIsChecklistModalOpen(true)}
-            >
-              Checklist
-            </button>
-            <button
+            />
+            <PurpleButton
+              text="Inspection Score"
               type="button"
-              className="px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-[0.4vw] text-[1vw] font-inter font-medium"
               onClick={() => setIsScoreModalOpen(true)}
-            >
-              Inspection Score
-            </button>
-            <button
+            />
+            <PurpleButton
+              text="Route"
               type="button"
-              className="px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-[0.4vw] text-[1vw] font-inter font-medium"
               onClick={() => setIsRouteModalOpen(true)}
-            >
-              Route
-            </button>
+            />
           </div>
           <InspectionForm onSubmit={handleSubmit} initialData={initialData} />
           <ScoreModal
@@ -131,13 +185,14 @@ const EditInspectionPage: React.FC = () => {
           <ChecklistModal
             isOpen={isChecklistModalOpen}
             onClose={() => setIsChecklistModalOpen(false)}
-            onSave={setChecklistItemIds}
+            onSave={handleChecklistModalSave}
+            initialChecklistName={checklistName}
             initialChecklistItemIds={checklistItemIds}
           />
           <RouteModal
             isOpen={isRouteModalOpen}
             onClose={() => setIsRouteModalOpen(false)}
-            onSave={setRoute}
+            onSave={handleRouteModalSave}
             initialRoute={route}
           />
         </div>

@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
+import { ChecklistItem } from "../../redux/features/inspectionSlice";
 import {
   useGetChecklistItemsQuery,
   useUpdateChecklistItemMutation,
 } from "../../redux/api/checkListItemApi";
-import { ChecklistItem } from "../../redux/features/inspectionSlice";
 import PurpleButton from "../Tags/PurpleButton";
 import WhiteButton from "../Tags/WhiteButton";
+import InputField from "../Tags/InputField";
 
 interface ChecklistModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (checklistItemIds: string[]) => void;
+  onSave: (checklistName: string, checklistItemIds: string[]) => void;
   initialChecklistItemIds?: string[];
+  initialChecklistName?: string;
 }
 
 const ChecklistModal: React.FC<ChecklistModalProps> = ({
@@ -19,45 +21,41 @@ const ChecklistModal: React.FC<ChecklistModalProps> = ({
   onClose,
   onSave,
   initialChecklistItemIds = [],
+  initialChecklistName = "",
 }) => {
-  const { data: allChecklistItems } = useGetChecklistItemsQuery();
+  const { data: allChecklistItems, isLoading } = useGetChecklistItemsQuery();
   const [selectedItems, setSelectedItems] = useState<ChecklistItem[]>([]);
+  const [checklistName, setChecklistName] = useState<string>(""); // Default empty string
   const [updateChecklistItem] = useUpdateChecklistItemMutation();
 
   useEffect(() => {
+    // Only set checklistName from initialChecklistName if it exists
+    if (initialChecklistName) {
+      setChecklistName(initialChecklistName);
+    }
     if (allChecklistItems && initialChecklistItemIds.length > 0) {
       const initialItems = allChecklistItems.filter((item) =>
         initialChecklistItemIds.includes(item.id)
       );
       setSelectedItems(initialItems);
     }
-  }, [allChecklistItems, initialChecklistItemIds]);
+  }, [allChecklistItems, initialChecklistItemIds, initialChecklistName]);
 
   const handleSelectItem = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedItem = allChecklistItems?.find(
       (item) => item.id === e.target.value
     );
-    if (
-      selectedItem &&
-      !selectedItems.find((item) => item.id === selectedItem.id)
-    ) {
+    if (selectedItem && !selectedItems.some((item) => item.id === selectedItem.id)) {
       setSelectedItems([...selectedItems, selectedItem]);
     }
   };
 
   const handleCheckboxChange = async (index: number, isCompleted: boolean) => {
     const updatedItems = [...selectedItems];
-    const updatedItem = {
-      ...updatedItems[index],
-      is_completed: isCompleted,
-    };
+    const updatedItem = { ...updatedItems[index], is_completed: isCompleted };
 
     try {
-      // Update the item in the backend
-      await updateChecklistItem({
-        id: updatedItem.id,
-        is_completed: isCompleted,
-      }).unwrap();
+      await updateChecklistItem({ id: updatedItem.id, is_completed: isCompleted }).unwrap();
       updatedItems[index] = updatedItem;
       setSelectedItems(updatedItems);
     } catch (error) {
@@ -66,74 +64,101 @@ const ChecklistModal: React.FC<ChecklistModalProps> = ({
   };
 
   const handleRemoveItem = (index: number) => {
-    const updatedItems = selectedItems.filter((_, i) => i !== index);
-    setSelectedItems(updatedItems);
+    setSelectedItems((prevItems) => prevItems.filter((_, i) => i !== index));
   };
 
   const handleSave = () => {
     const checklistItemIds = selectedItems.map((item) => item.id);
-    onSave(checklistItemIds);
+    onSave(checklistName, checklistItemIds);
     onClose();
   };
 
-  if (!isOpen) {
-    return null;
-  }
+  if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50 font-inter">
+    <div
+      className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="checklist-modal-title"
+    >
       <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6">
-        <h2 className="text-2xl font-semibold mb-4">Edit Checklist</h2>
-        <form>
-          <div className="grid grid-cols-1 gap-4 mb-4">
-            <select
-              className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-              onChange={handleSelectItem}
-              defaultValue=""
-            >
-              <option value="" disabled>
+        <h2 id="checklist-modal-title" className="text-2xl font-semibold mb-4">
+          Edit Checklist
+        </h2>
+
+        {/* Checklist Name Input */}
+        <div className="mb-4">
+          <InputField
+            label="Checklist Name"
+            id="checklistName"
+            fieldType="text"
+            value={checklistName}
+            onChange={(e) => setChecklistName(e.target.value)}
+            placeholder="Enter Checklist Name"
+          />
+        </div>
+
+        {isLoading ? (
+          <p>Loading checklist items...</p>
+        ) : (
+          <>
+            <div className="mb-4">
+              <label htmlFor="select-checklist-item" className="block mb-2 font-medium">
                 Select a Checklist Item
-              </option>
-              {allChecklistItems?.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.description}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="grid grid-cols-1 gap-4">
-            {selectedItems.map((item, index) => (
-              <div
-                key={item.id}
-                className="flex flex-row items-center justify-between space-x-4"
+              </label>
+              <select
+                id="select-checklist-item"
+                className="block w-full border py-2 px-3 rounded-md"
+                onChange={handleSelectItem}
+                defaultValue=""
               >
-                <div className="flex flex-row items-center space-x-[1vw]">
-                  <label className="block mb-1 font-medium">Description:</label>
-                  <p className="font-medium">{item.description}</p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <label className="block mb-1 font-medium">Completed:</label>
-                  <input
-                    type="checkbox"
-                    className="w-[1vw] h-[1vw] accent-purple-0"
-                    checked={item.is_completed}
-                    onChange={(e) =>
-                      handleCheckboxChange(index, e.target.checked)
-                    }
-                  />
-                </div>
-                <button
-                  type="button"
-                  className="bg-red-600 text-white py-[0.5vw] px-[1vw] rounded-[0.4vw] text-[1vw] font-inter font-medium"
-                  onClick={() => handleRemoveItem(index)}
+                <option value="" disabled>
+                  Select a Checklist Item
+                </option>
+                {allChecklistItems?.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.description}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Selected Checklist Items */}
+            <div className="space-y-4">
+              {selectedItems.map((item, index) => (
+                <div
+                  key={item.id}
+                  className="flex justify-between items-center border p-2 rounded-md"
                 >
-                  Remove
-                </button>
-              </div>
-            ))}
-          </div>
-        </form>
-        <div className="mt-[1vw] flex justify-end space-x-[1vw]">
+                  <div>
+                    <p className="font-medium">{item.description}</p>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <label className="flex items-center space-x-2">
+                      <span className="font-medium">Completed:</span>
+                      <input
+                        type="checkbox"
+                        checked={item.is_completed}
+                        onChange={(e) => handleCheckboxChange(index, e.target.checked)}
+                      />
+                    </label>
+                    <button
+                      type="button"
+                      className="text-red-600"
+                      onClick={() => handleRemoveItem(index)}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* Modal Actions */}
+        <div className="mt-6 flex justify-end space-x-4">
           <PurpleButton type="button" text="Save" onClick={handleSave} />
           <WhiteButton type="button" text="Cancel" onClick={onClose} />
         </div>

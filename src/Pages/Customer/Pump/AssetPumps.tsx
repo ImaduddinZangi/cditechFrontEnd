@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import ClientLayout from "../../../Layouts/ClientLayout";
 import Pumps from "../../../Components/Customer/Pump/Pumps";
 import { useCreatePumpMutation } from "../../../redux/api/pumpApi";
 import { useNavigate } from "react-router-dom";
@@ -71,7 +70,7 @@ const AssetPumps: React.FC = () => {
   };
 
   return (
-    <ClientLayout breadcrumb="Asset Pumps">
+    <>
       <Pumps onClick={handleModalOpen} />
       <AddPump
         isModalOpen={isModalOpen}
@@ -89,7 +88,7 @@ const AssetPumps: React.FC = () => {
         draggable
         pauseOnHover
       />
-    </ClientLayout>
+    </>
   );
 };
 

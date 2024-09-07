@@ -8,21 +8,26 @@ import AddCheckListItem from "../../Components/Inspection/AddCheckListItem";
 import RouteModal from "../../Components/Inspection/RouteModal";
 import { useCreateChecklistItemMutation } from "../../redux/api/checkListItemApi";
 import { useCreateInspectionMutation } from "../../redux/api/inspectionApi";
-import { Scores, Checklist, RoutePoint } from "../../redux/features/inspectionSlice";
+import {
+  Scores,
+  Checklist,
+  RoutePoint,
+  Inspection,
+} from "../../redux/features/inspectionSlice";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import PurpleButton from "../../Components/Tags/PurpleButton";
 
 interface InspectionData {
   name: string;
-  customerId: string;
-  assetId: string;
+  customerId?: string;
+  assetId?: string;
   scheduledDate: string;
   comments: string;
-  status: string;
   serviceFee: number;
-  recording: string;
-  clientId: string;
-  assignedTo: string;
+  recording?: string;
+  clientId?: string | null;
+  assignedTo: string | null;
   completedDate: string | null;
   checklists: Checklist[];
   route: RoutePoint[];
@@ -34,10 +39,12 @@ const AddInspectionPage: React.FC = () => {
   const [createInspection] = useCreateInspectionMutation();
   const [scores, setScores] = useState<Scores[]>([]);
   const [checklistItemIds, setChecklistItemIds] = useState<string[]>([]);
+  const [checklistName, setChecklistName] = useState<string>("");
   const [route, setRoute] = useState<RoutePoint[]>([]);
   const [isScoreModalOpen, setIsScoreModalOpen] = useState(false);
   const [isChecklistModalOpen, setIsChecklistModalOpen] = useState(false);
-  const [isChecklistItemModalOpen, setIsChecklistItemModalOpen] = useState(false);
+  const [isChecklistItemModalOpen, setIsChecklistItemModalOpen] =
+    useState(false);
   const [isRouteModalOpen, setIsRouteModalOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -55,7 +62,7 @@ const AddInspectionPage: React.FC = () => {
     try {
       const result = await createInspection(inspectionData).unwrap();
       toast.success("Inspection created successfully!", {
-        onClose: () => navigate("/client-dashboard"),
+        onClose: () => navigate("/inspection-table"),
         autoClose: 500,
       });
       console.log("Inspection created successfully", result);
@@ -71,20 +78,26 @@ const AddInspectionPage: React.FC = () => {
     }
   };
 
-  const handleFormSubmit = (
-    name?: string,
-    customerId?: string,
-    assetId?: string,
-    scheduledDate?: string,
-    comments?: string,
-    status?: string,
-    serviceFee?: number,
-    recording?: string,
-    clientId?: string,
-    assignedTo?: string,
-    completedDate?: string | null,
-  ) => {
-    if (!name || !customerId || !assetId || !scheduledDate || !status || serviceFee === undefined || !recording || !clientId || !assignedTo) {
+  const handleFormSubmit = (inspectionData: Inspection) => {
+    const {
+      name,
+      customerId,
+      assetId,
+      scheduledDate,
+      serviceFee,
+      recording,
+      clientId,
+    } = inspectionData;
+
+    if (
+      !name ||
+      !customerId ||
+      !assetId ||
+      !scheduledDate ||
+      serviceFee === undefined ||
+      !recording ||
+      !clientId
+    ) {
       toast.error("Please fill in all required fields.");
       return;
     }
@@ -104,37 +117,63 @@ const AddInspectionPage: React.FC = () => {
       return;
     }
 
-    const inspectionData: InspectionData = {
-      name,
-      customerId,
-      assetId,
-      scheduledDate,
-      comments: comments || "",
-      status,
-      serviceFee,
-      recording,
-      clientId,
-      assignedTo,
-      completedDate: completedDate || null,
+    const calculateOverallScore = (scores: Scores): string => {
+      const scoreValues = Object.values(scores).filter(
+        (value) => typeof value === "string"
+      ) as string[];
+      const gradeValues = scoreValues.map((score) => {
+        switch (score) {
+          case "A":
+            return 4;
+          case "B":
+            return 3;
+          case "C":
+            return 2;
+          case "D":
+            return 1;
+          default:
+            return 0;
+        }
+      });
+
+      const average =
+        gradeValues.reduce((a: number, b: number) => a + b, 0) /
+        gradeValues.length;
+
+      if (average >= 3.5) return "A";
+      if (average >= 2.5) return "B";
+      if (average >= 1.5) return "C";
+      return "D";
+    };
+
+    const overallScore = calculateOverallScore(scores[0]);
+
+    const newInspectionData: InspectionData = {
+      ...inspectionData,
       checklists: [
         {
-          name: "A Good Name",
-          overallScore: "A",
+          name: checklistName,
+          overallScore: overallScore,
           checklistItemIds: checklistItemIds,
         },
       ],
       route,
       scores,
+      assignedTo: null,
     };
 
-    handleAddInspection(inspectionData);
+    handleAddInspection(newInspectionData);
   };
 
   const handleScoreModalSave = (savedScores: Scores) => {
     setScores([savedScores]);
   };
 
-  const handleChecklistModalSave = (selectedChecklistItemIds: string[]) => {
+  const handleChecklistModalSave = (
+    name: string,
+    selectedChecklistItemIds: string[]
+  ) => {
+    setChecklistName(name);
     setChecklistItemIds(selectedChecklistItemIds);
   };
 
@@ -170,34 +209,26 @@ const AddInspectionPage: React.FC = () => {
   return (
     <ClientLayout breadcrumb="Add New Inspection">
       <div className="space-x-[1vw] m-[2vw]">
-        <button
+        <PurpleButton
+          text="Check List Items"
           type="button"
-          className="px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-[0.4vw] text-[1vw] font-inter font-medium"
-          onClick={() => setIsChecklistModalOpen(true)}
-        >
-          Checklist
-        </button>
-        <button
-          type="button"
-          className="px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-[0.4vw] text-[1vw] font-inter font-medium"
-          onClick={() => setIsScoreModalOpen(true)}
-        >
-          Inspection Score
-        </button>
-        <button
-          type="button"
-          className="px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-[0.4vw] text-[1vw] font-inter font-medium"
           onClick={() => setIsChecklistItemModalOpen(true)}
-        >
-          Check List Items
-        </button>
-        <button
+        />
+        <PurpleButton
+          text="CheckList"
           type="button"
-          className="px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-[0.4vw] text-[1vw] font-inter font-medium"
+          onClick={() => setIsChecklistModalOpen(true)}
+        />
+        <PurpleButton
+          text="Inspection Score"
+          type="button"
+          onClick={() => setIsScoreModalOpen(true)}
+        />
+        <PurpleButton
+          text="Route"
+          type="button"
           onClick={() => setIsRouteModalOpen(true)}
-        >
-          Route
-        </button>
+        />
       </div>
       <InspectionForm onSubmit={handleFormSubmit} />
       <ScoreModal

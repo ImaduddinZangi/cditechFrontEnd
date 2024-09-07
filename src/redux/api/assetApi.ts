@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Asset } from "../features/assetSlice";
+import { Asset, CreateAsset } from "../features/assetSlice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_BASE_URL,
@@ -28,14 +28,14 @@ export const assetApi = createApi({
         method: "GET",
       }),
     }),
-    createAsset: builder.mutation<Asset, Partial<Asset>>({
+    createAsset: builder.mutation<CreateAsset, Partial<CreateAsset>>({
       query: (newAsset) => ({
         url: "assets",
         method: "POST",
         body: newAsset,
       }),
     }),
-    updateAsset: builder.mutation<Asset, Partial<Asset>>({
+    updateAsset: builder.mutation<CreateAsset, Partial<CreateAsset>>({
       query: ({ id, ...rest }) => ({
         url: `assets/${id}`,
         method: "PATCH",

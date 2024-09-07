@@ -1,41 +1,41 @@
 import React from "react";
-import { useGetClientByIdQuery } from "../../redux/api/clientApi";
-import { getUserId } from "../../utils/utils";
-import Loader from "../Constants/Loader";
+import { useParams } from "react-router-dom";
+import { useGetAssetByIdQuery } from "../../../redux/api/assetApi";
+import Loader from "../../Constants/Loader";
 
-const DetailedClientInfo: React.FC = () => {
-  const clientId = getUserId();
+const DetailedAssets: React.FC = () => {
+  const { assetId } = useParams<{ assetId: string }>();
   const {
-    data: client,
+    data: asset,
     error,
     isLoading,
-  } = useGetClientByIdQuery(clientId || "");
+  } = useGetAssetByIdQuery(assetId || "");
 
   if (isLoading) return (
     <div className="w-full h-[80vh]">
       <Loader />
     </div>
   );
-  if (error) return <p>Error loading client details</p>;
+  if (error) return <p>Error loading asset details</p>;
 
   return (
     <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg">
-      {client && (
+      {asset && (
         <div className="grid grid-cols-4 gap-4">
           <div>
             <p className="text-[1vw] text-gray-0 font-medium font-inter">
-              Client Name:
+              Asset Name:
             </p>
             <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {client.name}
+              {asset.name}
             </p>
           </div>
           <div>
             <p className="text-[1vw] text-gray-0 font-medium font-inter">
-              Industry:
+              Location:
             </p>
             <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {client.industry}
+              {asset.location}
             </p>
           </div>
           <div>
@@ -43,63 +43,63 @@ const DetailedClientInfo: React.FC = () => {
               Status:
             </p>
             <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {client.account_status}
+              {asset.status}
             </p>
           </div>
           <div>
             <p className="text-[1vw] text-gray-0 font-medium font-inter">
-              Client ID:
+              Asset ID:
             </p>
             <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {client.id}
+              {asset.id}
             </p>
           </div>
           <div>
             <p className="text-[1vw] text-gray-0 font-medium font-inter">
-              Client Address:
+              Description:
             </p>
             <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {client.address}
+              {asset.description}
             </p>
           </div>
           <div>
             <p className="text-[1vw] text-gray-0 font-medium font-inter">
-              Billing Address:
+              Latitude:
             </p>
             <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {client.billing_address}
+              {asset.latitude}
             </p>
           </div>
           <div>
             <p className="text-[1vw] text-gray-0 font-medium font-inter">
-              Phone:
+              Longitude:
             </p>
             <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {client.phone}
+              {asset.longitude}
             </p>
           </div>
           <div>
             <p className="text-[1vw] text-gray-0 font-medium font-inter">
-              Client Email:
+              Inspection Interval:
             </p>
             <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {client.email}
+              {asset.inspectionInterval}
             </p>
           </div>
           <div>
             <p className="text-[1vw] text-gray-0 font-medium font-inter">
-              Payment method:
+              QR Code:
             </p>
             <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {client.payment_method}
+              {asset.qrCode}
             </p>
           </div>
           <div>
             <p className="text-[1vw] text-gray-0 font-medium font-inter">
-              Next bill date:
+              NFC Code:
             </p>
             <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {client.next_bill_date}
+              {asset.nfcCode}
             </p>
           </div>
         </div>
@@ -108,4 +108,4 @@ const DetailedClientInfo: React.FC = () => {
   );
 };
 
-export default DetailedClientInfo;
+export default DetailedAssets;

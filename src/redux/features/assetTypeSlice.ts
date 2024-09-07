@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export interface AssetType {
   id: string;
   name: string;
-  description: string;
+  description?: string;
 }
 
 interface AssetTypeState {

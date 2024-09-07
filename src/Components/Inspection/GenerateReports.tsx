@@ -5,7 +5,7 @@ import {
   useGetInspectionsQuery,
 } from "../../redux/api/inspectionApi";
 import { useGenerateReportMutation } from "../../redux/api/inspectionReportsApi";
-import MyDocument from "./MyDocument";
+import MyDocument from "./Constants/MyDocument";
 import { getUserId } from "../../utils/utils";
 import { pdf } from "@react-pdf/renderer";
 import { toast } from "react-toastify";

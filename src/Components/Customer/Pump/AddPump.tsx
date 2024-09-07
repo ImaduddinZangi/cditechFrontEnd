@@ -97,7 +97,7 @@ const AddPump: React.FC<AddPumpProps> = ({
 
   const handleCancel = () => {
     onClose();
-    navigate("/asset-pumps");
+    navigate("/customer-table");
   };
 
   useEffect(() => {

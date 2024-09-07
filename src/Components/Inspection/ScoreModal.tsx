@@ -34,7 +34,6 @@ const ScoreModal: React.FC<ScoreModalProps> = ({
 
   useEffect(() => {
     if (initialScores) {
-      // Filter out id, createdAt, and updatedAt fields
       const { id, createdAt, updatedAt, ...filteredScores } = initialScores;
       setScores(filteredScores as Scores);
     }

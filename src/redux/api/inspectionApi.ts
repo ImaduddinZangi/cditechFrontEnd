@@ -48,6 +48,18 @@ export const inspectionApi = createApi({
         method: "DELETE",
       }),
     }),
+    markInspectionCompleteAndBill: builder.mutation<{ success: boolean }, string>({
+      query: (inspectionId: string) => ({
+        url: `inspections/${inspectionId}/complete-and-bill`,
+        method: "PATCH",
+      }),
+    }),
+    markInspectionCompleteWithoutBilling: builder.mutation<{ success: boolean }, string>({
+      query: (inspectionId: string) => ({
+        url: `inspections/${inspectionId}/complete-without-billing`,
+        method: "PATCH",
+      }),
+    }),
   }),
 });
 
@@ -57,6 +69,8 @@ export const {
   useCreateInspectionMutation,
   useUpdateInspectionMutation,
   useDeleteInspectionMutation,
+  useMarkInspectionCompleteAndBillMutation,
+  useMarkInspectionCompleteWithoutBillingMutation,
 } = inspectionApi;
 
 export default inspectionApi;

@@ -36,7 +36,7 @@ const AssetDetails: React.FC = () => {
 
   const handleShowPumps = (id: string) => {
     localStorage.setItem("assetId", id);
-    navigate(`/asset-pumps`);
+    navigate(`/asset-details/${id}`);
   };
 
   const handleOpenDeleteModal = (id: string | undefined) => {
@@ -146,7 +146,7 @@ const AssetDetails: React.FC = () => {
               <p className="text-[1vw]">{asset.status || "N/A"}</p>
             </div>
           </div>
-          <div className="flex justify-between mt-[1vw] w-3/5 absolute bottom-[1vw] right-[1vw]">
+          <div className="flex justify-between mt-[1vw] w-1/2 absolute bottom-[1vw] right-[1vw]">
             <WhiteButton
               type="button"
               className="shadow-md"
@@ -156,13 +156,8 @@ const AssetDetails: React.FC = () => {
             <WhiteButton
               type="button"
               className="shadow-md"
-              text="Asset Pumps"
-              onClick={() => handleShowPumps(asset.id)}
-            />
-            <WhiteButton
-              type="button"
-              className="shadow-md"
               text="Asset Details"
+              onClick={() => handleShowPumps(asset.id)}
             />
             <WhiteButton
               type="button"

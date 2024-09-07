@@ -5,55 +5,14 @@ import { useGetAssetsQuery } from "../../redux/api/assetApi";
 import { getUserId } from "../../utils/utils";
 import { Asset } from "../../redux/features/assetSlice";
 import { useNavigate } from "react-router-dom";
-import {
-  Checklist,
-  RoutePoint,
-  Scores,
-} from "../../redux/features/inspectionSlice";
+import { Inspection } from "../../redux/features/inspectionSlice";
 import PurpleButton from "../Tags/PurpleButton";
 import WhiteButton from "../Tags/WhiteButton";
-
-interface InitialData {
-  name?: string;
-  customer?: { id: string; name: string };
-  asset?: { id: string; name: string };
-  scheduledDate?: string;
-  comments?: string;
-  status?: string;
-  serviceFee?: number;
-  recording?: string;
-  clientId?: string;
-  assignedTo?: string;
-  completedDate?: string | null;
-  checklists?: Checklist[];
-  route?: RoutePoint[];
-  scores?: Scores[];
-  id?: string;
-  createdAt?: string;
-  updatedAt?: string;
-}
+import InputField from "../Tags/InputField";
 
 interface InspectionFormProps {
-  onSubmit: (
-    name?: string,
-    customerId?: string,
-    assetId?: string,
-    scheduledDate?: string,
-    comments?: string,
-    status?: string,
-    serviceFee?: number,
-    recording?: string,
-    clientId?: string,
-    assignedTo?: string,
-    completedDate?: string | null,
-    checklists?: Checklist[],
-    route?: RoutePoint[],
-    scores?: Scores[],
-    id?: string,
-    createdAt?: string,
-    updatedAt?: string
-  ) => void;
-  initialData?: Partial<InitialData>;
+  onSubmit: (data: Inspection) => void;
+  initialData?: Partial<Inspection>;
 }
 
 const InspectionForm: React.FC<InspectionFormProps> = ({
@@ -74,48 +33,23 @@ const InspectionForm: React.FC<InspectionFormProps> = ({
     label: string;
     value: string;
   } | null>(null);
+
+  const [name, setName] = useState<string>(initialData?.name || "");
   const [scheduledDate, setScheduledDate] = useState<string>(
     initialData?.scheduledDate || ""
   );
   const [comments, setComments] = useState<string>(initialData?.comments || "");
-  const [status, setStatus] = useState<string>(
-    initialData?.status || "pending"
-  );
   const [serviceFee, setServiceFee] = useState<number>(
     initialData?.serviceFee || 0
   );
   const [recording, setRecording] = useState<string>(
     initialData?.recording || "no"
   );
-  const [name, setName] = useState<string>(initialData?.name || "");
+
   const { data: customersData } = useGetCustomersQuery();
   const { data: assetsData } = useGetAssetsQuery();
   const clientId = getUserId();
   const navigate = useNavigate();
-  const [formState, setFormState] = useState({
-    name: initialData?.name || "",
-    clientId: initialData?.clientId ?? clientId,
-    customerId: selectedCustomer?.value || initialData?.customer?.id || "",
-    assetId: selectedAsset?.value || initialData?.asset?.id || "",
-    assignedTo: initialData?.assignedTo || "",
-    status: initialData?.status || "pending",
-    scheduledDate: initialData?.scheduledDate || "",
-    completedDate: initialData?.completedDate || null,
-    comments: initialData?.comments || "",
-    serviceFee: initialData?.serviceFee || 0,
-    recording: initialData?.recording || "no",
-    checklists: initialData?.checklists || [],
-    route: initialData?.route || [],
-    scores: initialData?.scores || [],
-  });
-
-  const handleCustomerChange = (selectedOption: any) => {
-    setSelectedCustomer(selectedOption);
-    setFormState((prevState) => ({
-      ...prevState,
-      customerId: selectedOption?.value || "",
-    }));
-  };
 
   useEffect(() => {
     if (customersData) {
@@ -131,13 +65,9 @@ const InspectionForm: React.FC<InspectionFormProps> = ({
   useEffect(() => {
     if (initialData && customers.length > 0) {
       const selectedCustomerData = customers.find(
-        (c) => c.value === initialData.customer?.id
+        (c) => c.value === initialData.customerId
       );
       setSelectedCustomer(selectedCustomerData || null);
-      setFormState((prevState) => ({
-        ...prevState,
-        customerId: initialData.customer?.id || "",
-      }));
     }
   }, [initialData, customers]);
 
@@ -150,9 +80,9 @@ const InspectionForm: React.FC<InspectionFormProps> = ({
         }))
       );
 
-      if (initialData?.asset?.id) {
+      if (initialData?.assetId) {
         const selectedAssetData = assetsData.find(
-          (asset: Asset) => asset.id === initialData.asset?.id
+          (asset: Asset) => asset.id === initialData.assetId
         );
         if (selectedAssetData) {
           setSelectedAsset({
@@ -164,24 +94,32 @@ const InspectionForm: React.FC<InspectionFormProps> = ({
     }
   }, [assetsData, initialData]);
 
+  const handleCustomerChange = (selectedOption: { label: string; value: string; } | null) => {
+    setSelectedCustomer(selectedOption);
+  };
+
+  const handleAssetChange = (selectedOption: { label: string; value: string; } | null) => {
+    setSelectedAsset(selectedOption);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(
-      formState.name,
-      formState.customerId,
-      formState.assetId,
-      formState.scheduledDate,
-      formState.comments,
-      formState.status,
-      formState.serviceFee,
-      formState.recording,
-      clientId ?? undefined,
-      formState.assignedTo,
-      formState.completedDate,
-      formState.checklists,
-      formState.route,
-      formState.scores
-    );
+    onSubmit({
+      id: initialData?.id,
+      name,
+      clientId: initialData?.clientId ?? clientId,
+      customerId: selectedCustomer?.value || initialData?.customerId || "",
+      assetId: selectedAsset?.value || initialData?.assetId || "",
+      assignedTo: initialData?.assignedTo || "",
+      scheduledDate,
+      completedDate: initialData?.completedDate || null,
+      comments,
+      serviceFee,
+      recording,
+      checklists: initialData?.checklists || [],
+      route: initialData?.route || [],
+      scores: initialData?.scores || [],
+    });
   };
 
   const handleCancel = () => {
@@ -194,19 +132,15 @@ const InspectionForm: React.FC<InspectionFormProps> = ({
         <div className="grid grid-cols-2 gap-[1vw] mb-6">
           <div className="space-y-[1vw]">
             <div>
-              <label
+              <InputField
+                label="Name"
                 htmlFor="name"
-                className="block text-darkgray-0 font-medium text-[1vw]"
-              >
-                Name:
-              </label>
-              <input
-                type="text"
+                fieldType="text"
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
                 required
+                autoComplete="name"
               />
             </div>
             <div>
@@ -228,52 +162,27 @@ const InspectionForm: React.FC<InspectionFormProps> = ({
               />
             </div>
             <div>
-              <label className="block text-darkgray-0 font-medium text-[1vw]">
-                Status:
-              </label>
-              <select
-                name="status"
-                className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-                required
-              >
-                <option value="pending">Pending</option>
-                <option value="in_progress">In Progress</option>
-                <option value="completed">Completed</option>
-                <option value="canceled">Canceled</option>
-              </select>
-            </div>
-            <div>
-              <label
+              <InputField
                 htmlFor="scheduledDate"
-                className="block text-darkgray-0 font-medium text-[1vw]"
-              >
-                Scheduled Date:
-              </label>
-              <input
-                type="datetime-local"
+                label="Scheduled Date"
+                fieldType="datetime-local"
                 id="scheduledDate"
                 value={scheduledDate}
                 onChange={(e) => setScheduledDate(e.target.value)}
-                className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
                 required
+                autoComplete="scheduledDate"
               />
             </div>
             <div>
-              <label
+              <InputField
                 htmlFor="serviceFee"
-                className="block text-darkgray-0 font-medium text-[1vw]"
-              >
-                Service Fee:
-              </label>
-              <input
-                type="number"
+                label="Service Fee"
+                fieldType="number"
                 id="serviceFee"
                 value={serviceFee}
                 onChange={(e) => setServiceFee(parseFloat(e.target.value))}
-                className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
                 required
+                autoComplete="scheduledDate"
               />
             </div>
           </div>
@@ -292,7 +201,7 @@ const InspectionForm: React.FC<InspectionFormProps> = ({
                 className="mt-1"
                 isClearable
                 value={selectedAsset}
-                onChange={setSelectedAsset}
+                onChange={handleAssetChange}
                 required
               />
             </div>
@@ -318,6 +227,7 @@ const InspectionForm: React.FC<InspectionFormProps> = ({
               <label className="mr-2">
                 <input
                   type="radio"
+                  id="recordingTrue"
                   name="recording"
                   value="yes"
                   checked={recording === "yes"}
@@ -330,6 +240,7 @@ const InspectionForm: React.FC<InspectionFormProps> = ({
                 <input
                   type="radio"
                   name="recording"
+                  id="recordingFalse"
                   value="no"
                   checked={recording === "no"}
                   onChange={() => setRecording("no")}

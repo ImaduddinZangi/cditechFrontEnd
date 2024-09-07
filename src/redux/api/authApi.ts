@@ -4,6 +4,7 @@ import { User } from "../features/userSlice";
 
 interface AuthResponse {
   access_token: string;
+  refresh_token?: string;
   user?: User;
   client?: Client;
 }
@@ -65,6 +66,9 @@ export const authApi = createApi({
         try {
           const { data } = await queryFulfilled;
           localStorage.setItem("token", data.access_token);
+          if (data.refresh_token) {
+            localStorage.setItem("refresh_token", data.refresh_token);
+          }
         } catch (error) {
           console.error("Login error:", error);
         }
@@ -83,6 +87,9 @@ export const authApi = createApi({
         try {
           const { data } = await queryFulfilled;
           localStorage.setItem("token", data.access_token);
+          if (data.refresh_token) {
+            localStorage.setItem("refresh_token", data.refresh_token);
+          }
         } catch (error) {
           console.error("Login error:", error);
         }
@@ -102,6 +109,15 @@ export const authApi = createApi({
         body: newClient,
       }),
     }),
+    refreshToken: builder.query<AuthResponse, void>({
+      query: () => ({
+        url: "auth/refresh",
+        method: "POST",
+        body: {
+          refresh_token: localStorage.getItem("refresh_token"),
+        },
+      }),
+    }),
     logout: builder.mutation<void, void>({
       query: () => ({
         url: "auth/logout",
@@ -109,6 +125,7 @@ export const authApi = createApi({
       }),
       async onQueryStarted() {
         localStorage.removeItem("token");
+        localStorage.removeItem("refresh_token");
       },
     }),
   }),
@@ -120,4 +137,5 @@ export const {
   useRegisterUserMutation,
   useRegisterClientMutation,
   useLogoutMutation,
+  useLazyRefreshTokenQuery,
 } = authApi;

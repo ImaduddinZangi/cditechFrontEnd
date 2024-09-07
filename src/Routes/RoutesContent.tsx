@@ -9,7 +9,6 @@ import ClientRegistrationPage from "../Pages/Auth/ClientRegistrationPage";
 import AddInspectionPage from "../Pages/Inspection/AddInspectionPage";
 import AddCustomerPage from "../Pages/Customer/AddCustomerPage";
 import AddAssetsPage from "../Pages/Customer/Asset/AddAssetsPage";
-import AddAssetTypePage from "../Pages/Customer/Asset/AddAssetTypePage";
 import AddPumpBrandPage from "../Pages/Customer/Pump/AddPumpBrandPage";
 import ManageCustomerPage from "../Pages/Customer/ManageCustomerPage";
 import AddPhotosPage from "../Pages/Customer/AddPhotosPage";
@@ -17,11 +16,12 @@ import TwoFactorAuthPage from "../Pages/Auth/twoFactorAuthPage";
 import EditCustomerPage from "../Pages/Customer/EditCustomerPage";
 import EditAssetPage from "../Pages/Customer/Asset/EditAssetPage";
 import ClientProfilePage from "../Pages/ClientDashboard/ClientProfilePage";
-import AssetPumps from "../Pages/Customer/Pump/AssetPumps";
 import InspectionReportsPage from "../Pages/Inspection/InspectionReportsPage";
 import InspectionTablePage from "../Pages/Inspection/InspectionTablePage";
 import EditInspectionPage from "../Pages/Inspection/EditInspectionPage";
 import PumpBrandsTablePage from "../Pages/Customer/Pump/PumpBrandsTablePage";
+import InspectionDetailsPage from "../Pages/Inspection/InspectionDetailsPage";
+import AssetDetailsPage from "../Pages/Customer/Asset/AssetDetailsPage";
 
 const RoutesContent: React.FC = () => {
   return (
@@ -49,10 +49,9 @@ const RoutesContent: React.FC = () => {
         {/* Asset */}
         <Route path="/add-asset" element={<AddAssetsPage />} />
         <Route path="/edit-asset/:id" element={<EditAssetPage />} />
-        <Route path="/add-asset-type" element={<AddAssetTypePage />} />
+        <Route path="/asset-details/:assetId" element={<AssetDetailsPage />} />
         {/* Pump */}
         <Route path="/add-pump-brand" element={<AddPumpBrandPage />} />
-        <Route path="/asset-pumps" element={<AssetPumps />} />
         <Route path="/pump-brands-table" element={<PumpBrandsTablePage />} />
         {/* Photo */}
         <Route path="/add-photos" element={<AddPhotosPage />} />
@@ -63,6 +62,10 @@ const RoutesContent: React.FC = () => {
         <Route
           path="/update-inspection/:inspectionId"
           element={<EditInspectionPage />}
+        />
+        <Route
+          path="/inspection-details/:inspectionId"
+          element={<InspectionDetailsPage />}
         />
       </Route>
     </Routes>

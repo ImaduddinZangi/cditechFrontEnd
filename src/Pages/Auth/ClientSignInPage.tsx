@@ -1,6 +1,9 @@
 import React from "react";
 import ClientSignIn from "../../Components/Auth/ClientSignIn";
-import { useLoginClientMutation } from "../../redux/api/authApi";
+import {
+  useLoginClientMutation,
+  useLazyRefreshTokenQuery,
+} from "../../redux/api/authApi";
 import { useDispatch } from "react-redux";
 import { setToken, setClient } from "../../redux/features/clientSlice";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 const ClientSignInPage: React.FC = () => {
   const [loginClient] = useLoginClientMutation();
+  const [refreshToken] = useLazyRefreshTokenQuery();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -41,6 +45,18 @@ const ClientSignInPage: React.FC = () => {
           });
         }
       }
+
+      const refreshTokenInterval = setInterval(async () => {
+        try {
+          const refreshResult = await refreshToken().unwrap();
+          localStorage.setItem("token", refreshResult.access_token);
+          dispatch(setToken(refreshResult.access_token));
+        } catch (error) {
+          console.error("Error refreshing token:", error);
+        }
+      }, 900000);
+
+      return () => clearInterval(refreshTokenInterval);
     } catch (error) {
       if (isAPIError(error)) {
         toast.error("Login error: " + error.data.message);

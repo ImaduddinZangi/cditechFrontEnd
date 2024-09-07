@@ -1,11 +1,17 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Client } from "./clientSlice";
 import { Asset } from "./assetSlice";
+import { Customer } from "./customerSlice";
 
 export interface ChecklistItem {
   id: string;
   description: string;
   is_completed: boolean;
+}
+
+export interface FloatScores {
+  float1: string;
+  float2: string;
 }
 
 export interface Checklist {
@@ -33,10 +39,7 @@ export interface Scores {
   breakersScore: string;
   contactorsScore: string;
   thermalsScore: string;
-  floatScores: {
-    float1: string;
-    float2: string;
-  };
+  floatScores: FloatScores;
   id?: string;
   createdAt?: string;
   updatedAt?: string;
@@ -49,7 +52,7 @@ export interface Inspection {
   assetId?: string;
   name: string;
   assignedTo: string | null;
-  status: string;
+  status?: string;
   scheduledDate: string;
   completedDate: string | null;
   route: RoutePoint[];
@@ -62,6 +65,7 @@ export interface Inspection {
   updatedAt?: string;
   client?: Client;
   asset?: Asset;
+  customer?: Customer;
 }
 
 interface InspectionState {

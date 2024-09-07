@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import {
   useGetInspectionsQuery,
   useDeleteInspectionMutation,
+  useMarkInspectionCompleteAndBillMutation,
+  useMarkInspectionCompleteWithoutBillingMutation,
 } from "../../redux/api/inspectionApi";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -9,11 +11,16 @@ import ConfirmationModal from "../Constants/ConfirmationModal";
 import { FiSearch } from "react-icons/fi";
 import PurpleButton from "../Tags/PurpleButton";
 import WhiteButton from "../Tags/WhiteButton";
+import Loader from "../Constants/Loader";
 
 const InspectionTable: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [actionType, setActionType] = useState<string | null>(null);
   const { data: inspections, isLoading, error } = useGetInspectionsQuery();
   const [deleteInspection] = useDeleteInspectionMutation();
+  const [markCompleteAndBill] = useMarkInspectionCompleteAndBillMutation();
+  const [markCompleteWithoutBilling] =
+    useMarkInspectionCompleteWithoutBillingMutation();
   const navigate = useNavigate();
   const [inspectionIdToDelete, setInspectionIdToDelete] = useState<
     string | undefined | null
@@ -53,7 +60,7 @@ const InspectionTable: React.FC = () => {
     return (
       indexString.includes(searchTerm) ||
       inspection.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      inspection.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      inspection.status?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       new Date(inspection.scheduledDate)
         .toLocaleDateString()
         .includes(searchTerm)
@@ -79,6 +86,7 @@ const InspectionTable: React.FC = () => {
   const handleOpenDeleteModal = (id: string | undefined) => {
     setInspectionIdToDelete(id);
     setIsModalOpen(true);
+    setActionType("delete");
   };
 
   const handleConfirmDelete = async () => {
@@ -98,11 +106,6 @@ const InspectionTable: React.FC = () => {
     }
   };
 
-  const handleCancelDelete = () => {
-    setIsModalOpen(false);
-    setInspectionIdToDelete(null);
-  };
-
   const handleUpdate = (id: string | undefined) => {
     navigate(`/update-inspection/${id}`);
   };
@@ -111,25 +114,62 @@ const InspectionTable: React.FC = () => {
     navigate(`/inspection-details/${id}`);
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  const handleCompleteAction = (id: string | undefined, action: string) => {
+    setInspectionIdToDelete(id);
+    setIsModalOpen(true);
+    setActionType(action);
+  };
+
+  const handleConfirmComplete = async () => {
+    if (inspectionIdToDelete) {
+      try {
+        if (actionType === "billed") {
+          await markCompleteAndBill(inspectionIdToDelete).unwrap();
+          toast.success("Inspection marked as complete and billed!", {
+            onClose: () => window.location.reload(),
+            autoClose: 500,
+          });
+        } else if (actionType === "notBilled") {
+          await markCompleteWithoutBilling(inspectionIdToDelete).unwrap();
+          toast.success("Inspection marked as complete without billing!", {
+            onClose: () => window.location.reload(),
+            autoClose: 500,
+          });
+        }
+      } catch (error) {
+        toast.error("Error completing inspection!");
+      } finally {
+        setIsModalOpen(false);
+        setInspectionIdToDelete(null);
+      }
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setIsModalOpen(false);
+    setInspectionIdToDelete(null);
+  };
+
+  if (isLoading)
+    return (
+      <div className="w-full h-[80vh]">
+        <Loader />
+      </div>
+    );
   if (error) return <div>Error loading inspections.</div>;
 
   return (
     <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
       <div className="flex justify-between items-center px-[1.5vw] py-[1vw]">
         <div className="flex space-x-[1vw]">
-          <button
-            onClick={() => navigate("/add-inspection")}
-            className="w-[12vw] h-[3vw] text-white font-inter font-semibold text-[1vw] bg-purple-0 text-purple-600 border rounded"
-          >
-            Add New Inspection
-          </button>
-          <button
-            onClick={() => alert("Import Inspections feature coming soon!")}
-            className="w-[14vw] h-[3vw] text-white font-inter font-semibold text-[1vw] bg-purple-0 text-purple-600 border rounded"
-          >
-            Import New Inspections
-          </button>
+          <PurpleButton 
+          text="Add New Inspection"
+          onClick={() => navigate("/add-inspection")}
+          />
+          <PurpleButton 
+          text="Import New Inspections"
+          onClick={() => alert("Import Inspections feature coming soon!")}
+          />
         </div>
         <div className="relative">
           <input
@@ -183,7 +223,10 @@ const InspectionTable: React.FC = () => {
                     {highlightText(inspection.name, searchTerm)}
                   </td>
                   <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                    {highlightText(inspection.status, searchTerm)}
+                    {highlightText(
+                      inspection.status ? inspection.status : "N/A",
+                      searchTerm
+                    )}
                   </td>
                   <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
                     {highlightText(
@@ -204,6 +247,21 @@ const InspectionTable: React.FC = () => {
                       text="Delete"
                       onClick={() => handleOpenDeleteModal(inspection.id)}
                     />
+                    <div>
+                      <select
+                        onChange={(e) =>
+                          handleCompleteAction(inspection.id, e.target.value)
+                        }
+                        defaultValue=""
+                        className="border rounded px-2 py-1"
+                      >
+                        <option value="" disabled>
+                          Complete Action
+                        </option>
+                        <option value="billed">Complete Billed</option>
+                        <option value="notBilled">Complete Not Billed</option>
+                      </select>
+                    </div>
                   </td>
                 </tr>
               );
@@ -246,8 +304,14 @@ const InspectionTable: React.FC = () => {
 
       <ConfirmationModal
         isOpen={isModalOpen}
-        message="Are you sure you want to delete this inspection?"
-        onConfirm={handleConfirmDelete}
+        message={
+          actionType === "delete"
+            ? "Are you sure you want to delete this inspection?"
+            : "Are you sure you want to mark this inspection as complete?"
+        }
+        onConfirm={
+          actionType === "delete" ? handleConfirmDelete : handleConfirmComplete
+        }
         onCancel={handleCancelDelete}
       />
     </div>

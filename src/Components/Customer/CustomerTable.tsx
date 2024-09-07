@@ -114,7 +114,11 @@ const CustomerTable: React.FC = () => {
   };
 
   if (isLoading) {
-    return <Loader />;
+    return (
+      <div className="w-full h-[80vh]">
+        <Loader />;
+      </div>
+    );
   }
 
   if (error) {
