@@ -9,6 +9,7 @@ const AddPhotosPage: React.FC = () => {
   const [uploadPhoto] = useUploadPhotoMutation();
   const navigate = useNavigate();
   
+  
   const handlePhotoUpload = async (files: File[], id: string, type: string) => {
     try {
       const formData = new FormData();
@@ -21,6 +22,8 @@ const AddPhotosPage: React.FC = () => {
         formData.append("pumpId", id);
       } else if (type === "pumpBrand") {
         formData.append("pumpBrandId", id);
+      } else if (type === "customer") {
+        formData.append("customerId", id);
       }
       await uploadPhoto(formData).unwrap();
       toast.success("Photos uploaded successfully!", {

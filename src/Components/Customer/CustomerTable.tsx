@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ConfirmationModal from "../Constants/ConfirmationModal";
 import Loader from "../Constants/Loader";
-import { FiSearch } from "react-icons/fi"; // Import the search icon from react-icons
+import { FiSearch } from "react-icons/fi";
 import PurpleButton from "../Tags/PurpleButton";
 import WhiteButton from "../Tags/WhiteButton";
 
@@ -37,7 +37,7 @@ const highlightText = (text: string, searchTerm: string) => {
 
 const CustomerTable: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { data, error, isLoading } = useGetCustomersQuery();
+  const { data, isLoading } = useGetCustomersQuery();
   const [deleteCustomer] = useDeleteCustomerMutation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -113,18 +113,6 @@ const CustomerTable: React.FC = () => {
     setCustomerIdToDelete(null);
   };
 
-  if (isLoading) {
-    return (
-      <div className="w-full h-[80vh]">
-        <Loader />;
-      </div>
-    );
-  }
-
-  if (error) {
-    return <div>Error loading customers</div>;
-  }
-
   return (
     <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
       <div className="overflow-x-auto">
@@ -157,147 +145,158 @@ const CustomerTable: React.FC = () => {
                   />
                 </div>
               </div>
-              {paginatedData && paginatedData.length > 0 ? (
-                <>
-                  <table className="min-w-max w-full table-auto">
-                    <thead>
-                      <tr className="h-[3vw] text-darkgray-0 border-b uppercase text-[1vw] leading-normal">
-                        <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
-                          ID
-                        </th>
-                        <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
-                          Name
-                        </th>
-                        <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
-                          Address
-                        </th>
-                        <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
-                          Type
-                        </th>
-                        <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
-                          Status
-                        </th>
-                        <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
-                          Action
-                        </th>
+
+              <table className="min-w-max w-full table-auto">
+                <thead>
+                  <tr className="h-[3vw] text-darkgray-0 border-b uppercase text-[1vw] leading-normal">
+                    <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
+                      ID
+                    </th>
+                    <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
+                      Name
+                    </th>
+                    <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
+                      Address
+                    </th>
+                    <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
+                      Type
+                    </th>
+                    <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
+                      Status
+                    </th>
+                    <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="text-gray-600 text-[1vw] font-light">
+                  {isLoading && (
+                    <tr>
+                      <td colSpan={6} className="text-center py-[2vw]">
+                        <Loader />
+                      </td>
+                    </tr>
+                  )}
+                  {!isLoading &&
+                    (!paginatedData || paginatedData.length === 0) && (
+                      <tr>
+                        <td colSpan={6} className="text-center py-[2vw]">
+                          <p className="text-[1.5vw] font-semibold">
+                            No customers found
+                          </p>
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody className="text-gray-600 text-[1vw] font-light">
-                      {paginatedData.map((customer) => (
-                        <tr
-                          key={customer.id}
-                          className="border-b border-gray-200 hover:bg-gray-100"
-                        >
-                          <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                            {highlightText(
-                              customer.quickbooksCustomerId ?? "",
-                              searchTerm
-                            )}
-                          </td>
-                          <td className="py-[1vw] px-[1.5vw] text-left whitespace-nowrap">
-                            <div className="flex items-center">
-                              <div className="mr-2">
-                                <img
-                                  className="w-6 h-6 rounded-full"
-                                  src={
-                                    customer.photo
-                                      ? customer.photo
-                                      : "/assets/no-image.jpg"
-                                  }
-                                  alt={customer.name}
-                                />
-                              </div>
-                              <span className="font-inter font-medium text-[1vw]">
-                                {highlightText(customer.name, searchTerm)}
-                              </span>
+                    )}
+                  {!isLoading &&
+                    paginatedData &&
+                    paginatedData.map((customer) => (
+                      <tr
+                        key={customer.id}
+                        className="border-b border-gray-200 hover:bg-gray-100"
+                      >
+                        <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
+                          {highlightText(
+                            customer.quickbooksCustomerId ?? "",
+                            searchTerm
+                          )}
+                        </td>
+                        <td className="py-[1vw] px-[1.5vw] text-left whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="mr-2">
+                              <img
+                                className="w-6 h-6 rounded-full"
+                                src={
+                                  customer.photo
+                                    ? customer.photo
+                                    : "/assets/no-image.jpg"
+                                }
+                                alt={customer.name}
+                              />
                             </div>
-                          </td>
-                          <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                            {highlightText(
-                              truncateAddress(customer.address),
-                              searchTerm
-                            )}
-                          </td>
-                          <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                            {highlightText(customer.type, searchTerm)}
-                          </td>
-                          <td className="py-[1vw] px-[1.5vw] text-center">
-                            <ActiveBadge
-                              iconColor={
-                                customer.status === "active"
-                                  ? "bg-green-500"
-                                  : "bg-red-500"
-                              }
-                              bgColor={
-                                customer.status === "active"
-                                  ? "bg-green-100"
-                                  : "bg-red-100"
-                              }
-                              textColor={
-                                customer.status === "active"
-                                  ? "text-green-800"
-                                  : "text-red-800"
-                              }
-                              text={customer.status}
-                            />
-                          </td>
-                          <td className="flex flex-row items-center gap-x-[1vw] py-[1vw] px-[1.5vw] text-center">
-                            <PurpleButton
-                              type="button"
-                              text="Manage"
-                              onClick={() =>
-                                handleClickManageCustomer(customer.id)
-                              }
-                            />
-                            <WhiteButton
-                              type="button"
-                              text="Delete"
-                              onClick={() => handleOpenDeleteModal(customer.id)}
-                            />
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                  <div className="flex items-center justify-between py-[1vw] px-[1.5vw]">
+                            <span className="font-inter font-medium text-[1vw]">
+                              {highlightText(customer.name, searchTerm)}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
+                          {highlightText(
+                            truncateAddress(customer.address),
+                            searchTerm
+                          )}
+                        </td>
+                        <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
+                          {highlightText(customer.type, searchTerm)}
+                        </td>
+                        <td className="py-[1vw] px-[1.5vw] text-center">
+                          <ActiveBadge
+                            iconColor={
+                              customer.status === "active" ||"Active"
+                                ? "bg-green-500"
+                                : "bg-red-500"
+                            }
+                            bgColor={
+                              customer.status === "active" || "Active"
+                                ? "bg-green-100"
+                                : "bg-red-100"
+                            }
+                            textColor={
+                              customer.status === "active" || "Active"
+                                ? "text-green-800"
+                                : "text-red-800"
+                            }
+                            text={customer.status}
+                          />
+                        </td>
+                        <td className="flex flex-row items-center gap-x-[1vw] py-[1vw] px-[1.5vw] text-center">
+                          <PurpleButton
+                            type="button"
+                            text="Manage"
+                            onClick={() =>
+                              handleClickManageCustomer(customer.id)
+                            }
+                          />
+                          <WhiteButton
+                            type="button"
+                            text="Delete"
+                            onClick={() => handleOpenDeleteModal(customer.id)}
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+
+              <div className="flex items-center justify-between py-[1vw] px-[1.5vw]">
+                <button
+                  onClick={handlePreviousPage}
+                  disabled={currentPage === 1}
+                  className="px-[1vw] py-[0.5vw] border bg-white text-darkgray-0 rounded-[0.4vw] text-[1vw] font-inter font-medium"
+                >
+                  Previous
+                </button>
+                <div className="flex space-x-1">
+                  {[...Array(totalPages).keys()].map((page) => (
                     <button
-                      onClick={handlePreviousPage}
-                      disabled={currentPage === 1}
-                      className="px-[1vw] py-[0.5vw] border bg-white text-darkgray-0 rounded-[0.4vw] text-[1vw] font-inter font-medium"
+                      key={page}
+                      onClick={() => setCurrentPage(page + 1)}
+                      className={`${
+                        currentPage === page + 1
+                          ? "bg-purple-0 text-white"
+                          : "bg-gray-300 text-gray-600"
+                      } py-1 px-3 rounded`}
                     >
-                      Previous
+                      {page + 1}
                     </button>
-                    <div className="flex space-x-1">
-                      {[...Array(totalPages).keys()].map((page) => (
-                        <button
-                          key={page}
-                          onClick={() => setCurrentPage(page + 1)}
-                          className={`${
-                            currentPage === page + 1
-                              ? "bg-purple-0 text-white"
-                              : "bg-gray-300 text-gray-600"
-                          } py-1 px-3 rounded`}
-                        >
-                          {page + 1}
-                        </button>
-                      ))}
-                    </div>
-                    <button
-                      onClick={handleNextPage}
-                      disabled={currentPage === totalPages}
-                      className="px-[1vw] py-[0.5vw] border bg-white text-darkgray-0 rounded-[0.4vw] text-[1vw] font-inter font-medium"
-                    >
-                      Next
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <div className="text-center py-[2vw]">
-                  <p className="text-[1.5vw] font-semibold">
-                    No customers found
-                  </p>
+                  ))}
                 </div>
-              )}
+                <button
+                  onClick={handleNextPage}
+                  disabled={currentPage === totalPages}
+                  className="px-[1vw] py-[0.5vw] border bg-white text-darkgray-0 rounded-[0.4vw] text-[1vw] font-inter font-medium"
+                >
+                  Next
+                </button>
+              </div>
             </div>
           </div>
         </div>

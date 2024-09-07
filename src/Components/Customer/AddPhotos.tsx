@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useGetAssetsQuery } from "../../redux/api/assetApi";
 import { useGetPumpBrandsQuery } from "../../redux/api/pumpBrandApi";
 import { useGetPumpsQuery } from "../../redux/api/pumpApi";
+import { useGetCustomersQuery } from "../../redux/api/customerApi";
 import { toast, ToastContainer } from "react-toastify";
 import { Asset } from "../../redux/features/assetSlice";
 import { PumpBrand } from "../../redux/features/pumpBrandSlice";
@@ -11,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import PurpleButton from "../Tags/PurpleButton";
 import WhiteButton from "../Tags/WhiteButton";
 import Webcam from "react-webcam";
+import { Customer } from "../../redux/features/customerSlice";
 
 interface AddPhotosProps {
   onSubmit: (files: File[], id: string, type: string) => void;
@@ -33,6 +35,7 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
   const [assets, setAssets] = useState<Asset[]>([]);
   const [pumpBrands, setPumpBrands] = useState<PumpBrand[]>([]);
   const [pumps, setPumps] = useState<Pump[]>([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
   const [isWebcamOpen, setIsWebcamOpen] = useState<boolean>(false);
   const [webcamIndex, setWebcamIndex] = useState<number | null>(null);
   const [hasWebcam, setHasWebcam] = useState<boolean>(true);
@@ -42,6 +45,7 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
   const { data: assetsData } = useGetAssetsQuery();
   const { data: pumpBrandsData } = useGetPumpBrandsQuery();
   const { data: pumpsData } = useGetPumpsQuery();
+  const { data: customersData } = useGetCustomersQuery();
 
   useEffect(() => {
     if (assetsData) {
@@ -60,6 +64,12 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
       setPumps(pumpsData);
     }
   }, [pumpsData]);
+
+  useEffect(() => {
+    if (customersData) {
+      setCustomers(customersData);
+    }
+  }, [customersData]);
 
   useEffect(() => {
     // Check if the webcam is available
@@ -147,6 +157,8 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
         return pumps;
       case "pumpBrand":
         return pumpBrands;
+      case "customer":
+        return customers;
       default:
         return [];
     }
@@ -208,6 +220,8 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
     navigate("/client-dashboard");
   };
 
+  console.log(selectedId);
+
   return (
     <form
       className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter"
@@ -225,6 +239,7 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
             value={selectedType}
           >
             <option value="">Select Type</option>
+            <option value="customer">Customer</option>
             <option value="asset">Asset</option>
             <option value="pump">Pump</option>
             <option value="pumpBrand">Pump Brand</option>
@@ -233,8 +248,10 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
         {selectedType && (
           <div>
             <label className="block text-darkgray-0 font-medium text-[1vw]">
-              {selectedType === "asset"
-                ? "Asset:"
+              {selectedType === "customer"
+                ? "Customer:"
+                : selectedType === "asset"
+                ? "Asset"
                 : selectedType === "pump"
                 ? "Pump:"
                 : "Pump Brand:"}
@@ -331,6 +348,7 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
                 type="button"
                 text="Capture"
                 onClick={capturePhoto}
+                className="mr-[1vw]"
               />
               <WhiteButton type="button" text="Cancel" onClick={closeWebcam} />
             </div>
