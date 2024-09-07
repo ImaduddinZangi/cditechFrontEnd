@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Client } from "../features/clientSlice";
-import { User } from "../features/userSlice";
+import { Client, logoutClient } from "../features/clientSlice";
+import { logoutUser, User } from "../features/userSlice";
 
 interface AuthResponse {
   access_token: string;
@@ -59,10 +59,7 @@ export const authApi = createApi({
         method: "POST",
         body: credentials,
       }),
-      async onQueryStarted(
-        _args: LoginRequest,
-        { queryFulfilled }: { queryFulfilled: Promise<{ data: AuthResponse }> }
-      ) {
+      async onQueryStarted(_args, { queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
           localStorage.setItem("token", data.access_token);
@@ -80,10 +77,7 @@ export const authApi = createApi({
         method: "POST",
         body: credentials,
       }),
-      async onQueryStarted(
-        _args: LoginRequest,
-        { queryFulfilled }: { queryFulfilled: Promise<{ data: AuthResponse }> }
-      ) {
+      async onQueryStarted(_args, { queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
           localStorage.setItem("token", data.access_token);
@@ -109,7 +103,7 @@ export const authApi = createApi({
         body: newClient,
       }),
     }),
-    refreshToken: builder.query<AuthResponse, void>({
+    refreshToken: builder.mutation<AuthResponse, void>({
       query: () => ({
         url: "auth/refresh",
         method: "POST",
@@ -117,15 +111,28 @@ export const authApi = createApi({
           refresh_token: localStorage.getItem("refresh_token"),
         },
       }),
+      async onQueryStarted(_args, { queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          localStorage.setItem("token", data.access_token);
+          if (data.refresh_token) {
+            localStorage.setItem("refresh_token", data.refresh_token);
+          }
+        } catch (error) {
+          console.error("Error refreshing token:", error);
+        }
+      },
     }),
     logout: builder.mutation<void, void>({
       query: () => ({
         url: "auth/logout",
         method: "POST",
       }),
-      async onQueryStarted() {
+      async onQueryStarted(_args, { dispatch }) {
         localStorage.removeItem("token");
         localStorage.removeItem("refresh_token");
+        dispatch(logoutClient());
+        dispatch(logoutUser());
       },
     }),
   }),
@@ -137,5 +144,5 @@ export const {
   useRegisterUserMutation,
   useRegisterClientMutation,
   useLogoutMutation,
-  useLazyRefreshTokenQuery,
+  useRefreshTokenMutation,
 } = authApi;

@@ -81,7 +81,7 @@ const clientSlice = createSlice({
     setQuickBooksConnected: (state, action: PayloadAction<boolean>) => {
       state.quickbooksConnected = action.payload;
     },
-    logout: (state) => {
+    logoutClient: (state) => {
       state.token = null;
       state.client = null;
       state.quickbooksAuthUrl = null;
@@ -95,6 +95,7 @@ export const {
   setToken,
   setQuickBooksAuthUrl,
   setQuickBooksConnected,
-  logout,
+  logoutClient,
 } = clientSlice.actions;
+
 export default clientSlice.reducer;
