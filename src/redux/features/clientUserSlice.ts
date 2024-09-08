@@ -1,0 +1,73 @@
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Client } from "./clientSlice";
+
+export interface ClientUser {
+  id?: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  status?: string;
+  addressLine1?: string;
+  city?: string;
+  state?: string;
+  zipcode?: string;
+  phone?: string;
+  division?: string;
+  receiveSms?: boolean;
+  requirePasswordChange?: boolean;
+  sendWelcomeMessage?: boolean;
+  groupId?: string;
+  client?: Client;
+  is_active?: boolean;
+  is_client_admin?: boolean;
+  is_customer_admin?: boolean;
+  isProtectedUser?: boolean;
+  two_factor_enabled?: boolean;
+  created_at?: boolean;
+  updated_at?: boolean;
+}
+
+interface ClientUserState {
+  clientUsers: ClientUser[] | null;
+}
+
+const initialState: ClientUserState = {
+  clientUsers: null,
+};
+
+const clientUserSlice = createSlice({
+  name: "clientUser",
+  initialState,
+  reducers: {
+    setClientUsers: (state, action: PayloadAction<ClientUser[]>) => {
+      state.clientUsers = action.payload;
+    },
+    addClientUser: (state, action: PayloadAction<ClientUser>) => {
+      state.clientUsers?.push(action.payload);
+    },
+    updateClientUser: (state, action: PayloadAction<ClientUser>) => {
+      const index = state.clientUsers?.findIndex(
+        (clientUser) => clientUser.id === action.payload.id
+      );
+      if (index !== undefined && index !== -1 && state.clientUsers) {
+        state.clientUsers[index] = action.payload;
+      }
+    },
+    removeClientUser: (state, action: PayloadAction<string>) => {
+      state.clientUsers =
+        state.clientUsers?.filter(
+          (clientUser) => clientUser.id !== action.payload
+        ) || null;
+    },
+  },
+});
+
+export const {
+  setClientUsers,
+  addClientUser,
+  updateClientUser,
+  removeClientUser,
+} = clientUserSlice.actions;
+export default clientUserSlice.reducer;

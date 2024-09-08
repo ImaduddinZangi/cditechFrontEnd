@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Client } from './clientSlice';
 
 export interface Customer {
   id: string;
@@ -15,6 +16,7 @@ export interface Customer {
   service_contact: string;
   quickbooksCustomerId?: string;
   photo?: string;
+  client?: Client;
 }
 
 interface CustomerState {

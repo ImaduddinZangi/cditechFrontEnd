@@ -40,11 +40,15 @@ const PumpBrandsTable: React.FC = () => {
     (brand: PumpBrand) =>
       brand.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       brand.model.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      brand.id.toLowerCase().includes(searchTerm.toLowerCase())
+      brand.id?.includes(searchTerm.toLowerCase())
   );
 
-  const handleAddNewPumpButton = () => {
+  const handleAddNewPump = () => {
     navigate("/add-pump-brand");
+  };
+
+  const handleEditPump = (pumpId: string | undefined) => {
+    navigate(`/edit-pump-brand/${pumpId}`);
   };
 
   return (
@@ -53,7 +57,7 @@ const PumpBrandsTable: React.FC = () => {
         <div className="flex space-x-[1vw]">
           <PurpleButton
             text="Add New Pump Brand"
-            onClick={handleAddNewPumpButton}
+            onClick={handleAddNewPump}
             className="flex items-center"
           />
           <PurpleButton
@@ -141,14 +145,12 @@ const PumpBrandsTable: React.FC = () => {
                     </td>
                     <td className="flex flex-row items-center gap-x-[1vw] py-[1vw] px-[1.5vw] text-center">
                       <PurpleButton
-                        text="Brand Detail"
-                        onClick={() =>
-                          alert(`Brand Details Coming Soon!...`)
-                        }
+                        text="Edit"
+                        onClick={() => handleEditPump(brand.id)}
                       />
                       <WhiteButton
-                        text="Edit"
-                        onClick={() => alert(`Brand Editing Coming Soon!...`)}
+                        text="Brand Detail"
+                        onClick={() => alert(`Brand Details Coming Soon!...`)}
                       />
                     </td>
                   </tr>

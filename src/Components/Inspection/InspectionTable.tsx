@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   useGetInspectionsQuery,
   useDeleteInspectionMutation,
@@ -12,22 +12,35 @@ import { FiSearch } from "react-icons/fi";
 import PurpleButton from "../Tags/PurpleButton";
 import WhiteButton from "../Tags/WhiteButton";
 import Loader from "../Constants/Loader";
+import { getUserId } from "../../utils/utils";
+import { Inspection } from "../../redux/features/inspectionSlice";
 
 const InspectionTable: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actionType, setActionType] = useState<string | null>(null);
-  const { data: inspections, isLoading, error } = useGetInspectionsQuery();
+  const { data: inspectionsData, isLoading } = useGetInspectionsQuery();
+  const [inspections, setInspections] = useState<Inspection[]>([]);
   const [deleteInspection] = useDeleteInspectionMutation();
+  const navigate = useNavigate();
+  const clientId = getUserId();
   const [markCompleteAndBill] = useMarkInspectionCompleteAndBillMutation();
   const [markCompleteWithoutBilling] =
     useMarkInspectionCompleteWithoutBillingMutation();
-  const navigate = useNavigate();
   const [inspectionIdToDelete, setInspectionIdToDelete] = useState<
     string | undefined | null
   >(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const inspectionsPerPage = 10;
+
+  useEffect(() => {
+    if (inspectionsData && clientId) {
+      const filteredInspections = inspectionsData.filter(
+        (inspection) => inspection.client?.id === clientId
+      );
+      setInspections(filteredInspections);
+    }
+  }, [inspectionsData, clientId]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -150,25 +163,17 @@ const InspectionTable: React.FC = () => {
     setInspectionIdToDelete(null);
   };
 
-  if (isLoading)
-    return (
-      <div className="w-full h-[80vh]">
-        <Loader />
-      </div>
-    );
-  if (error) return <div>Error loading inspections.</div>;
-
   return (
     <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
       <div className="flex justify-between items-center px-[1.5vw] py-[1vw]">
         <div className="flex space-x-[1vw]">
-          <PurpleButton 
-          text="Add New Inspection"
-          onClick={() => navigate("/add-inspection")}
+          <PurpleButton
+            text="Add New Inspection"
+            onClick={() => navigate("/add-inspection")}
           />
-          <PurpleButton 
-          text="Import New Inspections"
-          onClick={() => alert("Import Inspections feature coming soon!")}
+          <PurpleButton
+            text="Import New Inspections"
+            onClick={() => alert("Import Inspections feature coming soon!")}
           />
         </div>
         <div className="relative">
@@ -208,64 +213,83 @@ const InspectionTable: React.FC = () => {
             </tr>
           </thead>
           <tbody className="text-gray-600 text-[1vw] font-light">
-            {paginatedInspections?.map((inspection, index: number) => {
-              const displayIndex =
-                index + 1 + (currentPage - 1) * inspectionsPerPage;
-              return (
-                <tr
-                  key={inspection.id}
-                  className="border-b border-gray-200 hover:bg-gray-100"
-                >
-                  <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                    {highlightText(displayIndex.toString(), searchTerm)}
-                  </td>
-                  <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                    {highlightText(inspection.name, searchTerm)}
-                  </td>
-                  <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                    {highlightText(
-                      inspection.status ? inspection.status : "N/A",
-                      searchTerm
-                    )}
-                  </td>
-                  <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                    {highlightText(
-                      new Date(inspection.scheduledDate).toLocaleDateString(),
-                      searchTerm
-                    )}
-                  </td>
-                  <td className="flex flex-row items-center gap-x-[1vw] py-[1vw] px-[1.5vw] text-center">
-                    <PurpleButton
-                      text="Details"
-                      onClick={() => handleDetails(inspection.id)}
-                    />
-                    <PurpleButton
-                      text="Edit"
-                      onClick={() => handleUpdate(inspection.id)}
-                    />
-                    <WhiteButton
-                      text="Delete"
-                      onClick={() => handleOpenDeleteModal(inspection.id)}
-                    />
-                    <div>
-                      <select
-                        onChange={(e) =>
-                          handleCompleteAction(inspection.id, e.target.value)
-                        }
-                        defaultValue=""
-                        className="border rounded px-2 py-1"
-                      >
-                        <option value="" disabled>
-                          Complete Action
-                        </option>
-                        <option value="billed">Complete Billed</option>
-                        <option value="notBilled">Complete Not Billed</option>
-                      </select>
-                    </div>
+            {isLoading && (
+              <tr>
+                <td colSpan={6} className="text-center py-[2vw]">
+                  <Loader />
+                </td>
+              </tr>
+            )}
+            {!isLoading &&
+              (!paginatedInspections || paginatedInspections.length === 0) && (
+                <tr>
+                  <td colSpan={6} className="text-center py-[2vw]">
+                    <p className="text-[1.5vw] font-semibold">
+                      No inspection found
+                    </p>
                   </td>
                 </tr>
-              );
-            })}
+              )}
+            {!isLoading &&
+              paginatedInspections &&
+              paginatedInspections?.map((inspection, index: number) => {
+                const displayIndex =
+                  index + 1 + (currentPage - 1) * inspectionsPerPage;
+                return (
+                  <tr
+                    key={inspection.id}
+                    className="border-b border-gray-200 hover:bg-gray-100"
+                  >
+                    <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
+                      {highlightText(displayIndex.toString(), searchTerm)}
+                    </td>
+                    <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
+                      {highlightText(inspection.name, searchTerm)}
+                    </td>
+                    <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
+                      {highlightText(
+                        inspection.status ? inspection.status : "N/A",
+                        searchTerm
+                      )}
+                    </td>
+                    <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
+                      {highlightText(
+                        new Date(inspection.scheduledDate).toLocaleDateString(),
+                        searchTerm
+                      )}
+                    </td>
+                    <td className="flex flex-row items-center gap-x-[1vw] py-[1vw] px-[1.5vw] text-center">
+                      <PurpleButton
+                        text="Details"
+                        onClick={() => handleDetails(inspection.id)}
+                      />
+                      <PurpleButton
+                        text="Edit"
+                        onClick={() => handleUpdate(inspection.id)}
+                      />
+                      <WhiteButton
+                        text="Delete"
+                        onClick={() => handleOpenDeleteModal(inspection.id)}
+                      />
+                      <div>
+                        <select
+                          onChange={(e) =>
+                            handleCompleteAction(inspection.id, e.target.value)
+                          }
+                          defaultValue=""
+                          className="border rounded px-2 py-1"
+                        >
+                          <option value="" disabled>
+                            Complete Action
+                          </option>
+                          <option value="billed">Complete Billed</option>
+                          <option value="notBilled">Complete Not Billed</option>
+                        </select>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
           </tbody>
         </table>
       </div>

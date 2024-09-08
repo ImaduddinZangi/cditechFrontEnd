@@ -5,6 +5,7 @@ import { useCreatePumpBrandMutation } from "../../../redux/api/pumpBrandApi";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import { PumpBrand } from "../../../redux/features/pumpBrandSlice";
 
 const AddPumpBrandPage: React.FC = () => {
   const [createPumpBrand] = useCreatePumpBrandMutation();
@@ -20,21 +21,9 @@ const AddPumpBrandPage: React.FC = () => {
     return error && error.data && typeof error.data.message === "string";
   };
 
-  const handleAddPumpBrand = async (
-    name: string,
-    model: string,
-    phone: string,
-    address: string,
-    madeInUsa: boolean
-  ) => {
+  const handleAddPumpBrand = async (pumpBrandData: PumpBrand) => {
     try {
-      const result = await createPumpBrand({
-        name,
-        model,
-        phone,
-        address,
-        madeInUsa,
-      }).unwrap();
+      const result = await createPumpBrand(pumpBrandData).unwrap();
       toast.success("Pump Brand added successfully!", {
         onClose: () => navigate("/add-pump"),
         autoClose: 500,

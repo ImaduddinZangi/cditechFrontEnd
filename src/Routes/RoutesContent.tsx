@@ -23,6 +23,13 @@ import PumpBrandsTablePage from "../Pages/Customer/Pump/PumpBrandsTablePage";
 import InspectionDetailsPage from "../Pages/Inspection/InspectionDetailsPage";
 import AssetDetailsPage from "../Pages/Customer/Asset/AssetDetailsPage";
 import AddUserGroupPage from "../Pages/UserGroups/Groups/AddUserGroupPage";
+import EditPumpBrandPage from "../Pages/Customer/Pump/EditPumpBrandPage";
+import EditUserGroupPage from "../Pages/UserGroups/Groups/EditUserGroupPage";
+import UserGroupTablePage from "../Pages/UserGroups/Groups/UserGroupTablePage";
+import AddClientUserPage from "../Pages/UserGroups/Users/AddClientUserPage";
+import EditClientUserPage from "../Pages/UserGroups/Users/EditClientUserPage";
+import ClientUserTablePage from "../Pages/UserGroups/Users/ClientUserTablePage";
+import GrantGroupPermissionsPage from "../Pages/UserGroups/Groups/GrantGroupPermissionsPage";
 
 const RoutesContent: React.FC = () => {
   return (
@@ -53,6 +60,7 @@ const RoutesContent: React.FC = () => {
         <Route path="/asset-details/:assetId" element={<AssetDetailsPage />} />
         {/* Pump */}
         <Route path="/add-pump-brand" element={<AddPumpBrandPage />} />
+        <Route path="/edit-pump-brand/:pumpId" element={<EditPumpBrandPage />} />
         <Route path="/pump-brands-table" element={<PumpBrandsTablePage />} />
         {/* Photo */}
         <Route path="/add-photos" element={<AddPhotosPage />} />
@@ -72,6 +80,30 @@ const RoutesContent: React.FC = () => {
         <Route
           path="/add-user-group"
           element={<AddUserGroupPage />}
+        />
+        <Route
+          path="/edit-user-group/:userGroupId"
+          element={<EditUserGroupPage />}
+        />
+        <Route
+          path="/user-group-table"
+          element={<UserGroupTablePage />}
+        />
+        <Route
+          path="/user-group-permissions"
+          element={<GrantGroupPermissionsPage />}
+        />
+        <Route
+          path="/add-client-user"
+          element={<AddClientUserPage />}
+        />
+        <Route
+          path="/edit-client-user/:clientUserId"
+          element={<EditClientUserPage />}
+        />
+        <Route
+          path="/client-user-table"
+          element={<ClientUserTablePage />}
         />
       </Route>
     </Routes>

@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface PumpBrand {
-  id: string;
+  id?: string;
   name: string;
   model: string;
-  website: string;
+  website?: string;
   phone: string;
   address: string;
   madeInUsa: boolean;

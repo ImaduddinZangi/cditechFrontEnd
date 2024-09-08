@@ -15,7 +15,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
     { title: "Dashboard", src: "dashboard", href: "/client-dashboard" },
     { title: "Client Profile", src: "client", href: "/client-profile" },
     {
-      title: "Pump Brands Table",
+      title: "Pump Brand Table",
       src: "table",
       href: "pump-brands-table",
     },
@@ -23,6 +23,15 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
       title: "Inspection Table",
       src: "table",
       href: "inspection-table",
+    },
+    {
+      title: "User Groups",
+      src: "group",
+      isDropdown: true,
+      dropdownItems: [
+        { title: "User Group Table", src: "table", href: "/user-group-table" },
+        { title: "Client User Table", src: "table", href: "/client-user-table" },
+      ],
     },
     {
       title: "Customers",
@@ -35,14 +44,6 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
           src: "manage-customer",
           href: "/manage-customer",
         },
-      ],
-    },
-    {
-      title: "User Groups",
-      src: "group",
-      isDropdown: true,
-      dropdownItems: [
-        { title: "Add User Group", src: "group", href: "/add-user-group" },
       ],
     },
     {

@@ -14,6 +14,9 @@ import twoFactorAuthReducer from "./features/twoFactorAuthSlice";
 import inspectionReducer from "./features/inspectionSlice";
 import checkListItemReducer from "./features/checkListItemSlice";
 import inspectionReportsReducer from "./features/inspectionReportsSlice";
+import userGroupReducer from "./features/userGroupSlice";
+import clientUserReducer from "./features/clientUserSlice";
+import groupPermissionsReducer from "./features/groupPermissionsSlice";
 
 import { authApi } from "./api/authApi";
 import clientApi from "./api/clientApi";
@@ -27,6 +30,9 @@ import twoFactorAuthApi from "./api/twoFactorAuthApi";
 import inspectionApi from "./api/inspectionApi";
 import checkListItemApi from "./api/checkListItemApi";
 import inspectionReportsApi from "./api/inspectionReportsApi";
+import userGroupApi from "./api/userGroupApi";
+import clientUserApi from "./api/clientUserApi";
+import groupPermissionsApi from "./api/groupPermissionsApi";
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -41,6 +47,9 @@ const rootReducer = combineReducers({
   inspection: inspectionReducer,
   checkListItem: checkListItemReducer,
   inspectionReports: inspectionReportsReducer,
+  userGroup: userGroupReducer,
+  clientUser: clientUserReducer,
+  groupPermissions: groupPermissionsReducer,
   [authApi.reducerPath]: authApi.reducer,
   [clientApi.reducerPath]: clientApi.reducer,
   [customerApi.reducerPath]: customerApi.reducer,
@@ -53,6 +62,9 @@ const rootReducer = combineReducers({
   [inspectionApi.reducerPath]: inspectionApi.reducer,
   [inspectionReportsApi.reducerPath]: inspectionReportsApi.reducer,
   [checkListItemApi.reducerPath]: checkListItemApi.reducer,
+  [userGroupApi.reducerPath]: userGroupApi.reducer,
+  [clientUserApi.reducerPath]: clientUserApi.reducer,
+  [groupPermissionsApi.reducerPath]: groupPermissionsApi.reducer,
 });
 
 const store = configureStore({
@@ -69,7 +81,10 @@ const store = configureStore({
       uploadPhotosApi.middleware,
       inspectionApi.middleware,
       inspectionReportsApi.middleware,
-      checkListItemApi.middleware
+      checkListItemApi.middleware,
+      userGroupApi.middleware,
+      clientUserApi.middleware,
+      groupPermissionsApi.middleware
     ),
 });
 

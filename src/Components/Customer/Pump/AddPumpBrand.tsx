@@ -3,28 +3,29 @@ import InputField from "../../Tags/InputField";
 import PurpleButton from "../../Tags/PurpleButton";
 import WhiteButton from "../../Tags/WhiteButton";
 import { useNavigate } from "react-router-dom";
+import { PumpBrand } from "../../../redux/features/pumpBrandSlice";
 
 interface AddPumpBrandProps {
-  onSubmit: (
-    name: string,
-    model: string,
-    phone: string,
-    address: string,
-    madeInUsa: boolean
-  ) => void;
+  onSubmit: (data: PumpBrand) => void;
+  initialData?: Partial<PumpBrand>;
 }
 
-const AddPumpBrand: React.FC<AddPumpBrandProps> = ({ onSubmit }) => {
-  const [name, setName] = useState("");
-  const [model, setModel] = useState("");
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
-  const [madeInUsa, setMadeInUsa] = useState(true);
+const AddPumpBrand: React.FC<AddPumpBrandProps> = ({
+  onSubmit,
+  initialData,
+}) => {
+  const [name, setName] = useState<string>(initialData?.name || "");
+  const [model, setModel] = useState<string>(initialData?.model || "");
+  const [phone, setPhone] = useState<string>(initialData?.phone || "");
+  const [address, setAddress] = useState<string>(initialData?.address || "");
+  const [madeInUsa, setMadeInUsa] = useState<boolean>(
+    initialData?.madeInUsa || false
+  );
   const navigate = useNavigate();
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    onSubmit(name, model, phone, address, madeInUsa);
+    onSubmit({ id: initialData?.id, name, model, phone, address, madeInUsa });
   };
 
   const handleCancel = () => {
@@ -34,7 +35,7 @@ const AddPumpBrand: React.FC<AddPumpBrandProps> = ({ onSubmit }) => {
   return (
     <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
       <form
-        className="grid grid-cols-1 sm:grid-cols-2 gap-[1vw] relative pb-[4vw]"
+        className="grid grid-cols-2 gap-[1vw] relative"
         onSubmit={handleSubmit}
       >
         <InputField

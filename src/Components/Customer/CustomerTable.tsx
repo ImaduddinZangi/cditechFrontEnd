@@ -123,15 +123,13 @@ const CustomerTable: React.FC = () => {
             <div className="bg-white my-[1.5vw]">
               <div className="flex justify-between items-center px-[1.5vw] py-[1vw]">
                 <div className="flex space-x-[1vw]">
-                  <button
-                    onClick={handleAddCustomer}
-                    className="w-[12vw] h-[3vw] text-white font-inter font-semibold text-[1vw] bg-purple-0 text-purple-600 border rounded"
-                  >
-                    Add New Customer
-                  </button>
-                  <button className="w-[14vw] h-[3vw] text-white font-inter font-semibold text-[1vw] bg-purple-0 text-purple-600 border rounded">
-                    Import New Customers
-                  </button>
+                  <PurpleButton 
+                  text="Add New Customer"
+                  onClick={handleAddCustomer}
+                  />
+                  <PurpleButton 
+                  text="Import New Customers"
+                  />
                 </div>
                 <div className="relative">
                   <input
@@ -215,7 +213,7 @@ const CustomerTable: React.FC = () => {
                               <div className="mr-2">
                                 <img
                                   className="w-6 h-6 rounded-full"
-                                  src={photoUrl} // Use matched photo URL
+                                  src={photoUrl}
                                   alt={customer.name}
                                 />
                               </div>
