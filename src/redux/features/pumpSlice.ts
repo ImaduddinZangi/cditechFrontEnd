@@ -3,16 +3,16 @@ import { PumpBrand } from "./pumpBrandSlice";
 import { Asset } from "./assetSlice";
 
 export interface Pump {
-  id: string;
+  id?: string;
   name: string;
-  assetId: string;
-  brandId: string;
-  hp: number;
+  assetId?: string;
+  brandId?: string;
+  hp: string;
   serial: string;
   warranty: string;
   installedDate: string;
-  avgAmps: number;
-  maxAmps: number;
+  avgAmps: string;
+  maxAmps: string;
   createdAt?: string;
   updatedAt?: string;
   photos?: [];

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetAssetsQuery } from "../../../redux/api/assetApi";
 import { useGetPumpBrandsQuery } from "../../../redux/api/pumpBrandApi";
 import { PumpBrand } from "../../../redux/features/pumpBrandSlice";
 import { Asset } from "../../../redux/features/assetSlice";
+import { Pump } from "../../../redux/features/pumpSlice";
 import InputField from "../../Tags/InputField";
 import WhiteButton from "../../Tags/WhiteButton";
 import PurpleButton from "../../Tags/PurpleButton";
@@ -11,29 +12,8 @@ import PurpleButton from "../../Tags/PurpleButton";
 interface AddPumpProps {
   isModalOpen: boolean;
   onClose: () => void;
-  onSubmit: (
-    assetId: string,
-    name: string,
-    brandId: string,
-    serial: string,
-    warranty: string,
-    installedDate: string,
-    avgAmps: number,
-    maxAmps: number,
-    hp: number
-  ) => void;
-  initialData?: {
-    assetId: string;
-    brandId: string;
-    serial: string;
-    name: string;
-    warranty: string;
-    installedDate: string;
-    avgAmps: number;
-    maxAmps: number;
-    hp: number;
-  } | null;
-  isEditing?: boolean;
+  onSubmit: (data: Pump) => void;
+  initialData?: Partial<Pump>;
 }
 
 const AddPump: React.FC<AddPumpProps> = ({
@@ -41,57 +21,34 @@ const AddPump: React.FC<AddPumpProps> = ({
   onClose,
   onSubmit,
   initialData,
-  isEditing,
 }) => {
+  const [assetId, setAssetId] = useState<string>(initialData?.asset?.id || "");
+  const [name, setName] = useState<string>(initialData?.name || "");
+  const [brandId, setBrandId] = useState<string>(initialData?.brand?.id || "");
+  const [serial, setSerial] = useState<string>(initialData?.serial || "");
+  const [warranty, setWarranty] = useState<string>(initialData?.warranty || "");
+  const [installedDate, setInstalledDate] = useState<string>(
+    initialData?.installedDate || ""
+  );
+  const [avgAmps, setAvgAmps] = useState<string>(initialData?.avgAmps || "");
+  const [maxAmps, setMaxAmps] = useState<string>(initialData?.maxAmps || "");
+  const [hp, setHp] = useState<string>(initialData?.hp || "");
   const { data: assets } = useGetAssetsQuery();
   const { data: pumpBrands } = useGetPumpBrandsQuery();
-
-  const [formState, setFormState] = useState({
-    assetId: "",
-    brandId: "",
-    serial: "",
-    name: "",
-    warranty: "1 Year",
-    installedDate: "",
-    avgAmps: 0,
-    maxAmps: 0,
-    hp: 0,
-  });
-
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (initialData) {
-      setFormState(initialData);
-    }
-  }, [initialData]);
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormState((prevState) => ({
-      ...prevState,
-      [name]:
-        name === "avgAmps" || name === "maxAmps" || name === "hp"
-          ? Number(value)
-          : value,
-    }));
-  };
-
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    onSubmit(
-      formState.assetId,
-      formState.name,
-      formState.brandId,
-      formState.serial,
-      formState.warranty,
-      formState.installedDate,
-      formState.avgAmps,
-      formState.maxAmps,
-      formState.hp
-    );
+    onSubmit({
+      assetId,
+      name,
+      brandId,
+      serial,
+      warranty,
+      installedDate,
+      avgAmps,
+      maxAmps,
+      hp,
+    });
     onClose();
   };
 
@@ -100,41 +57,22 @@ const AddPump: React.FC<AddPumpProps> = ({
     navigate("/customer-table");
   };
 
-  useEffect(() => {
-    if (!isModalOpen) {
-      setFormState({
-        assetId: "",
-        brandId: "",
-        serial: "",
-        name: "",
-        warranty: "1 Year",
-        installedDate: "",
-        avgAmps: 0,
-        maxAmps: 0,
-        hp: 0,
-      });
-    }
-  }, [isModalOpen]);
-
   if (!isModalOpen) {
     return null;
   }
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50 font-inter">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6">
-        <p className="text-[1.2vw] font-semibold mb-[1vw]">
-          {isEditing ? "Edit Pump" : "Add New Pump"}
-        </p>
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-[1.5vw]">
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-[1vw]">
             <InputField
               label="Pump Name"
               name="name"
               fieldType="text"
-              value={formState.name}
+              value={name}
               placeholder="Enter name of pump"
-              onChange={handleChange}
+              onChange={(e) => setName(e.target.value)}
               required
             />
             <div>
@@ -142,8 +80,8 @@ const AddPump: React.FC<AddPumpProps> = ({
               <select
                 className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
                 name="brandId"
-                value={formState.brandId}
-                onChange={handleChange}
+                value={brandId}
+                onChange={(e) => setBrandId(e.target.value)}
                 required
               >
                 <option value="">Select Brand</option>
@@ -159,8 +97,8 @@ const AddPump: React.FC<AddPumpProps> = ({
               <select
                 className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
                 name="assetId"
-                value={formState.assetId}
-                onChange={handleChange}
+                value={assetId}
+                onChange={(e) => setAssetId(e.target.value)}
                 required
               >
                 <option value="">Select Asset</option>
@@ -175,36 +113,36 @@ const AddPump: React.FC<AddPumpProps> = ({
               label="AVG-Amps"
               name="avgAmps"
               fieldType="number"
-              value={formState.avgAmps}
+              value={avgAmps}
               placeholder="Enter number of AVG-Amps"
-              onChange={handleChange}
+              onChange={(e) => setAvgAmps(e.target.value)}
               required
             />
             <InputField
               label="Max-Amps"
               name="maxAmps"
               fieldType="number"
-              value={formState.maxAmps}
+              value={maxAmps}
               placeholder="Enter number of Max-Amps"
-              onChange={handleChange}
+              onChange={(e) => setMaxAmps(e.target.value)}
               required
             />
             <InputField
               label="HP"
               name="hp"
               fieldType="number"
-              value={formState.hp}
+              value={hp}
               placeholder="Enter number of HP"
-              onChange={handleChange}
+              onChange={(e) => setHp(e.target.value)}
               required
             />
             <InputField
               label="Serial"
               name="serial"
               fieldType="text"
-              value={formState.serial}
+              value={serial}
               placeholder="Enter serial"
-              onChange={handleChange}
+              onChange={(e) => setSerial(e.target.value)}
               required
             />
             <div>
@@ -212,8 +150,8 @@ const AddPump: React.FC<AddPumpProps> = ({
               <select
                 className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
                 name="warranty"
-                value={formState.warranty}
-                onChange={handleChange}
+                value={warranty}
+                onChange={(e) => setWarranty(e.target.value)}
                 required
               >
                 <option value="1 Year">1 Year</option>
@@ -225,17 +163,13 @@ const AddPump: React.FC<AddPumpProps> = ({
               label="Installed Date"
               name="installedDate"
               fieldType="date"
-              value={formState.installedDate}
-              onChange={handleChange}
+              value={installedDate}
+              onChange={(e) => setInstalledDate(e.target.value)}
               required
             />
           </div>
           <div className="mt-[1vw] flex justify-end">
-            <PurpleButton
-              text={isEditing ? "Save Changes" : "Save"}
-              type="submit"
-              className="mr-[1vw]"
-            />
+            <PurpleButton text="Save" type="submit" className="mr-[1vw]" />
             <WhiteButton text="Cancel" type="button" onClick={handleCancel} />
           </div>
         </form>

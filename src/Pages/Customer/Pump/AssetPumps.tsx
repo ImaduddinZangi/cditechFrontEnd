@@ -4,6 +4,7 @@ import { useCreatePumpMutation } from "../../../redux/api/pumpApi";
 import { useNavigate } from "react-router-dom";
 import AddPump from "../../../Components/Customer/Pump/AddPump";
 import { ToastContainer, toast } from "react-toastify";
+import { Pump } from "../../../redux/features/pumpSlice";
 
 const AssetPumps: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,32 +21,11 @@ const AssetPumps: React.FC = () => {
     return error && error.data && typeof error.data.message === "string";
   };
 
-  const handleAddPump = async (
-    assetId: string,
-    name: string,
-    brandId: string,
-    serial: string,
-    warranty: string,
-    installedDate: string,
-    avgAmps: number,
-    maxAmps: number,
-    hp: number
-  ) => {
+  const handleAddPump = async (pumpData: Pump) => {
     try {
-      const result = await createPump({
-        assetId,
-        brandId,
-        name,
-        hp,
-        serial,
-        installedDate,
-        avgAmps,
-        maxAmps,
-        warranty,
-      }).unwrap();
-
+      const result = await createPump(pumpData).unwrap();
       toast.success("Pump added successfully!", {
-        onClose: () => navigate("/asset-pumps"),
+        onClose: () => navigate("/asset-details"),
         autoClose: 500,
       });
       console.log("Pump created successfully", result);

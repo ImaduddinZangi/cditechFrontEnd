@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { GroupPermissionResponse } from "./groupPermissionsSlice";
 
 export interface UserGroup {
   id?: string;
@@ -7,6 +8,7 @@ export interface UserGroup {
   isDefaultAdminGroup?: boolean;
   createdAt?: string;
   updatedAt?: string;
+  permissions?: GroupPermissionResponse[];
 }
 
 interface UserGroupState {

@@ -9,7 +9,6 @@ export interface User {
   phone?: string;
 }
 
-
 interface AuthState {
   token: string | null;
   user: User | null;

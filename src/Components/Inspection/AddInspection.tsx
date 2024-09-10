@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
-import Select from "react-select";
+import React, { useState } from "react";
 import { useGetCustomersQuery } from "../../redux/api/customerApi";
 import { useGetAssetsQuery } from "../../redux/api/assetApi";
 import { getUserId } from "../../utils/utils";
-import { Asset } from "../../redux/features/assetSlice";
 import { useNavigate } from "react-router-dom";
 import { Inspection } from "../../redux/features/inspectionSlice";
 import PurpleButton from "../Tags/PurpleButton";
 import WhiteButton from "../Tags/WhiteButton";
 import InputField from "../Tags/InputField";
+import { Customer } from "../../redux/features/customerSlice";
+import { Asset } from "../../redux/features/assetSlice";
 
 interface InspectionFormProps {
   onSubmit: (data: Inspection) => void;
@@ -19,21 +19,8 @@ const InspectionForm: React.FC<InspectionFormProps> = ({
   onSubmit,
   initialData,
 }) => {
-  const [assets, setAssets] = useState<Array<{ label: string; value: string }>>(
-    []
-  );
-  const [customers, setCustomers] = useState<
-    Array<{ label: string; value: string }>
-  >([]);
-  const [selectedCustomer, setSelectedCustomer] = useState<{
-    label: string;
-    value: string;
-  } | null>(null);
-  const [selectedAsset, setSelectedAsset] = useState<{
-    label: string;
-    value: string;
-  } | null>(null);
-
+  const [assetId, setAssetId] = useState<string>(initialData?.asset?.id || "");
+  const [customerId, setCustomerId] = useState<string>(initialData?.customer?.id || "");
   const [name, setName] = useState<string>(initialData?.name || "");
   const [scheduledDate, setScheduledDate] = useState<string>(
     initialData?.scheduledDate || ""
@@ -46,61 +33,11 @@ const InspectionForm: React.FC<InspectionFormProps> = ({
     initialData?.recording || "no"
   );
 
-  const { data: customersData } = useGetCustomersQuery();
-  const { data: assetsData } = useGetAssetsQuery();
+  const { data: customers } = useGetCustomersQuery();
+  const { data: assets } = useGetAssetsQuery();
+  
   const clientId = getUserId();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (customersData) {
-      setCustomers(
-        customersData.map((customer) => ({
-          label: customer.name,
-          value: customer.id,
-        }))
-      );
-    }
-  }, [customersData]);
-
-  useEffect(() => {
-    if (initialData && customers.length > 0) {
-      const selectedCustomerData = customers.find(
-        (c) => c.value === initialData.customerId
-      );
-      setSelectedCustomer(selectedCustomerData || null);
-    }
-  }, [initialData, customers]);
-
-  useEffect(() => {
-    if (assetsData) {
-      setAssets(
-        assetsData.map((asset: Asset) => ({
-          label: asset.name,
-          value: asset.id,
-        }))
-      );
-
-      if (initialData?.assetId) {
-        const selectedAssetData = assetsData.find(
-          (asset: Asset) => asset.id === initialData.assetId
-        );
-        if (selectedAssetData) {
-          setSelectedAsset({
-            label: selectedAssetData.name,
-            value: selectedAssetData.id,
-          });
-        }
-      }
-    }
-  }, [assetsData, initialData]);
-
-  const handleCustomerChange = (selectedOption: { label: string; value: string; } | null) => {
-    setSelectedCustomer(selectedOption);
-  };
-
-  const handleAssetChange = (selectedOption: { label: string; value: string; } | null) => {
-    setSelectedAsset(selectedOption);
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -108,8 +45,8 @@ const InspectionForm: React.FC<InspectionFormProps> = ({
       id: initialData?.id,
       name,
       clientId: initialData?.clientId ?? clientId,
-      customerId: selectedCustomer?.value || initialData?.customerId || "",
-      assetId: selectedAsset?.value || initialData?.assetId || "",
+      customerId,
+      assetId,
       assignedTo: initialData?.assignedTo || "",
       scheduledDate,
       completedDate: initialData?.completedDate || null,
@@ -144,22 +81,21 @@ const InspectionForm: React.FC<InspectionFormProps> = ({
               />
             </div>
             <div>
-              <label
-                htmlFor="customer"
-                className="block text-darkgray-0 font-medium text-[1vw]"
-              >
-                Customer:
-              </label>
-              <Select
-                id="customer"
-                options={customers}
-                placeholder="Search"
-                className="mt-1"
-                isClearable
-                value={selectedCustomer}
-                onChange={handleCustomerChange}
+              <label className="block mb-1 font-medium">Customer:</label>
+              <select
+                className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
+                name="customerId"
+                value={customerId}
+                onChange={(e) => setCustomerId(e.target.value)}
                 required
-              />
+              >
+                <option value="">Select Customer</option>
+                {customers?.map((customer: Customer) => (
+                  <option key={customer.id} value={customer.id}>
+                    {customer.name}
+                  </option>
+                ))}
+              </select>
             </div>
             <div>
               <InputField
@@ -187,23 +123,22 @@ const InspectionForm: React.FC<InspectionFormProps> = ({
             </div>
           </div>
           <div className="space-y-[1vw]">
-            <div>
-              <label
-                htmlFor="asset"
-                className="block text-darkgray-0 font-medium text-[1vw]"
-              >
-                Asset:
-              </label>
-              <Select
-                id="asset"
-                options={assets}
-                placeholder="Search"
-                className="mt-1"
-                isClearable
-                value={selectedAsset}
-                onChange={handleAssetChange}
+          <div>
+              <label className="block mb-1 font-medium">Asset:</label>
+              <select
+                className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
+                name="assetId"
+                value={assetId}
+                onChange={(e) => setAssetId(e.target.value)}
                 required
-              />
+              >
+                <option value="">Select Asset</option>
+                {assets?.map((asset: Asset) => (
+                  <option key={asset.id} value={asset.id}>
+                    {asset.name}
+                  </option>
+                ))}
+              </select>
             </div>
             <div>
               <label

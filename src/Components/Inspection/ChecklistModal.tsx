@@ -118,7 +118,7 @@ const ChecklistModal: React.FC<ChecklistModalProps> = ({
                 </option>
                 {allChecklistItems?.map((item) => (
                   <option key={item.id} value={item.id}>
-                    {item.description}
+                    {item.name}
                   </option>
                 ))}
               </select>
@@ -136,9 +136,10 @@ const ChecklistModal: React.FC<ChecklistModalProps> = ({
                   </div>
                   <div className="flex items-center space-x-4">
                     <label className="flex items-center space-x-2">
-                      <span className="font-medium">Completed:</span>
+                      <span className="text-[1vw] text-darkgray-0 font-medium">Completed:</span>
                       <input
                         type="checkbox"
+                        className="w-[1vw] h-[1vw] accent-purple-0 border-lightgray-0 rounded focus:ring-offset-white focus:ring-purple-0 cursor-pointer"
                         checked={item.is_completed}
                         onChange={(e) => handleCheckboxChange(index, e.target.checked)}
                       />

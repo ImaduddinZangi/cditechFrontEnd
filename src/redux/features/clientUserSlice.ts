@@ -29,11 +29,21 @@ export interface ClientUser {
   updated_at?: boolean;
 }
 
+interface AuthState {
+  token: string | null;
+  clientUser: ClientUser | null;
+}
+
 interface ClientUserState {
+  auth: AuthState;
   clientUsers: ClientUser[] | null;
 }
 
 const initialState: ClientUserState = {
+  auth: {
+    token: null,
+    clientUser: null,
+  },
   clientUsers: null,
 };
 
@@ -41,12 +51,15 @@ const clientUserSlice = createSlice({
   name: "clientUser",
   initialState,
   reducers: {
+    // Set client users
     setClientUsers: (state, action: PayloadAction<ClientUser[]>) => {
       state.clientUsers = action.payload;
     },
+    // Add a new client user
     addClientUser: (state, action: PayloadAction<ClientUser>) => {
       state.clientUsers?.push(action.payload);
     },
+    // Update a client user
     updateClientUser: (state, action: PayloadAction<ClientUser>) => {
       const index = state.clientUsers?.findIndex(
         (clientUser) => clientUser.id === action.payload.id
@@ -55,11 +68,25 @@ const clientUserSlice = createSlice({
         state.clientUsers[index] = action.payload;
       }
     },
+    // Remove a client user
     removeClientUser: (state, action: PayloadAction<string>) => {
       state.clientUsers =
         state.clientUsers?.filter(
           (clientUser) => clientUser.id !== action.payload
         ) || null;
+    },
+    // Set token for authentication
+    setToken: (state, action: PayloadAction<string>) => {
+      state.auth.token = action.payload;
+    },
+    // Set client user for authentication
+    setClientUser: (state, action: PayloadAction<ClientUser>) => {
+      state.auth.clientUser = action.payload;
+    },
+    // Logout the client user
+    clientUserLogout: (state) => {
+      state.auth.token = null;
+      state.auth.clientUser = null;
     },
   },
 });
@@ -69,5 +96,8 @@ export const {
   addClientUser,
   updateClientUser,
   removeClientUser,
+  setToken,
+  setClientUser,
+  clientUserLogout,
 } = clientUserSlice.actions;
 export default clientUserSlice.reducer;

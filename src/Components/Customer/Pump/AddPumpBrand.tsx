@@ -19,7 +19,7 @@ const AddPumpBrand: React.FC<AddPumpBrandProps> = ({
   const [phone, setPhone] = useState<string>(initialData?.phone || "");
   const [address, setAddress] = useState<string>(initialData?.address || "");
   const [madeInUsa, setMadeInUsa] = useState<boolean>(
-    initialData?.madeInUsa || false
+    initialData?.madeInUsa ? true : false || false
   );
   const navigate = useNavigate();
 

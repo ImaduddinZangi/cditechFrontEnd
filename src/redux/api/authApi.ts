@@ -1,25 +1,17 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Client, logoutClient } from "../features/clientSlice";
-import { logoutUser, User } from "../features/userSlice";
+import { ClientUser, clientUserLogout } from "../features/clientUserSlice";
 
 interface AuthResponse {
   access_token: string;
   refresh_token?: string;
-  user?: User;
+  user?: ClientUser;
   client?: Client;
 }
 
 interface LoginRequest {
   email: string;
   password: string;
-}
-
-interface UserRegisterRequest {
-  username: string;
-  password: string;
-  email: string;
-  role: string;
-  phone: string;
 }
 
 interface ClientRegisterRequest {
@@ -62,7 +54,7 @@ export const authApi = createApi({
       async onQueryStarted(_args, { queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          localStorage.setItem("token", data.access_token);
+          localStorage.setItem("userToken", data.access_token);
           if (data.refresh_token) {
             localStorage.setItem("refresh_token", data.refresh_token);
           }
@@ -88,13 +80,6 @@ export const authApi = createApi({
           console.error("Login error:", error);
         }
       },
-    }),
-    registerUser: builder.mutation<AuthResponse, UserRegisterRequest>({
-      query: (newUser: UserRegisterRequest) => ({
-        url: "auth/register",
-        method: "POST",
-        body: newUser,
-      }),
     }),
     registerClient: builder.mutation<AuthResponse, ClientRegisterRequest>({
       query: (newClient: ClientRegisterRequest) => ({
@@ -132,7 +117,7 @@ export const authApi = createApi({
         localStorage.removeItem("token");
         localStorage.removeItem("refresh_token");
         dispatch(logoutClient());
-        dispatch(logoutUser());
+        dispatch(clientUserLogout());
       },
     }),
   }),
@@ -141,7 +126,6 @@ export const authApi = createApi({
 export const {
   useLoginUserMutation,
   useLoginClientMutation,
-  useRegisterUserMutation,
   useRegisterClientMutation,
   useLogoutMutation,
   useRefreshTokenMutation,

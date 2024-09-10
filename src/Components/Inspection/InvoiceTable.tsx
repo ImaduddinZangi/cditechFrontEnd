@@ -15,7 +15,7 @@ import Loader from "../Constants/Loader";
 import { getUserId } from "../../utils/utils";
 import { Inspection } from "../../redux/features/inspectionSlice";
 
-const InspectionTable: React.FC = () => {
+const InvoiceTable: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actionType, setActionType] = useState<string | null>(null);
   const { data: inspectionsData, isLoading } = useGetInspectionsQuery();
@@ -36,8 +36,13 @@ const InspectionTable: React.FC = () => {
   useEffect(() => {
     if (inspectionsData && clientId) {
       const filteredInspections = inspectionsData.filter(
-        (inspection) => inspection.client?.id === clientId
+        (inspection) =>
+          inspection.client &&
+          inspection.client.id === clientId &&
+          (inspection.status === "Complete Not-Billed" ||
+            inspection.status === "Complete Billed")
       );
+
       setInspections(filteredInspections);
     }
   }, [inspectionsData, clientId]);
@@ -119,11 +124,7 @@ const InspectionTable: React.FC = () => {
     }
   };
 
-  const handleUpdate = (id: string | undefined) => {
-    navigate(`/update-inspection/${id}`);
-  };
-
-  const handleDetails = (id: string | undefined) => {
+  const handleInvoiceDetails = (id: string | undefined) => {
     navigate(`/inspection-details/${id}`);
   };
 
@@ -168,12 +169,8 @@ const InspectionTable: React.FC = () => {
       <div className="flex justify-between items-center px-[1.5vw] py-[1vw]">
         <div className="flex space-x-[1vw]">
           <PurpleButton
-            text="Add New Inspection"
-            onClick={() => navigate("/add-inspection")}
-          />
-          <PurpleButton
-            text="Invoiced Inspections"
-            onClick={() => navigate("/invoiced-inspections-table")}
+            text="Import New Inspections"
+            onClick={() => alert("Import Inspections feature coming soon!")}
           />
         </div>
         <div className="relative">
@@ -225,7 +222,7 @@ const InspectionTable: React.FC = () => {
                 <tr>
                   <td colSpan={6} className="text-center py-[2vw]">
                     <p className="text-[1.5vw] font-semibold">
-                      No inspection found
+                      No inspection with invoice found
                     </p>
                   </td>
                 </tr>
@@ -260,12 +257,8 @@ const InspectionTable: React.FC = () => {
                     </td>
                     <td className="flex flex-row items-center gap-x-[1vw] py-[1vw] px-[1.5vw] text-center">
                       <PurpleButton
-                        text="Details"
-                        onClick={() => handleDetails(inspection.id)}
-                      />
-                      <PurpleButton
-                        text="Edit"
-                        onClick={() => handleUpdate(inspection.id)}
+                        text="View Invoice"
+                        onClick={() => handleInvoiceDetails(inspection.id)}
                       />
                       <WhiteButton
                         text="Delete"
@@ -342,4 +335,4 @@ const InspectionTable: React.FC = () => {
   );
 };
 
-export default InspectionTable;
+export default InvoiceTable;
