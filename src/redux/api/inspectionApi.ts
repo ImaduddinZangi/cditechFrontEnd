@@ -60,6 +60,25 @@ export const inspectionApi = createApi({
         method: "PATCH",
       }),
     }),
+    markInspectionSubmitAndBill: builder.mutation<{ success: boolean }, string>({
+      query: (inspectionId: string) => ({
+        url: `inspections/${inspectionId}/submit-bill`,
+        method: "PATCH",
+      }),
+    }),
+    markInspectionSubmitWithoutBilling: builder.mutation<{ success: boolean }, string>({
+      query: (inspectionId: string) => ({
+        url: `inspections/${inspectionId}/submit-dont-bill`,
+        method: "PATCH",
+      }),
+    }),
+    addToExistingInvoice: builder.mutation<{ success: boolean }, { inspectionId: string; invoiceId: string | undefined }>({
+      query: ({ inspectionId, invoiceId }) => ({
+        url: `inspections/${inspectionId}/add-to-existing-invoice`,
+        method: "POST",
+        body: { invoiceId },
+      }),
+    }),
   }),
 });
 
@@ -71,6 +90,9 @@ export const {
   useDeleteInspectionMutation,
   useMarkInspectionCompleteAndBillMutation,
   useMarkInspectionCompleteWithoutBillingMutation,
+  useMarkInspectionSubmitAndBillMutation,
+  useMarkInspectionSubmitWithoutBillingMutation,
+  useAddToExistingInvoiceMutation
 } = inspectionApi;
 
 export default inspectionApi;

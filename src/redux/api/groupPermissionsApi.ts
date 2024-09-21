@@ -22,7 +22,7 @@ export const groupPermissionsApi = createApi({
         method: "GET",
       }),
     }),
-    updateGroupPermission: builder.mutation<Permission, { groupId: string; permissionId: string; permissionData: Partial<Permission> }>({
+    updateGroupPermission: builder.mutation<Permission, { groupId: string | undefined; permissionId: string | undefined; permissionData: Partial<Permission> }>({
       query: ({ groupId, permissionId, permissionData }) => ({
         url: `user-groups/${groupId}/permissions/${permissionId}`,
         method: "PATCH",

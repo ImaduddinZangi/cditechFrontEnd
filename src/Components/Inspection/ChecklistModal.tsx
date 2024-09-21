@@ -144,13 +144,11 @@ const ChecklistModal: React.FC<ChecklistModalProps> = ({
                         onChange={(e) => handleCheckboxChange(index, e.target.checked)}
                       />
                     </label>
-                    <button
-                      type="button"
-                      className="text-red-600"
-                      onClick={() => handleRemoveItem(index)}
-                    >
-                      Remove
-                    </button>
+                    <PurpleButton
+                    text="Remove"
+                    className="ml-[1vw]" 
+                    onClick={() => handleRemoveItem(index)}
+                    />
                   </div>
                 </div>
               ))}

@@ -32,6 +32,7 @@ import ClientUserTablePage from "../Pages/UserGroups/Users/ClientUserTablePage";
 import GrantGroupPermissionsPage from "../Pages/UserGroups/Groups/GrantGroupPermissionsPage";
 import UserGroupDetailsPage from "../Pages/UserGroups/Groups/UserGroupDetailsPage";
 import InvoiceTablePage from "../Pages/Inspection/InvoiceTablePage";
+// import EditGroupPermissionsPage from "../Pages/UserGroups/Groups/EditGroupPermissionsPage";
 
 const RoutesContent: React.FC = () => {
   return (
@@ -96,6 +97,10 @@ const RoutesContent: React.FC = () => {
           path="/user-group-details/:userGroupId"
           element={<UserGroupDetailsPage />}
         />
+        {/* <Route
+          path="/user-group-details/:groupId/edit-permission/:permissionId"
+          element={<EditGroupPermissionsPage />}
+        /> */}
         <Route
           path="/user-group-permissions"
           element={<GrantGroupPermissionsPage />}

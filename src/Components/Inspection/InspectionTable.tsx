@@ -4,6 +4,7 @@ import {
   useDeleteInspectionMutation,
   useMarkInspectionCompleteAndBillMutation,
   useMarkInspectionCompleteWithoutBillingMutation,
+  useAddToExistingInvoiceMutation,
 } from "../../redux/api/inspectionApi";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -20,15 +21,20 @@ const InspectionTable: React.FC = () => {
   const [actionType, setActionType] = useState<string | null>(null);
   const { data: inspectionsData, isLoading } = useGetInspectionsQuery();
   const [inspections, setInspections] = useState<Inspection[]>([]);
+  const [invoices, setInvoices] = useState<Inspection[]>([]);
   const [deleteInspection] = useDeleteInspectionMutation();
   const navigate = useNavigate();
   const clientId = getUserId();
   const [markCompleteAndBill] = useMarkInspectionCompleteAndBillMutation();
   const [markCompleteWithoutBilling] =
     useMarkInspectionCompleteWithoutBillingMutation();
+  const [addToExistingInvoiceMutation] = useAddToExistingInvoiceMutation();
   const [inspectionIdToDelete, setInspectionIdToDelete] = useState<
     string | undefined | null
   >(null);
+  const [selectFieldOptions, setSelectFieldOptions] = useState<
+    { id: string | undefined; name: string }[] | undefined
+  >(undefined);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const inspectionsPerPage = 10;
@@ -63,6 +69,20 @@ const InspectionTable: React.FC = () => {
       </>
     );
   };
+
+  useEffect(() => {
+    if (inspectionsData && clientId) {
+      const invoices = inspectionsData.filter(
+        (inspection) =>
+          inspection.client &&
+          inspection.client.id === clientId &&
+          (inspection.status === "Complete Not-Billed" ||
+            inspection.status === "Complete Billed")
+      );
+
+      setInvoices(invoices);
+    }
+  }, [inspectionsData, clientId]);
 
   const filteredInspections = inspections?.filter((inspection, index) => {
     const indexString = (
@@ -131,9 +151,19 @@ const InspectionTable: React.FC = () => {
     setInspectionIdToDelete(id);
     setIsModalOpen(true);
     setActionType(action);
+
+    if (action === "existingInvoice") {
+      const options = invoices.map((invoice) => ({
+        id: invoice.id,
+        name: invoice.name,
+      }));
+      setSelectFieldOptions(options);
+    } else {
+      setSelectFieldOptions(undefined);
+    }
   };
 
-  const handleConfirmComplete = async () => {
+  const handleConfirmComplete = async (selectedOption: string | undefined) => {
     if (inspectionIdToDelete) {
       try {
         if (actionType === "billed") {
@@ -144,6 +174,15 @@ const InspectionTable: React.FC = () => {
           });
         } else if (actionType === "notBilled") {
           await markCompleteWithoutBilling(inspectionIdToDelete).unwrap();
+          toast.success("Inspection marked as complete without billing!", {
+            onClose: () => window.location.reload(),
+            autoClose: 500,
+          });
+        } else if (actionType === "existingInvoice") {
+          await addToExistingInvoiceMutation({
+            inspectionId: inspectionIdToDelete!,
+            invoiceId: selectedOption,
+          }).unwrap();
           toast.success("Inspection marked as complete without billing!", {
             onClose: () => window.location.reload(),
             autoClose: 500,
@@ -247,10 +286,25 @@ const InspectionTable: React.FC = () => {
                       {highlightText(inspection.name, searchTerm)}
                     </td>
                     <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                      {highlightText(
-                        inspection.status ? inspection.status : "N/A",
-                        searchTerm
-                      )}
+                      <select
+                        onChange={(e) =>
+                          handleCompleteAction(inspection.id, e.target.value)
+                        }
+                        defaultValue=""
+                        className="appearance-none border-none bg-transparent cursor-pointer text-gray-600 hover:underline focus:outline-none"
+                      >
+                        <option value="" disabled>
+                          {highlightText(
+                            inspection.status ? inspection.status : "N/A",
+                            searchTerm
+                          )}
+                        </option>
+                        <option value="billed">Complete Billed</option>
+                        <option value="notBilled">Complete Not Billed</option>
+                        <option value="existingInvoice">
+                          Submit, Add to Existing Invoice
+                        </option>
+                      </select>
                     </td>
                     <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
                       {highlightText(
@@ -271,21 +325,6 @@ const InspectionTable: React.FC = () => {
                         text="Delete"
                         onClick={() => handleOpenDeleteModal(inspection.id)}
                       />
-                      <div>
-                        <select
-                          onChange={(e) =>
-                            handleCompleteAction(inspection.id, e.target.value)
-                          }
-                          defaultValue=""
-                          className="border rounded px-2 py-1"
-                        >
-                          <option value="" disabled>
-                            Complete Action
-                          </option>
-                          <option value="billed">Complete Billed</option>
-                          <option value="notBilled">Complete Not Billed</option>
-                        </select>
-                      </div>
                     </td>
                   </tr>
                 );
@@ -325,18 +364,20 @@ const InspectionTable: React.FC = () => {
           Next
         </button>
       </div>
-
       <ConfirmationModal
         isOpen={isModalOpen}
         message={
           actionType === "delete"
             ? "Are you sure you want to delete this inspection?"
+            : actionType === "existingInvoice"
+            ? "Select an inspection to add to the existing invoice."
             : "Are you sure you want to mark this inspection as complete?"
         }
         onConfirm={
           actionType === "delete" ? handleConfirmDelete : handleConfirmComplete
         }
         onCancel={handleCancelDelete}
+        selectFieldOptions={selectFieldOptions}
       />
     </div>
   );

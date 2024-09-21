@@ -5,10 +5,14 @@ import DetailedClientInfo from "../../Components/ClientDashboard/DetailedClientI
 import { useGetQuickBookSignUpLinkQuery } from "../../redux/api/clientApi";
 import { setQuickBooksAuthUrl } from "../../redux/features/clientSlice";
 import { RootState } from "../../redux/store";
+import { useGetClientByIdQuery } from "../../redux/api/clientApi";
+import { getUserId } from "../../utils/utils";
 
 const ClientProfilePage: React.FC = () => {
   const dispatch = useDispatch();
   const { data } = useGetQuickBookSignUpLinkQuery();
+  const clientId = getUserId();
+  const { data: client } = useGetClientByIdQuery(clientId as string);
   const quickbooksAuthUrl = useSelector((state: RootState) => state.client.quickbooksAuthUrl);
 
   useEffect(() => {
@@ -28,6 +32,7 @@ const ClientProfilePage: React.FC = () => {
       <DetailedClientInfo />
       <div className="m-[2vw] flex flex-row items-center gap-[1vw]">
         <button
+          disabled={client?.quickbooksAccessToken != ""}
           onClick={handleQuickBookSignUpClick}
           className="bg-purple-0 text-[1vw] text-white font-inter font-medium px-[1vw] py-[0.5vw] rounded-md"
         >

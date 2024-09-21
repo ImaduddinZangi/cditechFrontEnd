@@ -169,8 +169,8 @@ const InvoiceTable: React.FC = () => {
       <div className="flex justify-between items-center px-[1.5vw] py-[1vw]">
         <div className="flex space-x-[1vw]">
           <PurpleButton
-            text="Import New Inspections"
-            onClick={() => alert("Import Inspections feature coming soon!")}
+            text="Inspections Table"
+            onClick={() => navigate("/inspection-table")}
           />
         </div>
         <div className="relative">

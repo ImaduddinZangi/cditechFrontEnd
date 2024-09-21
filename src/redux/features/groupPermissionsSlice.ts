@@ -12,6 +12,7 @@ export interface GroupPermissionResponse {
 }
 
 export interface Permission {
+  id?: string;
   resource: string;
   actions: string[];
 }

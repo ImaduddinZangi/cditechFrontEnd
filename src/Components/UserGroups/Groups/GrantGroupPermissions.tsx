@@ -38,6 +38,30 @@ const defaultPermissions: InternalPermission[] = [
     resource: "reports",
     actions: { create: false, view: false, edit: false, delete: false },
   },
+  {
+    resource: "groups",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
+  {
+    resource: "users",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
+  {
+    resource: "invoices",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
+  {
+    resource: "checklists",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
+  {
+    resource: "checklists-items",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
+  {
+    resource: "permissions",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
 ];
 
 const GrantGroupPermissions: React.FC<GrantGroupPermissionsProps> = ({

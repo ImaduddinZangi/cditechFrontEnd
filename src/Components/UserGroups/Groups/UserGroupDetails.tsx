@@ -14,8 +14,11 @@ const UserGroupDetails: React.FC = () => {
   } = useGetUserGroupByIdQuery(userGroupId || "");
   const navigate = useNavigate();
 
-  const handleEditPermission = (id: string | undefined) => {
-    navigate(`/edit-user-group-permission/${id}`);
+  const handleEditPermission = (
+    groupId: string | undefined,
+    permissionId: string | undefined
+  ) => {
+    navigate(`/user-group-details/${groupId}/edit-permission/${permissionId}`);
   };
 
   if (isLoading)
@@ -58,28 +61,38 @@ const UserGroupDetails: React.FC = () => {
           </div>
           {/* Display Permissions */}
           {userGroup.permissions && userGroup.permissions.length > 0 && (
-            <div className="col-span-4">
+            <div className="col-span-4 w-full">
               <p className="text-[1.1vw] text-darkgray-0 font-semibold font-inter">
                 Permissions:
               </p>
               <ul className="ml-[1vw]">
                 {userGroup.permissions.map((permission) => (
                   <li key={permission.id} className="mb-[1vw]">
-                    <div className="flex flex-row items-center space-x-4">
+                    <div className="flex flex-row justify-between items-center space-x-4">
                       <div>
                         <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
                           {permission.permissionName}
                         </p>
-                        <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                          View: {permission.canView ? "Yes" : "No"}, Edit:{" "}
-                          {permission.canEdit ? "Yes" : "No"}, Create:{" "}
-                          {permission.canCreate ? "Yes" : "No"}, Delete:{" "}
-                          {permission.canDelete ? "Yes" : "No"}
-                        </p>
+                        <div>
+                          <p className="text-[1vw] text-gray-0 font-medium font-inter">
+                            View: {permission.canView ? "Yes" : "No"}
+                          </p>
+                          <p className="text-[1vw] text-gray-0 font-medium font-inter">
+                            Edit: {permission.canEdit ? "Yes" : "No"}
+                          </p>
+                          <p className="text-[1vw] text-gray-0 font-medium font-inter">
+                            Create: {permission.canCreate ? "Yes" : "No"}
+                          </p>
+                          <p className="text-[1vw] text-gray-0 font-medium font-inter">
+                            Delete: {permission.canDelete ? "Yes" : "No"}
+                          </p>
+                        </div>
                       </div>
                       <PurpleButton
                         text="Edit Permission"
-                        onClick={() => handleEditPermission(permission.id)}
+                        onClick={() =>
+                          handleEditPermission(userGroupId, permission.id)
+                        }
                       />
                     </div>
                   </li>
