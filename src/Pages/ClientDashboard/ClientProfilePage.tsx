@@ -32,7 +32,7 @@ const ClientProfilePage: React.FC = () => {
       <DetailedClientInfo />
       <div className="m-[2vw] flex flex-row items-center gap-[1vw]">
         <button
-          disabled={client?.quickbooksAccessToken != ""}
+          disabled={client?.quickbooksAccessToken != null}
           onClick={handleQuickBookSignUpClick}
           className="bg-purple-0 text-[1vw] text-white font-inter font-medium px-[1vw] py-[0.5vw] rounded-md"
         >
