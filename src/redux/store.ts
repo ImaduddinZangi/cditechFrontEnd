@@ -17,6 +17,7 @@ import inspectionReportsReducer from "./features/inspectionReportsSlice";
 import userGroupReducer from "./features/userGroupSlice";
 import clientUserReducer from "./features/clientUserSlice";
 import groupPermissionsReducer from "./features/groupPermissionsSlice";
+import invoiceReducer from "./features/invoiceSlice";
 
 import { authApi } from "./api/authApi";
 import clientApi from "./api/clientApi";
@@ -33,6 +34,7 @@ import inspectionReportsApi from "./api/inspectionReportsApi";
 import userGroupApi from "./api/userGroupApi";
 import clientUserApi from "./api/clientUserApi";
 import groupPermissionsApi from "./api/groupPermissionsApi";
+import invoiceApi from "./api/invoiceApi";
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -50,6 +52,7 @@ const rootReducer = combineReducers({
   userGroup: userGroupReducer,
   clientUser: clientUserReducer,
   groupPermissions: groupPermissionsReducer,
+  invoices: invoiceReducer,
   [authApi.reducerPath]: authApi.reducer,
   [clientApi.reducerPath]: clientApi.reducer,
   [customerApi.reducerPath]: customerApi.reducer,
@@ -65,6 +68,7 @@ const rootReducer = combineReducers({
   [userGroupApi.reducerPath]: userGroupApi.reducer,
   [clientUserApi.reducerPath]: clientUserApi.reducer,
   [groupPermissionsApi.reducerPath]: groupPermissionsApi.reducer,
+  [invoiceApi.reducerPath]: invoiceApi.reducer,
 });
 
 const store = configureStore({
@@ -84,7 +88,8 @@ const store = configureStore({
       checkListItemApi.middleware,
       userGroupApi.middleware,
       clientUserApi.middleware,
-      groupPermissionsApi.middleware
+      groupPermissionsApi.middleware,
+      invoiceApi.middleware
     ),
 });
 

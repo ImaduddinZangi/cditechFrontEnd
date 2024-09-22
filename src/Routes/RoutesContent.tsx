@@ -34,6 +34,7 @@ import UserGroupDetailsPage from "../Pages/UserGroups/Groups/UserGroupDetailsPag
 import InvoiceTablePage from "../Pages/Inspection/InvoiceTablePage";
 import EditGroupPermissionsPage from "../Pages/UserGroups/Groups/EditGroupPermissionsPage";
 import ReportedInspectionTablePage from "../Pages/Inspection/ReportedInspectionTablePage";
+import InvoiceDetailsPage from "../Pages/Inspection/InvoiceDetailsPage";
 
 const RoutesContent: React.FC = () => {
   return (
@@ -72,8 +73,9 @@ const RoutesContent: React.FC = () => {
         <Route path="/add-inspection" element={<AddInspectionPage />} />
         <Route path="/inspection-reports" element={<InspectionReportsPage />} />
         <Route path="/inspection-table" element={<InspectionTablePage />} />
-        <Route path="/invoiced-inspections-table" element={<InvoiceTablePage />} />
         <Route path="/pdf-uploaded-table" element={<ReportedInspectionTablePage />} />
+        <Route path="/invoiced-inspections-table" element={<InvoiceTablePage />} />
+        <Route path="/invoice/:invoiceId" element={<InvoiceDetailsPage />} />
         <Route
           path="/update-inspection/:inspectionId"
           element={<EditInspectionPage />}

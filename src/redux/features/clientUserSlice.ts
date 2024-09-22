@@ -5,6 +5,7 @@ export interface ClientUser {
   id?: string;
   username: string;
   firstName: string;
+  name?: string;
   lastName: string;
   email: string;
   password: string;

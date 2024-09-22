@@ -87,8 +87,7 @@ const ReportedInspectionTable: React.FC = () => {
         (inspection) =>
           inspection.client &&
           inspection.client.id === clientId &&
-          (inspection.status === "Complete Not-Billed" ||
-            inspection.status === "Complete Billed")
+          inspection.status === "Complete Not-Billed"
       );
 
       setInvoices(invoices);

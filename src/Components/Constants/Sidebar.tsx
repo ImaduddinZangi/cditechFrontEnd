@@ -59,7 +59,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
         { title: "Add Photos", src: "photo", href: "/add-photos" },
       ],
     },
-    { title: "Setting", src: "setting" },
+    { title: "Setting", src: "photo" },
   ];
 
   const handleLogout = async () => {

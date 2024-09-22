@@ -1,11 +1,12 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Client, logoutClient } from "../features/clientSlice";
-import { ClientUser, clientUserLogout } from "../features/clientUserSlice";
+import {  clientUserLogout } from "../features/clientUserSlice";
+import { User } from "../features/userSlice";
 
 interface AuthResponse {
   access_token: string;
   refresh_token?: string;
-  user?: ClientUser;
+  user?: User;
   client?: Client;
 }
 

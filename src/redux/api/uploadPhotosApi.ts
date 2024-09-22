@@ -7,6 +7,7 @@ export interface UploadPhotoPayload {
   pumpBrandId?: string;
   customerId?: string;
   clientId?: string;
+  inspectionId?: string;
   files: File;
 }
 
@@ -18,6 +19,7 @@ interface Photo {
   pumpBrandId?: string;
   customerId?: string;
   clientId?: string;
+  inspectionId?: string;
 }
 
 const clientId = getUserId();
