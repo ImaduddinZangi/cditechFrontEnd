@@ -27,7 +27,7 @@ interface InspectionData {
   serviceFee: number;
   recording?: string;
   clientId?: string | null;
-  assignedTo: string | null;
+  assignedTo?: string;
   completedDate: string | null;
   checklists: Checklist[];
   route: RoutePoint[];
@@ -83,6 +83,7 @@ const AddInspectionPage: React.FC = () => {
       name,
       customerId,
       assetId,
+      assignedTo,
       scheduledDate,
       serviceFee,
       recording,
@@ -96,7 +97,8 @@ const AddInspectionPage: React.FC = () => {
       !scheduledDate ||
       serviceFee === undefined ||
       !recording ||
-      !clientId
+      !clientId ||
+      !assignedTo
     ) {
       toast.error("Please fill in all required fields.");
       return;
@@ -159,7 +161,6 @@ const AddInspectionPage: React.FC = () => {
       ],
       route,
       scores,
-      assignedTo: null,
     };
 
     handleAddInspection(newInspectionData);

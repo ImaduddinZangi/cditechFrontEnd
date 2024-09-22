@@ -11,12 +11,11 @@ import { toast } from "react-toastify";
 import ConfirmationModal from "../Constants/ConfirmationModal";
 import { FiSearch } from "react-icons/fi";
 import PurpleButton from "../Tags/PurpleButton";
-import WhiteButton from "../Tags/WhiteButton";
 import Loader from "../Constants/Loader";
 import { getUserId } from "../../utils/utils";
 import { GetInspection } from "../../redux/features/inspectionSlice";
 
-const InspectionTable: React.FC = () => {
+const ReportedInspectionTable: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actionType, setActionType] = useState<string | null>(null);
   const { data: inspectionsData, isLoading } = useGetInspectionsQuery();
@@ -51,6 +50,18 @@ const InspectionTable: React.FC = () => {
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
+
+  useEffect(() => {
+    if (inspectionsData && clientId) {
+      const filteredInspections = inspectionsData.filter(
+        (inspection) =>
+          inspection.client &&
+          inspection.client.id === clientId &&
+          inspection.pdfFilePath != null
+      );
+      setInspections(filteredInspections);
+    }
+  }, [inspectionsData, clientId]);
 
   const highlightText = (text: string, highlight: string) => {
     if (!highlight) return text;
@@ -116,35 +127,21 @@ const InspectionTable: React.FC = () => {
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
   };
 
-  const handleOpenDeleteModal = (id: string | undefined) => {
-    setInspectionIdToDelete(id);
-    setIsModalOpen(true);
-    setActionType("delete");
-  };
-
   const handleConfirmDelete = async () => {
     if (inspectionIdToDelete) {
       try {
         await deleteInspection(inspectionIdToDelete).unwrap();
-        toast.success("Inspection deleted successfully!", {
+        toast.success("Invoice deleted successfully!", {
           onClose: () => window.location.reload(),
           autoClose: 500,
         });
       } catch (error) {
-        toast.error("Error deleting inspection!");
+        toast.error("Error deleting invoice!");
       } finally {
         setIsModalOpen(false);
         setInspectionIdToDelete(null);
       }
     }
-  };
-
-  const handleUpdate = (id: string | undefined) => {
-    navigate(`/update-inspection/${id}`);
-  };
-
-  const handleDetails = (id: string | undefined) => {
-    navigate(`/inspection-details/${id}`);
   };
 
   const handleCompleteAction = (id: string | undefined, action: string) => {
@@ -168,13 +165,13 @@ const InspectionTable: React.FC = () => {
       try {
         if (actionType === "billed") {
           await markSubmitAndBill(inspectionIdToDelete).unwrap();
-          toast.success("Inspection marked as complete and billed!", {
+          toast.success("Invoice marked as complete and billed!", {
             onClose: () => window.location.reload(),
             autoClose: 500,
           });
         } else if (actionType === "notBilled") {
           await markSubmitWithoutBilling(inspectionIdToDelete).unwrap();
-          toast.success("Inspection marked as complete without billing!", {
+          toast.success("Invoice marked as complete without billing!", {
             onClose: () => window.location.reload(),
             autoClose: 500,
           });
@@ -183,13 +180,13 @@ const InspectionTable: React.FC = () => {
             inspectionId: inspectionIdToDelete!,
             invoiceId: selectedOption,
           }).unwrap();
-          toast.success("Inspection marked as complete without billing!", {
+          toast.success("Invoice marked as complete without billing!", {
             onClose: () => window.location.reload(),
             autoClose: 500,
           });
         }
       } catch (error) {
-        toast.error("Error completing inspection!");
+        toast.error("Error completing invoice!");
       } finally {
         setIsModalOpen(false);
         setInspectionIdToDelete(null);
@@ -207,15 +204,11 @@ const InspectionTable: React.FC = () => {
       <div className="flex justify-between items-center px-[1.5vw] py-[1vw]">
         <div className="flex space-x-[1vw]">
           <PurpleButton
-            text="Add New Inspection"
-            onClick={() => navigate("/add-inspection")}
+            text="Inspection Table"
+            onClick={() => navigate("/inspection-table")}
           />
           <PurpleButton
-            text="Uploaded PDF Table"
-            onClick={() => navigate("/pdf-uploaded-table")}
-          />
-          <PurpleButton
-            text="Invoices"
+            text="Invoice Table"
             onClick={() => navigate("/invoiced-inspections-table")}
           />
         </div>
@@ -327,16 +320,11 @@ const InspectionTable: React.FC = () => {
                     </td>
                     <td className="flex flex-row items-center gap-x-[1vw] py-[1vw] px-[1.5vw] text-center">
                       <PurpleButton
-                        text="Details"
-                        onClick={() => handleDetails(inspection.id)}
-                      />
-                      <PurpleButton
-                        text="Edit"
-                        onClick={() => handleUpdate(inspection.id)}
-                      />
-                      <WhiteButton
-                        text="Delete"
-                        onClick={() => handleOpenDeleteModal(inspection.id)}
+                        text="Download PDF"
+                        onClick={() => {
+                          const url = `https://inspection-point-s3.s3.us-east-2.amazonaws.com/${inspection.pdfFilePath}`;
+                          window.open(url, "_blank");
+                        }}
                       />
                     </td>
                   </tr>
@@ -380,9 +368,7 @@ const InspectionTable: React.FC = () => {
       <ConfirmationModal
         isOpen={isModalOpen}
         message={
-          actionType === "delete"
-            ? "Are you sure you want to delete this inspection?"
-            : actionType === "existingInvoice"
+          actionType === "existingInvoice"
             ? "Select an inspection to add to the existing invoice."
             : "Are you sure you want to mark this inspection as complete?"
         }
@@ -396,4 +382,4 @@ const InspectionTable: React.FC = () => {
   );
 };
 
-export default InspectionTable;
+export default ReportedInspectionTable;

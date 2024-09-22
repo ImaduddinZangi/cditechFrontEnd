@@ -5,7 +5,7 @@ import {
   FetchBaseQueryError,
   FetchBaseQueryMeta,
 } from "@reduxjs/toolkit/query";
-import { logout } from "../features/userSlice";
+import { logoutUser } from "../features/userSlice";
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -38,7 +38,7 @@ const customFetchBase: BaseQueryFn<
     result.error?.status === 401 &&
     (result.error.data as CustomError)?.message === "You are not logged in"
   ) {
-    api.dispatch(logout());
+    api.dispatch(logoutUser());
     window.location.href = "/login"; // Redirect on logout
   }
 

@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Inspection } from "../features/inspectionSlice";
+import { GetInspection, Inspection } from "../features/inspectionSlice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_BASE_URL,
@@ -16,13 +16,13 @@ export const inspectionApi = createApi({
   reducerPath: "inspectionApi",
   baseQuery,
   endpoints: (builder) => ({
-    getInspections: builder.query<Inspection[], void>({
+    getInspections: builder.query<GetInspection[], void>({
       query: () => ({
         url: "inspections",
         method: "GET",
       }),
     }),
-    getInspectionById: builder.query<Inspection, string>({
+    getInspectionById: builder.query<GetInspection, string>({
       query: (inspectionId: string) => ({
         url: `inspections/${inspectionId}`,
         method: "GET",
@@ -38,7 +38,7 @@ export const inspectionApi = createApi({
     updateInspection: builder.mutation<Inspection, Partial<Inspection>>({
       query: ({ id, ...rest }) => ({
         url: `inspections/${id}`,
-        method: "PUT",
+        method: "PATCH",
         body: rest,
       }),
     }),
@@ -63,13 +63,13 @@ export const inspectionApi = createApi({
     markInspectionSubmitAndBill: builder.mutation<{ success: boolean }, string>({
       query: (inspectionId: string) => ({
         url: `inspections/${inspectionId}/submit-bill`,
-        method: "PATCH",
+        method: "POST",
       }),
     }),
     markInspectionSubmitWithoutBilling: builder.mutation<{ success: boolean }, string>({
       query: (inspectionId: string) => ({
         url: `inspections/${inspectionId}/submit-dont-bill`,
-        method: "PATCH",
+        method: "POST",
       }),
     }),
     addToExistingInvoice: builder.mutation<{ success: boolean }, { inspectionId: string; invoiceId: string | undefined }>({

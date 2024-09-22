@@ -13,6 +13,8 @@ import PurpleButton from "../Tags/PurpleButton";
 import WhiteButton from "../Tags/WhiteButton";
 import Webcam from "react-webcam";
 import { Customer } from "../../redux/features/customerSlice";
+import { GetInspection } from "../../redux/features/inspectionSlice";
+import { useGetInspectionsQuery } from "../../redux/api/inspectionApi";
 
 interface AddPhotosProps {
   onSubmit: (files: File[], id: string, type: string) => void;
@@ -36,6 +38,7 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
   const [pumpBrands, setPumpBrands] = useState<PumpBrand[]>([]);
   const [pumps, setPumps] = useState<Pump[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
+  const [inspections, setInspections] = useState<GetInspection[]>([]);
   const [isWebcamOpen, setIsWebcamOpen] = useState<boolean>(false);
   const [webcamIndex, setWebcamIndex] = useState<number | null>(null);
   const [hasWebcam, setHasWebcam] = useState<boolean>(true);
@@ -46,6 +49,7 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
   const { data: pumpBrandsData } = useGetPumpBrandsQuery();
   const { data: pumpsData } = useGetPumpsQuery();
   const { data: customersData } = useGetCustomersQuery();
+  const { data: inspectionsData } = useGetInspectionsQuery();
 
   useEffect(() => {
     if (assetsData) {
@@ -70,6 +74,12 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
       setCustomers(customersData);
     }
   }, [customersData]);
+
+  useEffect(() => {
+    if (inspectionsData) {
+      setInspections(inspectionsData);
+    }
+  }, [inspectionsData]);
 
   useEffect(() => {
     // Check if the webcam is available
@@ -159,6 +169,8 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
         return pumpBrands;
       case "customer":
         return customers;
+      case "inspection":
+        return inspections;
       default:
         return [];
     }
@@ -220,8 +232,6 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
     navigate("/client-dashboard");
   };
 
-  console.log(selectedId);
-
   return (
     <form
       className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter"
@@ -243,6 +253,7 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
             <option value="asset">Asset</option>
             <option value="pump">Pump</option>
             <option value="pumpBrand">Pump Brand</option>
+            <option value="inspection">Inspection</option>
           </select>
         </div>
         {selectedType && (
@@ -251,7 +262,9 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
               {selectedType === "customer"
                 ? "Customer:"
                 : selectedType === "asset"
-                ? "Asset"
+                ? "Asset:"
+                : selectedType === "inspection"
+                ? "Inspection"
                 : selectedType === "pump"
                 ? "Pump:"
                 : "Pump Brand:"}

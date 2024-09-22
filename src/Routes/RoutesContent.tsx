@@ -32,7 +32,8 @@ import ClientUserTablePage from "../Pages/UserGroups/Users/ClientUserTablePage";
 import GrantGroupPermissionsPage from "../Pages/UserGroups/Groups/GrantGroupPermissionsPage";
 import UserGroupDetailsPage from "../Pages/UserGroups/Groups/UserGroupDetailsPage";
 import InvoiceTablePage from "../Pages/Inspection/InvoiceTablePage";
-// import EditGroupPermissionsPage from "../Pages/UserGroups/Groups/EditGroupPermissionsPage";
+import EditGroupPermissionsPage from "../Pages/UserGroups/Groups/EditGroupPermissionsPage";
+import ReportedInspectionTablePage from "../Pages/Inspection/ReportedInspectionTablePage";
 
 const RoutesContent: React.FC = () => {
   return (
@@ -72,6 +73,7 @@ const RoutesContent: React.FC = () => {
         <Route path="/inspection-reports" element={<InspectionReportsPage />} />
         <Route path="/inspection-table" element={<InspectionTablePage />} />
         <Route path="/invoiced-inspections-table" element={<InvoiceTablePage />} />
+        <Route path="/pdf-uploaded-table" element={<ReportedInspectionTablePage />} />
         <Route
           path="/update-inspection/:inspectionId"
           element={<EditInspectionPage />}
@@ -97,10 +99,10 @@ const RoutesContent: React.FC = () => {
           path="/user-group-details/:userGroupId"
           element={<UserGroupDetailsPage />}
         />
-        {/* <Route
+        <Route
           path="/user-group-details/:groupId/edit-permission/:permissionId"
           element={<EditGroupPermissionsPage />}
-        /> */}
+        />
         <Route
           path="/user-group-permissions"
           element={<GrantGroupPermissionsPage />}

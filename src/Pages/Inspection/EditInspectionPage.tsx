@@ -9,7 +9,7 @@ import ClientLayout from "../../Layouts/ClientLayout";
 import ScoreModal from "../../Components/Inspection/ScoreModal";
 import ChecklistModal from "../../Components/Inspection/ChecklistModal";
 import RouteModal from "../../Components/Inspection/RouteModal";
-import { Scores, Inspection } from "../../redux/features/inspectionSlice";
+import { Scores, Inspection, GetInspection } from "../../redux/features/inspectionSlice";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../Components/Constants/Loader";
@@ -149,7 +149,7 @@ const EditInspectionPage: React.FC = () => {
     );
   if (error) return <div>Error loading inspection details.</div>;
 
-  const initialData: Inspection = {
+  const initialData: GetInspection = {
     ...inspection!,
     clientId: inspection?.client?.id ?? null,
   };

@@ -24,6 +24,8 @@ const AddPhotosPage: React.FC = () => {
         formData.append("pumpBrandId", id);
       } else if (type === "customer") {
         formData.append("customerId", id);
+      } else if (type === "inspection") {
+        formData.append("inspectionId", id);
       }
       await uploadPhoto(formData).unwrap();
       toast.success("Photos uploaded successfully!", {

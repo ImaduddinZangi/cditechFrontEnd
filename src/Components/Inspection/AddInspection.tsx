@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 import { useGetCustomersQuery } from "../../redux/api/customerApi";
 import { useGetAssetsQuery } from "../../redux/api/assetApi";
+import { useGetClientUsersQuery } from "../../redux/api/clientUserApi";
 import { getUserId } from "../../utils/utils";
 import { useNavigate } from "react-router-dom";
-import { Inspection } from "../../redux/features/inspectionSlice";
+import { GetInspection, Inspection } from "../../redux/features/inspectionSlice";
 import PurpleButton from "../Tags/PurpleButton";
 import WhiteButton from "../Tags/WhiteButton";
 import InputField from "../Tags/InputField";
 import { Customer } from "../../redux/features/customerSlice";
 import { Asset } from "../../redux/features/assetSlice";
+import { ClientUser } from "../../redux/features/clientUserSlice";
 
 interface InspectionFormProps {
   onSubmit: (data: Inspection) => void;
-  initialData?: Partial<Inspection>;
+  initialData?: Partial<GetInspection>;
 }
 
 const InspectionForm: React.FC<InspectionFormProps> = ({
@@ -20,10 +22,15 @@ const InspectionForm: React.FC<InspectionFormProps> = ({
   initialData,
 }) => {
   const [assetId, setAssetId] = useState<string>(initialData?.asset?.id || "");
-  const [customerId, setCustomerId] = useState<string>(initialData?.customer?.id || "");
+  const [customerId, setCustomerId] = useState<string>(
+    initialData?.customer?.id || ""
+  );
   const [name, setName] = useState<string>(initialData?.name || "");
   const [scheduledDate, setScheduledDate] = useState<string>(
     initialData?.scheduledDate || ""
+  );
+  const [assignedTo, setAssignedTo] = useState<string>(
+    initialData?.assignedTo?.id || ""
   );
   const [comments, setComments] = useState<string>(initialData?.comments || "");
   const [serviceFee, setServiceFee] = useState<number>(
@@ -35,7 +42,8 @@ const InspectionForm: React.FC<InspectionFormProps> = ({
 
   const { data: customers } = useGetCustomersQuery();
   const { data: assets } = useGetAssetsQuery();
-  
+  const {data: users} = useGetClientUsersQuery();
+
   const clientId = getUserId();
   const navigate = useNavigate();
 
@@ -44,10 +52,10 @@ const InspectionForm: React.FC<InspectionFormProps> = ({
     onSubmit({
       id: initialData?.id,
       name,
-      clientId: initialData?.clientId ?? clientId,
+      clientId: initialData?.client?.id ?? clientId,
       customerId,
       assetId,
-      assignedTo: initialData?.assignedTo || "",
+      assignedTo,
       scheduledDate,
       completedDate: initialData?.completedDate || null,
       comments,
@@ -73,6 +81,7 @@ const InspectionForm: React.FC<InspectionFormProps> = ({
                 label="Name"
                 htmlFor="name"
                 fieldType="text"
+                placeholder="Inspection name"
                 id="name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -123,7 +132,7 @@ const InspectionForm: React.FC<InspectionFormProps> = ({
             </div>
           </div>
           <div className="space-y-[1vw]">
-          <div>
+            <div>
               <label className="block mb-1 font-medium">Asset:</label>
               <select
                 className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
@@ -136,6 +145,23 @@ const InspectionForm: React.FC<InspectionFormProps> = ({
                 {assets?.map((asset: Asset) => (
                   <option key={asset.id} value={asset.id}>
                     {asset.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block mb-1 font-medium">Assigned To:</label>
+              <select
+                className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
+                name="assignedTo"
+                value={assignedTo}
+                onChange={(e) => setAssignedTo(e.target.value)}
+                required
+              >
+                <option value="">Select User</option>
+                {users?.map((user: ClientUser) => (
+                  <option key={user.id} value={user.id}>
+                    {user.username}
                   </option>
                 ))}
               </select>

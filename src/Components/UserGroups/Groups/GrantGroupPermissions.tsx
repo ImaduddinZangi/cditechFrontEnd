@@ -27,7 +27,23 @@ const defaultPermissions: InternalPermission[] = [
     actions: { create: false, view: false, edit: false, delete: false },
   },
   {
+    resource: "asset-types",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
+  {
     resource: "assets",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
+  {
+    resource: "pump-brands",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
+  {
+    resource: "pumps",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
+  {
+    resource: "photos",
     actions: { create: false, view: false, edit: false, delete: false },
   },
   {
@@ -177,37 +193,39 @@ const GrantGroupPermissions: React.FC<GrantGroupPermissionsProps> = ({
             </select>
           </div>
         </div>
-        <div className="w-full grid grid-cols-4">
+        <div className="w-full grid grid-cols-4 gap-[1vw]">
           {permissions.map((perm) => (
             <div key={perm.resource}>
-              <p className="text-[1vw] text-darkgray-0 font-semibold font-inter mb-[1vw]">
+              <p className="text-[1vw] text-darkgray-0 font-semibold font-inter mb-[0.5vw]">
                 {perm.resource.charAt(0).toUpperCase() + perm.resource.slice(1)}
               </p>
-              {["create", "view", "edit", "delete"].map((action) => (
-                <label
-                  key={action}
-                  className="flex items-center space-x-2 text-darkgray-0 font-medium text-[1vw] mb-[0.4vw]"
-                >
-                  <input
-                    type="checkbox"
-                    className="w-[2.5vw] md:w-[1vw] h-[2.5vw] md:h-[1vw] accent-purple-0 border-lightgray-0 rounded focus:ring-offset-white focus:ring-purple-0 cursor-pointer"
-                    checked={
-                      perm.actions[
-                        action as keyof InternalPermission["actions"]
-                      ]
-                    }
-                    onChange={() =>
-                      handleCheckboxChange(
-                        perm.resource,
-                        action as keyof InternalPermission["actions"]
-                      )
-                    }
-                  />
-                  <span>
-                    {action.charAt(0).toUpperCase() + action.slice(1)}
-                  </span>
-                </label>
-              ))}
+              <div className="grid grid-cols-2">
+                {["create", "view", "edit", "delete"].map((action) => (
+                  <label
+                    key={action}
+                    className="flex items-center space-x-2 text-darkgray-0 font-medium text-[1vw] mb-[0.4vw]"
+                  >
+                    <input
+                      type="checkbox"
+                      className="w-[2.5vw] md:w-[1vw] h-[2.5vw] md:h-[1vw] accent-purple-0 border-lightgray-0 rounded focus:ring-offset-white focus:ring-purple-0 cursor-pointer"
+                      checked={
+                        perm.actions[
+                          action as keyof InternalPermission["actions"]
+                        ]
+                      }
+                      onChange={() =>
+                        handleCheckboxChange(
+                          perm.resource,
+                          action as keyof InternalPermission["actions"]
+                        )
+                      }
+                    />
+                    <span>
+                      {action.charAt(0).toUpperCase() + action.slice(1)}
+                    </span>
+                  </label>
+                ))}
+              </div>
             </div>
           ))}
         </div>

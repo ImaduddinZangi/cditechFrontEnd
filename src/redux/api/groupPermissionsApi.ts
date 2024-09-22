@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Permission } from "../features/groupPermissionsSlice";
+import { GroupPermissionResponse, Permission } from "../features/groupPermissionsSlice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_BASE_URL,
@@ -16,7 +16,7 @@ export const groupPermissionsApi = createApi({
   reducerPath: "groupPermissionsApi",
   baseQuery,
   endpoints: (builder) => ({
-    getGroupPermissions: builder.query<Permission[], string>({
+    getGroupPermissions: builder.query<GroupPermissionResponse[], string>({
       query: (groupId) => ({
         url: `user-groups/${groupId}/permissions`,
         method: "GET",

@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Client } from "./clientSlice";
 import { Asset } from "./assetSlice";
 import { Customer } from "./customerSlice";
+import { ClientUser } from "./clientUserSlice";
 
 export interface ChecklistItem {
   id: string;
@@ -51,7 +52,7 @@ export interface Inspection {
   customerId?: string;
   assetId?: string;
   name: string;
-  assignedTo: string | null;
+  assignedTo?: string;
   status?: string;
   scheduledDate: string;
   completedDate: string | null;
@@ -60,12 +61,29 @@ export interface Inspection {
   serviceFee: number;
   checklists: Checklist[];
   scores: Scores[];
+  recording: string;
+}
+
+export interface GetInspection {
+  id: string;
+  name: string;
+  clientId?: string | null;
+  assignedTo?: ClientUser;
+  status: string;
+  pdfFilePath?: string;
+  scheduledDate: string;
+  completedDate: string | null;
+  route: RoutePoint[];
+  comments: string;
+  serviceFee: number;
+  checklists: Checklist[];
+  scores: Scores[];
   recording?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  client?: Client;
-  asset?: Asset;
-  customer?: Customer;
+  createdAt: string;
+  updatedAt: string;
+  client: Client;
+  asset: Asset;
+  customer: Customer;
 }
 
 interface InspectionState {

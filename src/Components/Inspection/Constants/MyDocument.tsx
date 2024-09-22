@@ -1,6 +1,6 @@
 import React from "react";
 import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
-import { Inspection } from "../../../redux/features/inspectionSlice";
+import { GetInspection } from "../../../redux/features/inspectionSlice";
 
 const styles = StyleSheet.create({
   page: {
@@ -11,6 +11,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textAlign: "center",
     marginBottom: 20,
+  },
+  address: {
+    marginBottom: 10,
+    flexDirection: "row",
+  },
+  checklist: {
+    marginBottom: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   section: {
     marginBottom: 10,
@@ -23,6 +32,14 @@ const styles = StyleSheet.create({
   label: {
     fontWeight: "bold",
   },
+  comment: {
+    fontWeight: "bold",
+    marginTop: 10
+  },
+  routeText: {
+    fontWeight: "bold",
+    marginBottom: 10
+  },
   footer: {
     marginTop: 20,
     textAlign: "center",
@@ -31,7 +48,7 @@ const styles = StyleSheet.create({
 });
 
 interface MyDocumentProps {
-  data: Inspection;
+  data: GetInspection;
 }
 
 const MyDocument: React.FC<MyDocumentProps> = ({ data }) => (
@@ -39,14 +56,14 @@ const MyDocument: React.FC<MyDocumentProps> = ({ data }) => (
     <Page style={styles.page}>
       {/* Header Section */}
       <View style={styles.header}>
-        <Text>Monthly Lift Station</Text>
+        <Text>Inspection Report</Text>
         <Text>{data.name || "Unnamed Inspection"}</Text>
         <Text>Overall Score: {data.checklists[0]?.overallScore || "N/A"}</Text>
       </View>
 
       {/* Address Section */}
-      <View style={styles.section}>
-        <Text style={styles.label}>Address:</Text>
+      <View style={styles.address}>
+        <Text style={styles.label}>Address:&nbsp;</Text>
         <Text>{data.asset?.location || "N/A"}</Text>
       </View>
 
@@ -101,13 +118,13 @@ const MyDocument: React.FC<MyDocumentProps> = ({ data }) => (
       )}
 
       {/* Checklist Items */}
-      <View style={styles.section}>
-        <Text style={styles.label}>Checklist Items:</Text>
+      <View style={styles.checklist}>
+        <Text style={styles.label}>Checklist:</Text>
         {data.checklists?.map((checklist, index) => (
           <View key={index} style={styles.section}>
             <Text style={styles.label}>
-              {checklist.name || "Unnamed Checklist"} - Overall Score:{" "}
-              {checklist.overallScore || "N/A"}
+              Checklist Name:&nbsp;{checklist.name || "Unnamed Checklist"} -
+              Overall Score:&nbsp;{checklist.overallScore || "N/A"}
             </Text>
             {/* You may need to iterate over items if they exist */}
           </View>
@@ -116,7 +133,7 @@ const MyDocument: React.FC<MyDocumentProps> = ({ data }) => (
 
       {/* Route Section */}
       <View style={styles.section}>
-        <Text style={styles.label}>Route:</Text>
+        <Text style={styles.routeText}>Route:</Text>
         {data.route?.map((point, index) => (
           <View key={index} style={styles.field}>
             <Text>Point {index + 1}: </Text>
@@ -125,13 +142,13 @@ const MyDocument: React.FC<MyDocumentProps> = ({ data }) => (
             </Text>
           </View>
         ))}
+        <Text style={styles.comment}>Comments:&nbsp;{data.comments || "N/A"}</Text>
       </View>
 
       {/* Footer Section */}
       <View style={styles.footer}>
-        <Text>Comments: {data.comments || "N/A"}</Text>
         <Text>
-          Completed PN:{" "}
+          Completed Date:
           {data.completedDate
             ? new Date(data.completedDate).toLocaleDateString()
             : "N/A"}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
 import {
   useGetInspectionByIdQuery,
@@ -13,9 +13,12 @@ import { useNavigate } from "react-router-dom";
 import Loader from "../Constants/Loader";
 import PurpleButton from "../Tags/PurpleButton";
 import WhiteButton from "../Tags/WhiteButton";
+import { GetInspection } from "../../redux/features/inspectionSlice";
 
 const GenerateReports: React.FC = () => {
-  const { data: inspections } = useGetInspectionsQuery();
+  const [inspections, setInspections] = useState<GetInspection[]>([]);
+  const clientId = getUserId();
+  const { data: inspectionsData } = useGetInspectionsQuery();
   const [selectedInspectionId, setSelectedInspectionId] = useState<
     string | null
   >(null);
@@ -25,6 +28,29 @@ const GenerateReports: React.FC = () => {
       skip: !selectedInspectionId,
     }
   );
+
+  useEffect(() => {
+    if (inspectionsData && clientId) {
+      const filteredInspections = inspectionsData.filter(
+        (inspection) => inspection.client?.id === clientId
+      );
+      setInspections(filteredInspections);
+    }
+  }, [inspectionsData, clientId]);
+
+  useEffect(() => {
+    if (inspectionsData) {
+      const filteredInspections = inspectionsData.filter(
+        (inspection) =>
+          inspection.client &&
+          inspection.client.id === clientId &&
+          inspection.pdfFilePath === null
+      );
+
+      setInspections(filteredInspections);
+    }
+  }, [inspectionsData]);
+
   const [generateReport] = useGenerateReportMutation();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -85,25 +111,27 @@ const GenerateReports: React.FC = () => {
         <label className="block text-darkgray-0 font-medium text-[1vw]">
           Select an Inspection:
         </label>
-        <select
-          className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-          onChange={(e) => handleSelectInspection(e.target.value)}
-          value={selectedInspectionId || ""}
-        >
-          <option value="" disabled>
-            Select Inspection
-          </option>
-          {inspections?.map((inspection) => (
-            <option key={inspection.id} value={inspection.id}>
-              {inspection.name}
+        <div className="grid grid-cols-2">
+          <select
+            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
+            onChange={(e) => handleSelectInspection(e.target.value)}
+            value={selectedInspectionId || ""}
+          >
+            <option value="" disabled>
+              Select Inspection
             </option>
-          ))}
-        </select>
+            {inspections?.map((inspection) => (
+              <option key={inspection.id} value={inspection.id}>
+                {inspection.name}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
       {isLoading && (
-        <p>
+        <div>
           <Loader />
-        </p>
+        </div>
       )}
       {inspection && (
         <>
