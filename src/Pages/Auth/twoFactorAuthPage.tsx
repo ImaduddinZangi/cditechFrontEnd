@@ -1,16 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import AuthLayout from '../../Layouts/AuthLayout';
-import TwoFactorAuthentication from '../../Components/Auth/TwoFactorAuthentication';
-import { useGenerateQrCodeMutation, useVerifyCodeMutation } from '../../redux/api/twoFactorAuthApi';
-import { toast, ToastContainer } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import AuthLayout from "../../Layouts/AuthLayout";
+import TwoFactorAuthentication from "../../Components/Auth/TwoFactorAuthentication";
+import {
+  useGenerateQrCodeMutation,
+  useVerifyCodeMutation,
+} from "../../redux/api/twoFactorAuthApi";
+import { toast, ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const TwoFactorAuthPage: React.FC = () => {
   const [generateQrCode] = useGenerateQrCodeMutation();
   const [verifyCode] = useVerifyCodeMutation();
   const [qrCode, setQrCode] = useState<string>("");
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     const fetchQrCode = async () => {
       try {
@@ -32,13 +35,18 @@ const TwoFactorAuthPage: React.FC = () => {
         autoClose: 500,
       });
     } catch (error) {
-      toast.error("Failed to verify 2FA code.");
+      toast.error("Failed to verify 2FA code.", {
+        onClose: () => navigate("/error/500"),
+        autoClose: 500,
+      });
     }
   };
 
   return (
     <AuthLayout>
-      {qrCode && <TwoFactorAuthentication src={qrCode} onSubmit={handleSubmit} />}
+      {qrCode && (
+        <TwoFactorAuthentication src={qrCode} onSubmit={handleSubmit} />
+      )}
       <ToastContainer
         position="top-right"
         autoClose={500}

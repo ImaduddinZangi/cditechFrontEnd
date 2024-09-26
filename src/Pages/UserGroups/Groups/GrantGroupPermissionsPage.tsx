@@ -27,7 +27,10 @@ const GrantGroupPermissionsPage: React.FC = () => {
       console.log("Permissions granted successfully", result);
     } catch (error) {
       console.error("Error granting permissions:", error);
-      toast.error("Error granting permissions. Please try again.");
+      toast.error("Error granting permissions. Please try again.", {
+        onClose: () => navigate("/error/500"),
+        autoClose: 500,
+      });
     }
   };
 

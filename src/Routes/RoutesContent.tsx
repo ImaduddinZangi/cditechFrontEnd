@@ -35,10 +35,14 @@ import InvoiceTablePage from "../Pages/Inspection/InvoiceTablePage";
 import EditGroupPermissionsPage from "../Pages/UserGroups/Groups/EditGroupPermissionsPage";
 import ReportedInspectionTablePage from "../Pages/Inspection/ReportedInspectionTablePage";
 import InvoiceDetailsPage from "../Pages/Inspection/InvoiceDetailsPage";
+import Error500 from "../Components/Constants/Error500";
+import Error404 from "../Components/Constants/Error404";
 
 const RoutesContent: React.FC = () => {
   return (
     <Routes>
+      {/* Error 500 */}
+      <Route path="/error/500" element={<Error500 />} />
       {/* Authentication */}
       <Route path="/" element={<ClientSignInPage />} />
       <Route path="/client-login" element={<ClientSignInPage />} />
@@ -65,7 +69,10 @@ const RoutesContent: React.FC = () => {
         <Route path="/asset-details/:assetId" element={<AssetDetailsPage />} />
         {/* Pump */}
         <Route path="/add-pump-brand" element={<AddPumpBrandPage />} />
-        <Route path="/edit-pump-brand/:pumpId" element={<EditPumpBrandPage />} />
+        <Route
+          path="/edit-pump-brand/:pumpId"
+          element={<EditPumpBrandPage />}
+        />
         <Route path="/pump-brands-table" element={<PumpBrandsTablePage />} />
         {/* Photo */}
         <Route path="/add-photos" element={<AddPhotosPage />} />
@@ -73,8 +80,14 @@ const RoutesContent: React.FC = () => {
         <Route path="/add-inspection" element={<AddInspectionPage />} />
         <Route path="/inspection-reports" element={<InspectionReportsPage />} />
         <Route path="/inspection-table" element={<InspectionTablePage />} />
-        <Route path="/pdf-uploaded-table" element={<ReportedInspectionTablePage />} />
-        <Route path="/invoiced-inspections-table" element={<InvoiceTablePage />} />
+        <Route
+          path="/pdf-uploaded-table"
+          element={<ReportedInspectionTablePage />}
+        />
+        <Route
+          path="/invoiced-inspections-table"
+          element={<InvoiceTablePage />}
+        />
         <Route path="/invoice/:invoiceId" element={<InvoiceDetailsPage />} />
         <Route
           path="/update-inspection/:inspectionId"
@@ -85,18 +98,12 @@ const RoutesContent: React.FC = () => {
           element={<InspectionDetailsPage />}
         />
         {/* UserGroups */}
-        <Route
-          path="/add-user-group"
-          element={<AddUserGroupPage />}
-        />
+        <Route path="/add-user-group" element={<AddUserGroupPage />} />
         <Route
           path="/edit-user-group/:userGroupId"
           element={<EditUserGroupPage />}
         />
-        <Route
-          path="/user-group-table"
-          element={<UserGroupTablePage />}
-        />
+        <Route path="/user-group-table" element={<UserGroupTablePage />} />
         <Route
           path="/user-group-details/:userGroupId"
           element={<UserGroupDetailsPage />}
@@ -109,19 +116,16 @@ const RoutesContent: React.FC = () => {
           path="/user-group-permissions"
           element={<GrantGroupPermissionsPage />}
         />
-        <Route
-          path="/add-client-user"
-          element={<AddClientUserPage />}
-        />
+        <Route path="/add-client-user" element={<AddClientUserPage />} />
         <Route
           path="/edit-client-user/:clientUserId"
           element={<EditClientUserPage />}
         />
-        <Route
-          path="/client-user-table"
-          element={<ClientUserTablePage />}
-        />
+        <Route path="/client-user-table" element={<ClientUserTablePage />} />
       </Route>
+
+      {/* Catch-all for 404 errors */}
+      <Route path="*" element={<Error404 />} />
     </Routes>
   );
 };

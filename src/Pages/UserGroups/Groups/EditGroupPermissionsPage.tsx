@@ -24,7 +24,10 @@ const EditGroupPermissionsPage: React.FC = () => {
       });
     } catch (error) {
       console.error("Error updating permission:", error);
-      toast.error("Error updating permission. Please try again.");
+      toast.error("Error updating permission. Please try again.", {
+        onClose: () => navigate("/error/500"),
+        autoClose: 500,
+      });
     }
   };  
 

@@ -36,11 +36,20 @@ const ManagementSignInPage: React.FC = () => {
       });
     } catch (error) {
       if (isAPIError(error)) {
-        toast.error("Login error: " + error.data.message);
+        toast.error("Login error: " + error.data.message, {
+          onClose: () => navigate("/error/500"),
+          autoClose: 500,
+        });
       } else if (error instanceof Error) {
-        toast.error("Login error: " + error.message);
+        toast.error("Login error: " + error.message, {
+          onClose: () => navigate("/error/500"),
+          autoClose: 500,
+        });
       } else {
-        toast.error("An unknown error occurred");
+        toast.error("An unknown error occurred", {
+          onClose: () => navigate("/error/500"),
+          autoClose: 500,
+        });
       }
       console.error("Login error:", error);
     }

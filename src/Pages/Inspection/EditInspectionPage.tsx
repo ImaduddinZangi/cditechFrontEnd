@@ -111,11 +111,20 @@ const EditInspectionPage: React.FC = () => {
       });
     } catch (error) {
       if (isAPIError(error)) {
-        toast.error("Error Updating Inspection: " + error.data.message);
+        toast.error("Error Updating Inspection: " + error.data.message, {
+          onClose: () => navigate("/error/500"),
+          autoClose: 500,
+        });
       } else if (error instanceof Error) {
-        toast.error("Error Updating Inspection: " + error.message);
+        toast.error("Error Updating Inspection: " + error.message, {
+          onClose: () => navigate("/error/500"),
+          autoClose: 500,
+        });
       } else {
-        toast.error("An unknown error occurred");
+        toast.error("An unknown error occurred", {
+          onClose: () => navigate("/error/500"),
+          autoClose: 500,
+        });
       }
       console.error("Error Updating Inspection:", error);
     }

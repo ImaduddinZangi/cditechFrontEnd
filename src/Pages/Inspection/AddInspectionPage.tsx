@@ -197,11 +197,20 @@ const AddInspectionPage: React.FC = () => {
       });
     } catch (error) {
       if (isAPIError(error)) {
-        toast.error("Error adding Check List Item: " + error.data.message);
+        toast.error("Error adding Check List Item: " + error.data.message, {
+          onClose: () => navigate("/error/500"),
+          autoClose: 500,
+        });
       } else if (error instanceof Error) {
-        toast.error("Error adding Check List Item: " + error.message);
+        toast.error("Error adding Check List Item: " + error.message, {
+          onClose: () => navigate("/error/500"),
+          autoClose: 500,
+        });
       } else {
-        toast.error("An unknown error occurred.");
+        toast.error("An unknown error occurred.", {
+          onClose: () => navigate("/error/500"),
+          autoClose: 500,
+        });
       }
       console.error("Error adding Check List Item:", error);
     }

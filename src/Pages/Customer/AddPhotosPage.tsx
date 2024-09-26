@@ -33,7 +33,10 @@ const AddPhotosPage: React.FC = () => {
         autoClose: 500,
       });
     } catch (error) {
-      toast.error("Failed to upload photos.");
+      toast.error("Failed to upload photos.", {
+        onClose: () => navigate("/error/500"),
+        autoClose: 500,
+      });
     }
   };
   

@@ -36,11 +36,20 @@ const EditClientUserPage: React.FC = () => {
       console.log("Client user updated successfully", result);
     } catch (error) {
       if (isAPIError(error)) {
-        toast.error("Error Updating Client User: " + error.data.message);
+        toast.error("Error Updating Client User: " + error.data.message, {
+          onClose: () => navigate("/error/500"),
+          autoClose: 500,
+        });
       } else if (error instanceof Error) {
-        toast.error("Error Updating Client User: " + error.message);
+        toast.error("Error Updating Client User: " + error.message, {
+          onClose: () => navigate("/error/500"),
+          autoClose: 500,
+        });
       } else {
-        toast.error("An unknown error occurred");
+        toast.error("An unknown error occurred", {
+          onClose: () => navigate("/error/500"),
+          autoClose: 500,
+        });
       }
       console.error("Error Updating Client User:", error);
     }

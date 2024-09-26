@@ -31,11 +31,20 @@ const AddPumpBrandPage: React.FC = () => {
       console.log("Pump created successfully", result);
     } catch (error) {
       if (isAPIError(error)) {
-        toast.error("Error Adding Pump Brand: " + error.data.message);
+        toast.error("Error Adding Pump Brand: " + error.data.message, {
+          onClose: () => navigate("/error/500"),
+          autoClose: 500,
+        });
       } else if (error instanceof Error) {
-        toast.error("Error Adding Pump Brand: " + error.message);
+        toast.error("Error Adding Pump Brand: " + error.message, {
+          onClose: () => navigate("/error/500"),
+          autoClose: 500,
+        });
       } else {
-        toast.error("An unknown error occurred");
+        toast.error("An unknown error occurred", {
+          onClose: () => navigate("/error/500"),
+          autoClose: 500,
+        });
       }
       console.error("Error Adding Pump Brand:", error);
     }
