@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import InputField from "../Tags/InputField";
+import PurpleButton from "../Tags/PurpleButton";
 
 interface TwoFactorAuthenticationProps {
   onSubmit: (code: string) => void;
@@ -42,12 +43,7 @@ const TwoFactorAuthentication: React.FC<TwoFactorAuthenticationProps> = ({
               required
             />
           </div>
-          <button
-            type="submit"
-            className="w-full px-[2vw] md:px-[1vw] py-[1vw] md:py-[0.5vw] text-[2.5vw] md:text-[1vw] font-semibold text-white bg-purple-0 rounded-[1vw] md:rounded-[0.5vw] hover:bg-opacity-95 focus:outline-none focus:opacity-90"
-          >
-            Verify
-          </button>
+          <PurpleButton type="submit" className="w-full" text="Verify" />
         </form>
       </div>
     </div>

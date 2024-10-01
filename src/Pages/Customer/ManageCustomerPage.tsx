@@ -4,6 +4,7 @@ import DetailedCustomerInfo from "../../Components/Customer/DetailedCustomerInfo
 import AssetDetails from "../../Components/Customer/Asset/AssetDetails";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../redux/store";
+import PurpleButton from "../../Components/Tags/PurpleButton";
 
 const ManageCustomerPage: React.FC = () => {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ const ManageCustomerPage: React.FC = () => {
     (state) => state.customer.selectedCustomerId
   );
 
-  const handeAddAsset = () => {
+  const handleAddAsset = () => {
     navigate("/add-asset");
   };
 
@@ -26,28 +27,11 @@ const ManageCustomerPage: React.FC = () => {
       <DetailedCustomerInfo />
       <div className="m-[2vw] flex flex-row items-center justify-between">
         <div className="flex flex-row items-center gap-[1vw]">
-          <button className="bg-purple-0 text-[1vw] text-white font-inter font-medium px-[1vw] py-[0.5vw] rounded-md">
-            New Inspection
-          </button>
-          <button className="bg-purple-0 text-[1vw] text-white font-inter font-medium px-[1vw] py-[0.5vw] rounded-md">
-            Send to GPS
-          </button>
-          <button
-            onClick={handeAddAsset}
-            className="bg-purple-0 text-[1vw] text-white font-inter font-medium px-[1vw] py-[0.5vw] rounded-md"
-          >
-            Add New Asset
-          </button>
-          <button className="bg-purple-0 text-[1vw] text-white font-inter font-medium px-[1vw] py-[0.5vw] rounded-md">
-            Blank Button
-          </button>
+          <PurpleButton text="New Inspection" />
+          <PurpleButton text="Send to GPS" />
+          <PurpleButton text="Add New Asset" onClick={handleAddAsset} />
         </div>
-        <button
-          onClick={handleEditCustomer}
-          className="bg-purple-0 bg-opacity-5 border border-purple-0 text-[1vw] text-purple-0 font-inter font-medium px-[1vw] py-[0.5vw] rounded-md"
-        >
-          Edit Customer
-        </button>
+        <PurpleButton text="Edit Customer" onClick={handleEditCustomer} />
       </div>
       <AssetDetails />
     </ClientLayout>

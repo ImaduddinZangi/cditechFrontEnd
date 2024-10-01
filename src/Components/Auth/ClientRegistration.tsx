@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import InputField from "../Tags/InputField";
+import PurpleButton from "../Tags/PurpleButton";
 
 interface ClientRegistrationProps {
   onSubmit: (
@@ -65,10 +66,7 @@ const ClientRegistration: React.FC<ClientRegistrationProps> = ({
         <p className="text-[2vw] text-dark-0 font-semibold text-center">
           Client Registration
         </p>
-        <form
-          className="space-y-[1.5vw]"
-          onSubmit={handleSubmit}
-        >
+        <form className="space-y-[1.5vw]" onSubmit={handleSubmit}>
           <div className="grid grid-cols-2">
             <div className="w-full px-[1vw] mt-[2vw]">
               <InputField
@@ -216,12 +214,7 @@ const ClientRegistration: React.FC<ClientRegistrationProps> = ({
             </div>
           </div>
           <div>
-            <button
-              type="submit"
-              className="w-full px-[2vw] md:px-[1vw] py-[1vw] md:py-[0.5vw] text-[2.5vw] md:text-[1vw] font-semibold text-white bg-purple-0 rounded-[1vw] md:rounded-[0.5vw] hover:bg-opacity-95 focus:outline-none focus:opacity-90"
-            >
-              Register
-            </button>
+            <PurpleButton type="submit" className="w-full" text="Register" />
           </div>
           <div className="text-center text-[2.5vw] md:text-[1vw] flex flex-row w-full items-center justify-center">
             <p className="text-gray-0">Already have an account?&nbsp;</p>

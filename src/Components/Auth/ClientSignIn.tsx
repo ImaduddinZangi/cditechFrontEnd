@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import InputField from "../Tags/InputField";
+import PurpleButton from "../Tags/PurpleButton";
 
 interface ClientSignInProps {
   onSubmit: (email: string, password: string) => void;
@@ -81,12 +82,7 @@ const ClientSignIn: React.FC<ClientSignInProps> = ({ onSubmit }) => {
             </div>
           </div>
           <div>
-            <button
-              type="submit"
-              className="w-full px-[2vw] md:px-[1vw] py-[1vw] md:py-[0.5vw] text-[2.5vw] md:text-[1vw] font-semibold text-white bg-purple-0 rounded-[1vw] md:rounded-[0.5vw] hover:bg-opacity-95 focus:outline-none focus:opacity-90"
-            >
-              Log In
-            </button>
+            <PurpleButton type="submit" className="mt-[1vw]" text="Log In" />
           </div>
           <div className="text-center text-[2.5vw] md:text-[1vw] flex flex-row w-full items-center justify-center">
             <p className="text-gray-0">Don't have an account?&nbsp;</p>

@@ -7,6 +7,7 @@ import { setQuickBooksAuthUrl } from "../../redux/features/clientSlice";
 import { RootState } from "../../redux/store";
 import { useGetClientByIdQuery } from "../../redux/api/clientApi";
 import { getUserId } from "../../utils/utils";
+import CompanyExtraDetails from "../../Components/Extras/CompanyExtraDetails";
 
 const ClientProfilePage: React.FC = () => {
   const dispatch = useDispatch();
@@ -28,7 +29,7 @@ const ClientProfilePage: React.FC = () => {
   };
 
   return (
-    <ClientLayout breadcrumb="Client Profile">
+    <ClientLayout breadcrumb="Manage Client">
       <DetailedClientInfo />
       <div className="m-[2vw] flex flex-row items-center gap-[1vw]">
         <button
@@ -51,6 +52,7 @@ const ClientProfilePage: React.FC = () => {
           Change Fee Plan
         </button>
       </div>
+      <CompanyExtraDetails />
     </ClientLayout>
   );
 };

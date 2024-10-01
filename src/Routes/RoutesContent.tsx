@@ -37,6 +37,19 @@ import ReportedInspectionTablePage from "../Pages/Inspection/ReportedInspectionT
 import InvoiceDetailsPage from "../Pages/Inspection/InvoiceDetailsPage";
 import Error500 from "../Components/Constants/Error500";
 import Error404 from "../Components/Constants/Error404";
+import ForgotPasswordPage from "../Pages/Auth/ForgotPasswordPage";
+import NewPasswordPage from "../Pages/Auth/NewPasswordPage";
+import ViewFullMapPage from "../Pages/Extras/ViewFullMapPage";
+import ProductServicesTablePage from "../Pages/Extras/ProductServicesTablePage";
+import ManageServicesPage from "../Pages/Extras/ManageServicesPage";
+import FeePlanPage from "../Pages/Extras/FeePlanPage";
+import AddClientPage from "../Pages/Extras/AddClientPage";
+import BackupCodesPage from "../Pages/Auth/BackupCodesPage";
+import EnterSMSCodePage from "../Pages/Auth/EnterSMSCodePage";
+import OtherOptionsInitialPage from "../Pages/Auth/OtherOptionsInitialPage";
+import TwoFactorSetupPage from "../Pages/Auth/TwoFactorSetupPage";
+import UseBackupCodePage from "../Pages/Auth/UseBackupCodePage";
+import VerifyPhoneNumberPage from "../Pages/Auth/VerifyPhoneNumberPage";
 
 const RoutesContent: React.FC = () => {
   return (
@@ -48,7 +61,14 @@ const RoutesContent: React.FC = () => {
       <Route path="/client-login" element={<ClientSignInPage />} />
       <Route path="/management-login" element={<ManagementSignInPage />} />
       <Route path="/client-registration" element={<ClientRegistrationPage />} />
-
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/new-password" element={<NewPasswordPage />} />
+      <Route path="/backup-codes" element={<BackupCodesPage />} />
+      <Route path="/sms-code" element={<EnterSMSCodePage />} />
+      <Route path="/other-options" element={<OtherOptionsInitialPage />} />
+      <Route path="/two-factor-setup" element={<TwoFactorSetupPage />} />
+      <Route path="/use-backup-code" element={<UseBackupCodePage />} />
+      <Route path="/verify-phone-number" element={<VerifyPhoneNumberPage />} />
       {/* Protected Routes */}
       <Route element={<ProtectedRoute />}>
         <Route path="/2fa" element={<TwoFactorAuthPage />} />
@@ -122,6 +142,15 @@ const RoutesContent: React.FC = () => {
           element={<EditClientUserPage />}
         />
         <Route path="/client-user-table" element={<ClientUserTablePage />} />
+        {/* EXTRAS */}
+        <Route path="/full-view-map" element={<ViewFullMapPage />} />
+        <Route
+          path="/product-services-list"
+          element={<ProductServicesTablePage />}
+        />
+        <Route path="/manage-services" element={<ManageServicesPage />} />
+        <Route path="/my-fee-plan" element={<FeePlanPage />} />
+        <Route path="/add-client" element={<AddClientPage />} />
       </Route>
 
       {/* Catch-all for 404 errors */}

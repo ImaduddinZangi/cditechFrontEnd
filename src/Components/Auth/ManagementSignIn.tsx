@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PurpleButton from "../Tags/PurpleButton";
 
 interface ManagementSignInProps {
   onSubmit: (email: string, password: string) => void;
@@ -90,12 +91,7 @@ const ManagementSignIn: React.FC<ManagementSignInProps> = ({ onSubmit }) => {
             </div>
           </div>
           <div>
-            <button
-              type="submit"
-              className="w-full px-[2vw] md:px-[1vw] py-[1vw] md:py-[0.5vw] text-[2.5vw] md:text-[1vw] font-semibold text-white bg-purple-0 rounded-[1vw] md:rounded-[0.5vw] hover:bg-opacity-95 focus:outline-none focus:opacity-90"
-            >
-              Log In
-            </button>
+            <PurpleButton type="submit" className="w-full" text="Log In" />
           </div>
         </form>
       </div>

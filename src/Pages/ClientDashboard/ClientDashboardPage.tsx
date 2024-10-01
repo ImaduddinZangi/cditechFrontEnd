@@ -1,11 +1,13 @@
 import React from "react";
 import ClientLayout from "../../Layouts/ClientLayout";
-import DetailedClientInfo from "../../Components/ClientDashboard/DetailedClientInfo";
+import EmployeeDashboard from "../../Components/EmployeeDashboard/EmpolyeeDashboard";
+import DashInspectionGraph from "../../Components/EmployeeDashboard/DashInspectionGraph";
 
 const ClientDashboardPage: React.FC = () => {
   return (
-    <ClientLayout breadcrumb="Manage Client">
-      <DetailedClientInfo />
+    <ClientLayout breadcrumb="Dashboard">
+      <EmployeeDashboard />
+      <DashInspectionGraph />
     </ClientLayout>
   );
 };
