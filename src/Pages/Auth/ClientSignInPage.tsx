@@ -1,9 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import ClientSignIn from "../../Components/Auth/ClientSignIn";
-import {
-  useLoginClientMutation,
-  useRefreshTokenMutation,
-} from "../../redux/api/authApi";
+import { useLoginClientMutation } from "../../redux/api/authApi";
 import { useDispatch } from "react-redux";
 import { setToken, setClient } from "../../redux/features/clientSlice";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +10,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 const ClientSignInPage: React.FC = () => {
   const [loginClient] = useLoginClientMutation();
-  const [refreshToken] = useRefreshTokenMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -31,6 +27,9 @@ const ClientSignInPage: React.FC = () => {
     try {
       const result = await loginClient({ email, password }).unwrap();
       dispatch(setToken(result.access_token));
+      if (result.refresh_token) {
+        localStorage.setItem("refresh_token", result.refresh_token);
+      }
       if (result.client) {
         dispatch(setClient(result.client));
         if (result.client.user.two_factor_enabled) {
@@ -56,20 +55,6 @@ const ClientSignInPage: React.FC = () => {
       console.error("Login error:", error);
     }
   };
-
-  useEffect(() => {
-    const refreshTokenInterval = setInterval(async () => {
-      try {
-        const refreshResult = await refreshToken().unwrap();
-        localStorage.setItem("token", refreshResult.access_token);
-        dispatch(setToken(refreshResult.access_token));
-      } catch (error) {
-        console.error("Error refreshing token:", error);
-      }
-    }, 800000);
-
-    return () => clearInterval(refreshTokenInterval);
-  }, [dispatch, refreshToken]);
 
   return (
     <AuthLayout>

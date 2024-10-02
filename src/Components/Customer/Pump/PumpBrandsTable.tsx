@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { FiSearch } from "react-icons/fi";
 import PurpleButton from "../../Tags/PurpleButton";
 import WhiteButton from "../../Tags/WhiteButton";
@@ -8,17 +8,20 @@ import { PumpBrand } from "../../../redux/features/pumpBrandSlice";
 import Loader from "../../Constants/Loader";
 import { useNavigate } from "react-router-dom";
 
-const PumpBrandsTable: React.FC = () => {
+const PumpBrandsTable: React.FC = React.memo(() => {
   const [searchTerm, setSearchTerm] = useState("");
   const { data: brands, isLoading } = useGetPumpBrandsQuery();
   const { data: photosData } = useGetPhotosQuery();
   const navigate = useNavigate();
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-  };
+  const handleSearchChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchTerm(event.target.value);
+    },
+    []
+  );
 
-  const highlightText = (text: string, highlight: string) => {
+  const highlightText = useCallback((text: string, highlight: string) => {
     if (!highlight) return text;
     const parts = text.split(new RegExp(`(${highlight})`, "gi"));
     return (
@@ -34,22 +37,29 @@ const PumpBrandsTable: React.FC = () => {
         )}
       </>
     );
-  };
+  }, []);
 
-  const filteredBrands = brands?.filter(
-    (brand: PumpBrand) =>
-      brand.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      brand.model.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      brand.id?.includes(searchTerm.toLowerCase())
-  );
+  // Memoize the filtered brands to avoid re-calculating on every render
+  const filteredBrands = useMemo(() => {
+    return brands?.filter(
+      (brand: PumpBrand) =>
+        brand.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        brand.model.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        brand.id?.includes(searchTerm.toLowerCase())
+    );
+  }, [brands, searchTerm]);
 
-  const handleAddNewPump = () => {
+  // Memoize navigation functions
+  const handleAddNewPump = useCallback(() => {
     navigate("/add-pump-brand");
-  };
+  }, [navigate]);
 
-  const handleEditPump = (pumpId: string | undefined) => {
-    navigate(`/edit-pump-brand/${pumpId}`);
-  };
+  const handleEditPump = useCallback(
+    (pumpId: string | undefined) => {
+      navigate(`/edit-pump-brand/${pumpId}`);
+    },
+    [navigate]
+  );
 
   return (
     <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
@@ -150,7 +160,9 @@ const PumpBrandsTable: React.FC = () => {
                       />
                       <WhiteButton
                         text="Brand Detail"
-                        onClick={() => navigate(`/pump-brand-detail/${brand.id}`)}
+                        onClick={() =>
+                          navigate(`/pump-brand-detail/${brand.id}`)
+                        }
                       />
                     </td>
                   </tr>
@@ -161,6 +173,6 @@ const PumpBrandsTable: React.FC = () => {
       </div>
     </div>
   );
-};
+});
 
 export default PumpBrandsTable;

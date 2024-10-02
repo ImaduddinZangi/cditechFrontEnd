@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import InputField from "../Tags/InputField";
 import PurpleButton from "../Tags/PurpleButton";
+import { Link } from "react-router-dom";
 
 interface ClientSignInProps {
   onSubmit: (email: string, password: string) => void;
@@ -73,12 +74,12 @@ const ClientSignIn: React.FC<ClientSignInProps> = ({ onSubmit }) => {
               </label>
             </div>
             <div>
-              <a
-                href="/forgot-password"
+              <Link
+                to="/forgot-password"
                 className="text-[2.5vw] md:text-[1vw] font-semibold text-purple-0 hover:opacity-95"
               >
                 Forgot password?
-              </a>
+              </Link>
             </div>
           </div>
           <div>
@@ -86,12 +87,12 @@ const ClientSignIn: React.FC<ClientSignInProps> = ({ onSubmit }) => {
           </div>
           <div className="text-center text-[2.5vw] md:text-[1vw] flex flex-row w-full items-center justify-center">
             <p className="text-gray-0">Don't have an account?&nbsp;</p>
-            <a
-              href="/client-registration"
+            <Link
+              to="/client-registration"
               className="text-purple-0 font font-semibold"
             >
               Sign up
-            </a>
+            </Link>
           </div>
         </form>
       </div>

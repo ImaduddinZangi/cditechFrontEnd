@@ -7,7 +7,7 @@ interface CardProps {
   isPositive: boolean;
 }
 
-const Card: React.FC<CardProps> = ({
+const DashCard: React.FC<CardProps> = ({
   title,
   value,
   percentage,
@@ -32,14 +32,4 @@ const Card: React.FC<CardProps> = ({
   );
 };
 
-const EmployeeDashboard: React.FC = () => {
-  return (
-    <div className="grid grid-cols-3 gap-[1vw] m-[2vw]">
-      <Card title="Past Due" value={4} percentage="10%" isPositive={true} />
-      <Card title="Due Today" value={91} percentage="12%" isPositive={true} />
-      <Card title="This Month" value={276} percentage="5%" isPositive={false} />
-    </div>
-  );
-};
-
-export default EmployeeDashboard;
+export default DashCard;

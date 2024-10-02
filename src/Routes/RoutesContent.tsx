@@ -1,177 +1,306 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "../Middleware/ProtectedRoutes";
-import ClientSignInPage from "../Pages/Auth/ClientSignInPage";
-import ClientDashboardPage from "../Pages/ClientProfile/ClientDashboardPage";
-import ManagementSignInPage from "../Pages/Auth/ManagementSignInPage";
-import CustomerTablePage from "../Pages/Customer/CustomerTablePage";
-import ClientRegistrationPage from "../Pages/Auth/ClientRegistrationPage";
-import AddInspectionPage from "../Pages/Inspection/AddInspectionPage";
-import AddCustomerPage from "../Pages/Customer/AddCustomerPage";
-import AddAssetsPage from "../Pages/Customer/Asset/AddAssetsPage";
-import AddPumpBrandPage from "../Pages/Customer/Pump/AddPumpBrandPage";
-import ManageCustomerPage from "../Pages/Customer/ManageCustomerPage";
-import AddPhotosPage from "../Pages/Customer/AddPhotosPage";
-import TwoFactorAuthPage from "../Pages/Auth/twoFactorAuthPage";
-import EditCustomerPage from "../Pages/Customer/EditCustomerPage";
-import EditAssetPage from "../Pages/Customer/Asset/EditAssetPage";
-import ClientProfilePage from "../Pages/ClientProfile/ClientProfilePage";
-import InspectionReportsPage from "../Pages/Inspection/InspectionReportsPage";
-import InspectionTablePage from "../Pages/Inspection/InspectionTablePage";
-import EditInspectionPage from "../Pages/Inspection/EditInspectionPage";
-import PumpBrandsTablePage from "../Pages/Customer/Pump/PumpBrandsTablePage";
-import InspectionDetailsPage from "../Pages/Inspection/InspectionDetailsPage";
-import AssetDetailsPage from "../Pages/Customer/Asset/AssetDetailsPage";
-import AddUserGroupPage from "../Pages/UserGroups/Groups/AddUserGroupPage";
-import EditPumpBrandPage from "../Pages/Customer/Pump/EditPumpBrandPage";
-import EditUserGroupPage from "../Pages/UserGroups/Groups/EditUserGroupPage";
-import UserGroupTablePage from "../Pages/UserGroups/Groups/UserGroupTablePage";
-import AddClientUserPage from "../Pages/UserGroups/Users/AddClientUserPage";
-import EditClientUserPage from "../Pages/UserGroups/Users/EditClientUserPage";
-import ClientUserTablePage from "../Pages/UserGroups/Users/ClientUserTablePage";
-import GrantGroupPermissionsPage from "../Pages/UserGroups/Groups/GrantGroupPermissionsPage";
-import UserGroupDetailsPage from "../Pages/UserGroups/Groups/UserGroupDetailsPage";
-import InvoiceTablePage from "../Pages/Inspection/InvoiceTablePage";
-import EditGroupPermissionsPage from "../Pages/UserGroups/Groups/EditGroupPermissionsPage";
-import ReportedInspectionTablePage from "../Pages/Inspection/ReportedInspectionTablePage";
-import InvoiceDetailsPage from "../Pages/Inspection/InvoiceDetailsPage";
 import Error500 from "../Components/Constants/Error500";
 import Error404 from "../Components/Constants/Error404";
-import ForgotPasswordPage from "../Pages/Auth/ForgotPasswordPage";
-import NewPasswordPage from "../Pages/Auth/NewPasswordPage";
-import ViewFullMapPage from "../Pages/Extras/ViewFullMapPage";
-import ProductServicesTablePage from "../Pages/Extras/ProductServicesTablePage";
-import ManageServicesPage from "../Pages/Extras/ManageServicesPage";
-import FeePlanPage from "../Pages/Extras/FeePlanPage";
-import AddClientPage from "../Pages/Extras/AddClientPage";
-import BackupCodesPage from "../Pages/Auth/BackupCodesPage";
-import EnterSMSCodePage from "../Pages/Auth/EnterSMSCodePage";
-import OtherOptionsInitialPage from "../Pages/Auth/OtherOptionsInitialPage";
-import TwoFactorSetupPage from "../Pages/Auth/TwoFactorSetupPage";
-import UseBackupCodePage from "../Pages/Auth/UseBackupCodePage";
-import VerifyPhoneNumberPage from "../Pages/Auth/VerifyPhoneNumberPage";
-import PumpBrandDetailsPage from "../Pages/Customer/Pump/PumpBrandDetailsPage";
-import AddInspectionScoresPage from "../Pages/Inspection/AddInspectionScoresPage";
-import AddInspectionChecklistPage from "../Pages/Inspection/AddInspectionChecklistPage";
+import Loader from "../Components/Constants/Loader";
+const ClientSignInPage = lazy(() => import("../Pages/Auth/ClientSignInPage"));
+const ClientDashboardPage = lazy(
+  () => import("../Pages/ClientProfile/ClientDashboardPage")
+);
+const ManagementSignInPage = lazy(
+  () => import("../Pages/Auth/ManagementSignInPage")
+);
+const CustomerTablePage = lazy(
+  () => import("../Pages/Customer/CustomerTablePage")
+);
+const ClientRegistrationPage = lazy(
+  () => import("../Pages/Auth/ClientRegistrationPage")
+);
+const AddInspectionPage = lazy(
+  () => import("../Pages/Inspection/AddInspectionPage")
+);
+const AddCustomerPage = lazy(() => import("../Pages/Customer/AddCustomerPage"));
+const AddAssetsPage = lazy(
+  () => import("../Pages/Customer/Asset/AddAssetsPage")
+);
+const AddPumpBrandPage = lazy(
+  () => import("../Pages/Customer/Pump/AddPumpBrandPage")
+);
+const ManageCustomerPage = lazy(
+  () => import("../Pages/Customer/ManageCustomerPage")
+);
+const AddPhotosPage = lazy(() => import("../Pages/Customer/AddPhotosPage"));
+const TwoFactorAuthPage = lazy(() => import("../Pages/Auth/twoFactorAuthPage"));
+const EditCustomerPage = lazy(
+  () => import("../Pages/Customer/EditCustomerPage")
+);
+const EditAssetPage = lazy(
+  () => import("../Pages/Customer/Asset/EditAssetPage")
+);
+const ClientProfilePage = lazy(
+  () => import("../Pages/ClientProfile/ClientProfilePage")
+);
+const InspectionReportsPage = lazy(
+  () => import("../Pages/Inspection/InspectionReportsPage")
+);
+const InspectionTablePage = lazy(
+  () => import("../Pages/Inspection/InspectionTablePage")
+);
+const EditInspectionPage = lazy(
+  () => import("../Pages/Inspection/EditInspectionPage")
+);
+const PumpBrandsTablePage = lazy(
+  () => import("../Pages/Customer/Pump/PumpBrandsTablePage")
+);
+const InspectionDetailsPage = lazy(
+  () => import("../Pages/Inspection/InspectionDetailsPage")
+);
+const AssetDetailsPage = lazy(
+  () => import("../Pages/Customer/Asset/AssetDetailsPage")
+);
+const AddUserGroupPage = lazy(
+  () => import("../Pages/UserGroups/Groups/AddUserGroupPage")
+);
+const EditPumpBrandPage = lazy(
+  () => import("../Pages/Customer/Pump/EditPumpBrandPage")
+);
+const EditUserGroupPage = lazy(
+  () => import("../Pages/UserGroups/Groups/EditUserGroupPage")
+);
+const UserGroupTablePage = lazy(
+  () => import("../Pages/UserGroups/Groups/UserGroupTablePage")
+);
+const AddClientUserPage = lazy(
+  () => import("../Pages/UserGroups/Users/AddClientUserPage")
+);
+const EditClientUserPage = lazy(
+  () => import("../Pages/UserGroups/Users/EditClientUserPage")
+);
+const ClientUserTablePage = lazy(
+  () => import("../Pages/UserGroups/Users/ClientUserTablePage")
+);
+const GrantGroupPermissionsPage = lazy(
+  () => import("../Pages/UserGroups/Groups/GrantGroupPermissionsPage")
+);
+const UserGroupDetailsPage = lazy(
+  () => import("../Pages/UserGroups/Groups/UserGroupDetailsPage")
+);
+const InvoiceTablePage = lazy(
+  () => import("../Pages/Inspection/InvoiceTablePage")
+);
+const EditGroupPermissionsPage = lazy(
+  () => import("../Pages/UserGroups/Groups/EditGroupPermissionsPage")
+);
+const ReportedInspectionTablePage = lazy(
+  () => import("../Pages/Inspection/ReportedInspectionTablePage")
+);
+const InvoiceDetailsPage = lazy(
+  () => import("../Pages/Inspection/InvoiceDetailsPage")
+);
+const ForgotPasswordPage = lazy(
+  () => import("../Pages/Auth/ForgotPasswordPage")
+);
+const NewPasswordPage = lazy(() => import("../Pages/Auth/NewPasswordPage"));
+const ViewFullMapPage = lazy(() => import("../Pages/Extras/ViewFullMapPage"));
+const ProductServicesTablePage = lazy(
+  () => import("../Pages/Extras/ProductServicesTablePage")
+);
+const ManageServicesPage = lazy(
+  () => import("../Pages/Extras/ManageServicesPage")
+);
+const FeePlanPage = lazy(() => import("../Pages/Extras/FeePlanPage"));
+const BackupCodesPage = lazy(() => import("../Pages/Auth/BackupCodesPage"));
+const EnterSMSCodePage = lazy(() => import("../Pages/Auth/EnterSMSCodePage"));
+const OtherOptionsInitialPage = lazy(
+  () => import("../Pages/Auth/OtherOptionsInitialPage")
+);
+const TwoFactorSetupPage = lazy(
+  () => import("../Pages/Auth/TwoFactorSetupPage")
+);
+const UseBackupCodePage = lazy(() => import("../Pages/Auth/UseBackupCodePage"));
+const VerifyPhoneNumberPage = lazy(
+  () => import("../Pages/Auth/VerifyPhoneNumberPage")
+);
+const PumpBrandDetailsPage = lazy(
+  () => import("../Pages/Customer/Pump/PumpBrandDetailsPage")
+);
+const AddInspectionScoresPage = lazy(
+  () => import("../Pages/Inspection/AddInspectionScoresPage")
+);
+const AddInspectionChecklistPage = lazy(
+  () => import("../Pages/Inspection/AddInspectionChecklistPage")
+);
+const ClientLogsTablePage = lazy(
+  () => import("../Pages/Logs/ClientLogsTablePage")
+);
+const ManagementLogsTablePage = lazy(
+  () => import("../Pages/Logs/ManagementLogsTablePage")
+);
+const ClientUsersSessionsTablePage = lazy(
+  () => import("../Pages/Logs/ClientUsersSessionsTablePage")
+);
 
 const RoutesContent: React.FC = () => {
   return (
-    <Routes>
-      {/* Error 500 */}
-      <Route path="/error/500" element={<Error500 />} />
+    <Suspense
+      fallback={
+        <div className="w-screen h-screen flex flex-row justify-center items-center">
+          <Loader />
+        </div>
+      }
+    >
+      <Routes>
+        {/* Error 500 */}
+        <Route path="/error/500" element={<Error500 />} />
 
-      {/* Authentication */}
-      <Route path="/" element={<ClientSignInPage />} />
-      <Route path="/client-login" element={<ClientSignInPage />} />
-      <Route path="/management-login" element={<ManagementSignInPage />} />
-      <Route path="/client-registration" element={<ClientRegistrationPage />} />
-      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-      <Route path="/new-password" element={<NewPasswordPage />} />
-      <Route path="/backup-codes" element={<BackupCodesPage />} />
-      <Route path="/sms-code" element={<EnterSMSCodePage />} />
-      <Route path="/other-options" element={<OtherOptionsInitialPage />} />
-      <Route path="/two-factor-setup" element={<TwoFactorSetupPage />} />
-      <Route path="/use-backup-code" element={<UseBackupCodePage />} />
-      <Route path="/verify-phone-number" element={<VerifyPhoneNumberPage />} />
-
-      {/* Protected Routes */}
-      <Route element={<ProtectedRoute />}>
-        <Route path="/2fa" element={<TwoFactorAuthPage />} />
-
-        {/* Client */}
-        <Route path="/client-dashboard" element={<ClientDashboardPage />} />
-        <Route path="/client-profile" element={<ClientProfilePage />} />
-
-        {/* Customer */}
-        <Route path="/manage-customer" element={<ManageCustomerPage />} />
-        <Route path="/add-customer" element={<AddCustomerPage />} />
+        {/* Authentication */}
+        <Route path="/" element={<ClientSignInPage />} />
+        <Route path="/client-login" element={<ClientSignInPage />} />
+        <Route path="/management-login" element={<ManagementSignInPage />} />
         <Route
-          path="/edit-customer/:customerId"
-          element={<EditCustomerPage />}
+          path="/client-registration"
+          element={<ClientRegistrationPage />}
         />
-        <Route path="/customer-table" element={<CustomerTablePage />} />
-
-        {/* Asset */}
-        <Route path="/add-asset" element={<AddAssetsPage />} />
-        <Route path="/edit-asset/:id" element={<EditAssetPage />} />
-        <Route path="/asset-details/:assetId" element={<AssetDetailsPage />} />
-
-        {/* Pump */}
-        <Route path="/add-pump-brand" element={<AddPumpBrandPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/new-password" element={<NewPasswordPage />} />
+        <Route path="/backup-codes" element={<BackupCodesPage />} />
+        <Route path="/sms-code" element={<EnterSMSCodePage />} />
+        <Route path="/other-options" element={<OtherOptionsInitialPage />} />
+        <Route path="/two-factor-setup" element={<TwoFactorSetupPage />} />
+        <Route path="/use-backup-code" element={<UseBackupCodePage />} />
         <Route
-          path="/edit-pump-brand/:pumpId"
-          element={<EditPumpBrandPage />}
-        />
-        <Route path="/pump-brands-table" element={<PumpBrandsTablePage />} />
-        <Route path="/pump-brand-detail/:pumpBrandId" element={<PumpBrandDetailsPage />} />
-
-        {/* Photo */}
-        <Route path="/add-photos/:type/:id" element={<AddPhotosPage />} />
-
-        {/* Inspection */}
-        <Route path="/add-inspection" element={<AddInspectionPage />} />
-        <Route path="/add-inspection/scores" element={<AddInspectionScoresPage />} />
-        <Route path="/add-inspection/checklist" element={<AddInspectionChecklistPage />} />
-        <Route path="/inspection-reports" element={<InspectionReportsPage />} />
-        <Route path="/inspection-table" element={<InspectionTablePage />} />
-        <Route
-          path="/pdf-uploaded-table"
-          element={<ReportedInspectionTablePage />}
-        />
-        <Route
-          path="/invoiced-inspections-table"
-          element={<InvoiceTablePage />}
-        />
-        <Route path="/invoice/:invoiceId" element={<InvoiceDetailsPage />} />
-        <Route
-          path="/update-inspection/:inspectionId"
-          element={<EditInspectionPage />}
-        />
-        <Route
-          path="/inspection-details/:inspectionId"
-          element={<InspectionDetailsPage />}
+          path="/verify-phone-number"
+          element={<VerifyPhoneNumberPage />}
         />
 
-        {/* UserGroups */}
-        <Route path="/add-user-group" element={<AddUserGroupPage />} />
-        <Route
-          path="/edit-user-group/:userGroupId"
-          element={<EditUserGroupPage />}
-        />
-        <Route path="/user-group-table" element={<UserGroupTablePage />} />
-        <Route
-          path="/user-group-details/:userGroupId"
-          element={<UserGroupDetailsPage />}
-        />
-        <Route
-          path="/user-group-details/:groupId/edit-permission/:permissionId"
-          element={<EditGroupPermissionsPage />}
-        />
-        <Route
-          path="/user-group-permissions"
-          element={<GrantGroupPermissionsPage />}
-        />
-        <Route path="/add-client-user" element={<AddClientUserPage />} />
-        <Route
-          path="/edit-client-user/:clientUserId"
-          element={<EditClientUserPage />}
-        />
-        <Route path="/client-user-table" element={<ClientUserTablePage />} />
+        {/* Protected Routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/2fa" element={<TwoFactorAuthPage />} />
 
-        {/* EXTRAS */}
-        <Route path="/full-view-map" element={<ViewFullMapPage />} />
-        <Route
-          path="/product-services-list"
-          element={<ProductServicesTablePage />}
-        />
-        <Route path="/manage-services" element={<ManageServicesPage />} />
-        <Route path="/my-fee-plan" element={<FeePlanPage />} />
-        <Route path="/add-client" element={<AddClientPage />} />
-      </Route>
+          {/* Client */}
+          <Route path="/client-dashboard" element={<ClientDashboardPage />} />
+          <Route path="/client-profile" element={<ClientProfilePage />} />
 
-      {/* Catch-all for 404 errors */}
-      <Route path="*" element={<Error404 />} />
-    </Routes>
+          {/* Customer */}
+          <Route path="/manage-customer" element={<ManageCustomerPage />} />
+          <Route path="/add-customer" element={<AddCustomerPage />} />
+          <Route
+            path="/edit-customer/:customerId"
+            element={<EditCustomerPage />}
+          />
+          <Route path="/customer-table" element={<CustomerTablePage />} />
+
+          {/* Asset */}
+          <Route path="/add-asset" element={<AddAssetsPage />} />
+          <Route path="/edit-asset/:id" element={<EditAssetPage />} />
+          <Route
+            path="/asset-details/:assetId"
+            element={<AssetDetailsPage />}
+          />
+
+          {/* Pump */}
+          <Route path="/add-pump-brand" element={<AddPumpBrandPage />} />
+          <Route
+            path="/edit-pump-brand/:pumpId"
+            element={<EditPumpBrandPage />}
+          />
+          <Route path="/pump-brands-table" element={<PumpBrandsTablePage />} />
+          <Route
+            path="/pump-brand-detail/:pumpBrandId"
+            element={<PumpBrandDetailsPage />}
+          />
+
+          {/* Photo */}
+          <Route path="/add-photos/:type/:id" element={<AddPhotosPage />} />
+
+          {/* Inspection */}
+          <Route path="/add-inspection" element={<AddInspectionPage />} />
+          <Route
+            path="/add-inspection/scores"
+            element={<AddInspectionScoresPage />}
+          />
+          <Route
+            path="/add-inspection/checklist"
+            element={<AddInspectionChecklistPage />}
+          />
+          <Route
+            path="/inspection-reports"
+            element={<InspectionReportsPage />}
+          />
+          <Route path="/inspection-table" element={<InspectionTablePage />} />
+          <Route
+            path="/pdf-uploaded-table"
+            element={<ReportedInspectionTablePage />}
+          />
+          <Route
+            path="/invoiced-inspections-table"
+            element={<InvoiceTablePage />}
+          />
+          <Route path="/invoice/:invoiceId" element={<InvoiceDetailsPage />} />
+          <Route
+            path="/update-inspection/:inspectionId"
+            element={<EditInspectionPage />}
+          />
+          <Route
+            path="/inspection-details/:inspectionId"
+            element={<InspectionDetailsPage />}
+          />
+
+          {/* UserGroups */}
+          <Route path="/add-user-group" element={<AddUserGroupPage />} />
+          <Route
+            path="/edit-user-group/:userGroupId"
+            element={<EditUserGroupPage />}
+          />
+          <Route path="/user-group-table" element={<UserGroupTablePage />} />
+          <Route
+            path="/user-group-details/:userGroupId"
+            element={<UserGroupDetailsPage />}
+          />
+          <Route
+            path="/user-group-details/:groupId/edit-permission/:permissionId"
+            element={<EditGroupPermissionsPage />}
+          />
+          <Route
+            path="/user-group-permissions"
+            element={<GrantGroupPermissionsPage />}
+          />
+          <Route path="/add-client-user" element={<AddClientUserPage />} />
+          <Route
+            path="/edit-client-user/:clientUserId"
+            element={<EditClientUserPage />}
+          />
+          <Route path="/client-user-table" element={<ClientUserTablePage />} />
+
+          {/* LOGS */}
+          <Route
+            path="/client-logs-dashboard"
+            element={<ClientLogsTablePage />}
+          />
+          <Route
+            path="/management-logs-dashboard"
+            element={<ManagementLogsTablePage />}
+          />
+          <Route
+            path="/client-users-sessions"
+            element={<ClientUsersSessionsTablePage />}
+          />
+
+          {/* EXTRAS */}
+          <Route path="/full-view-map" element={<ViewFullMapPage />} />
+          <Route
+            path="/product-services-list"
+            element={<ProductServicesTablePage />}
+          />
+          <Route path="/manage-services" element={<ManageServicesPage />} />
+          <Route path="/my-fee-plan" element={<FeePlanPage />} />
+        </Route>
+
+        {/* Catch-all for 404 errors */}
+        <Route path="*" element={<Error404 />} />
+      </Routes>
+    </Suspense>
   );
 };
 

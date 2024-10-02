@@ -15,7 +15,7 @@ interface LoginRequest {
   password: string;
 }
 
-interface ClientRegisterRequest {
+export interface ClientRegisterRequest {
   name: string;
   email: string;
   password: string;
@@ -89,13 +89,11 @@ export const authApi = createApi({
         body: newClient,
       }),
     }),
-    refreshToken: builder.mutation<AuthResponse, void>({
-      query: () => ({
+    refreshToken: builder.mutation<AuthResponse, { refresh_token: string }>({
+      query: (data) => ({
         url: "auth/refresh",
         method: "POST",
-        body: {
-          refresh_token: localStorage.getItem("refresh_token"),
-        },
+        body: data,
       }),
       async onQueryStarted(_args, { queryFulfilled }) {
         try {
@@ -105,10 +103,10 @@ export const authApi = createApi({
             localStorage.setItem("refresh_token", data.refresh_token);
           }
         } catch (error) {
-          console.error("Error refreshing token:", error);
+          console.error("Token refresh error:", error);
         }
       },
-    }),
+    }),    
     logout: builder.mutation<void, void>({
       query: () => ({
         url: "auth/logout",
@@ -116,7 +114,6 @@ export const authApi = createApi({
       }),
       async onQueryStarted(_args, { dispatch }) {
         localStorage.removeItem("token");
-        localStorage.removeItem("refresh_token");
         dispatch(logoutClient());
         dispatch(clientUserLogout());
       },
@@ -128,6 +125,6 @@ export const {
   useLoginUserMutation,
   useLoginClientMutation,
   useRegisterClientMutation,
-  useLogoutMutation,
   useRefreshTokenMutation,
+  useLogoutMutation,
 } = authApi;

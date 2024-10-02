@@ -1,12 +1,12 @@
 import React from "react";
-import { useRegisterClientMutation } from "../../redux/api/authApi";
+import { ClientRegisterRequest, useRegisterClientMutation } from "../../redux/api/authApi";
 import { useDispatch } from "react-redux";
 import { setToken, setClient } from "../../redux/features/clientSlice";
 import { useNavigate } from "react-router-dom";
 import AuthLayout from "../../Layouts/AuthLayout";
-import ClientRegistration from "../../Components/Auth/ClientRegistration";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AddClient from "../../Components/Auth/AddClient";
 
 const ClientRegistrationPage: React.FC = () => {
   const [registerClient] = useRegisterClientMutation();
@@ -23,36 +23,9 @@ const ClientRegistrationPage: React.FC = () => {
     return error && error.data && typeof error.data.message === "string";
   };
 
-  const handleRegistration = async (
-    name: string,
-    email: string,
-    industry: string,
-    password: string,
-    phone: string,
-    address: string,
-    companyName: string,
-    companyType: string,
-    billingAddress: string,
-    paymentMethod: string,
-    customPortalUrl: string,
-    nextBillDate: string
-  ) => {
+  const handleRegistration = async (registrationData: ClientRegisterRequest) => {
     try {
-      const result = await registerClient({
-        name,
-        email,
-        password,
-        phone,
-        industry,
-        address,
-        company_name: companyName,
-        company_type: companyType,
-        billing_address: billingAddress,
-        payment_method: paymentMethod,
-        custom_portal_url: customPortalUrl,
-        next_bill_date: nextBillDate,
-        account_status: "Inactive",
-      }).unwrap();
+      const result = await registerClient(registrationData).unwrap();
       dispatch(setToken(result.access_token));
       if (result.client) {
         dispatch(setClient(result.client));
@@ -75,7 +48,7 @@ const ClientRegistrationPage: React.FC = () => {
 
   return (
     <AuthLayout>
-      <ClientRegistration onSubmit={handleRegistration} />
+      <AddClient onSubmit={handleRegistration} />
       <ToastContainer
         position="top-right"
         autoClose={500}

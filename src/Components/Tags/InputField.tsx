@@ -13,6 +13,7 @@ interface InputFieldProps {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   labelClassName?: string;
   fieldClassName?: string;
+  disabled?: boolean;
 }
 
 const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
@@ -30,6 +31,7 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
       onChange,
       labelClassName,
       fieldClassName,
+      disabled,
     },
     ref
   ) => {
@@ -54,6 +56,7 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
           placeholder={placeholder}
           value={value}
           onChange={onChange}
+          disabled={disabled}
         />
       </div>
     );

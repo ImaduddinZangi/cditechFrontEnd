@@ -1,21 +1,21 @@
 import React, { ReactNode, useState } from "react";
 import AuthFooter from "./AuthFooter";
 import { FiLogOut, FiChevronDown, FiChevronRight } from "react-icons/fi";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { Link } from "react-router-dom";
 
 interface SubMenuItem {
   title: string;
   src: string;
-  href: string; // 'href' is required for SubMenuItem
+  href: string;
 }
 
 interface MenuItem {
   title: string;
   src: string;
-  href?: string; // 'href' is optional for MenuItem
+  href?: string;
   isDropdown?: boolean;
-  dropdownItems?: SubMenuItem[]; // Array of SubMenuItem
+  dropdownItems?: SubMenuItem[];
 }
 
 interface SidebarProps {
@@ -45,7 +45,11 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
       isDropdown: true,
       dropdownItems: [
         { title: "User Group Table", src: "table", href: "/user-group-table" },
-        { title: "Client User Table", src: "table", href: "/client-user-table" },
+        {
+          title: "Client User Table",
+          src: "table",
+          href: "/client-user-table",
+        },
       ],
     },
     {
@@ -62,6 +66,24 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
       ],
     },
     {
+      title: "Logs",
+      src: "log",
+      isDropdown: true,
+      dropdownItems: [
+        { title: "Client Logs", src: "log", href: "/client-logs-dashboard" },
+        {
+          title: "Management Logs",
+          src: "log",
+          href: "/management-logs-dashboard",
+        },
+        {
+          title: "User Sessions",
+          src: "log",
+          href: "/client-users-sessions",
+        },
+      ],
+    },
+    {
       title: "Files",
       src: "files",
       isDropdown: true,
@@ -73,7 +95,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
         },
       ],
     },
-    { title: "Setting", src: "setting" }, // No href provided
+    { title: "Setting", src: "/setting" },
   ];
 
   const handleLogout = async () => {
@@ -152,9 +174,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
                     <div
                       className="flex items-center gap-x-[1vw] w-full"
                       onClick={() =>
-                        Menu.isDropdown
-                          ? handleDropdownClick(Menu.title)
-                          : null
+                        Menu.isDropdown ? handleDropdownClick(Menu.title) : null
                       }
                     >
                       <img
@@ -253,6 +273,17 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
           <AuthFooter />
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };
