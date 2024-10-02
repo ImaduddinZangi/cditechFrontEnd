@@ -1,5 +1,5 @@
 import React from 'react';
-import EmployeeDashboard from '../../Components/EmployeeDashboard/EmpolyeeDashboard';
+import EmployeeDashboard from '../../Components/ClientProfile/EmpolyeeDashboard';
 
 const EmployeeDashboardPage: React.FC = () => {
   return (

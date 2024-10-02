@@ -163,6 +163,7 @@ const AssetDetails: React.FC = () => {
               type="button"
               className="shadow-md"
               text="Asset Photos"
+              onClick={() => navigate(`/add-photos/asset/${asset.id}`)}
             />
             <WhiteButton
               type="button"

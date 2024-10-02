@@ -150,7 +150,7 @@ const PumpBrandsTable: React.FC = () => {
                       />
                       <WhiteButton
                         text="Brand Detail"
-                        onClick={() => alert(`Brand Details Coming Soon!...`)}
+                        onClick={() => navigate(`/pump-brand-detail/${brand.id}`)}
                       />
                     </td>
                   </tr>

@@ -79,8 +79,8 @@ const DashInspectionGraph: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col w-full p-6 bg-white rounded-lg shadow-md">
-      <div className="flex justify-between items-center mb-4">
+    <div className="flex flex-col p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg">
+      <div className="flex justify-between items-center mb-[1vw]">
         <h2 className="text-lg font-semibold text-gray-800">Inspections</h2>
         <WhiteButton text="View Report" />
       </div>

@@ -25,7 +25,7 @@ const AssetPumps: React.FC = () => {
     try {
       const result = await createPump(pumpData).unwrap();
       toast.success("Pump added successfully!", {
-        onClose: () => navigate("/asset-details"),
+        onClose: () => navigate("/manage-customer"),
         autoClose: 500,
       });
       console.log("Pump created successfully", result);

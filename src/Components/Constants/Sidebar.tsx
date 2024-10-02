@@ -8,7 +8,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ children }) => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   const Menus = [
@@ -56,7 +56,6 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
           src: "reports",
           href: "/inspection-reports",
         },
-        { title: "Add Photos", src: "photo", href: "/add-photos" },
       ],
     },
     { title: "Setting", src: "setting" },

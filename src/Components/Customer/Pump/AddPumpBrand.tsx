@@ -14,18 +14,48 @@ const AddPumpBrand: React.FC<AddPumpBrandProps> = ({
   onSubmit,
   initialData,
 }) => {
+  // Split the address into streetAddress, city, state, and zipcode
+  const splitAddress = (address: string | undefined) => {
+    if (!address) return { streetAddress: "", city: "", state: "", zipcode: "" };
+    
+    const parts = address.split(", ");
+    return {
+      streetAddress: parts[0] || "",
+      city: parts[1] || "",
+      state: parts[2] || "",
+      zipcode: parts[3] || ""
+    };
+  };
+
   const [name, setName] = useState<string>(initialData?.name || "");
   const [model, setModel] = useState<string>(initialData?.model || "");
+  const [website, setWebsite] = useState<string>(initialData?.website || "");
   const [phone, setPhone] = useState<string>(initialData?.phone || "");
-  const [address, setAddress] = useState<string>(initialData?.address || "");
+  const [logoUrl, setLogoUrl] = useState<string>(initialData?.logoUrl || "");
+
+  const { streetAddress: initialStreet, city: initialCity, state: initialState, zipcode: initialZip } = splitAddress(initialData?.address);
+
+  const [streetAddress, setStreetAddress] = useState<string>(initialStreet);
+  const [city, setCity] = useState<string>(initialCity);
+  const [state, setState] = useState<string>(initialState);
+  const [zipcode, setZipcode] = useState<string>(initialZip);
   const [madeInUsa, setMadeInUsa] = useState<boolean>(
-    initialData?.madeInUsa ? true : false || false
+    initialData?.madeInUsa || false
   );
   const navigate = useNavigate();
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    onSubmit({ id: initialData?.id, name, model, phone, address, madeInUsa });
+    const address = `${streetAddress}, ${city}, ${state}, ${zipcode}`;
+    onSubmit({
+      id: initialData?.id,
+      name,
+      model,
+      website,
+      phone,
+      address,
+      madeInUsa,
+    });
   };
 
   const handleCancel = () => {
@@ -48,7 +78,7 @@ const AddPumpBrand: React.FC<AddPumpBrandProps> = ({
           required
         />
         <InputField
-          label="Model"
+          label="Brand Model"
           name="model"
           fieldType="text"
           value={model}
@@ -57,21 +87,67 @@ const AddPumpBrand: React.FC<AddPumpBrandProps> = ({
           required
         />
         <InputField
-          label="Phone No"
+          label="Brand Website"
+          name="website"
+          fieldType="text"
+          value={website}
+          placeholder="https://www.brandwebsite.com"
+          onChange={(e) => setWebsite(e.target.value)}
+          required
+        />
+        
+        <InputField
+          label="Brand Phone Number"
           name="phone"
           fieldType="text"
           value={phone}
-          placeholder="Enter phone no"
+          placeholder="Enter phone number"
           onChange={(e) => setPhone(e.target.value)}
           required
         />
         <InputField
-          label="Address"
-          name="address"
+          label="Street Address"
+          name="streetAddress"
           fieldType="text"
-          value={address}
-          placeholder="Enter Address"
-          onChange={(e) => setAddress(e.target.value)}
+          value={streetAddress}
+          placeholder="Enter street address"
+          onChange={(e) => setStreetAddress(e.target.value)}
+          required
+        />
+        <InputField
+          label="City"
+          name="city"
+          fieldType="text"
+          value={city}
+          placeholder="Select City"
+          onChange={(e) => setCity(e.target.value)}
+          required
+        />
+        <InputField
+          label="State"
+          name="state"
+          fieldType="text"
+          value={state}
+          placeholder="Select State"
+          onChange={(e) => setState(e.target.value)}
+          required
+        />
+        <InputField
+          label="Zipcode"
+          name="zipcode"
+          fieldType="text"
+          value={zipcode}
+          placeholder="Enter Zip Code"
+          onChange={(e) => setZipcode(e.target.value)}
+          required
+        />
+        <InputField
+          label="Logo Url"
+          name="logoUrl"
+          fieldType="text"
+          value={logoUrl}
+          placeholder="Enter Logo Url"
+          onChange={(e) => setLogoUrl(e.target.value)}
           required
         />
         <div className="flex flex-row items-center gap-x-[1vw] mt-[0.5vw]">
@@ -85,9 +161,9 @@ const AddPumpBrand: React.FC<AddPumpBrandProps> = ({
             onChange={(e) => setMadeInUsa(e.target.checked)}
           />
         </div>
-        <div className="mt-[1vw] flex justify-end">
-          <PurpleButton type="submit" text="Create" className="mr-[1vw]" />
-          <WhiteButton type="button" text="Cancel" onClick={handleCancel} />
+        <div className="mt-[1vw] flex justify-end col-span-2">
+          <PurpleButton type="submit" text="Save & Close" className="mr-[1vw]" />
+          <WhiteButton type="button" text="Do Not Save & Cancel" onClick={handleCancel} />
         </div>
       </form>
     </div>

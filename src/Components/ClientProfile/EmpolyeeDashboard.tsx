@@ -34,7 +34,7 @@ const Card: React.FC<CardProps> = ({
 
 const EmployeeDashboard: React.FC = () => {
   return (
-    <div className="p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-3 gap-[1vw] m-[2vw]">
       <Card title="Past Due" value={4} percentage="10%" isPositive={true} />
       <Card title="Due Today" value={91} percentage="12%" isPositive={true} />
       <Card title="This Month" value={276} percentage="5%" isPositive={false} />

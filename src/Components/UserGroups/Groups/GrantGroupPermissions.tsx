@@ -71,6 +71,10 @@ const defaultPermissions: InternalPermission[] = [
     actions: { create: false, view: false, edit: false, delete: false },
   },
   {
+    resource: "inspection-scores",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
+  {
     resource: "checklists-items",
     actions: { create: false, view: false, edit: false, delete: false },
   },

@@ -146,7 +146,7 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
         <div className="grid grid-cols-2 gap-[1.5vw]">
           <div>
             <InputField
-              label="User"
+              label="Customer Name"
               name="name"
               fieldType="text"
               value={name}

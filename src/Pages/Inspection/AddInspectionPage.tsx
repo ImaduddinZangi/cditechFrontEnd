@@ -2,19 +2,12 @@ import React, { useState } from "react";
 import ClientLayout from "../../Layouts/ClientLayout";
 import InspectionForm from "../../Components/Inspection/AddInspection";
 import { useNavigate } from "react-router-dom";
-import ScoreModal from "../../Components/Inspection/ScoreModal";
-import ChecklistModal from "../../Components/Inspection/ChecklistModal";
 import AddCheckListItem from "../../Components/Inspection/AddCheckListItem";
 import RouteModal from "../../Components/Inspection/RouteModal";
 import { useCreateChecklistItemMutation } from "../../redux/api/checkListItemApi";
 import { useCreateInspectionMutation } from "../../redux/api/inspectionApi";
-import {
-  Scores,
-  Checklist,
-  RoutePoint,
-  Inspection,
-} from "../../redux/features/inspectionSlice";
-import { toast, ToastContainer } from "react-toastify";
+import { RoutePoint, Inspection } from "../../redux/features/inspectionSlice";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PurpleButton from "../../Components/Tags/PurpleButton";
 
@@ -29,20 +22,13 @@ interface InspectionData {
   clientId?: string | null;
   assignedTo?: string;
   completedDate: string | null;
-  checklists: Checklist[];
   route: RoutePoint[];
-  scores: Scores[];
 }
 
 const AddInspectionPage: React.FC = () => {
   const [createChecklistItem] = useCreateChecklistItemMutation();
   const [createInspection] = useCreateInspectionMutation();
-  const [scores, setScores] = useState<Scores[]>([]);
-  const [checklistItemIds, setChecklistItemIds] = useState<string[]>([]);
-  const [checklistName, setChecklistName] = useState<string>("");
   const [route, setRoute] = useState<RoutePoint[]>([]);
-  const [isScoreModalOpen, setIsScoreModalOpen] = useState(false);
-  const [isChecklistModalOpen, setIsChecklistModalOpen] = useState(false);
   const [isChecklistItemModalOpen, setIsChecklistItemModalOpen] =
     useState(false);
   const [isRouteModalOpen, setIsRouteModalOpen] = useState(false);
@@ -104,78 +90,17 @@ const AddInspectionPage: React.FC = () => {
       return;
     }
 
-    if (scores.length === 0) {
-      toast.error("The inspection score data is not added.");
-      return;
-    }
-
-    if (checklistItemIds.length === 0) {
-      toast.error("The checklist data is not added.");
-      return;
-    }
-
     if (route.length !== 2) {
       toast.error("The route data is not added.");
       return;
     }
 
-    const calculateOverallScore = (scores: Scores): string => {
-      const scoreValues = Object.values(scores).filter(
-        (value) => typeof value === "string"
-      ) as string[];
-      const gradeValues = scoreValues.map((score) => {
-        switch (score) {
-          case "A":
-            return 4;
-          case "B":
-            return 3;
-          case "C":
-            return 2;
-          case "D":
-            return 1;
-          default:
-            return 0;
-        }
-      });
-
-      const average =
-        gradeValues.reduce((a: number, b: number) => a + b, 0) /
-        gradeValues.length;
-
-      if (average >= 3.5) return "A";
-      if (average >= 2.5) return "B";
-      if (average >= 1.5) return "C";
-      return "D";
-    };
-
-    const overallScore = calculateOverallScore(scores[0]);
-
     const newInspectionData: InspectionData = {
       ...inspectionData,
-      checklists: [
-        {
-          name: checklistName,
-          overallScore: overallScore,
-          checklistItemIds: checklistItemIds,
-        },
-      ],
       route,
-      scores,
     };
 
     handleAddInspection(newInspectionData);
-  };
-
-  const handleScoreModalSave = (savedScores: Scores) => {
-    setScores([savedScores]);
-  };
-
-  const handleChecklistModalSave = (
-    name: string,
-    selectedChecklistItemIds: string[]
-  ) => {
-    setChecklistName(name);
-    setChecklistItemIds(selectedChecklistItemIds);
   };
 
   const handleRouteModalSave = (selectedRoute: RoutePoint[]) => {
@@ -227,12 +152,12 @@ const AddInspectionPage: React.FC = () => {
         <PurpleButton
           text="CheckList"
           type="button"
-          onClick={() => setIsChecklistModalOpen(true)}
+          onClick={() => navigate("/add-inspection/checklist")}
         />
         <PurpleButton
           text="Inspection Score"
           type="button"
-          onClick={() => setIsScoreModalOpen(true)}
+          onClick={() => navigate("/add-inspection/scores")}
         />
         <PurpleButton
           text="Route"
@@ -241,16 +166,6 @@ const AddInspectionPage: React.FC = () => {
         />
       </div>
       <InspectionForm onSubmit={handleFormSubmit} />
-      <ScoreModal
-        isOpen={isScoreModalOpen}
-        onClose={() => setIsScoreModalOpen(false)}
-        onSave={handleScoreModalSave}
-      />
-      <ChecklistModal
-        isOpen={isChecklistModalOpen}
-        onClose={() => setIsChecklistModalOpen(false)}
-        onSave={handleChecklistModalSave}
-      />
       <AddCheckListItem
         isOpen={isChecklistItemModalOpen}
         onClose={() => setIsChecklistItemModalOpen(false)}
@@ -260,17 +175,6 @@ const AddInspectionPage: React.FC = () => {
         isOpen={isRouteModalOpen}
         onClose={() => setIsRouteModalOpen(false)}
         onSave={handleRouteModalSave}
-      />
-      <ToastContainer
-        position="top-right"
-        autoClose={500}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
       />
     </ClientLayout>
   );

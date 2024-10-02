@@ -82,7 +82,7 @@ const ClientSignIn: React.FC<ClientSignInProps> = ({ onSubmit }) => {
             </div>
           </div>
           <div>
-            <PurpleButton type="submit" className="mt-[1vw]" text="Log In" />
+            <PurpleButton type="submit" className="w-full" text="Log In" />
           </div>
           <div className="text-center text-[2.5vw] md:text-[1vw] flex flex-row w-full items-center justify-center">
             <p className="text-gray-0">Don't have an account?&nbsp;</p>

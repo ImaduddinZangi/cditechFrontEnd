@@ -18,7 +18,7 @@ export const clientUserApi = createApi({
   endpoints: (builder) => ({
     getClientUsers: builder.query<ClientUser[], void>({
       query: () => ({
-        url: "users",
+        url: "users/client/associated",
         method: "GET",
       }),
     }),

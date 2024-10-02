@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
 import { useGetClientByIdQuery } from "../../redux/api/clientApi";
+import { useGetPhotosQuery } from "../../redux/api/uploadPhotosApi";
 import { getUserId } from "../../utils/utils";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "./Loader";
+import { Link } from "react-router-dom";
 
 interface ClientHeaderProps {
   breadcrumb: string;
@@ -11,6 +13,7 @@ interface ClientHeaderProps {
 
 const ClientHeader: React.FC<ClientHeaderProps> = ({ breadcrumb }) => {
   const clientId = getUserId();
+  const { data: photosData } = useGetPhotosQuery();
   const {
     data: client,
     error,
@@ -23,7 +26,16 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ breadcrumb }) => {
     }
   }, [error]);
 
-  if (isLoading) return <div><Loader /></div>;
+  if (isLoading)
+    return (
+      <div>
+        <Loader />
+      </div>
+    );
+  const photo = photosData?.find((photo) => photo.clientId === clientId);
+  const photoUrl = photo
+    ? `https://inspection-point-s3.s3.us-east-2.amazonaws.com/${photo.url}`
+    : "/assets/no-image.jpg";
 
   return (
     <div className="flex justify-between items-center p-[2vw]">
@@ -41,30 +53,20 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ breadcrumb }) => {
         </span>
       </div>
       <div className="flex items-center">
-        <img
-          className="w-[2.5vw] h-[2.5vw] rounded-full mr-[1vw]"
-          src="https://via.placeholder.com/150"
-          alt="Oliver Ray"
-        />
+        {/* Clickable image wrapped in Link */}
+        <Link to={`/add-photos/client/${clientId}`}>
+          <img
+            className="w-[2.5vw] h-[2.5vw] rounded-full mr-[1vw] cursor-pointer"
+            src={photoUrl || "https://via.placeholder.com/150"}
+            alt={client?.name || "Client Image"}
+          />
+        </Link>
         <div>
           <p className="text-darkgray-0 text-[1vw] font-semibold leading-none font-inter">
             {client?.name}
           </p>
-          <p className="text-gray-0 text-[1vw] font-inter">
-            {client?.email}
-          </p>
+          <p className="text-gray-0 text-[1vw] font-inter">{client?.email}</p>
         </div>
-        <ToastContainer
-          position="top-right"
-          autoClose={1000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />
       </div>
     </div>
   );
