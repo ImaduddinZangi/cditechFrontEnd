@@ -2,6 +2,21 @@ import React, { ReactNode, useState } from "react";
 import AuthFooter from "./AuthFooter";
 import { FiLogOut, FiChevronDown, FiChevronRight } from "react-icons/fi";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
+
+interface SubMenuItem {
+  title: string;
+  src: string;
+  href: string; // 'href' is required for SubMenuItem
+}
+
+interface MenuItem {
+  title: string;
+  src: string;
+  href?: string; // 'href' is optional for MenuItem
+  isDropdown?: boolean;
+  dropdownItems?: SubMenuItem[]; // Array of SubMenuItem
+}
 
 interface SidebarProps {
   children: ReactNode;
@@ -11,18 +26,18 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
   const [open, setOpen] = useState(true);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
-  const Menus = [
+  const Menus: MenuItem[] = [
     { title: "Dashboard", src: "dashboard", href: "/client-dashboard" },
     { title: "Client Profile", src: "client", href: "/client-profile" },
     {
       title: "Pump Brand Table",
       src: "table",
-      href: "pump-brands-table",
+      href: "/pump-brands-table",
     },
     {
       title: "Inspection Table",
       src: "table",
-      href: "inspection-table",
+      href: "/inspection-table",
     },
     {
       title: "User Groups",
@@ -59,7 +74,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
         { title: "Add Photos", src: "photo", href: "/add-photos" },
       ],
     },
-    { title: "Setting", src: "setting" },
+    { title: "Setting", src: "setting" }, // No href provided
   ];
 
   const handleLogout = async () => {
@@ -81,14 +96,14 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
   return (
     <div className="flex font-inter">
       <div
-        className={` ${
+        className={`${
           open ? "w-[15vw]" : "w-[6vw]"
         } bg-white h-screen fixed border-r p-[1.25vw] pt-[2vw] duration-300`}
       >
         <img
           src="/assets/control.png"
           className={`absolute cursor-pointer -right-[1vw] top-[2.2vw] w-[2vw] border-dark-purple
-           border rounded-full  ${!open && "rotate-180"}`}
+               border rounded-full  ${!open && "rotate-180"}`}
           onClick={() => setOpen(!open)}
         />
         <div className="flex gap-x-[1vw] items-center">
@@ -100,44 +115,71 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
           />
         </div>
         <ul className="pt-[1.5vw]">
-          {Menus.map((Menu, index) => (
+          {Menus.map((Menu: MenuItem, index: number) => (
             <React.Fragment key={index}>
               <li
-                className={`flex rounded-md p-[0.5vw] cursor-pointer hover:bg-light-white text-gray-300 text-[0.9vw] items-center mt-[0.3vw] ${
+                className={`flex rounded-md p-[0.5vw] cursor-pointer hover:bg-light-white text-gray-700 text-[0.9vw] items-center mt-[0.3vw] ${
                   index === 0 && "bg-light-white"
                 } `}
               >
-                <div
-                  className="flex items-center w-full"
-                  onClick={() =>
-                    Menu.isDropdown ? handleDropdownClick(Menu.title) : null
-                  }
-                >
-                  <a
-                    href={Menu.href}
-                    className="flex items-center gap-x-[1vw] w-full"
-                  >
-                    <img
-                      src={`/assets/${Menu.src}.png`}
-                      className="w-[1.7vw] h-[1.7vw]"
-                    />
-                    <span
-                      className={`${
-                        !open && "hidden"
-                      } origin-left duration-300 flex items-center`}
+                <div className="flex items-center w-full">
+                  {Menu.href ? (
+                    <Link
+                      to={Menu.href}
+                      className="flex items-center gap-x-[1vw] w-full"
                     >
-                      {Menu.title}
-                      {Menu.isDropdown && (
-                        <span className="ml-[0.5vw]">
-                          {activeDropdown === Menu.title ? (
-                            <FiChevronDown className="text-[1.2vw]" />
-                          ) : (
-                            <FiChevronRight className="text-[1.2vw]" />
-                          )}
-                        </span>
-                      )}
-                    </span>
-                  </a>
+                      <img
+                        src={`/assets/${Menu.src}.png`}
+                        className="w-[1.7vw] h-[1.7vw]"
+                      />
+                      <span
+                        className={`${
+                          !open && "hidden"
+                        } origin-left duration-300 flex items-center`}
+                      >
+                        {Menu.title}
+                        {Menu.isDropdown && (
+                          <span className="ml-[0.5vw]">
+                            {activeDropdown === Menu.title ? (
+                              <FiChevronDown className="text-[1.2vw]" />
+                            ) : (
+                              <FiChevronRight className="text-[1.2vw]" />
+                            )}
+                          </span>
+                        )}
+                      </span>
+                    </Link>
+                  ) : (
+                    <div
+                      className="flex items-center gap-x-[1vw] w-full"
+                      onClick={() =>
+                        Menu.isDropdown
+                          ? handleDropdownClick(Menu.title)
+                          : null
+                      }
+                    >
+                      <img
+                        src={`/assets/${Menu.src}.png`}
+                        className="w-[1.7vw] h-[1.7vw]"
+                      />
+                      <span
+                        className={`${
+                          !open && "hidden"
+                        } origin-left duration-300 flex items-center`}
+                      >
+                        {Menu.title}
+                        {Menu.isDropdown && (
+                          <span className="ml-[0.5vw]">
+                            {activeDropdown === Menu.title ? (
+                              <FiChevronDown className="text-[1.2vw]" />
+                            ) : (
+                              <FiChevronRight className="text-[1.2vw]" />
+                            )}
+                          </span>
+                        )}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </li>
               {Menu.isDropdown && Menu.dropdownItems && (
@@ -146,29 +188,31 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
                     activeDropdown === Menu.title ? "block" : "hidden"
                   } ml-[1.5vw]`}
                 >
-                  {Menu.dropdownItems.map((dropdownItem, idx) => (
-                    <li
-                      key={idx}
-                      className="flex rounded-md p-[0.5vw] cursor-pointer hover:bg-light-white text-gray-300 text-[0.9vw] items-center mt-[0.5vw]"
-                    >
-                      <a
-                        href={dropdownItem.href}
-                        className="flex items-center gap-x-[1vw]"
+                  {Menu.dropdownItems.map(
+                    (dropdownItem: SubMenuItem, idx: number) => (
+                      <li
+                        key={idx}
+                        className="flex rounded-md p-[0.5vw] cursor-pointer hover:bg-light-white text-gray-700 text-[0.9vw] items-center mt-[0.5vw]"
                       >
-                        <img
-                          src={`/assets/${dropdownItem.src}.png`}
-                          className="w-[1.5vw] h-[1.5vw]"
-                        />
-                        <span
-                          className={`${
-                            !open && "hidden"
-                          } origin-left duration-300`}
+                        <Link
+                          to={dropdownItem.href}
+                          className="flex items-center gap-x-[1vw]"
                         >
-                          {dropdownItem.title}
-                        </span>
-                      </a>
-                    </li>
-                  ))}
+                          <img
+                            src={`/assets/${dropdownItem.src}.png`}
+                            className="w-[1.5vw] h-[1.5vw]"
+                          />
+                          <span
+                            className={`${
+                              !open && "hidden"
+                            } origin-left duration-300`}
+                          >
+                            {dropdownItem.title}
+                          </span>
+                        </Link>
+                      </li>
+                    )
+                  )}
                 </ul>
               )}
             </React.Fragment>
