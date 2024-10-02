@@ -95,7 +95,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
         },
       ],
     },
-    { title: "Setting", src: "/setting" },
+    { title: "Setting", src: "setting" },
   ];
 
   const handleLogout = async () => {
