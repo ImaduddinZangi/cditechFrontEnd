@@ -7,7 +7,7 @@ import RouteModal from "../../Components/Inspection/RouteModal";
 import { useCreateChecklistItemMutation } from "../../redux/api/checkListItemApi";
 import { useCreateInspectionMutation } from "../../redux/api/inspectionApi";
 import { RoutePoint, Inspection } from "../../redux/features/inspectionSlice";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PurpleButton from "../../Components/Tags/PurpleButton";
 
@@ -175,6 +175,17 @@ const AddInspectionPage: React.FC = () => {
         isOpen={isRouteModalOpen}
         onClose={() => setIsRouteModalOpen(false)}
         onSave={handleRouteModalSave}
+      />
+      <ToastContainer
+        position="top-right"
+        autoClose={500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
       />
     </ClientLayout>
   );

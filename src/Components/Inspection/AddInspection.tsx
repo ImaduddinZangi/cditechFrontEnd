@@ -208,13 +208,13 @@ const InspectionForm: React.FC<InspectionFormProps> = ({
               className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
               name="scoreId"
               value={scoreId}
-              onChange={(e) => setScoreId(e.target.value)} // Update scoreId directly
+              onChange={(e) => setScoreId(e.target.value)}
               required
             >
               <option value="">Select Score</option>
               {scores?.map((score: Scores) => (
                 <option key={score.id} value={score.id}>
-                  {score.overallScore}
+                  {score.name}
                 </option>
               ))}
             </select>

@@ -46,7 +46,7 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
     if (file) {
       const isValid = await validateFile(file);
       if (isValid) {
-        const newPreviewUrl = URL.createObjectURL(file); // Create a preview URL
+        const newPreviewUrl = URL.createObjectURL(file);
         setPhotos((prevPhotos) => {
           const updatedPhotos = [...prevPhotos];
           updatedPhotos[index] = file;
@@ -54,7 +54,7 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
         });
         setPhotoPreviews((prevPreviews) => {
           const updatedPreviews = [...prevPreviews];
-          updatedPreviews[index] = newPreviewUrl; // Store the preview URL
+          updatedPreviews[index] = newPreviewUrl;
           return updatedPreviews;
         });
       } else {
@@ -130,7 +130,7 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
 
         setPhotoPreviews((prevPreviews) => {
           const updatedPreviews = [...prevPreviews];
-          updatedPreviews[webcamIndex] = newPreviewUrl; // Store the preview URL
+          updatedPreviews[webcamIndex] = newPreviewUrl;
           return updatedPreviews;
         });
 
@@ -163,7 +163,7 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
 
     setPhotoPreviews((prevPreviews) => {
       const updatedPreviews = [...prevPreviews];
-      updatedPreviews[index] = null; // Clear the preview
+      updatedPreviews[index] = null;
       return updatedPreviews;
     });
   };

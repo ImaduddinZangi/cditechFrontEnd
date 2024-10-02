@@ -7,8 +7,11 @@ import {
 import InspectionForm from "../../Components/Inspection/AddInspection";
 import ClientLayout from "../../Layouts/ClientLayout";
 import RouteModal from "../../Components/Inspection/RouteModal";
-import { Inspection, GetInspection } from "../../redux/features/inspectionSlice";
-import { toast } from "react-toastify";
+import {
+  Inspection,
+  GetInspection,
+} from "../../redux/features/inspectionSlice";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../Components/Constants/Loader";
 import PurpleButton from "../../Components/Tags/PurpleButton";
@@ -38,7 +41,6 @@ const EditInspectionPage: React.FC = () => {
   };
 
   const handleSubmit = async (data: Inspection) => {
-
     try {
       await updateInspection({
         ...data,
@@ -116,6 +118,17 @@ const EditInspectionPage: React.FC = () => {
             onClose={() => setIsRouteModalOpen(false)}
             onSave={handleRouteModalSave}
             initialRoute={route}
+          />
+          <ToastContainer
+            position="top-right"
+            autoClose={500}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
           />
         </div>
       )}
