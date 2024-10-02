@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import CompanyBillingInfo from "./CompanyBillingInfo";
 import CompanyNotificationSettings from "./CompanyNotificationSetting";
+import CompanyFeePlan from "./CompanyFeePlan";
 
 const CompanyExtraDetails: React.FC = () => {
   const [activeTab, setActiveTab] = useState<
@@ -10,7 +11,7 @@ const CompanyExtraDetails: React.FC = () => {
     | "invoices"
     | "quickBookAccess"
     | "securitySettings"
-  >("billingInfo");
+  >("feePlan");
 
   const handleTabClick = (
     tab:
@@ -89,13 +90,11 @@ const CompanyExtraDetails: React.FC = () => {
         </button>
       </div>
 
+      {activeTab === "feePlan" && <CompanyFeePlan />}
       {activeTab === "billingInfo" && <CompanyBillingInfo />}
       {activeTab === "notificationSettings" && <CompanyNotificationSettings />}
 
       {/* These are inactive and can be filled when needed */}
-      {activeTab === "feePlan" && (
-        <div className="text-center mt-4">Fee Plan details coming soon...</div>
-      )}
       {activeTab === "invoices" && (
         <div className="text-center mt-4">Invoices details coming soon...</div>
       )}

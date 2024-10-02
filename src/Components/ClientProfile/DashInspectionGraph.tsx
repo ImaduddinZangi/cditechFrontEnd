@@ -41,23 +41,33 @@ const DashInspectionGraph: React.FC = () => {
       {
         label: "Completed",
         data: [12, 19, 3, 5, 2, 3, 6, 9, 12, 14, 10, 16],
-        backgroundColor: "rgba(75, 85, 255, 0.8)",
+        backgroundColor: "rgb(105, 65, 198)",
+        borderRadius: 10,
+        barPercentage: 0.6,
+        categoryPercentage: 0.5,
       },
       {
         label: "Pending",
         data: [10, 15, 6, 7, 4, 6, 8, 11, 10, 13, 9, 15],
-        backgroundColor: "rgba(139, 92, 246, 0.8)",
+        backgroundColor: "rgb(158, 119, 237)",
+        borderRadius: 10,
+        barPercentage: 0.6,
+        categoryPercentage: 0.5,
       },
       {
         label: "Failed",
         data: [5, 8, 2, 4, 3, 2, 5, 7, 6, 9, 4, 8],
-        backgroundColor: "rgba(196, 181, 253, 0.8)",
+        backgroundColor: "rgb(214, 187, 251)",
+        borderRadius: 10,
+        barPercentage: 0.6,
+        categoryPercentage: 0.5,
       },
     ],
   };
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         display: true,
@@ -71,20 +81,32 @@ const DashInspectionGraph: React.FC = () => {
     scales: {
       x: {
         stacked: true,
+        grid: {
+          display: false,
+        },
       },
       y: {
         stacked: true,
+        beginAtZero: true,
+      },
+    },
+    elements: {
+      bar: {
+        borderRadius: 10,
       },
     },
   };
 
   return (
-    <div className="flex flex-col w-full p-6 bg-white rounded-lg shadow-md">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold text-gray-800">Inspections</h2>
+    <div className="flex flex-col p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg">
+      <div className="flex justify-between items-center mb-[1vw]">
+        <h2 className="text-[1.5vw] font-semibold text-darkgray-0">
+          Inspections
+        </h2>
         <WhiteButton text="View Report" />
       </div>
-      <div className="relative w-full h-full">
+      <div className="relative w-full h-[300px]">
+        {/* Adjusted height */}
         <Bar data={data} options={options} />
       </div>
     </div>

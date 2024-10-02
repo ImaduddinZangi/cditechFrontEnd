@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "../Middleware/ProtectedRoutes";
 import ClientSignInPage from "../Pages/Auth/ClientSignInPage";
-import ClientDashboardPage from "../Pages/ClientDashboard/ClientDashboardPage";
+import ClientDashboardPage from "../Pages/ClientProfile/ClientDashboardPage";
 import ManagementSignInPage from "../Pages/Auth/ManagementSignInPage";
 import CustomerTablePage from "../Pages/Customer/CustomerTablePage";
 import ClientRegistrationPage from "../Pages/Auth/ClientRegistrationPage";
@@ -15,7 +15,7 @@ import AddPhotosPage from "../Pages/Customer/AddPhotosPage";
 import TwoFactorAuthPage from "../Pages/Auth/twoFactorAuthPage";
 import EditCustomerPage from "../Pages/Customer/EditCustomerPage";
 import EditAssetPage from "../Pages/Customer/Asset/EditAssetPage";
-import ClientProfilePage from "../Pages/ClientDashboard/ClientProfilePage";
+import ClientProfilePage from "../Pages/ClientProfile/ClientProfilePage";
 import InspectionReportsPage from "../Pages/Inspection/InspectionReportsPage";
 import InspectionTablePage from "../Pages/Inspection/InspectionTablePage";
 import EditInspectionPage from "../Pages/Inspection/EditInspectionPage";
@@ -50,12 +50,16 @@ import OtherOptionsInitialPage from "../Pages/Auth/OtherOptionsInitialPage";
 import TwoFactorSetupPage from "../Pages/Auth/TwoFactorSetupPage";
 import UseBackupCodePage from "../Pages/Auth/UseBackupCodePage";
 import VerifyPhoneNumberPage from "../Pages/Auth/VerifyPhoneNumberPage";
+import PumpBrandDetailsPage from "../Pages/Customer/Pump/PumpBrandDetailsPage";
+import AddInspectionScoresPage from "../Pages/Inspection/AddInspectionScoresPage";
+import AddInspectionChecklistPage from "../Pages/Inspection/AddInspectionChecklistPage";
 
 const RoutesContent: React.FC = () => {
   return (
     <Routes>
       {/* Error 500 */}
       <Route path="/error/500" element={<Error500 />} />
+
       {/* Authentication */}
       <Route path="/" element={<ClientSignInPage />} />
       <Route path="/client-login" element={<ClientSignInPage />} />
@@ -69,12 +73,15 @@ const RoutesContent: React.FC = () => {
       <Route path="/two-factor-setup" element={<TwoFactorSetupPage />} />
       <Route path="/use-backup-code" element={<UseBackupCodePage />} />
       <Route path="/verify-phone-number" element={<VerifyPhoneNumberPage />} />
+
       {/* Protected Routes */}
       <Route element={<ProtectedRoute />}>
         <Route path="/2fa" element={<TwoFactorAuthPage />} />
+
         {/* Client */}
         <Route path="/client-dashboard" element={<ClientDashboardPage />} />
         <Route path="/client-profile" element={<ClientProfilePage />} />
+
         {/* Customer */}
         <Route path="/manage-customer" element={<ManageCustomerPage />} />
         <Route path="/add-customer" element={<AddCustomerPage />} />
@@ -83,10 +90,12 @@ const RoutesContent: React.FC = () => {
           element={<EditCustomerPage />}
         />
         <Route path="/customer-table" element={<CustomerTablePage />} />
+
         {/* Asset */}
         <Route path="/add-asset" element={<AddAssetsPage />} />
         <Route path="/edit-asset/:id" element={<EditAssetPage />} />
         <Route path="/asset-details/:assetId" element={<AssetDetailsPage />} />
+
         {/* Pump */}
         <Route path="/add-pump-brand" element={<AddPumpBrandPage />} />
         <Route
@@ -94,10 +103,15 @@ const RoutesContent: React.FC = () => {
           element={<EditPumpBrandPage />}
         />
         <Route path="/pump-brands-table" element={<PumpBrandsTablePage />} />
+        <Route path="/pump-brand-detail/:pumpBrandId" element={<PumpBrandDetailsPage />} />
+
         {/* Photo */}
-        <Route path="/add-photos" element={<AddPhotosPage />} />
+        <Route path="/add-photos/:type/:id" element={<AddPhotosPage />} />
+
         {/* Inspection */}
         <Route path="/add-inspection" element={<AddInspectionPage />} />
+        <Route path="/add-inspection/scores" element={<AddInspectionScoresPage />} />
+        <Route path="/add-inspection/checklist" element={<AddInspectionChecklistPage />} />
         <Route path="/inspection-reports" element={<InspectionReportsPage />} />
         <Route path="/inspection-table" element={<InspectionTablePage />} />
         <Route
@@ -117,6 +131,7 @@ const RoutesContent: React.FC = () => {
           path="/inspection-details/:inspectionId"
           element={<InspectionDetailsPage />}
         />
+
         {/* UserGroups */}
         <Route path="/add-user-group" element={<AddUserGroupPage />} />
         <Route
@@ -142,6 +157,7 @@ const RoutesContent: React.FC = () => {
           element={<EditClientUserPage />}
         />
         <Route path="/client-user-table" element={<ClientUserTablePage />} />
+
         {/* EXTRAS */}
         <Route path="/full-view-map" element={<ViewFullMapPage />} />
         <Route

@@ -25,7 +25,7 @@ const AddPumpBrandPage: React.FC = () => {
     try {
       const result = await createPumpBrand(pumpBrandData).unwrap();
       toast.success("Pump Brand added successfully!", {
-        onClose: () => navigate("/add-pump"),
+        onClose: () => navigate("/pump-brands-table"),
         autoClose: 500,
       });
       console.log("Pump created successfully", result);

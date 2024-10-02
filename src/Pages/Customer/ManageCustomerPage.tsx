@@ -27,9 +27,10 @@ const ManageCustomerPage: React.FC = () => {
       <DetailedCustomerInfo />
       <div className="m-[2vw] flex flex-row items-center justify-between">
         <div className="flex flex-row items-center gap-[1vw]">
-          <PurpleButton text="New Inspection" />
+          <PurpleButton text="New Inspection" onClick={() => navigate('add-inspection')} />
           <PurpleButton text="Send to GPS" />
           <PurpleButton text="Add New Asset" onClick={handleAddAsset} />
+          <PurpleButton text="Add Customer Photos" onClick={() => navigate(`/add-photos/customer/${selectedCustomerId}`)} />
         </div>
         <PurpleButton text="Edit Customer" onClick={handleEditCustomer} />
       </div>

@@ -63,20 +63,11 @@ const ClientRegistrationPage: React.FC = () => {
       });
     } catch (error) {
       if (isAPIError(error)) {
-        toast.error("Registration error: " + error.data.message, {
-          onClose: () => navigate("/error/500"),
-          autoClose: 500,
-        });
+        toast.error("Registration error: " + error.data.message);
       } else if (error instanceof Error) {
-        toast.error("Registration error: " + error.message, {
-          onClose: () => navigate("/error/500"),
-          autoClose: 500,
-        });
+        toast.error("Registration error: " + error.message);
       } else {
-        toast.error("An unknown error occurred", {
-          onClose: () => navigate("/error/500"),
-          autoClose: 500,
-        });
+        toast.error("An unknown error occurred");
       }
       console.error("Registration error:", error);
     }

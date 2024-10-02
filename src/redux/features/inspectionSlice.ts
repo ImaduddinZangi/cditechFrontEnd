@@ -3,47 +3,20 @@ import { Client } from "./clientSlice";
 import { Asset } from "./assetSlice";
 import { Customer } from "./customerSlice";
 import { ClientUser } from "./clientUserSlice";
-
-export interface ChecklistItem {
-  id: string;
-  description: string;
-  is_completed: boolean;
-}
-
-export interface FloatScores {
-  float1: string;
-  float2: string;
-}
-
-export interface Checklist {
-  id?: string;
-  name: string;
-  overallScore: string;
-  checklistItemIds?: string[];
-  items?: ChecklistItem[];
-  created_at?: string;
-  updated_at?: string;
-}
+import { Scores } from "./inspectionScoresSlice";
+import { Checklist } from "./inspectionChecklistSlice";
 
 export interface RoutePoint {
   latitude: number;
   longitude: number;
 }
 
-export interface Scores {
-  structureScore: string;
-  panelScore: string;
-  pipesScore: string;
-  alarmScore: string;
-  alarmLightScore: string;
-  wiresScore: string;
-  breakersScore: string;
-  contactorsScore: string;
-  thermalsScore: string;
-  floatScores: FloatScores;
-  id?: string;
-  createdAt?: string;
-  updatedAt?: string;
+export interface Score {
+  scoreId: string;
+}
+
+export interface IDs {
+  id: string;
 }
 
 export interface Inspection {
@@ -51,6 +24,8 @@ export interface Inspection {
   clientId?: string | null;
   customerId?: string;
   assetId?: string;
+  checklists?: IDs[];
+  score?: Score;
   name: string;
   assignedTo?: string;
   status?: string;
@@ -59,8 +34,6 @@ export interface Inspection {
   route: RoutePoint[];
   comments: string;
   serviceFee: number;
-  checklists: Checklist[];
-  scores: Scores[];
   recording: string;
 }
 

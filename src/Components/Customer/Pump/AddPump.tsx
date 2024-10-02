@@ -54,7 +54,7 @@ const AddPump: React.FC<AddPumpProps> = ({
 
   const handleCancel = () => {
     onClose();
-    navigate("/customer-table");
+    navigate("/manage-customer");
   };
 
   if (!isModalOpen) {
@@ -76,7 +76,7 @@ const AddPump: React.FC<AddPumpProps> = ({
               required
             />
             <div>
-              <label className="block mb-1 font-medium">Brand:</label>
+              <label className="block text-darkgray-0 font-medium text-[1vw]">Brand:</label>
               <select
                 className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
                 name="brandId"
@@ -93,7 +93,7 @@ const AddPump: React.FC<AddPumpProps> = ({
               </select>
             </div>
             <div>
-              <label className="block mb-1 font-medium">Asset:</label>
+              <label className="block text-darkgray-0 font-medium text-[1vw]">Asset:</label>
               <select
                 className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
                 name="assetId"
@@ -146,7 +146,7 @@ const AddPump: React.FC<AddPumpProps> = ({
               required
             />
             <div>
-              <label className="block mb-1 font-medium">Warranty:</label>
+              <label className="block text-darkgray-0 font-medium text-[1vw]">Warranty:</label>
               <select
                 className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
                 name="warranty"

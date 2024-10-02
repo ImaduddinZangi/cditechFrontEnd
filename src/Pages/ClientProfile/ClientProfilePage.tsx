@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ClientLayout from "../../Layouts/ClientLayout";
-import DetailedClientInfo from "../../Components/ClientDashboard/DetailedClientInfo";
+import DetailedClientInfo from "../../Components/ClientProfile/DetailedClientInfo";
 import { useGetQuickBookSignUpLinkQuery } from "../../redux/api/clientApi";
 import { setQuickBooksAuthUrl } from "../../redux/features/clientSlice";
 import { RootState } from "../../redux/store";
 import { useGetClientByIdQuery } from "../../redux/api/clientApi";
 import { getUserId } from "../../utils/utils";
-import CompanyExtraDetails from "../../Components/Extras/CompanyExtraDetails";
+import CompanyExtraDetails from "../../Components/ClientProfile/CompanyExtraDetails";
 
 const ClientProfilePage: React.FC = () => {
   const dispatch = useDispatch();

@@ -8,8 +8,7 @@ import { useNavigate } from "react-router-dom";
 const AddPhotosPage: React.FC = () => {
   const [uploadPhoto] = useUploadPhotoMutation();
   const navigate = useNavigate();
-  
-  
+
   const handlePhotoUpload = async (files: File[], id: string, type: string) => {
     try {
       const formData = new FormData();
@@ -26,6 +25,8 @@ const AddPhotosPage: React.FC = () => {
         formData.append("customerId", id);
       } else if (type === "inspection") {
         formData.append("inspectionId", id);
+      } else if (type === "client") {
+        formData.append("cliendId", id);
       }
       await uploadPhoto(formData).unwrap();
       toast.success("Photos uploaded successfully!", {
@@ -39,8 +40,6 @@ const AddPhotosPage: React.FC = () => {
       });
     }
   };
-  
-  
 
   return (
     <ClientLayout breadcrumb="Add Photos">
