@@ -15,8 +15,12 @@ const baseQuery = fetchBaseQuery({
 export const inspectionReportsApi = createApi({
   reducerPath: "inspectionReportsApi",
   baseQuery,
+  tagTypes: ["Report"], // Add tagTypes for caching
   endpoints: (builder) => ({
-    generateReport: builder.mutation<InspectionReport, { file: File, inspectionId: string, clientId: string }>({
+    generateReport: builder.mutation<
+      InspectionReport,
+      { file: File; inspectionId: string; clientId: string }
+    >({
       query: ({ file, inspectionId, clientId }) => {
         const formData = new FormData();
         formData.append("file", file);
@@ -26,6 +30,9 @@ export const inspectionReportsApi = createApi({
           body: formData,
         };
       },
+      invalidatesTags: (_result, _error, { inspectionId }) => [
+        { type: "Report", id: inspectionId },
+      ], // Invalidate cache after report generation
     }),
     deleteReport: builder.mutation<
       { success: boolean },
@@ -35,13 +42,14 @@ export const inspectionReportsApi = createApi({
         url: `reports/delete/${clientId}/${inspectionId}`,
         method: "DELETE",
       }),
+      invalidatesTags: (_result, _error, { inspectionId }) => [
+        { type: "Report", id: inspectionId },
+      ], // Invalidate cache after report deletion
     }),
   }),
 });
 
-export const {
-  useGenerateReportMutation,
-  useDeleteReportMutation,
-} = inspectionReportsApi;
+export const { useGenerateReportMutation, useDeleteReportMutation } =
+  inspectionReportsApi;
 
 export default inspectionReportsApi;

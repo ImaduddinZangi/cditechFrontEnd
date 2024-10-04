@@ -69,24 +69,24 @@ const AddAssetsPage: React.FC = () => {
       }).unwrap();
       toast.success("Asset added successfully!", {
         onClose: () => navigate("/manage-customer"),
-        autoClose: 500,
+        autoClose: 1000,
       });
       console.log("Asset created successfully", result);
     } catch (error) {
       if (isAPIError(error)) {
         toast.error("Error Adding Asset: " + error.data.message, {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       } else if (error instanceof Error) {
         toast.error("Error Adding Asset: " + error.message, {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       } else {
         toast.error("An unknown error occurred", {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       }
       console.error("Error Adding Asset:", error);
@@ -98,7 +98,7 @@ const AddAssetsPage: React.FC = () => {
       <AddAsset onSubmit={handleAddAsset} />
       <ToastContainer
         position="top-right"
-        autoClose={500}
+        autoClose={1000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

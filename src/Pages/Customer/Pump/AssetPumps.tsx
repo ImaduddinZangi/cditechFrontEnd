@@ -26,24 +26,24 @@ const AssetPumps: React.FC = () => {
       const result = await createPump(pumpData).unwrap();
       toast.success("Pump added successfully!", {
         onClose: () => navigate("/manage-customer"),
-        autoClose: 500,
+        autoClose: 1000,
       });
       console.log("Pump created successfully", result);
     } catch (error) {
       if (isAPIError(error)) {
         toast.error("Error Creating Pump: " + error.data.message, {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       } else if (error instanceof Error) {
         toast.error("Error Creating Pump: " + error.message, {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       } else {
         toast.error("An unknown error occurred", {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       }
       console.error("Error Creating Pump:", error);
@@ -68,7 +68,7 @@ const AssetPumps: React.FC = () => {
       />
       <ToastContainer
         position="top-right"
-        autoClose={500}
+        autoClose={1000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

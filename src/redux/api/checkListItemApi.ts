@@ -15,18 +15,21 @@ const baseQuery = fetchBaseQuery({
 export const checkListItemApi = createApi({
   reducerPath: "checkListItemApi",
   baseQuery,
+  tagTypes: ["ChecklistItem"], // Add tagTypes for caching
   endpoints: (builder) => ({
     getChecklistItems: builder.query<ChecklistItem[], void>({
       query: () => ({
         url: "checklist-items",
         method: "GET",
       }),
+      providesTags: ["ChecklistItem"], // Provide tags for caching the checklist items
     }),
     getChecklistItemById: builder.query<ChecklistItem, string>({
       query: (checklistItemId: string) => ({
         url: `checklist-items/${checklistItemId}`,
         method: "GET",
       }),
+      providesTags: (_result, _error, id) => [{ type: "ChecklistItem", id }], // Provide tags for caching a specific checklist item
     }),
     createChecklistItem: builder.mutation<ChecklistItem, Partial<ChecklistItem>>({
       query: (newChecklistItem) => ({
@@ -34,6 +37,7 @@ export const checkListItemApi = createApi({
         method: "POST",
         body: newChecklistItem,
       }),
+      invalidatesTags: ["ChecklistItem"], // Invalidate checklist item list after creation
     }),
     updateChecklistItem: builder.mutation<ChecklistItem, Partial<ChecklistItem>>({
       query: ({ id, ...rest }) => ({
@@ -41,12 +45,14 @@ export const checkListItemApi = createApi({
         method: "PATCH",
         body: rest,
       }),
+      invalidatesTags: (_result, _error, { id }) => [{ type: "ChecklistItem", id }], // Invalidate specific checklist item after update
     }),
     deleteChecklistItem: builder.mutation<{ success: boolean }, string>({
       query: (checklistItemId: string) => ({
         url: `checklist-items/${checklistItemId}`,
         method: "DELETE",
       }),
+      invalidatesTags: (_result, _error, id) => [{ type: "ChecklistItem", id }], // Invalidate specific checklist item after deletion
     }),
   }),
 });

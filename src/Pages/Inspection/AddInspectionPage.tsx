@@ -118,23 +118,23 @@ const AddInspectionPage: React.FC = () => {
       await createChecklistItem({ name, description, is_completed }).unwrap();
       toast.success("Check List Item added successfully!", {
         onClose: () => navigate("/add-inspection"),
-        autoClose: 500,
+        autoClose: 1000,
       });
     } catch (error) {
       if (isAPIError(error)) {
         toast.error("Error adding Check List Item: " + error.data.message, {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       } else if (error instanceof Error) {
         toast.error("Error adding Check List Item: " + error.message, {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       } else {
         toast.error("An unknown error occurred.", {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       }
       console.error("Error adding Check List Item:", error);
@@ -178,7 +178,7 @@ const AddInspectionPage: React.FC = () => {
       />
       <ToastContainer
         position="top-right"
-        autoClose={500}
+        autoClose={1000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

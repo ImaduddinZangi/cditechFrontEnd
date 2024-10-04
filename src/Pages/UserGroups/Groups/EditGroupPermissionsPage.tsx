@@ -20,13 +20,13 @@ const EditGroupPermissionsPage: React.FC = () => {
   
       toast.success("Permission updated successfully!", {
         onClose: () => navigate(`/user-group-table`),
-        autoClose: 500,
+        autoClose: 1000,
       });
     } catch (error) {
       console.error("Error updating permission:", error);
       toast.error("Error updating permission. Please try again.", {
         onClose: () => navigate("/error/500"),
-        autoClose: 500,
+        autoClose: 1000,
       });
     }
   };  

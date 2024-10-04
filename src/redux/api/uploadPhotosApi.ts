@@ -38,6 +38,7 @@ const baseQuery = fetchBaseQuery({
 export const uploadPhotosApi = createApi({
   reducerPath: "uploadPhotosApi",
   baseQuery,
+  tagTypes: ["Photo"], // Add tagTypes for caching photos
   endpoints: (builder) => ({
     uploadPhoto: builder.mutation<{ success: boolean }, FormData>({
       query: (formData) => ({
@@ -45,12 +46,14 @@ export const uploadPhotosApi = createApi({
         method: "POST",
         body: formData,
       }),
+      invalidatesTags: ["Photo"], // Invalidate photo list after upload
     }),
     getPhotos: builder.query<Photo[], void>({
       query: () => ({
         url: "photos",
         method: "GET",
       }),
+      providesTags: ["Photo"], // Provide tags for photo list
     }),
   }),
 });

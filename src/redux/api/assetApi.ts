@@ -15,18 +15,21 @@ const baseQuery = fetchBaseQuery({
 export const assetApi = createApi({
   reducerPath: "assetApi",
   baseQuery,
+  tagTypes: ["Asset"], // Add tagTypes
   endpoints: (builder) => ({
     getAssets: builder.query<Asset[], void>({
       query: () => ({
         url: "assets",
         method: "GET",
       }),
+      providesTags: ["Asset"], // Provides tags for caching
     }),
     getAssetById: builder.query<Asset, string>({
       query: (assetId: string) => ({
         url: `assets/${assetId}`,
         method: "GET",
       }),
+      providesTags: (_result, _error, id) => [{ type: "Asset", id }], // Provides tags for individual asset
     }),
     createAsset: builder.mutation<CreateAsset, Partial<CreateAsset>>({
       query: (newAsset) => ({
@@ -34,6 +37,7 @@ export const assetApi = createApi({
         method: "POST",
         body: newAsset,
       }),
+      invalidatesTags: ["Asset"], // Invalidates list of assets after creation
     }),
     updateAsset: builder.mutation<CreateAsset, Partial<CreateAsset>>({
       query: ({ id, ...rest }) => ({
@@ -41,12 +45,14 @@ export const assetApi = createApi({
         method: "PATCH",
         body: rest,
       }),
+      invalidatesTags: (_result, _error, { id }) => [{ type: "Asset", id }], // Invalidates specific asset after update
     }),
     deleteAsset: builder.mutation<{ success: boolean }, string>({
       query: (assetId: string) => ({
         url: `assets/${assetId}`,
         method: "DELETE",
       }),
+      invalidatesTags: (_result, _error, id) => [{ type: "Asset", id }], // Invalidates specific asset after deletion
     }),
   }),
 });

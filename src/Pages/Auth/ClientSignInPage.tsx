@@ -35,12 +35,12 @@ const ClientSignInPage: React.FC = () => {
         if (result.client.user.two_factor_enabled) {
           toast.success("Login successful!", {
             onClose: () => navigate("/client-dashboard"),
-            autoClose: 500,
+            autoClose: 1000,
           });
         } else {
           toast.success("Two-factor authentication required!", {
             onClose: () => navigate("/2fa"),
-            autoClose: 500,
+            autoClose: 1000,
           });
         }
       }
@@ -61,7 +61,7 @@ const ClientSignInPage: React.FC = () => {
       <ClientSignIn onSubmit={handleLogin} />
       <ToastContainer
         position="top-right"
-        autoClose={500}
+        autoClose={1000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

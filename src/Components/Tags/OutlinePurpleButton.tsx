@@ -18,7 +18,7 @@ const OutlinePurpleButton: React.FC<OutlinePurpleButtonProps> = ({
   return (
     <button
       type={type}
-      className={`px-[1vw] py-[0.5vw] bg-white text-purple-0 border border-purple-0 rounded-[0.4vw] text-[1vw] font-inter font-medium ${className}`}
+      className={`px-[1vw] py-[0.5vw] bg-white hover:bg-purple-0 text-purple-0 hover:text-white border border-purple-0 hover:border-none rounded-[0.4vw] text-[1vw] font-inter font-medium duration-200 active:opacity-90 ${className}`}
       onClick={onClick}
       disabled={disabled}
     >

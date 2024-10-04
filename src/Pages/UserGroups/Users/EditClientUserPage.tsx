@@ -31,24 +31,24 @@ const EditClientUserPage: React.FC = () => {
       const result = await updateClientUser(clientUserData).unwrap();
       toast.success("Client User updated successfully!", {
         onClose: () => navigate("/client-user-table"),
-        autoClose: 500,
+        autoClose: 1000,
       });
       console.log("Client user updated successfully", result);
     } catch (error) {
       if (isAPIError(error)) {
         toast.error("Error Updating Client User: " + error.data.message, {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       } else if (error instanceof Error) {
         toast.error("Error Updating Client User: " + error.message, {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       } else {
         toast.error("An unknown error occurred", {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       }
       console.error("Error Updating Client User:", error);

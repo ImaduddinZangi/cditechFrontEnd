@@ -15,18 +15,21 @@ const baseQuery = fetchBaseQuery({
 export const pumpBrandApi = createApi({
   reducerPath: "pumpBrandApi",
   baseQuery,
+  tagTypes: ["PumpBrand"],
   endpoints: (builder) => ({
     getPumpBrands: builder.query<PumpBrand[], void>({
       query: () => ({
         url: "pump-brands",
         method: "GET",
       }),
+      providesTags: ["PumpBrand"],
     }),
     getPumpBrandById: builder.query<PumpBrand, string>({
       query: (PumpBrandId: string) => ({
         url: `pump-brands/${PumpBrandId}`,
         method: "GET",
       }),
+      providesTags: (_result, _error, id) => [{ type: "PumpBrand", id }],
     }),
     createPumpBrand: builder.mutation<PumpBrand, Partial<PumpBrand>>({
       query: (newPumpBrand) => ({
@@ -34,6 +37,7 @@ export const pumpBrandApi = createApi({
         method: "POST",
         body: newPumpBrand,
       }),
+      invalidatesTags: ["PumpBrand"],
     }),
     updatePumpBrand: builder.mutation<PumpBrand, Partial<PumpBrand>>({
       query: ({ id, ...rest }) => ({
@@ -41,12 +45,14 @@ export const pumpBrandApi = createApi({
         method: "PATCH",
         body: rest,
       }),
+      invalidatesTags: (_result, _error, { id }) => [{ type: "PumpBrand", id }],
     }),
     deletePumpBrand: builder.mutation<{ success: boolean }, string>({
       query: (PumpBrandId: string) => ({
         url: `pump-brands/${PumpBrandId}`,
         method: "DELETE",
       }),
+      invalidatesTags: (_result, _error, id) => [{ type: "PumpBrand", id }],
     }),
   }),
 });

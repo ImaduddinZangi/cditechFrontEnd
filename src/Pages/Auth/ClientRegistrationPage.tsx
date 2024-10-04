@@ -32,7 +32,7 @@ const ClientRegistrationPage: React.FC = () => {
       }
       toast.success("Registration successful!", {
         onClose: () => navigate("/client-login"),
-        autoClose: 500,
+        autoClose: 1000,
       });
     } catch (error) {
       if (isAPIError(error)) {
@@ -51,7 +51,7 @@ const ClientRegistrationPage: React.FC = () => {
       <AddClient onSubmit={handleRegistration} />
       <ToastContainer
         position="top-right"
-        autoClose={500}
+        autoClose={1000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

@@ -25,24 +25,24 @@ const AddClientUserPage: React.FC = () => {
       const result = await createClientUser(clientUserData).unwrap();
       toast.success("Client User added successfully!", {
         onClose: () => navigate("/client-user-table"),
-        autoClose: 500,
+        autoClose: 1000,
       });
       console.log("Client user created successfully", result);
     } catch (error) {
       if (isAPIError(error)) {
         toast.error("Error Adding Client User: " + error.data.message, {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       } else if (error instanceof Error) {
         toast.error("Error Adding Client User: " + error.message, {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       } else {
         toast.error("An unknown error occurred", {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       }
       console.error("Error Adding Client User:", error);

@@ -31,24 +31,24 @@ const EditPumpBrandPage: React.FC = () => {
       const result = await updatePumpBrand(pumpBrandData).unwrap();
       toast.success("Pump Brand updated successfully!", {
         onClose: () => navigate("/pump-brands-table"),
-        autoClose: 500,
+        autoClose: 1000,
       });
       console.log("Pump brand updated successfully", result);
     } catch (error) {
       if (isAPIError(error)) {
         toast.error("Error Updating Pump Brand: " + error.data.message, {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       } else if (error instanceof Error) {
         toast.error("Error Updating Pump Brand: " + error.message, {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       } else {
         toast.error("An unknown error occurred", {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       }
       console.error("Error Updating Pump Brand:", error);

@@ -25,24 +25,24 @@ const AddUserGroupPage: React.FC = () => {
       const result = await createUserGroup(userGroupData).unwrap();
       toast.success("User Group added successfully!", {
         onClose: () => navigate("/user-group-table"),
-        autoClose: 500,
+        autoClose: 1000,
       });
       console.log("User group created successfully", result);
     } catch (error) {
       if (isAPIError(error)) {
         toast.error("Error Adding User Group: " + error.data.message, {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       } else if (error instanceof Error) {
         toast.error("Error Adding User Group: " + error.message, {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       } else {
         toast.error("An unknown error occurred", {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       }
       console.error("Error Adding User Group:", error);

@@ -15,18 +15,21 @@ const baseQuery = fetchBaseQuery({
 export const clientUserApi = createApi({
   reducerPath: "clientUserApi",
   baseQuery,
+  tagTypes: ["ClientUser"], // Add tagTypes for caching
   endpoints: (builder) => ({
     getClientUsers: builder.query<ClientUser[], void>({
       query: () => ({
         url: "users/client/associated",
         method: "GET",
       }),
+      providesTags: ["ClientUser"], // Provide tags for client users
     }),
     getClientUserById: builder.query<ClientUser, string>({
       query: (clientUserId: string) => ({
         url: `users/${clientUserId}`,
         method: "GET",
       }),
+      providesTags: (_result, _error, id) => [{ type: "ClientUser", id }], // Provide tags for specific client user
     }),
     createClientUser: builder.mutation<ClientUser, Partial<ClientUser>>({
       query: (newClientUser) => ({
@@ -34,6 +37,7 @@ export const clientUserApi = createApi({
         method: "POST",
         body: newClientUser,
       }),
+      invalidatesTags: ["ClientUser"], // Invalidate client users list after creation
     }),
     updateClientUser: builder.mutation<ClientUser, Partial<ClientUser>>({
       query: ({ id, ...rest }) => ({
@@ -41,12 +45,14 @@ export const clientUserApi = createApi({
         method: "PATCH",
         body: rest,
       }),
+      invalidatesTags: (_result, _error, { id }) => [{ type: "ClientUser", id }], // Invalidate specific client user after update
     }),
     deleteClientUser: builder.mutation<{ success: boolean }, string>({
       query: (clientUserId: string) => ({
         url: `users/${clientUserId}`,
         method: "DELETE",
       }),
+      invalidatesTags: (_result, _error, id) => [{ type: "ClientUser", id }], // Invalidate specific client user after deletion
     }),
   }),
 });

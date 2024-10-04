@@ -26,24 +26,24 @@ const AddPumpBrandPage: React.FC = () => {
       const result = await createPumpBrand(pumpBrandData).unwrap();
       toast.success("Pump Brand added successfully!", {
         onClose: () => navigate("/pump-brands-table"),
-        autoClose: 500,
+        autoClose: 1000,
       });
       console.log("Pump created successfully", result);
     } catch (error) {
       if (isAPIError(error)) {
         toast.error("Error Adding Pump Brand: " + error.data.message, {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       } else if (error instanceof Error) {
         toast.error("Error Adding Pump Brand: " + error.message, {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       } else {
         toast.error("An unknown error occurred", {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       }
       console.error("Error Adding Pump Brand:", error);
@@ -55,7 +55,7 @@ const AddPumpBrandPage: React.FC = () => {
       <AddPumpBrand onSubmit={handleAddPumpBrand} />
       <ToastContainer
         position="top-right"
-        autoClose={500}
+        autoClose={1000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

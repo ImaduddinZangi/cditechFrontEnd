@@ -49,23 +49,23 @@ const EditInspectionPage: React.FC = () => {
       }).unwrap();
       toast.success("Inspection updated successfully!", {
         onClose: () => navigate("/inspection-table"),
-        autoClose: 500,
+        autoClose: 1000,
       });
     } catch (error) {
       if (isAPIError(error)) {
         toast.error("Error Updating Inspection: " + error.data.message, {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       } else if (error instanceof Error) {
         toast.error("Error Updating Inspection: " + error.message, {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       } else {
         toast.error("An unknown error occurred", {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       }
       console.error("Error Updating Inspection:", error);
@@ -121,7 +121,7 @@ const EditInspectionPage: React.FC = () => {
           />
           <ToastContainer
             position="top-right"
-            autoClose={500}
+            autoClose={1000}
             hideProgressBar={false}
             newestOnTop={false}
             closeOnClick

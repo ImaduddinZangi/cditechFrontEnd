@@ -60,23 +60,23 @@ const EditCustomerPage: React.FC = () => {
       await updateCustomer(customerData).unwrap();
       toast.success("Customer updated successfully!", {
         onClose: () => navigate("/client-dashboard"),
-        autoClose: 500,
+        autoClose: 1000,
       });
     } catch (error) {
       if (isAPIError(error)) {
         toast.error("Error Updating Customer: " + error.data.message, {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       } else if (error instanceof Error) {
         toast.error("Error Updating Customer: " + error.message, {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       } else {
         toast.error("An unknown error occurred", {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       }
       console.error("Error Updating Customer:", error);
@@ -91,7 +91,7 @@ const EditCustomerPage: React.FC = () => {
       <AddCustomer onSubmit={handleSubmit} initialData={customer} />
       <ToastContainer
         position="top-right"
-        autoClose={500}
+        autoClose={1000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

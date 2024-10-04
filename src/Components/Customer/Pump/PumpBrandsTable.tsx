@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 const PumpBrandsTable: React.FC = React.memo(() => {
   const [searchTerm, setSearchTerm] = useState("");
-  const { data: brands, isLoading } = useGetPumpBrandsQuery();
+  const { data: pumpBrands, error, isLoading } = useGetPumpBrandsQuery();
   const { data: photosData } = useGetPhotosQuery();
   const navigate = useNavigate();
 
@@ -41,13 +41,13 @@ const PumpBrandsTable: React.FC = React.memo(() => {
 
   // Memoize the filtered brands to avoid re-calculating on every render
   const filteredBrands = useMemo(() => {
-    return brands?.filter(
+    return pumpBrands?.filter(
       (brand: PumpBrand) =>
         brand.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         brand.model.toLowerCase().includes(searchTerm.toLowerCase()) ||
         brand.id?.includes(searchTerm.toLowerCase())
     );
-  }, [brands, searchTerm]);
+  }, [pumpBrands, searchTerm]);
 
   // Memoize navigation functions
   const handleAddNewPump = useCallback(() => {
@@ -114,6 +114,14 @@ const PumpBrandsTable: React.FC = React.memo(() => {
               <tr>
                 <td colSpan={4} className="text-center py-[2vw]">
                   <Loader />
+                </td>
+              </tr>
+            )}
+            {!isLoading && error && (
+              <tr>
+                <td colSpan={4} className="text-center py-[2vw]">
+                  Some unknown error occured while fetching the data for Pump
+                  Brands
                 </td>
               </tr>
             )}

@@ -32,12 +32,12 @@ const TwoFactorAuthPage: React.FC = () => {
       await verifyCode({ code }).unwrap();
       toast.success("2FA verified successfully", {
         onClose: () => navigate("/client-dashboard"),
-        autoClose: 500,
+        autoClose: 1000,
       });
     } catch (error) {
       toast.error("Failed to verify 2FA code.", {
         onClose: () => navigate("/error/500"),
-        autoClose: 500,
+        autoClose: 1000,
       });
     }
   };
@@ -49,7 +49,7 @@ const TwoFactorAuthPage: React.FC = () => {
       )}
       <ToastContainer
         position="top-right"
-        autoClose={500}
+        autoClose={1000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

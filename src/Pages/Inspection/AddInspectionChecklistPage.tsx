@@ -26,7 +26,7 @@ const AddInspectionChecklistPage: React.FC = () => {
       const result = await createInspectionChecklist(checklistData).unwrap();
       toast.success("Inspection Checklist added successfully!", {
         onClose: () => navigate("/add-inspection"),
-        autoClose: 500,
+        autoClose: 1000,
       });
       console.log("Inspection Checklist created successfully", result);
     } catch (error) {
@@ -35,18 +35,18 @@ const AddInspectionChecklistPage: React.FC = () => {
           "Error Adding Inspection Checklist: " + error.data.message,
           {
             onClose: () => navigate("/error/500"),
-            autoClose: 500,
+            autoClose: 1000,
           }
         );
       } else if (error instanceof Error) {
         toast.error("Error Adding Inspection Checklist: " + error.message, {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       } else {
         toast.error("An unknown error occurred", {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       }
       console.error("Error Adding Inspection Checklist:", error);

@@ -32,23 +32,23 @@ const ManagementSignInPage: React.FC = () => {
       }
       toast.success("Login successful!", {
         onClose: () => navigate("/dashboard"),
-        autoClose: 500,
+        autoClose: 1000,
       });
     } catch (error) {
       if (isAPIError(error)) {
         toast.error("Login error: " + error.data.message, {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       } else if (error instanceof Error) {
         toast.error("Login error: " + error.message, {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       } else {
         toast.error("An unknown error occurred", {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       }
       console.error("Login error:", error);
@@ -60,7 +60,7 @@ const ManagementSignInPage: React.FC = () => {
       <ManagementSignIn onSubmit={handleLogin} />
       <ToastContainer
         position="top-right"
-        autoClose={500}
+        autoClose={1000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

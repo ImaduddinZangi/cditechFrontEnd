@@ -22,14 +22,14 @@ const GrantGroupPermissionsPage: React.FC = () => {
 
       toast.success("Permissions granted successfully!", {
         onClose: () => navigate(`/user-group-table/`),
-        autoClose: 500,
+        autoClose: 1000,
       });
       console.log("Permissions granted successfully", result);
     } catch (error) {
       console.error("Error granting permissions:", error);
       toast.error("Error granting permissions. Please try again.", {
         onClose: () => navigate("/error/500"),
-        autoClose: 500,
+        autoClose: 1000,
       });
     }
   };

@@ -26,24 +26,24 @@ const AddInspectionScoresPage: React.FC = () => {
       const result = await createInspectionScore(inspectionScoreData).unwrap();
       toast.success("Inspection Score added successfully!", {
         onClose: () => navigate("/add-inspection"),
-        autoClose: 500,
+        autoClose: 1000,
       });
       console.log("Inspection Score created successfully", result);
     } catch (error) {
       if (isAPIError(error)) {
         toast.error("Error Adding Inspection Score: " + error.data.message, {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       } else if (error instanceof Error) {
         toast.error("Error Adding Inspection Score: " + error.message, {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       } else {
         toast.error("An unknown error occurred", {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       }
       console.error("Error Adding Inspection Score:", error);

@@ -24,24 +24,28 @@ const baseQuery = fetchBaseQuery({
 export const clientApi = createApi({
   reducerPath: "clientApi",
   baseQuery,
+  tagTypes: ["Client"], // Add tagTypes for caching
   endpoints: (builder) => ({
     getClients: builder.query<ClientListResponse, void>({
       query: () => ({
         url: "clients",
         method: "GET",
       }),
+      providesTags: ["Client"], // Provide tags for client list
     }),
     getClientById: builder.query<Client, string>({
       query: (clientId: string) => ({
         url: `clients/${clientId}`,
         method: "GET",
       }),
+      providesTags: (_result, _error, id) => [{ type: "Client", id }], // Provide tags for a specific client
     }),
     getQuickBookSignUpLink: builder.query<QuickBookSignUpLinkResponse, void>({
       query: () => ({
         url: `clients/quickbooks/authorize`,
         method: "GET",
       }),
+      providesTags: ["Client"], // Provide tags for quickbook signup
     }),
     createClient: builder.mutation<Client, Partial<Client>>({
       query: (newClient) => ({
@@ -49,6 +53,7 @@ export const clientApi = createApi({
         method: "POST",
         body: newClient,
       }),
+      invalidatesTags: ["Client"], // Invalidate client list after creation
     }),
     updateClient: builder.mutation<Client, Partial<Client>>({
       query: ({ id, ...rest }) => ({
@@ -56,12 +61,14 @@ export const clientApi = createApi({
         method: "PATCH",
         body: rest,
       }),
+      invalidatesTags: (_result, _error, { id }) => [{ type: "Client", id }], // Invalidate specific client after update
     }),
     deleteClient: builder.mutation<{ success: boolean }, string>({
       query: (clientId: string) => ({
         url: `clients/${clientId}`,
         method: "DELETE",
       }),
+      invalidatesTags: (_result, _error, id) => [{ type: "Client", id }], // Invalidate specific client after deletion
     }),
   }),
 });

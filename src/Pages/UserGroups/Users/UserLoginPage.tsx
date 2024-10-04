@@ -32,12 +32,12 @@ const ClientSignInPage: React.FC = () => {
         if (result.client.user.two_factor_enabled) {
           toast.success("Login successful!", {
             onClose: () => navigate("/client-dashboard"),
-            autoClose: 500,
+            autoClose: 1000,
           });
         } else {
           toast.success("Two-factor authentication required!", {
             onClose: () => navigate("/2fa"),
-            autoClose: 500,
+            autoClose: 1000,
           });
         }
       }
@@ -45,17 +45,17 @@ const ClientSignInPage: React.FC = () => {
       if (isAPIError(error)) {
         toast.error("Login error: " + error.data.message, {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       } else if (error instanceof Error) {
         toast.error("Login error: " + error.message, {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       } else {
         toast.error("An unknown error occurred", {
           onClose: () => navigate("/error/500"),
-          autoClose: 500,
+          autoClose: 1000,
         });
       }
       console.error("Login error:", error);
@@ -67,7 +67,7 @@ const ClientSignInPage: React.FC = () => {
       <UserLogin onSubmit={handleLogin} />
       <ToastContainer
         position="top-right"
-        autoClose={500}
+        autoClose={1000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
