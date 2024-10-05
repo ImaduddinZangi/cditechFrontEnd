@@ -18,21 +18,18 @@ const ClientSignIn: React.FC<ClientSignInProps> = ({ onSubmit }) => {
 
   return (
     <div className="flex w-full font-inter items-center justify-center h-full">
-      <div className="w-full max-w-[80vw] md:max-w-[30vw] p-[4vw] md:p-[2vw] space-y-[0.5vh] bg-white rounded shadow-lg">
-        <p className="text-[5vw] md:text-[2.5vw] text-dark-0 font-semibold text-center">
+      <div className="w-full max-w-[30vw] p-[2vw] space-y-[0.5vh] bg-white rounded shadow-lg">
+        <p className="text-[2.5vw] text-dark-0 font-semibold text-center">
           Client Portal
         </p>
-        <p className="text-[4vw] md:text-[2vw] text-dark-0 font-semibold text-center">
+        <p className="text-[2vw] text-dark-0 font-semibold text-center">
           Log in to your account
         </p>
-        <p className="text-[2.2vw] md:text-[1vw] text-gray-0 text-center">
+        <p className="text-[1vw] text-gray-0 text-center">
           Welcome back! Please enter your details
         </p>
-        <form
-          className="space-y-[3vw] md:space-y-[1.5vw]"
-          onSubmit={handleSubmit}
-        >
-          <div className="mt-[4vw] md:mt-[2vw]">
+        <form className="space-y-[1.5vw]" onSubmit={handleSubmit}>
+          <div className="mt-[2vw]">
             <InputField
               label="Email"
               id="email"
@@ -64,11 +61,11 @@ const ClientSignIn: React.FC<ClientSignInProps> = ({ onSubmit }) => {
                 id="remember-me"
                 name="remember-me"
                 type="checkbox"
-                className="w-[2.5vw] md:w-[1vw] h-[2.5vw] md:h-[1vw] accent-purple-0 border-lightgray-0 rounded focus:ring-offset-white focus:ring-purple-0 cursor-pointer"
+                className="w-[1vw] h-[1vw] accent-purple-0 border-lightgray-0 rounded focus:ring-offset-white focus:ring-purple-0 cursor-pointer"
               />
               <label
                 htmlFor="remember-me"
-                className="text-[2.5vw] md:text-[1vw] text-darkgray-0 font-medium"
+                className="text-[1vw] text-darkgray-0 font-medium"
               >
                 &nbsp;Remember for 30 days
               </label>
@@ -76,7 +73,7 @@ const ClientSignIn: React.FC<ClientSignInProps> = ({ onSubmit }) => {
             <div>
               <Link
                 to="/forgot-password"
-                className="text-[2.5vw] md:text-[1vw] font-semibold text-purple-0 hover:opacity-95"
+                className="text-[1vw] font-semibold text-purple-0 hover:underline"
               >
                 Forgot password?
               </Link>
@@ -85,15 +82,15 @@ const ClientSignIn: React.FC<ClientSignInProps> = ({ onSubmit }) => {
           <div>
             <PurpleButton type="submit" className="w-full" text="Log In" />
           </div>
-          <div className="text-center text-[2.5vw] md:text-[1vw] flex flex-row w-full items-center justify-center">
+          {/* <div className="text-center text-[1vw] flex flex-row w-full items-center justify-center">
             <p className="text-gray-0">Don't have an account?&nbsp;</p>
             <Link
               to="/client-registration"
-              className="text-purple-0 font font-semibold"
+              className="text-purple-0 font font-semibold hover:underline"
             >
               Sign up
             </Link>
-          </div>
+          </div> */}
         </form>
       </div>
     </div>

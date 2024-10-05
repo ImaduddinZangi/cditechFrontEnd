@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from "react";
-import PhoneInput from "react-phone-input-2";
-import Select, { SingleValue } from "react-select";
-import "react-phone-input-2/lib/style.css";
 import cities from "cities.json";
 import { states } from "./Constants/usStates";
 import { useNavigate } from "react-router-dom";
 import InputField from "../Tags/InputField";
 import PurpleButton from "../Tags/PurpleButton";
 import WhiteButton from "../Tags/WhiteButton";
-
-interface Option {
-  value: string;
-  label: string;
-}
+import SelectField, { Option } from "../Tags/SelectField";
+import PhoneInput from "../Tags/PhoneInput";
+import { CreateCustomer, Customer } from "../../redux/features/customerSlice";
 
 interface City {
   name: string;
@@ -24,31 +19,15 @@ interface City {
 }
 
 interface AddCustomerProps {
-  onSubmit: (data: {
-    name: string;
-    email: string;
-    phone: string;
-    gate_code: string;
-    previousPhone: string;
-    streetAddress: string;
-    billingAddress: string;
-  }) => void;
-  initialData?: {
-    name: string;
-    email: string;
-    phone: string;
-    gate_code: string;
-    previous_phone_number: string;
-    address: string;
-    billing_address: string;
-  };
+  onSubmit: (data: CreateCustomer) => void;
+  initialData?: Partial<Customer>;
 }
 
 const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
   const [name, setName] = useState(initialData?.name || "");
   const [email, setEmail] = useState(initialData?.email || "");
-  const [phone, setPhone] = useState(initialData?.phone || "");
   const [gateCode, setGateCode] = useState(initialData?.gate_code || "");
+  const [phone, setPhone] = useState(initialData?.phone || "");
   const [previousPhone, setPreviousPhone] = useState(
     initialData?.previous_phone_number || ""
   );
@@ -89,35 +68,44 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
 
   useEffect(() => {
     if (initialData) {
-      const addressParts = initialData.address.split(", ");
-      const billingAddressParts = initialData.billing_address.split(", ");
+      const addressParts = initialData.address
+        ? initialData.address.split(", ")
+        : [];
+      const billingAddressParts = initialData.billing_address
+        ? initialData.billing_address.split(", ")
+        : [];
 
-      setName(initialData.name);
-      setEmail(initialData.email);
-      setPhone(initialData.phone);
-      setGateCode(initialData.gate_code);
-      setPreviousPhone(initialData.previous_phone_number);
-      setStreetAddress(addressParts.slice(1, -2).join(", "));
-      setSelectedCity({
-        value: addressParts[addressParts.length - 2],
-        label: addressParts[addressParts.length - 2],
-      });
-      setSelectedState({
-        value: addressParts[addressParts.length - 1],
-        label: addressParts[addressParts.length - 1],
-      });
-      setZipCode(addressParts[0]);
+      setName(initialData.name ?? "");
+      setEmail(initialData.email ?? "");
+      setPhone(initialData.phone ?? "");
+      setGateCode(initialData.gate_code ?? "");
+      setPreviousPhone(initialData.previous_phone_number ?? "");
 
-      setBillingStreetAddress(billingAddressParts.slice(1, -2).join(", "));
-      setBillingCity({
-        value: billingAddressParts[billingAddressParts.length - 2],
-        label: billingAddressParts[billingAddressParts.length - 2],
-      });
-      setBillingState({
-        value: billingAddressParts[billingAddressParts.length - 1],
-        label: billingAddressParts[billingAddressParts.length - 1],
-      });
-      setBillingZipCode(billingAddressParts[0]);
+      if (addressParts.length > 0) {
+        setStreetAddress(addressParts.slice(1, -2).join(", "));
+        setSelectedCity({
+          value: addressParts[addressParts.length - 2] ?? "",
+          label: addressParts[addressParts.length - 2] ?? "",
+        });
+        setSelectedState({
+          value: addressParts[addressParts.length - 1] ?? "",
+          label: addressParts[addressParts.length - 1] ?? "",
+        });
+        setZipCode(addressParts[0] ?? "");
+      }
+
+      if (billingAddressParts.length > 0) {
+        setBillingStreetAddress(billingAddressParts.slice(1, -2).join(", "));
+        setBillingCity({
+          value: billingAddressParts[billingAddressParts.length - 2] ?? "",
+          label: billingAddressParts[billingAddressParts.length - 2] ?? "",
+        });
+        setBillingState({
+          value: billingAddressParts[billingAddressParts.length - 1] ?? "",
+          label: billingAddressParts[billingAddressParts.length - 1] ?? "",
+        });
+        setBillingZipCode(billingAddressParts[0] ?? "");
+      }
     }
   }, [initialData]);
 
@@ -125,14 +113,19 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
     event.preventDefault();
     const combinedStreetAddress = `${zipCode}, ${streetAddress}, ${selectedCity?.label}, ${selectedState?.label}`;
     const combinedBillingAddress = `${billingZipCode}, ${billingStreetAddress}, ${billingCity?.label}, ${billingState?.label}`;
+
     onSubmit({
       name,
       email,
       gate_code: gateCode,
       phone,
-      previousPhone,
-      streetAddress: combinedStreetAddress,
-      billingAddress: combinedBillingAddress,
+      previous_phone_number: previousPhone,
+      address: combinedStreetAddress,
+      billing_address: combinedBillingAddress,
+      service_address: combinedStreetAddress,
+      type: "customer",
+      status: "active",
+      service_contact: phone,
     });
   };
 
@@ -155,15 +148,12 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
             />
           </div>
           <div>
-            <label className="block text-darkgray-0 font-medium text-[1vw]">
-              Service Contact
-            </label>
             <PhoneInput
-              country={"us"}
+              label="Service Contact"
+              name="phone"
               value={phone}
               onChange={setPhone}
-              containerStyle={{ width: "100%" }}
-              inputStyle={{ width: "100%" }}
+              required
             />
           </div>
         </div>
@@ -179,15 +169,11 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
             />
           </div>
           <div>
-            <label className="block text-darkgray-0 font-medium text-[1vw]">
-              Previous Phone Number
-            </label>
             <PhoneInput
-              country={"us"}
+              label="Previous Phone Number"
+              name="previousPhone"
               value={previousPhone}
               onChange={setPreviousPhone}
-              containerStyle={{ width: "100%" }}
-              inputStyle={{ width: "100%" }}
             />
           </div>
           <div>
@@ -214,31 +200,27 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
             />
           </div>
           <div>
-            <label className="block text-darkgray-0 font-medium text-[1vw]">
-              State
-            </label>
-            <Select
+            <SelectField
+              label="State"
               value={selectedState}
-              onChange={(option: SingleValue<Option>) => {
+              placeholder="Select State"
+              onChange={(option) => {
                 setSelectedState(option);
                 setSelectedCity(null);
               }}
               options={states}
-              placeholder="Select State"
+              required
             />
           </div>
           <div>
-            <label className="block text-darkgray-0 font-medium text-[1vw]">
-              City
-            </label>
-            <Select
+            <SelectField
+              label="City"
               value={selectedCity}
-              onChange={(option: SingleValue<Option>) =>
-                setSelectedCity(option)
-              }
+              onChange={(option) => setSelectedCity(option)}
               options={citiesOfSelectedState}
-              isDisabled={!selectedState}
               placeholder="Select City"
+              disabled={!selectedState}
+              required
             />
           </div>
           <div>
@@ -264,12 +246,10 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
             />
           </div>
           <div>
-            <label className="block text-darkgray-0 font-medium text-[1vw]">
-              State
-            </label>
-            <Select
+            <SelectField
+              label="State"
               value={billingState}
-              onChange={(option: SingleValue<Option>) => {
+              onChange={(option) => {
                 setBillingState(option);
                 setBillingCity(null);
               }}
@@ -278,14 +258,12 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
             />
           </div>
           <div>
-            <label className="block text-darkgray-0 font-medium text-[1vw]">
-              City
-            </label>
-            <Select
+            <SelectField
+              label="City"
               value={billingCity}
-              onChange={(option: SingleValue<Option>) => setBillingCity(option)}
+              onChange={(option) => setBillingCity(option)}
               options={billingCitiesOfSelectedState}
-              isDisabled={!billingState}
+              disabled={!billingState}
               placeholder="Select City"
             />
           </div>

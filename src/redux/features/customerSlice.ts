@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Client } from './clientSlice';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Client } from "./clientSlice";
 
 export interface Customer {
   id: string;
@@ -19,6 +19,21 @@ export interface Customer {
   client?: Client;
 }
 
+export interface CreateCustomer {
+  id?: string;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  service_address: string;
+  billing_address: string;
+  type: string;
+  status: string;
+  gate_code: string;
+  previous_phone_number: string;
+  service_contact: string;
+}
+
 interface CustomerState {
   token: string | null;
   customer: Customer | null;
@@ -28,11 +43,11 @@ interface CustomerState {
 const initialState: CustomerState = {
   token: null,
   customer: null,
-  selectedCustomerId: localStorage.getItem('selectedCustomerId'),
+  selectedCustomerId: localStorage.getItem("selectedCustomerId"),
 };
 
 const customerSlice = createSlice({
-  name: 'customer',
+  name: "customer",
   initialState,
   reducers: {
     setCustomer: (state, action: PayloadAction<Customer>) => {
@@ -47,10 +62,11 @@ const customerSlice = createSlice({
     },
     setSelectedCustomerId: (state, action: PayloadAction<string>) => {
       state.selectedCustomerId = action.payload;
-      localStorage.setItem('selectedCustomerId', action.payload);
+      localStorage.setItem("selectedCustomerId", action.payload);
     },
   },
 });
 
-export const { setCustomer, setToken, logout, setSelectedCustomerId } = customerSlice.actions;
+export const { setCustomer, setToken, logout, setSelectedCustomerId } =
+  customerSlice.actions;
 export default customerSlice.reducer;

@@ -67,24 +67,7 @@ const AssetDetails: React.FC = () => {
   };
 
   return (
-    <div className="p-[1vw] m-[2vw] font-inter bg-white shadow-lg rounded-lg max-h-[93vh] overflow-y-auto">
-      <div className="flex p-[0.2vw] justify-between bg-textpurple-0 rounded-[0.5vw] bg-opacity-5 font-semibold">
-        <button className="flex-1 py-[0.5vw] text-[1vw] text-darkgray-0 text-center shadow-lg rounded-[0.5vw] bg-white">
-          Assets
-        </button>
-        <button className="flex-1 py-[0.5vw] text-[1vw] text-darkgray-0 text-center">
-          Inspection History
-        </button>
-        <button className="flex-1 py-[0.5vw] text-[1vw] text-darkgray-0 text-center">
-          Up-Coming Inspection
-        </button>
-        <button className="flex-1 py-[0.5vw] text-[1vw] text-darkgray-0 text-center">
-          Photos
-        </button>
-        <button className="flex-1 py-[0.5vw] text-[1vw] text-darkgray-0 text-center">
-          Notes
-        </button>
-      </div>
+    <div className="p-[1vw] font-inter max-h-[93vh] overflow-y-auto">
       {assetData?.map((asset) => (
         <div
           key={asset.id}

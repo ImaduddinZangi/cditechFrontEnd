@@ -1,20 +1,13 @@
 import React, { useEffect, useState } from "react";
-import PhoneInput from "react-phone-input-2";
-import Select, { SingleValue } from "react-select";
-import "react-phone-input-2/lib/style.css";
 import PurpleButton from "../Tags/PurpleButton";
-import WhiteButton from "../Tags/WhiteButton";
 import InputField from "../Tags/InputField";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { states } from "../Customer/Constants/usStates";
 import cities from "cities.json";
 import { ClientRegisterRequest } from "../../redux/api/authApi";
 import { Client } from "../../redux/features/clientSlice";
-
-interface Option {
-  value: string;
-  label: string;
-}
+import SelectField, { Option } from "../Tags/SelectField";
+import PhoneInput from "../Tags/PhoneInput";
 
 interface City {
   name: string;
@@ -27,8 +20,23 @@ interface City {
 
 interface AddClientProps {
   onSubmit: (data: ClientRegisterRequest) => void;
-  initialData?: Partial<Client>
+  initialData?: Partial<Client>;
 }
+
+const companyTypeOptions: Option[] = [
+  { label: "LLC", value: "llc" },
+  { label: "Corporation", value: "corporation" },
+];
+
+const industryOptions: Option[] = [
+  { label: "Technology", value: "tech" },
+  { label: "Healthcare", value: "health" },
+];
+
+const paymentMethodOptions: Option[] = [
+  { label: "Credit Card", value: "credit card" },
+  { label: "Bank", value: "bank" },
+];
 
 const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
   const [firstName, setFirstName] = useState<string>("");
@@ -36,12 +44,21 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
   const [password, setPassword] = useState<string>("");
   const [companyName, setCompanyName] = useState("");
   const [companyEmail, setCompanyEmail] = useState<string>("");
-  const [industry, setIndustry] = useState<string>("");
+  const [industry, setIndustry] = useState<Option | null>({
+    label: "",
+    value: "",
+  });
   const [companyWebsite, setCompanyWebsite] = useState<string>("");
-  const [companyType, setCompanyType] = useState<string>("");
+  const [companyType, setCompanyType] = useState<Option | null>({
+    label: "",
+    value: "",
+  });
   const [phone, setPhone] = useState<string>("");
   const [billingPhone, setBillingPhone] = useState<string>("");
-  const [paymentMethod, setPaymentMethod] = useState<string>("");
+  const [paymentMethod, setPaymentMethod] = useState<Option | null>({
+    label: "",
+    value: "",
+  });
   const [nextBillDate, setNextBillDate] = useState<string>("");
 
   // Addresses
@@ -102,23 +119,19 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
       name,
       email: companyEmail,
       password,
-      industry,
+      industry: industry?.value || "",
       phone: combinedPhones,
       address: companyFullAddress,
       company_name: companyName,
-      company_type: companyType,
+      company_type: companyType?.value || "",
       billing_address: billingFullAddress,
-      payment_method: paymentMethod,
+      payment_method: paymentMethod?.value || "",
       custom_portal_url: companyWebsite,
       next_bill_date: nextBillDate,
       account_status: "inactive",
     };
 
     onSubmit(clientRegisterRequest);
-    navigate("/client-dashboard");
-  };
-
-  const handleCancel = () => {
     navigate("/client-dashboard");
   };
 
@@ -134,6 +147,7 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
             value={firstName}
             placeholder="Enter first name"
             onChange={(e) => setFirstName(e.target.value)}
+            required
           />
           <InputField
             label="Last Name"
@@ -142,6 +156,7 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
             value={lastName}
             placeholder="Enter last name"
             onChange={(e) => setLastName(e.target.value)}
+            required
           />
           <InputField
             label="Password"
@@ -150,11 +165,12 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
             value={password}
             placeholder="Enter Password"
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
         </div>
 
         {/* Address Section */}
-        <div className="grid grid-cols-2 gap-[2vw] mt-[1vw]">
+        <div className="grid grid-cols-2 gap-[1vw] mt-[1vw]">
           <div className="grid gap-y-[1vw]">
             <h2 className="font-semibold text-[1.1vw]">Company Address</h2>
             <InputField
@@ -164,6 +180,7 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
               value={companyAddress}
               placeholder="Address"
               onChange={(e) => setCompanyAddress(e.target.value)}
+              required
             />
             <InputField
               label="Line 2"
@@ -172,38 +189,35 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
               placeholder="Address"
               value={companyAddressLine2}
               onChange={(e) => setCompanyAddressLine2(e.target.value)}
+              required
             />
-            <div className="grid grid-cols-2 gap-[2vw]">
+            <div className="grid grid-cols-2 gap-[1vw]">
               <div>
-                <label className="block text-darkgray-0 font-medium text-[1vw]">
-                  State
-                </label>
-                <Select
+                <SelectField
+                  label="State"
                   value={selectedState}
-                  onChange={(option: SingleValue<Option>) => {
+                  placeholder="Select State"
+                  onChange={(option) => {
                     setSelectedState(option);
                     setSelectedCity(null);
                   }}
                   options={states}
-                  placeholder="Select State"
+                  required
                 />
               </div>
               <div>
-                <label className="block text-darkgray-0 font-medium text-[1vw]">
-                  City
-                </label>
-                <Select
+                <SelectField
+                  label="City"
                   value={selectedCity}
-                  onChange={(option: SingleValue<Option>) =>
-                    setSelectedCity(option)
-                  }
+                  onChange={(option) => setSelectedCity(option)}
                   options={citiesOfSelectedState}
-                  isDisabled={!selectedState}
                   placeholder="Select City"
+                  disabled={!selectedState}
+                  required
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-[2vw]">
+            <div className="grid grid-cols-2 gap-[1vw]">
               <div>
                 <InputField
                   label="Zipcode"
@@ -212,18 +226,16 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
                   value={companyZipCode}
                   placeholder="Enter Zip Code"
                   onChange={(e) => setCompanyZipCode(e.target.value)}
+                  required
                 />
               </div>
               <div>
-                <label className="block text-darkgray-0 font-medium text-[1vw]">
-                  Phone
-                </label>
                 <PhoneInput
-                  country={"us"}
+                  label="Phone"
+                  name="phone"
                   value={phone}
                   onChange={setPhone}
-                  containerStyle={{ width: "100%" }}
-                  inputStyle={{ width: "100%" }}
+                  required
                 />
               </div>
             </div>
@@ -239,6 +251,7 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
               placeholder="Billing Address"
               onChange={(e) => setBillingAddress(e.target.value)}
               disabled={sameAsCompanyAddress}
+              required
             />
             <InputField
               label="Line 2"
@@ -248,35 +261,32 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
               value={billingAddressLine2}
               onChange={(e) => setBillingAddressLine2(e.target.value)}
               disabled={sameAsCompanyAddress}
+              required
             />
-            <div className="grid grid-cols-2 gap-[2vw]">
+            <div className="grid grid-cols-2 gap-[1vw]">
               <div>
-                <label className="block text-darkgray-0 font-medium text-[1vw]">
-                  State
-                </label>
-                <Select
+                <SelectField
+                  label="State"
                   value={billingState}
-                  onChange={(option: SingleValue<Option>) => {
+                  onChange={(option) => {
                     setBillingState(option);
                     setBillingCity(null);
                   }}
                   options={states}
                   placeholder="Select State"
-                  isDisabled={sameAsCompanyAddress} // Disable if same as company address
+                  disabled={sameAsCompanyAddress}
+                  required
                 />
               </div>
               <div>
-                <label className="block text-darkgray-0 font-medium text-[1vw]">
-                  City
-                </label>
-                <Select
+                <SelectField
+                  label="City"
                   value={billingCity}
-                  onChange={(option: SingleValue<Option>) =>
-                    setBillingCity(option)
-                  }
+                  onChange={(option) => setBillingCity(option)}
                   options={billingCitiesOfSelectedState}
-                  isDisabled={!billingState || sameAsCompanyAddress} // Disable if same as company address
+                  disabled={!billingState || sameAsCompanyAddress}
                   placeholder="Select City"
+                  required
                 />
               </div>
             </div>
@@ -290,19 +300,17 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
                   placeholder="Enter Zip Code"
                   onChange={(e) => setBillingZipCode(e.target.value)}
                   disabled={sameAsCompanyAddress}
+                  required
                 />
               </div>
               <div>
-                <label className="block text-darkgray-0 font-medium text-[1vw]">
-                  Phone
-                </label>
                 <PhoneInput
-                  country={"us"}
+                  label="Phone"
+                  name="phone"
                   value={billingPhone}
                   onChange={setBillingPhone}
-                  containerStyle={{ width: "100%" }}
-                  inputStyle={{ width: "100%" }}
-                  disabled={sameAsCompanyAddress} // Disable if same as company address
+                  disabled={sameAsCompanyAddress}
+                  required
                 />
               </div>
             </div>
@@ -314,7 +322,7 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
               type="checkbox"
               checked={sameAsCompanyAddress}
               onChange={() => setSameAsCompanyAddress(!sameAsCompanyAddress)}
-              className="accent-purple-0"
+              className="accent-purple-0 w-[1vw] h-[1vw]"
             />
             <span className="text-darkgray-0">Same as company address</span>
           </div>
@@ -329,6 +337,7 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
             value={companyName}
             placeholder="Enter company name"
             onChange={(e) => setCompanyName(e.target.value)}
+            required
           />
           <InputField
             label="Company Email"
@@ -337,48 +346,37 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
             value={companyEmail}
             placeholder="Enter company email"
             onChange={(e) => setCompanyEmail(e.target.value)}
+            required
           />
           <div>
-            <label className="block text-darkgray-0 font-medium text-[1vw]">
-              Company Type:
-            </label>
-            <select
+            <SelectField
+              label="Company Type:"
               name="companyType"
-              className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
               value={companyType}
-              onChange={(e) => setCompanyType(e.target.value)}
-            >
-              <option value="llc">LLC</option>
-              <option value="corporation">Corporation</option>
-            </select>
+              options={companyTypeOptions}
+              onChange={(option) => setCompanyType(option)}
+              required
+            />
           </div>
           <div>
-            <label className="block text-darkgray-0 font-medium text-[1vw]">
-              Industry:
-            </label>
-            <select
+            <SelectField
+              label="Industry"
               name="industry"
-              className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
               value={industry}
-              onChange={(e) => setIndustry(e.target.value)}
-            >
-              <option value="tech">Technology</option>
-              <option value="health">Healthcare</option>
-            </select>
+              options={industryOptions}
+              onChange={(option) => setIndustry(option)}
+              required
+            />
           </div>
           <div>
-            <label className="block text-darkgray-0 font-medium text-[1vw]">
-              Payment Method:
-            </label>
-            <select
+            <SelectField
+              label="Payment Method"
               name="paymentMethod"
-              className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
               value={paymentMethod}
-              onChange={(e) => setPaymentMethod(e.target.value)}
-            >
-              <option value="credit card">Credit Card</option>
-              <option value="bank">Bank</option>
-            </select>
+              options={paymentMethodOptions}
+              onChange={(option) => setPaymentMethod(option)}
+              required
+            />
           </div>
           <InputField
             label="Company Website"
@@ -387,6 +385,7 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
             value={companyWebsite}
             placeholder="Enter company website"
             onChange={(e) => setCompanyWebsite(e.target.value)}
+            required
           />
           <InputField
             label="Next Bill Date"
@@ -395,17 +394,22 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
             value={nextBillDate}
             placeholder="Select Next Bill Date"
             onChange={(e) => setNextBillDate(e.target.value)}
+            required
           />
         </div>
-
-        {/* Buttons */}
-        <div className="flex justify-end space-x-[1.5vw] mt-8">
-          <PurpleButton text="Save" type="submit" />
-          <WhiteButton
-            text="Do Not Save"
-            type="button"
-            onClick={handleCancel}
-          />
+        <div className="mt-[2vw] w-full flex flex-col items-center">
+          <PurpleButton text="Sign Up" type="submit" className="w-1/2" />
+        </div>
+        <div className="text-center text-[1vw] mt-[1vw] flex flex-row w-full items-center justify-center">
+          <p className="text-gray-0 text-[1vw]">
+            Already have an account?&nbsp;
+          </p>
+          <Link
+            to="/client-login"
+            className="text-purple-0 text-[1vw] font-semibold hover:underline"
+          >
+            Login
+          </Link>
         </div>
       </form>
     </div>

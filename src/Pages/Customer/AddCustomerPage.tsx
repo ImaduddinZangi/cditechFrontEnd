@@ -5,6 +5,7 @@ import { useCreateCustomerMutation } from "../../redux/api/customerApi";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { CreateCustomer } from "../../redux/features/customerSlice";
 
 const AddCustomerPage: React.FC = () => {
   const [createCustomer] = useCreateCustomerMutation();
@@ -20,39 +21,7 @@ const AddCustomerPage: React.FC = () => {
     return error && error.data && typeof error.data.message === "string";
   };
 
-  const handleSubmit = async (data: {
-    name: string;
-    email: string;
-    phone: string;
-    gate_code: string;
-    previousPhone: string;
-    streetAddress: string;
-    billingAddress: string;
-  }) => {
-    const {
-      name,
-      email,
-      phone,
-      gate_code,
-      previousPhone,
-      streetAddress,
-      billingAddress,
-    } = data;
-
-    const customerData = {
-      name,
-      email,
-      phone,
-      address: streetAddress,
-      service_address: streetAddress,
-      billing_address: billingAddress,
-      type: "customer",
-      status: "active",
-      gate_code,
-      previous_phone_number: previousPhone,
-      service_contact: phone,
-    };
-
+  const handleSubmit = async (customerData: CreateCustomer) => {
     try {
       await createCustomer(customerData).unwrap();
       toast.success("Customer added successfully!", {

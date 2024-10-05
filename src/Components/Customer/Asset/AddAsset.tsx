@@ -3,107 +3,141 @@ import { getUserId } from "../../../utils/utils";
 import { useGetAssetTypesQuery } from "../../../redux/api/assetTypeApi";
 import { useGetCustomersQuery } from "../../../redux/api/customerApi";
 import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
-import Select from "react-select";
 import InputField from "../../Tags/InputField";
 import PurpleButton from "../../Tags/PurpleButton";
 import WhiteButton from "../../Tags/WhiteButton";
+import SelectField from "../../Tags/SelectField";
 import Loader from "../../Constants/Loader";
 import { useNavigate } from "react-router-dom";
+import { Asset, CreateAsset } from "../../../redux/features/assetSlice";
 
-interface InitialData {
-  name?: string;
-  type?: { id: string; name: string };
-  customer?: { id: string; name: string };
-  location?: string;
-  latitude?: number;
-  longitude?: number;
-  description?: string;
-  status?: string;
-  inspectionInterval?: string;
-  qrCode?: string;
-  nfcCode?: string;
-  pipeDia?: number;
-  smart?: string;
-  size?: string;
-  material?: string;
-  deleteProtect?: string;
-  duty?: string;
-  rails?: string;
-  float?: number;
-  pumps?: number;
+interface Option {
+  label: string;
+  value: string;
 }
 
 interface AddAssetProps {
-  onSubmit: (
-    name: string,
-    type: string,
-    customerId: string,
-    clientId: string | undefined,
-    location: string,
-    latitude: number,
-    longitude: number,
-    description: string,
-    status: string,
-    inspectionInterval: string,
-    qrCode: string,
-    nfcCode: string,
-    pipeDia: number,
-    smart: string,
-    size: string,
-    material: string,
-    deleteProtect: string,
-    duty: string,
-    rails: string,
-    float: number,
-    pumps: number
-  ) => void;
-  initialData?: Partial<InitialData>;
+  onSubmit: (data: CreateAsset) => void;
+  initialData?: Partial<Asset>;
 }
+
+const statusOptions: Option[] = [
+  { label: "Active", value: "active" },
+  { label: "Inactive", value: "inactive" },
+  { label: "Maintenance", value: "maintenance" },
+];
+
+const inspectionIntervalOptions: Option[] = [
+  { label: "Daily", value: "Daily" },
+  { label: "Weekly", value: "Weekly" },
+  { label: "Monthly", value: "Monthly" },
+  { label: "Annually", value: "Annually" },
+];
+
+const smartOptions: Option[] = [
+  { label: "Yes", value: "Yes" },
+  { label: "No", value: "No" },
+];
+
+const sizeOptions: Option[] = [
+  { label: "Small", value: "Small" },
+  { label: "Medium", value: "Medium" },
+  { label: "Large", value: "Large" },
+  { label: "XLarge", value: "XLarge" },
+  { label: "XXLarge", value: "XXLarge" },
+];
+
+const materialOptions: Option[] = [
+  { label: "Concrete", value: "Concrete" },
+  { label: "Cement", value: "Cement" },
+  { label: "Brass", value: "Brass" },
+  { label: "Iron", value: "Iron" },
+];
+
+const deleteProtectOptions: Option[] = [
+  { label: "Yes", value: "Yes" },
+  { label: "No", value: "No" },
+];
+
+const railsOptions: Option[] = [
+  { label: "Yes", value: "Yes" },
+  { label: "No", value: "No" },
+];
 
 const libraries: ("places" | "drawing")[] = ["places"];
 
 const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
-  const [customers, setCustomers] = useState<
-    Array<{ label: string; value: string }>
-  >([]);
-  const [selectedCustomer, setSelectedCustomer] = useState<{
-    label: string;
-    value: string;
-  } | null>(null);
-  const [assetType, setAssetType] = useState<
-    Array<{ label: string; value: string }>
-  >([]);
-  const [selectedAssetType, setSelectedAssetType] = useState<{
-    label: string;
-    value: string;
-  } | null>(null);
+  const [customers, setCustomers] = useState<Option[]>([]);
+  const [assetTypes, setAssetTypes] = useState<Option[]>([]);
+
+  const [name, setName] = useState<string>(initialData?.name || "");
+  const [type, setType] = useState<Option | null>(
+    initialData?.type
+      ? { label: initialData.type.name, value: initialData.type.id }
+      : null
+  );
+  const [customerId, setCustomerId] = useState<Option | null>(
+    initialData?.customer
+      ? { label: initialData.customer.name, value: initialData.customer.id }
+      : null
+  );
+  const [location, setLocation] = useState<string>(initialData?.location || "");
+  const [latitude, setLatitude] = useState<number>(initialData?.latitude || 0);
+  const [longitude, setLongitude] = useState<number>(
+    initialData?.longitude || 0
+  );
+  const [description, setDescription] = useState<string>(
+    initialData?.description || ""
+  );
+  const [status, setStatus] = useState<Option | null>(
+    initialData?.status
+      ? { label: initialData.status, value: initialData.status }
+      : null
+  );
+  const [inspectionInterval, setInspectionInterval] = useState<Option | null>(
+    initialData?.inspectionInterval
+      ? {
+          label: initialData.inspectionInterval,
+          value: initialData.inspectionInterval,
+        }
+      : null
+  );
+  const [qrCode, setQrCode] = useState<string>(initialData?.qrCode || "");
+  const [nfcCode, setNfcCode] = useState<string>(initialData?.nfcCode || "");
+  const [pipeDia, setPipeDia] = useState<number>(initialData?.pipeDia || 0);
+  const [smart, setSmart] = useState<Option | null>(
+    initialData?.smart
+      ? { label: initialData.smart, value: initialData.smart }
+      : null
+  );
+  const [size, setSize] = useState<Option | null>(
+    initialData?.size
+      ? { label: initialData.size, value: initialData.size }
+      : null
+  );
+  const [material, setMaterial] = useState<Option | null>(
+    initialData?.material
+      ? { label: initialData.material, value: initialData.material }
+      : null
+  );
+  const [deleteProtect, setDeleteProtect] = useState<Option | null>(
+    initialData?.deleteProtect
+      ? { label: initialData.deleteProtect, value: initialData.deleteProtect }
+      : null
+  );
+  const [duty, setDuty] = useState<string>(initialData?.duty || "");
+  const [rails, setRails] = useState<Option | null>(
+    initialData?.rails
+      ? { label: initialData.rails, value: initialData.rails }
+      : null
+  );
+  const [floatVal, setFloat] = useState<number>(initialData?.float || 0);
+  const [pumps, setPumps] = useState<number>(initialData?.pumps || 0);
+
   const clientId = getUserId();
   const navigate = useNavigate();
   const { data: assetTypeData } = useGetAssetTypesQuery();
   const { data: customersData } = useGetCustomersQuery();
-
-  const [formState, setFormState] = useState({
-    name: initialData?.name || "",
-    type: initialData?.type?.id || "",
-    customerId: initialData?.customer?.id || "",
-    location: initialData?.location || "",
-    latitude: initialData?.latitude || 0,
-    longitude: initialData?.longitude || 0,
-    description: initialData?.description || "",
-    status: initialData?.status || "active",
-    inspectionInterval: initialData?.inspectionInterval || "Monthly",
-    qrCode: initialData?.qrCode || "",
-    nfcCode: initialData?.nfcCode || "",
-    pipeDia: initialData?.pipeDia || 0,
-    smart: initialData?.smart || "No",
-    size: initialData?.size || "Medium",
-    material: initialData?.material || "Concrete",
-    deleteProtect: initialData?.deleteProtect || "No",
-    duty: initialData?.duty || "",
-    rails: initialData?.rails || "No",
-    float: initialData?.float || 0,
-    pumps: initialData?.pumps || 0,
-  });
 
   const { isLoaded, loadError } = useJsApiLoader({
     id: "google-map-script",
@@ -122,88 +156,48 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
     if (autocompleteRef.current !== null) {
       const place = autocompleteRef.current.getPlace();
       if (place.geometry && place.geometry.location) {
-        setFormState({
-          ...formState,
-          location: place.formatted_address || "",
-          latitude: place.geometry.location.lat(),
-          longitude: place.geometry.location.lng(),
-        });
+        setLocation(place.formatted_address || "");
+        setLatitude(place.geometry.location.lat());
+        setLongitude(place.geometry.location.lng());
       }
     }
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    setFormState({
-      ...formState,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleCustomerChange = (selectedOption: any) => {
-    setSelectedCustomer(selectedOption);
-    setFormState((prevState) => ({
-      ...prevState,
-      customerId: selectedOption?.value || "",
-    }));
-  };
-
-  const handleAssetTypeChange = (selectedOption: any) => {
-    setSelectedAssetType(selectedOption);
-    setFormState((prevState) => ({
-      ...prevState,
-      type: selectedOption?.value || "",
-    }));
-  };
-
   useEffect(() => {
     if (customersData) {
-      setCustomers(
-        customersData.map((customer) => ({
-          label: customer.name,
-          value: customer.id,
-        }))
-      );
+      const customerOptions = customersData.map((customer) => ({
+        label: customer.name,
+        value: customer.id,
+      }));
+      setCustomers(customerOptions);
+
+      // Set initial customer if initialData is provided
+      if (initialData?.customer) {
+        const selectedCustomer = customerOptions.find(
+          (c) => c.value === initialData.customer?.id
+        );
+        setCustomerId(selectedCustomer || null);
+      }
     }
-  }, [customersData]);
+  }, [customersData, initialData]);
 
   useEffect(() => {
     if (assetTypeData) {
-      setAssetType(
-        assetTypeData.map((assetType) => ({
-          label: assetType.name,
-          value: assetType.id,
-        }))
-      );
-    }
-  }, [assetTypeData]);
-
-  useEffect(() => {
-    if (initialData && customers.length > 0) {
-      const selectedCustomerData = customers.find(
-        (c) => c.value === initialData.customer?.id
-      );
-      setSelectedCustomer(selectedCustomerData || null);
-      setFormState((prevState) => ({
-        ...prevState,
-        customerId: initialData.customer?.id || "",
+      const assetTypeOptions = assetTypeData.map((assetType) => ({
+        label: assetType.name,
+        value: assetType.id,
       }));
-    }
-  }, [initialData, customers]);
+      setAssetTypes(assetTypeOptions);
 
-  useEffect(() => {
-    if (initialData && assetType.length > 0) {
-      const selectedAssetTypeData = assetType.find(
-        (a) => a.value === initialData.type?.id
-      );
-      setSelectedAssetType(selectedAssetTypeData || null);
-      setFormState((prevState) => ({
-        ...prevState,
-        type: initialData.type?.id || "",
-      }));
+      // Set initial asset type if initialData is provided
+      if (initialData?.type) {
+        const selectedAssetType = assetTypeOptions.find(
+          (a) => a.value === initialData.type?.id
+        );
+        setType(selectedAssetType || null);
+      }
     }
-  }, [initialData, assetType]);
+  }, [assetTypeData, initialData]);
 
   const handleCancel = () => {
     navigate("/customer-table");
@@ -211,29 +205,29 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    onSubmit(
-      formState.name,
-      formState.type,
-      formState.customerId,
-      clientId ?? undefined,
-      formState.location,
-      formState.latitude,
-      formState.longitude,
-      formState.description,
-      formState.status,
-      formState.inspectionInterval,
-      formState.qrCode,
-      formState.nfcCode,
-      formState.pipeDia,
-      formState.smart,
-      formState.size,
-      formState.material,
-      formState.deleteProtect,
-      formState.duty,
-      formState.rails,
-      formState.float,
-      formState.pumps
-    );
+    onSubmit({
+      name,
+      type: type?.value || "",
+      customerId: customerId?.value || "",
+      clientId: clientId ?? undefined,
+      location,
+      latitude,
+      longitude,
+      description,
+      status: status?.value || "",
+      inspectionInterval: inspectionInterval?.value || "",
+      qrCode,
+      nfcCode,
+      pipeDia,
+      smart: smart?.value || "",
+      size: size?.value || "",
+      material: material?.value || "",
+      deleteProtect: deleteProtect?.value || "",
+      duty,
+      rails: rails?.value || "",
+      float: floatVal,
+      pumps,
+    });
   };
 
   if (loadError) return <div>Error loading maps</div>;
@@ -251,32 +245,22 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
         onSubmit={handleSubmit}
       >
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">
-            Customer:
-          </label>
-          <Select
-            id="customer"
+          <SelectField
+            label="Customer"
+            value={customerId}
+            onChange={(option) => setCustomerId(option)}
             options={customers}
-            placeholder="Search"
-            className="mt-1"
-            isClearable
-            value={selectedCustomer}
-            onChange={handleCustomerChange}
+            placeholder="Select a customer"
             required
           />
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">
-            Asset Type:
-          </label>
-          <Select
-            id="type"
-            options={assetType}
-            placeholder="Search"
-            className="mt-1"
-            isClearable
-            value={selectedAssetType}
-            onChange={handleAssetTypeChange}
+          <SelectField
+            label="Asset Type"
+            value={type}
+            onChange={(option) => setType(option)}
+            options={assetTypes}
+            placeholder="Select an asset type"
             required
           />
         </div>
@@ -285,9 +269,9 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
             label="Asset Name"
             name="name"
             fieldType="text"
-            value={formState.name}
+            value={name}
             placeholder="Enter asset name"
-            onChange={handleChange}
+            onChange={(e) => setName(e.target.value)}
           />
         </div>
         <div>
@@ -298,9 +282,9 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
                 label="Location"
                 name="location"
                 fieldType="text"
-                value={formState.location}
+                value={location}
                 placeholder="Enter asset location"
-                onChange={handleChange}
+                onChange={(e) => setLocation(e.target.value)}
               />
             </Autocomplete>
           )}
@@ -310,50 +294,39 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
             label="Description"
             name="description"
             fieldType="text"
-            value={formState.description}
+            value={description}
             placeholder="Enter description"
-            onChange={handleChange}
+            onChange={(e) => setDescription(e.target.value)}
           />
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">
-            Status:
-          </label>
-          <select
-            name="status"
-            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-            value={formState.status}
-            onChange={handleChange}
-          >
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-            <option value="maintenance">Maintenance</option>
-          </select>
+          <SelectField
+            label="Status"
+            value={status}
+            onChange={(option) => setStatus(option)}
+            options={statusOptions}
+            placeholder="Select status"
+            required
+          />
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">
-            Inspection Interval:
-          </label>
-          <select
-            name="inspectionInterval"
-            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-            value={formState.inspectionInterval}
-            onChange={handleChange}
-          >
-            <option value="Daily">Daily</option>
-            <option value="Weekly">Weekly</option>
-            <option value="Monthly">Monthly</option>
-            <option value="Annually">Annually</option>
-          </select>
+          <SelectField
+            label="Inspection Interval"
+            value={inspectionInterval}
+            onChange={(option) => setInspectionInterval(option)}
+            options={inspectionIntervalOptions}
+            placeholder="Select Inspection Interval"
+            required
+          />
         </div>
         <div>
           <InputField
             label="QR Code"
             name="qrCode"
             fieldType="text"
-            value={formState.qrCode}
+            value={qrCode}
             placeholder="Enter QR code"
-            onChange={handleChange}
+            onChange={(e) => setQrCode(e.target.value)}
           />
         </div>
         <div>
@@ -361,9 +334,9 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
             label="NFC Code"
             name="nfcCode"
             fieldType="text"
-            value={formState.nfcCode}
+            value={nfcCode}
             placeholder="Enter NFC code"
-            onChange={handleChange}
+            onChange={(e) => setNfcCode(e.target.value)}
           />
         </div>
         <div>
@@ -371,104 +344,76 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
             label="Pipe Diameter"
             name="pipeDia"
             fieldType="number"
-            value={formState.pipeDia}
+            value={pipeDia}
             placeholder="Enter pipe diameter"
-            onChange={handleChange}
+            onChange={(e) => setPipeDia(parseFloat(e.target.value))}
           />
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">
-            Smart:
-          </label>
-          <select
-            name="smart"
-            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-            value={formState.smart}
-            onChange={handleChange}
-          >
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-          </select>
+          <SelectField
+            label="Smart"
+            value={smart}
+            onChange={(option) => setSmart(option)}
+            options={smartOptions}
+            required
+          />
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">
-            Size:
-          </label>
-          <select
-            name="size"
-            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-            value={formState.size}
-            onChange={handleChange}
-          >
-            <option value="Small">Small</option>
-            <option value="Medium">Medium</option>
-            <option value="Large">Large</option>
-            <option value="XLarge">Xlarge</option>
-            <option value="XXLarge">XXLarge</option>
-          </select>
+          <SelectField
+            label="Size"
+            value={size}
+            onChange={(option) => setSize(option)}
+            options={sizeOptions}
+            placeholder="Select Size"
+            required
+          />
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">
-            Material:
-          </label>
-          <select
-            name="material"
-            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-            value={formState.material}
-            onChange={handleChange}
-          >
-            <option value="Concrete">Concrete</option>
-            <option value="Cement">Cement</option>
-            <option value="Brass">Brass</option>
-            <option value="Iron">Iron</option>
-          </select>
+          <SelectField
+            label="Material"
+            value={material}
+            onChange={(option) => setMaterial(option)}
+            options={materialOptions}
+            placeholder="Select Material"
+            required
+          />
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">
-            Delete Protect:
-          </label>
-          <select
-            name="deleteProtect"
-            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-            value={formState.deleteProtect}
-            onChange={handleChange}
-          >
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-          </select>
+          <SelectField
+            label="Delete Protect"
+            value={deleteProtect}
+            onChange={(option) => setDeleteProtect(option)}
+            options={deleteProtectOptions}
+            required
+          />
         </div>
         <div>
           <InputField
             label="Duty"
             name="duty"
             fieldType="text"
-            value={formState.duty}
+            value={duty}
             placeholder="Enter duty"
-            onChange={handleChange}
+            onChange={(e) => setDuty(e.target.value)}
           />
         </div>
         <div>
-          <label className="block text-darkgray-0 font-medium text-[1vw]">
-            Rails:
-          </label>
-          <select
-            name="rails"
-            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-            value={formState.rails}
-            onChange={handleChange}
-          >
-            <option value="Yes">Yes</option>
-            <option value="No">No</option>
-          </select>
+          <SelectField
+            label="Rails"
+            value={rails}
+            onChange={(option) => setRails(option)}
+            options={railsOptions}
+            required
+          />
         </div>
         <div>
           <InputField
             label="Float"
             name="float"
             fieldType="number"
-            value={formState.float}
+            value={floatVal}
             placeholder="Enter float"
-            onChange={handleChange}
+            onChange={(e) => setFloat(parseFloat(e.target.value))}
           />
         </div>
         <div>
@@ -476,9 +421,9 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
             label="Pumps"
             name="pumps"
             fieldType="number"
-            value={formState.pumps}
+            value={pumps}
             placeholder="Enter pumps"
-            onChange={handleChange}
+            onChange={(e) => setPumps(parseFloat(e.target.value))}
           />
         </div>
         <div className="col-span-2 absolute bottom-0 right-0 flex justify-end space-x-[1vw]">

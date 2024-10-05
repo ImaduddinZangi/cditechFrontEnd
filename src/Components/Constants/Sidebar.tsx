@@ -30,12 +30,12 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
     { title: "Dashboard", src: "dashboard", href: "/client-dashboard" },
     { title: "Client Profile", src: "client", href: "/client-profile" },
     {
-      title: "Pump Brand Table",
+      title: "Pump Brands",
       src: "table",
       href: "/pump-brands-table",
     },
     {
-      title: "Inspection Table",
+      title: "Inspections",
       src: "table",
       href: "/inspection-table",
     },
@@ -44,9 +44,9 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
       src: "group",
       isDropdown: true,
       dropdownItems: [
-        { title: "User Group Table", src: "table", href: "/user-group-table" },
+        { title: "User Groups", src: "table", href: "/user-group-table" },
         {
-          title: "Client User Table",
+          title: "Client Users",
           src: "table",
           href: "/client-user-table",
         },
@@ -57,7 +57,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
       src: "customer",
       isDropdown: true,
       dropdownItems: [
-        { title: "Customers Table", src: "table", href: "/customer-table" },
+        { title: "Customers", src: "table", href: "/customer-table" },
         {
           title: "Manage Customer",
           src: "manage-customer",
@@ -266,9 +266,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
       >
         {children}
         <div
-          className={`fixed bottom-0 ${
-            open ? "w-[85vw]" : "w-[94vw]"
-          } duration-300`}
+          className={`block ${open ? "w-[84.7vw]" : "w-[93.7vw]"} duration-300`}
         >
           <AuthFooter />
         </div>

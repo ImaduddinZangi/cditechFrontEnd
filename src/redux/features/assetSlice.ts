@@ -6,8 +6,6 @@ import { AssetType } from './assetTypeSlice';
 export interface Asset {
   id: string;
   name: string;
-  customerId: string;
-  clientId: string;
   location: string;
   latitude: number;
   longitude: number;
@@ -25,7 +23,7 @@ export interface Asset {
   rails: string;
   float: number;
   pumps: number;
-  type: AssetType;
+  type?: AssetType;
   createdAt?: string;
   updatedAt?: string;
   client?: Client;
@@ -33,11 +31,10 @@ export interface Asset {
 }
 
 export interface CreateAsset {
-  id: string;
   name: string;
   type: string;
   customerId: string;
-  clientId: string;
+  clientId?: string;
   location: string;
   latitude: number;
   longitude: number;
@@ -55,10 +52,6 @@ export interface CreateAsset {
   rails: string;
   float: number;
   pumps: number;
-  createdAt?: string;
-  updatedAt?: string;
-  client?: Client;
-  customer?: Customer;
 }
 
 interface AssetState {

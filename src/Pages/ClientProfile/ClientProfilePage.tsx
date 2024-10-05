@@ -8,13 +8,16 @@ import { RootState } from "../../redux/store";
 import { useGetClientByIdQuery } from "../../redux/api/clientApi";
 import { getUserId } from "../../utils/utils";
 import CompanyExtraDetails from "../../Components/ClientProfile/CompanyExtraDetails";
+import PurpleButton from "../../Components/Tags/PurpleButton";
 
 const ClientProfilePage: React.FC = () => {
   const dispatch = useDispatch();
   const { data } = useGetQuickBookSignUpLinkQuery();
   const clientId = getUserId();
   const { data: client } = useGetClientByIdQuery(clientId as string);
-  const quickbooksAuthUrl = useSelector((state: RootState) => state.client.quickbooksAuthUrl);
+  const quickbooksAuthUrl = useSelector(
+    (state: RootState) => state.client.quickbooksAuthUrl
+  );
 
   useEffect(() => {
     if (data && data.url) {
@@ -32,25 +35,15 @@ const ClientProfilePage: React.FC = () => {
     <ClientLayout breadcrumb="Manage Client">
       <DetailedClientInfo />
       <div className="m-[2vw] flex flex-row items-center gap-[1vw]">
-        <button
+        <PurpleButton
+          text="Quickbook Sign Up"
           disabled={client?.quickbooksAccessToken != null}
           onClick={handleQuickBookSignUpClick}
-          className="bg-purple-0 text-[1vw] text-white font-inter font-medium px-[1vw] py-[0.5vw] rounded-md"
-        >
-          Quickbook Sign Up
-        </button>
-        <button className="bg-purple-0 text-[1vw] text-white font-inter font-medium px-[1vw] py-[0.5vw] rounded-md">
-          Edit Profile
-        </button>
-        <button className="bg-purple-0 text-[1vw] text-white font-inter font-medium px-[1vw] py-[0.5vw] rounded-md">
-          Edit Payment
-        </button>
-        <button className="bg-purple-0 text-[1vw] text-white font-inter font-medium px-[1vw] py-[0.5vw] rounded-md">
-          Edit Company Logo
-        </button>
-        <button className="bg-purple-0 text-[1vw] text-white font-inter font-medium px-[1vw] py-[0.5vw] rounded-md">
-          Change Fee Plan
-        </button>
+        />
+        <PurpleButton text="Edit Profile" />
+        <PurpleButton text="Edit Payment" />
+        <PurpleButton text="Edit Company Logo" />
+        <PurpleButton text="Change Fee Plan" />
       </div>
       <CompanyExtraDetails />
     </ClientLayout>

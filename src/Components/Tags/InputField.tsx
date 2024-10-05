@@ -40,9 +40,10 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
         {label && (
           <label
             htmlFor={htmlFor}
-            className={`block text-[2.5vw] md:text-[1vw] font-medium text-darkgray-0 ${labelClassName}`}
+            className={`block text-[1vw] font-medium text-darkgray-0 ${labelClassName}`}
           >
             {label}
+            {required && <span className="text-red-500"> *</span>}
           </label>
         )}
         <input

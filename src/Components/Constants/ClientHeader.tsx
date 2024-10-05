@@ -32,7 +32,15 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ breadcrumb }) => {
         <Loader />
       </div>
     );
-  const photo = photosData?.find((photo) => photo.clientId === clientId);
+  const photo = photosData?.find(
+    (photo) =>
+      photo.clientId === clientId &&
+      !photo.assetId &&
+      !photo.customerId &&
+      !photo.inspectionId &&
+      !photo.pumpBrandId &&
+      !photo.pumpId
+  );
   const photoUrl = photo
     ? `https://inspection-point-s3.s3.us-east-2.amazonaws.com/${photo.url}`
     : "/assets/no-image.jpg";
@@ -52,21 +60,22 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ breadcrumb }) => {
           {breadcrumb}
         </span>
       </div>
-      <div className="flex items-center">
-        {/* Clickable image wrapped in Link */}
+      <div className="flex flex-row items-center">
+        <div className="flex flex-col items-end">
+          <p className="text-darkgray-0 text-[1vw] font-semibold leading-none font-inter">
+            {client?.name}
+          </p>
+          <p className="text-gray-0 text-[1vw] font-inter">
+            {client?.company_name}
+          </p>
+        </div>
         <Link to={`/add-photos/client/${clientId}`}>
           <img
-            className="w-[2.5vw] h-[2.5vw] rounded-full mr-[1vw] cursor-pointer"
+            className="ml-[1vw] w-[3vw] h-[3vw] rounded-full cursor-pointer"
             src={photoUrl || "https://via.placeholder.com/150"}
             alt={client?.name || "Client Image"}
           />
         </Link>
-        <div>
-          <p className="text-darkgray-0 text-[1vw] font-semibold leading-none font-inter">
-            {client?.name}
-          </p>
-          <p className="text-gray-0 text-[1vw] font-inter">{client?.email}</p>
-        </div>
       </div>
     </div>
   );
