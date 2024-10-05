@@ -14,7 +14,7 @@ const ClientLayout: React.FC<ClientLayoutProps> = ({
   return (
     <Sidebar>
       <ClientHeader breadcrumb={breadcrumb} />
-      <div className="pb-[12vh]">{children}</div>
+      <div className="min-h-[75vh]">{children}</div>
     </Sidebar>
   );
 };
