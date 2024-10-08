@@ -28,74 +28,253 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 
   const Menus: MenuItem[] = [
     { title: "Dashboard", src: "dashboard", href: "/client-dashboard" },
-    { title: "Client Profile", src: "client", href: "/client-profile" },
+    { title: "New Rapid Task", src: "client", href: "/new-rapid-task" },
     {
-      title: "Pump Brands",
+      title: "Quick Search",
       src: "table",
-      href: "/pump-brands-table",
-    },
-    {
-      title: "Inspections",
-      src: "table",
-      href: "/inspection-table",
-    },
-    {
-      title: "User Groups",
-      src: "group",
-      isDropdown: true,
-      dropdownItems: [
-        { title: "User Groups", src: "table", href: "/user-group-table" },
-        {
-          title: "Client Users",
-          src: "table",
-          href: "/client-user-table",
-        },
-      ],
+      href: "/quick-search",
     },
     {
       title: "Customers",
       src: "customer",
       isDropdown: true,
       dropdownItems: [
-        { title: "Customers", src: "table", href: "/customer-table" },
+        { title: "Manage Customers", src: "table", href: "/manage-customers" },
         {
-          title: "Manage Customer",
-          src: "manage-customer",
-          href: "/manage-customer",
+          title: "Add New Customer",
+          src: "table",
+          href: "/add-customer",
         },
       ],
     },
     {
-      title: "Logs",
-      src: "log",
+      title: "Tasks",
+      src: "customer",
       isDropdown: true,
       dropdownItems: [
-        { title: "Client Logs", src: "log", href: "/client-logs-dashboard" },
+        { title: "Task Manager", src: "table", href: "/manage-tasks" },
         {
-          title: "Management Logs",
-          src: "log",
-          href: "/management-logs-dashboard",
+          title: "My Tasks",
+          src: "manage-customer",
+          href: "/my-tasks",
         },
         {
-          title: "User Sessions",
-          src: "log",
-          href: "/client-users-sessions",
+          title: "My Task History",
+          src: "manage-customer",
+          href: "/my-task-history",
+        },
+        {
+          title: "Add New Customer Task",
+          src: "manage-customer",
+          href: "/add-new-customer-task",
+        },
+        {
+          title: "Easy Task Editor",
+          src: "manage-customer",
+          href: "/easy-task-editor",
         },
       ],
     },
     {
-      title: "Files",
+      title: "Inspections",
+      src: "inspection",
+      isDropdown: true,
+      dropdownItems: [
+        {
+          title: "Inspection Manager",
+          src: "inspection",
+          href: "/manage-inspections",
+        },
+        {
+          title: "My Inspections",
+          src: "log",
+          href: "/manage-inspections",
+        },
+        {
+          title: "My Inspection History",
+          src: "log",
+          href: "/my-inspection-history",
+        },
+        {
+          title: "Add New Inspection",
+          src: "log",
+          href: "/add-inspection",
+        },
+        {
+          title: "Inspection Checklist Manager",
+          src: "log",
+          href: "/manage-inspection-checklists",
+        },
+      ],
+    },
+    {
+      title: "Maps",
+      src: "map",
+      isDropdown: true,
+      dropdownItems: [
+        { title: "Customers", src: "", href: "/customers-map" },
+        {
+          title: "Tasks",
+          src: "log",
+          href: "/tasks-map",
+        },
+        {
+          title: "Inspections",
+          src: "log",
+          href: "/inspections-map",
+        },
+        {
+          title: "Assets",
+          src: "log",
+          href: "/assets-map",
+        },
+        {
+          title: "One Click Task Route",
+          src: "log",
+          href: "/one-click-task-route",
+        },
+        {
+          title: "One Click Inspection Route",
+          src: "log",
+          href: "/one-click-inspection-route",
+        },
+      ],
+    },
+    {
+      title: "Calendars",
       src: "files",
       isDropdown: true,
       dropdownItems: [
         {
-          title: "Inspection Reports",
+          title: "Task Calendar",
           src: "reports",
-          href: "/inspection-reports",
+          href: "/task-calendar",
+        },
+        {
+          title: "Inspection Calendar",
+          src: "reports",
+          href: "/inspection-calendar",
         },
       ],
     },
-    { title: "Setting", src: "setting" },
+    {
+      title: "Billing",
+      src: "files",
+      isDropdown: true,
+      dropdownItems: [
+        {
+          title: "Invoice Manager",
+          src: "reports",
+          href: "/manage-invoices",
+        },
+        {
+          title: "Products",
+          src: "reports",
+          href: "/products",
+        },
+        {
+          title: "Services",
+          src: "reports",
+          href: "/services",
+        },
+      ],
+    },
+    {
+      title: "Users & Groups",
+      src: "files",
+      isDropdown: true,
+      dropdownItems: [
+        {
+          title: "User Management",
+          src: "reports",
+          href: "/manage-users",
+        },
+        {
+          title: "Group Management",
+          src: "reports",
+          href: "/manage-groups",
+        },
+        {
+          title: "Add New User",
+          src: "reports",
+          href: "/add-client-user",
+        },
+        {
+          title: "Current User Sessions",
+          src: "reports",
+          href: "/currect user sessions",
+        },
+      ],
+    },
+    {
+      title: "Support",
+      src: "files",
+      isDropdown: true,
+      dropdownItems: [
+        {
+          title: "Support Case Management",
+          src: "reports",
+          href: "/support-case-management",
+        },
+        {
+          title: "Education Center",
+          src: "reports",
+          href: "/education-center",
+        },
+        {
+          title: "Chat With Support",
+          src: "reports",
+          href: "/chat-with-support",
+        },
+        {
+          title: "Contact Us",
+          src: "reports",
+          href: "/contact-us",
+        },
+        {
+          title: "About Us",
+          src: "reports",
+          href: "/about-us",
+        },
+      ],
+    },
+    {
+      title: "Settings",
+      src: "setting",
+      isDropdown: true,
+      dropdownItems: [
+        {
+          title: "Task Settings",
+          src: "reports",
+          href: "/task-settings",
+        },
+        {
+          title: "Client Profile",
+          src: "reports",
+          href: "/client-profile",
+        },
+        {
+          title: "My Fee Plan",
+          src: "reports",
+          href: "/my-fee-plan",
+        },
+        {
+          title: "Log Dashboard",
+          src: "reports",
+          href: "/log-dashboard",
+        },
+        {
+          title: "Pump Brands",
+          src: "reports",
+          href: "/manage-pump-brands",
+        },
+        {
+          title: "My User Profile",
+          src: "reports",
+          href: "/my-user-profile",
+        },
+      ],
+    },
   ];
 
   const handleLogout = async () => {

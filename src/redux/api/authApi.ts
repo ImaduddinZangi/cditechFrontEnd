@@ -16,7 +16,8 @@ interface LoginRequest {
 }
 
 export interface ClientRegisterRequest {
-  name: string;
+  first_name: string;
+  last_name: string;
   email: string;
   password: string;
   industry: string;

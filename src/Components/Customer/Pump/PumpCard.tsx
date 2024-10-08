@@ -12,10 +12,9 @@ const formatDate = (dateString: string): string => {
 const PumpCard: React.FC<{
   pump: Pump;
   index: number;
-  onEdit: (pump: Pump) => void;
   onDelete: () => void;
   photoUrl: string;
-}> = ({ pump, index, onEdit, photoUrl, onDelete }) => {
+}> = ({ pump, index, photoUrl, onDelete }) => {
   const navigate = useNavigate();
   return (
     <div className="flex items-center justify-between border p-[1vw] mb-[1vw] rounded-lg">
@@ -99,7 +98,7 @@ const PumpCard: React.FC<{
         </div>
       </div>
       <div className="w-[21.333334%] flex justify-center space-x-[1vw]">
-        <PurpleButton type="button" text="Edit" onClick={() => onEdit(pump)} />
+        <PurpleButton type="button" text="Edit" />
         <PurpleButton
           type="button"
           text="Photos"

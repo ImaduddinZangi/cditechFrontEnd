@@ -234,17 +234,17 @@ const CustomerTable: React.FC = () => {
                           <td className="py-[1vw] px-[1.5vw] text-center">
                             <ActiveBadge
                               iconColor={
-                                customer.status === "active"
+                                customer.status === "Active"
                                   ? "bg-green-500"
                                   : "bg-red-500"
                               }
                               bgColor={
-                                customer.status === "active"
+                                customer.status === "Active"
                                   ? "bg-green-100"
                                   : "bg-red-100"
                               }
                               textColor={
-                                customer.status === "active"
+                                customer.status === "Active"
                                   ? "text-green-800"
                                   : "text-red-800"
                               }

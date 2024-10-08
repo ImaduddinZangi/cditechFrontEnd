@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useGetClientByIdQuery } from "../../redux/api/clientApi";
 import { useGetPhotosQuery } from "../../redux/api/uploadPhotosApi";
+import { useGetCompanyByClientIdQuery } from "../../redux/api/companyApi";
 import { getUserId } from "../../utils/utils";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -19,6 +20,8 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ breadcrumb }) => {
     error,
     isLoading,
   } = useGetClientByIdQuery(clientId || "");
+
+  const { data: company } = useGetCompanyByClientIdQuery(clientId || "");
 
   useEffect(() => {
     if (error) {
@@ -63,17 +66,20 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ breadcrumb }) => {
       <div className="flex flex-row items-center">
         <div className="flex flex-col items-end">
           <p className="text-darkgray-0 text-[1vw] font-semibold leading-none font-inter">
-            {client?.name}
+            {client?.first_name}, {client?.last_name}
           </p>
           <p className="text-gray-0 text-[1vw] font-inter">
-            {client?.company_name}
+            {company?.company_name}
+          </p>
+          <p className="text-gray-0 text-[1vw] font-inter">
+            {client?.userGroups[0].name}
           </p>
         </div>
         <Link to={`/add-photos/client/${clientId}`}>
           <img
-            className="ml-[1vw] w-[3vw] h-[3vw] rounded-full cursor-pointer"
+            className="ml-[1vw] w-[4vw] h-[4vw] rounded-full cursor-pointer"
             src={photoUrl || "https://via.placeholder.com/150"}
-            alt={client?.name || "Client Image"}
+            alt={client?.first_name || "Client Image"}
           />
         </Link>
       </div>

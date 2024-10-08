@@ -5,17 +5,14 @@ import Loader from "../../Constants/Loader";
 
 const DetailedAssets: React.FC = () => {
   const { assetId } = useParams<{ assetId: string }>();
-  const {
-    data: asset,
-    error,
-    isLoading,
-  } = useGetAssetByIdQuery(assetId || "");
+  const { data: asset, error, isLoading } = useGetAssetByIdQuery(assetId || "");
 
-  if (isLoading) return (
-    <div className="w-full h-[80vh]">
-      <Loader />
-    </div>
-  );
+  if (isLoading)
+    return (
+      <div className="w-full h-[80vh]">
+        <Loader />
+      </div>
+    );
   if (error) return <p>Error loading asset details</p>;
 
   return (
@@ -32,14 +29,6 @@ const DetailedAssets: React.FC = () => {
           </div>
           <div>
             <p className="text-[1vw] text-gray-0 font-medium font-inter">
-              Location:
-            </p>
-            <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {asset.location}
-            </p>
-          </div>
-          <div>
-            <p className="text-[1vw] text-gray-0 font-medium font-inter">
               Status:
             </p>
             <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
@@ -52,14 +41,6 @@ const DetailedAssets: React.FC = () => {
             </p>
             <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
               {asset.id}
-            </p>
-          </div>
-          <div>
-            <p className="text-[1vw] text-gray-0 font-medium font-inter">
-              Description:
-            </p>
-            <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {asset.description}
             </p>
           </div>
           <div>

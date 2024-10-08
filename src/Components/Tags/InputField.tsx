@@ -2,11 +2,8 @@ import React, { forwardRef } from "react";
 
 interface InputFieldProps {
   label?: string;
-  htmlFor?: string;
-  id?: string;
   name?: string;
   fieldType: string;
-  autoComplete?: string;
   placeholder?: string;
   value?: string | number;
   required?: boolean;
@@ -19,12 +16,9 @@ interface InputFieldProps {
 const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
   (
     {
-      htmlFor,
       label,
-      id,
       name,
       fieldType,
-      autoComplete,
       placeholder,
       value,
       required = false,
@@ -39,7 +33,7 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
       <div className="w-full">
         {label && (
           <label
-            htmlFor={htmlFor}
+            htmlFor={name}
             className={`block text-[1vw] font-medium text-darkgray-0 ${labelClassName}`}
           >
             {label}
@@ -48,10 +42,10 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
         )}
         <input
           ref={ref}
-          id={id}
+          id={name}
           name={name}
           type={fieldType}
-          autoComplete={autoComplete}
+          autoComplete="on"
           required={required}
           className={`mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none ${fieldClassName}`}
           placeholder={placeholder}

@@ -92,9 +92,6 @@ const InvoiceTablePage = lazy(
 const EditGroupPermissionsPage = lazy(
   () => import("../Pages/UserGroups/Groups/EditGroupPermissionsPage")
 );
-const ReportedInspectionTablePage = lazy(
-  () => import("../Pages/Inspection/ReportedInspectionTablePage")
-);
 const InvoiceDetailsPage = lazy(
   () => import("../Pages/Inspection/InvoiceDetailsPage")
 );
@@ -189,7 +186,7 @@ const RoutesContent: React.FC = () => {
             path="/edit-customer/:customerId"
             element={<EditCustomerPage />}
           />
-          <Route path="/customer-table" element={<CustomerTablePage />} />
+          <Route path="/manage-customers" element={<CustomerTablePage />} />
 
           {/* Asset */}
           <Route path="/add-asset" element={<AddAssetsPage />} />
@@ -205,7 +202,7 @@ const RoutesContent: React.FC = () => {
             path="/edit-pump-brand/:pumpId"
             element={<EditPumpBrandPage />}
           />
-          <Route path="/pump-brands-table" element={<PumpBrandsTablePage />} />
+          <Route path="/manage-pump-brands" element={<PumpBrandsTablePage />} />
           <Route
             path="/pump-brand-detail/:pumpBrandId"
             element={<PumpBrandDetailsPage />}
@@ -228,15 +225,8 @@ const RoutesContent: React.FC = () => {
             path="/inspection-reports"
             element={<InspectionReportsPage />}
           />
-          <Route path="/inspection-table" element={<InspectionTablePage />} />
-          <Route
-            path="/pdf-uploaded-table"
-            element={<ReportedInspectionTablePage />}
-          />
-          <Route
-            path="/invoiced-inspections-table"
-            element={<InvoiceTablePage />}
-          />
+          <Route path="/manage-inspections" element={<InspectionTablePage />} />
+          <Route path="/manage-invoices" element={<InvoiceTablePage />} />
           <Route path="/invoice/:invoiceId" element={<InvoiceDetailsPage />} />
           <Route
             path="/update-inspection/:inspectionId"
@@ -253,7 +243,7 @@ const RoutesContent: React.FC = () => {
             path="/edit-user-group/:userGroupId"
             element={<EditUserGroupPage />}
           />
-          <Route path="/user-group-table" element={<UserGroupTablePage />} />
+          <Route path="/manage-user-groups" element={<UserGroupTablePage />} />
           <Route
             path="/user-group-details/:userGroupId"
             element={<UserGroupDetailsPage />}
@@ -271,7 +261,7 @@ const RoutesContent: React.FC = () => {
             path="/edit-client-user/:clientUserId"
             element={<EditClientUserPage />}
           />
-          <Route path="/client-user-table" element={<ClientUserTablePage />} />
+          <Route path="/manage-users" element={<ClientUserTablePage />} />
 
           {/* LOGS */}
           <Route

@@ -40,7 +40,10 @@ const SelectField: React.FC<SelectFieldProps> = ({
 
   return (
     <div>
-      <label className="block text-darkgray-0 font-medium text-[1vw]">
+      <label
+        htmlFor={name}
+        className="block text-darkgray-0 font-medium text-[1vw]"
+      >
         {label}
         {required && <span className="text-red-500"> *</span>}
       </label>
@@ -60,6 +63,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
             placeholder={placeholder}
             required={required}
             name={name}
+            id={name}
             disabled={disabled}
             onFocus={() => setIsOpen(true)}
             onBlur={() => setIsOpen(false)}

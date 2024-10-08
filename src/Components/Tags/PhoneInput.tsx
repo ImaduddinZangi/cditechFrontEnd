@@ -10,6 +10,8 @@ interface PhoneInputProps {
   required?: boolean;
   placeholder?: string;
   disabled?: boolean;
+  autoComplete?: string;
+  id?: string;
 }
 
 const PhoneInput: React.FC<PhoneInputProps> = ({
@@ -78,7 +80,10 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
   return (
     <div>
       {label && (
-        <label className="block text-darkgray-0 font-medium text-[1vw]">
+        <label
+          htmlFor={name}
+          className="block text-darkgray-0 font-medium text-[1vw]"
+        >
           {label}
           {required && <span className="text-red-500"> *</span>}
         </label>
@@ -104,7 +109,9 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
             placeholder={placeholder}
             required={required}
             disabled={disabled}
-            className="block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] ml-2 placeholder:text-lightgray-0 opacity-60 focus:outline-none"
+            autoComplete="on"
+            id={name}
+            className="block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] ml-[0.5vw] placeholder:text-lightgray-0 opacity-60 focus:outline-none"
           />
         </div>
         {isDropdownOpen && (
@@ -112,7 +119,7 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
             {countryOptions.map((country) => (
               <li
                 key={country.iso2}
-                className="cursor-pointer px-2 py-1 hover:bg-purple-0 hover:text-white"
+                className="cursor-pointer px-[0.5vw] py-1 hover:bg-purple-0 hover:text-white"
                 onClick={() => handleCountryChange(country)}
               >
                 {country.name} ({country.dialCode})

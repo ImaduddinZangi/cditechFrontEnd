@@ -1,5 +1,8 @@
 import React from "react";
-import { useGetCustomerByIdQuery, useUpdateCustomerMutation } from "../../redux/api/customerApi";
+import {
+  useGetCustomerByIdQuery,
+  useUpdateCustomerMutation,
+} from "../../redux/api/customerApi";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -8,7 +11,11 @@ import ClientLayout from "../../Layouts/ClientLayout";
 
 const EditCustomerPage: React.FC = () => {
   const { customerId } = useParams<{ customerId: string }>();
-  const { data: customer, error, isLoading } = useGetCustomerByIdQuery(customerId || "");
+  const {
+    data: customer,
+    error,
+    isLoading,
+  } = useGetCustomerByIdQuery(customerId || "");
   const [updateCustomer] = useUpdateCustomerMutation();
   const navigate = useNavigate();
 
@@ -22,42 +29,9 @@ const EditCustomerPage: React.FC = () => {
     return error && error.data && typeof error.data.message === "string";
   };
 
-  const handleSubmit = async (data: {
-    name: string;
-    email: string;
-    phone: string;
-    gate_code: string;
-    previousPhone: string;
-    streetAddress: string;
-    billingAddress: string;
-  }) => {
-    const {
-      name,
-      email,
-      phone,
-      gate_code,
-      previousPhone,
-      streetAddress,
-      billingAddress,
-    } = data;
-
-    const customerData = {
-      id: customerId,
-      name,
-      email,
-      phone,
-      address: streetAddress,
-      service_address: streetAddress,
-      billing_address: billingAddress,
-      type: "customer",
-      status: "active",
-      gate_code,
-      previous_phone_number: previousPhone,
-      service_contact: phone,
-    };
-
+  const handleSubmit = async (formData: FormData) => {
     try {
-      await updateCustomer(customerData).unwrap();
+      await updateCustomer({ id: customerId, formData }).unwrap();
       toast.success("Customer updated successfully!", {
         onClose: () => navigate("/client-dashboard"),
         autoClose: 1000,

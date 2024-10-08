@@ -9,7 +9,11 @@ import WhiteButton from "../../Tags/WhiteButton";
 import SelectField from "../../Tags/SelectField";
 import Loader from "../../Constants/Loader";
 import { useNavigate } from "react-router-dom";
-import { Asset, CreateAsset } from "../../../redux/features/assetSlice";
+import { Asset } from "../../../redux/features/assetSlice";
+import AddPump from "../Pump/AddPump";
+import { Pump } from "../../../redux/features/pumpSlice";
+import AddPhotos from "../AddPhotos";
+import OutlinePurpleButton from "../../Tags/OutlinePurpleButton";
 
 interface Option {
   label: string;
@@ -17,7 +21,7 @@ interface Option {
 }
 
 interface AddAssetProps {
-  onSubmit: (data: CreateAsset) => void;
+  onSubmit: (assetData: FormData, pumpDataList: Pump[]) => void;
   initialData?: Partial<Asset>;
 }
 
@@ -47,16 +51,29 @@ const sizeOptions: Option[] = [
   { label: "XXLarge", value: "XXLarge" },
 ];
 
-const materialOptions: Option[] = [
-  { label: "Concrete", value: "Concrete" },
-  { label: "Cement", value: "Cement" },
-  { label: "Brass", value: "Brass" },
-  { label: "Iron", value: "Iron" },
+const powerOptions: Option[] = [
+  { label: "1 Phase", value: "1 Phase" },
+  { label: "2 Phase", value: "2 Phase" },
+  { label: "3 Phase", value: "3 Phase" },
+  { label: "Wild", value: "Wild" },
+  { label: "Unknown", value: "Unknown" },
+  { label: "Other", value: "Other" },
 ];
 
-const deleteProtectOptions: Option[] = [
-  { label: "Yes", value: "Yes" },
-  { label: "No", value: "No" },
+const materialOptions: Option[] = [
+  { label: "Concrete", value: "Concrete" },
+  { label: "Steel", value: "Steel" },
+  { label: "Fiberglass", value: "Fiberglass" },
+  { label: "Composite", value: "Composite" },
+  { label: "Other", value: "Other" },
+  { label: "Unknown", value: "Unknown" },
+];
+
+const dutyOptions: Option[] = [
+  { label: "Lite", value: "Lite" },
+  { label: "Normal", value: "Normal" },
+  { label: "Heavy", value: "Heavy" },
+  { label: "Severe", value: "Severe" },
 ];
 
 const railsOptions: Option[] = [
@@ -64,12 +81,21 @@ const railsOptions: Option[] = [
   { label: "No", value: "No" },
 ];
 
+const pumpOptions: Option[] = [
+  { label: "6", value: "6" },
+  { label: "5", value: "5" },
+  { label: "4", value: "4" },
+  { label: "3", value: "3" },
+  { label: "2", value: "2" },
+  { label: "1", value: "1" },
+];
+
 const libraries: ("places" | "drawing")[] = ["places"];
 
 const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
   const [customers, setCustomers] = useState<Option[]>([]);
   const [assetTypes, setAssetTypes] = useState<Option[]>([]);
-
+  const [pumpDataList, setPumpDataList] = useState<Partial<Pump>[]>([]);
   const [name, setName] = useState<string>(initialData?.name || "");
   const [type, setType] = useState<Option | null>(
     initialData?.type
@@ -86,12 +112,14 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
   const [longitude, setLongitude] = useState<number>(
     initialData?.longitude || 0
   );
-  const [description, setDescription] = useState<string>(
-    initialData?.description || ""
-  );
   const [status, setStatus] = useState<Option | null>(
     initialData?.status
       ? { label: initialData.status, value: initialData.status }
+      : null
+  );
+  const [power, setPower] = useState<Option | null>(
+    initialData?.power
+      ? { label: initialData.power, value: initialData.power }
       : null
   );
   const [inspectionInterval, setInspectionInterval] = useState<Option | null>(
@@ -104,7 +132,8 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
   );
   const [qrCode, setQrCode] = useState<string>(initialData?.qrCode || "");
   const [nfcCode, setNfcCode] = useState<string>(initialData?.nfcCode || "");
-  const [pipeDia, setPipeDia] = useState<number>(initialData?.pipeDia || 0);
+  const [photos, setPhotos] = useState<File[]>([]);
+  const [pipeDia, setPipeDia] = useState<string>(initialData?.pipeDia || "");
   const [smart, setSmart] = useState<Option | null>(
     initialData?.smart
       ? { label: initialData.smart, value: initialData.smart }
@@ -120,19 +149,25 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
       ? { label: initialData.material, value: initialData.material }
       : null
   );
-  const [deleteProtect, setDeleteProtect] = useState<Option | null>(
-    initialData?.deleteProtect
-      ? { label: initialData.deleteProtect, value: initialData.deleteProtect }
+  const [duty, setDuty] = useState<Option | null>(
+    initialData?.duty
+      ? { label: initialData.duty, value: initialData.duty }
       : null
   );
-  const [duty, setDuty] = useState<string>(initialData?.duty || "");
   const [rails, setRails] = useState<Option | null>(
     initialData?.rails
       ? { label: initialData.rails, value: initialData.rails }
       : null
   );
-  const [floatVal, setFloat] = useState<number>(initialData?.float || 0);
-  const [pumps, setPumps] = useState<number>(initialData?.pumps || 0);
+  const [pumps, setPumps] = useState<Option | null>(
+    initialData?.pumps
+      ? { label: initialData.pumps, value: initialData.pumps }
+      : null
+  );
+  const [floatVal, setFloat] = useState<string>(initialData?.float || "");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
 
   const clientId = getUserId();
   const navigate = useNavigate();
@@ -171,7 +206,6 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
       }));
       setCustomers(customerOptions);
 
-      // Set initial customer if initialData is provided
       if (initialData?.customer) {
         const selectedCustomer = customerOptions.find(
           (c) => c.value === initialData.customer?.id
@@ -189,7 +223,6 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
       }));
       setAssetTypes(assetTypeOptions);
 
-      // Set initial asset type if initialData is provided
       if (initialData?.type) {
         const selectedAssetType = assetTypeOptions.find(
           (a) => a.value === initialData.type?.id
@@ -199,35 +232,64 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
     }
   }, [assetTypeData, initialData]);
 
+  useEffect(() => {
+    if (pumps) {
+      const numberOfPumps = Number(pumps.value);
+      setPumpDataList(Array(numberOfPumps).fill({}));
+    } else {
+      setPumpDataList([]);
+    }
+  }, [pumps]);
+
+  const handlePumpChange = (index: number, data: Pump) => {
+    setPumpDataList((prevPumpDataList) => {
+      const newPumpDataList = [...prevPumpDataList];
+      newPumpDataList[index] = data;
+      return newPumpDataList;
+    });
+  };
+
   const handleCancel = () => {
     navigate("/customer-table");
   };
 
+  const handlePhotosSubmit = (uploadedPhotos: File[]) => {
+    setPhotos(uploadedPhotos);
+    handleCloseModal();
+  };
+
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    onSubmit({
-      name,
-      type: type?.value || "",
-      customerId: customerId?.value || "",
-      clientId: clientId ?? undefined,
-      location,
-      latitude,
-      longitude,
-      description,
-      status: status?.value || "",
-      inspectionInterval: inspectionInterval?.value || "",
-      qrCode,
-      nfcCode,
-      pipeDia,
-      smart: smart?.value || "",
-      size: size?.value || "",
-      material: material?.value || "",
-      deleteProtect: deleteProtect?.value || "",
-      duty,
-      rails: rails?.value || "",
-      float: floatVal,
-      pumps,
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("type", type?.value || "");
+    formData.append("customerId", customerId?.value || "");
+    if (clientId !== undefined && clientId != null) {
+      formData.append("clientId", clientId);
+    }
+    formData.append("location", location);
+    formData.append("latitude", latitude.toString());
+    formData.append("longitude", longitude.toString());
+    formData.append("status", status?.value || "");
+    formData.append("inspectionInterval", inspectionInterval?.value || "");
+    formData.append("qrCode", qrCode);
+    formData.append("nfcCode", nfcCode);
+    formData.append("pipeDia", pipeDia);
+    formData.append("smart", smart?.value || "");
+    formData.append("size", size?.value || "");
+    formData.append("material", material?.value || "");
+    formData.append("deleteProtect", "yes");
+    formData.append("duty", duty?.value || "");
+    formData.append("rails", rails?.value || "");
+    formData.append("power", power?.value || "");
+    formData.append("float", floatVal);
+    formData.append("pumps", pumps?.value || "");
+    photos.forEach((photo) => {
+      formData.append("photos", photo);
     });
+
+    onSubmit(formData, pumpDataList as Pump[]);
   };
 
   if (loadError) return <div>Error loading maps</div>;
@@ -240,197 +302,208 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
 
   return (
     <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
-      <form
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[1vw] relative pb-[5vw]"
-        onSubmit={handleSubmit}
-      >
-        <div>
-          <SelectField
-            label="Customer"
-            value={customerId}
-            onChange={(option) => setCustomerId(option)}
-            options={customers}
-            placeholder="Select a customer"
-            required
-          />
+      <form className="relative pb-[5vw]" onSubmit={handleSubmit}>
+        <div className="grid grid-cols-3 gap-[1vw]">
+          <div>
+            <SelectField
+              label="Customer"
+              value={customerId}
+              onChange={(option) => setCustomerId(option)}
+              options={customers}
+              placeholder="Select a customer"
+              // required
+            />
+          </div>
+          <div>
+            <SelectField
+              label="Asset Type"
+              value={type}
+              onChange={(option) => setType(option)}
+              options={assetTypes}
+              placeholder="Select an asset type"
+              required
+            />
+          </div>
+          <div>
+            <InputField
+              label="Asset Name"
+              name="name"
+              fieldType="text"
+              value={name}
+              placeholder="Enter asset name"
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+          <div>
+            {isLoaded && (
+              <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
+                <InputField
+                  ref={inputRef}
+                  label="Lat/Lng"
+                  name="location"
+                  fieldType="text"
+                  value={location}
+                  placeholder="Enter asset location"
+                  onChange={(e) => setLocation(e.target.value)}
+                />
+              </Autocomplete>
+            )}
+          </div>
+          <div>
+            <SelectField
+              label="Status"
+              value={status}
+              onChange={(option) => setStatus(option)}
+              options={statusOptions}
+              placeholder="Select status"
+              required
+            />
+          </div>
+          <div>
+            <SelectField
+              label="Inspection Interval"
+              value={inspectionInterval}
+              onChange={(option) => setInspectionInterval(option)}
+              options={inspectionIntervalOptions}
+              placeholder="Select Inspection Interval"
+              required
+            />
+          </div>
+          <div>
+            <InputField
+              label="QR Code"
+              name="qrCode"
+              fieldType="text"
+              value={qrCode}
+              placeholder="Enter QR code"
+              onChange={(e) => setQrCode(e.target.value)}
+            />
+          </div>
+          <div>
+            <InputField
+              label="NFC Code"
+              name="nfcCode"
+              fieldType="text"
+              value={nfcCode}
+              placeholder="Enter NFC code"
+              onChange={(e) => setNfcCode(e.target.value)}
+            />
+          </div>
+          <div>
+            <InputField
+              label="Pipe Diameter"
+              name="pipeDia"
+              fieldType="number"
+              value={pipeDia}
+              placeholder="Enter pipe diameter"
+              onChange={(e) => setPipeDia(e.target.value)}
+            />
+          </div>
+          <div>
+            <SelectField
+              label="Smart"
+              value={smart}
+              onChange={(option) => setSmart(option)}
+              options={smartOptions}
+              required
+            />
+          </div>
+          <div>
+            <SelectField
+              label="Size"
+              value={size}
+              onChange={(option) => setSize(option)}
+              options={sizeOptions}
+              placeholder="Select Size"
+              required
+            />
+          </div>
+          <div>
+            <SelectField
+              label="Material"
+              value={material}
+              onChange={(option) => setMaterial(option)}
+              options={materialOptions}
+              placeholder="Select Material"
+              required
+            />
+          </div>
+          <div>
+            <SelectField
+              label="Duty"
+              name="duty"
+              value={duty}
+              placeholder="Select Duty"
+              onChange={(option) => setDuty(option)}
+              options={dutyOptions}
+            />
+          </div>
+          <div>
+            <SelectField
+              label="Rails"
+              value={rails}
+              onChange={(option) => setRails(option)}
+              options={railsOptions}
+              required
+            />
+          </div>
+          <div>
+            <SelectField
+              label="Power"
+              value={power}
+              onChange={(option) => setPower(option)}
+              options={powerOptions}
+              required
+            />
+          </div>
+          <div>
+            <InputField
+              label="Floats"
+              name="floats"
+              fieldType="number"
+              value={floatVal}
+              placeholder="Enter float"
+              onChange={(e) => setFloat(e.target.value)}
+            />
+          </div>
+          <div>
+            <SelectField
+              label="Pumps"
+              name="pumps"
+              value={pumps}
+              placeholder="Select pumps"
+              onChange={(option) => setPumps(option)}
+              options={pumpOptions}
+            />
+          </div>
+          <OutlinePurpleButton onClick={handleOpenModal} text="Upload Photos" />
         </div>
-        <div>
-          <SelectField
-            label="Asset Type"
-            value={type}
-            onChange={(option) => setType(option)}
-            options={assetTypes}
-            placeholder="Select an asset type"
-            required
-          />
-        </div>
-        <div>
-          <InputField
-            label="Asset Name"
-            name="name"
-            fieldType="text"
-            value={name}
-            placeholder="Enter asset name"
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
-        <div>
-          {isLoaded && (
-            <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
-              <InputField
-                ref={inputRef}
-                label="Location"
-                name="location"
-                fieldType="text"
-                value={location}
-                placeholder="Enter asset location"
-                onChange={(e) => setLocation(e.target.value)}
+        {pumps &&
+          pumpDataList.map((pumpData, index) => (
+            <div className="mt-[2vw]">
+              <p className="text-[1.2vw] my-[1vw] font-semibold font-inter">
+                Pump # {index + 1}
+              </p>
+              <AddPump
+                key={index}
+                onChange={(data) => handlePumpChange(index, data)}
+                initialData={pumpData}
               />
-            </Autocomplete>
-          )}
-        </div>
-        <div>
-          <InputField
-            label="Description"
-            name="description"
-            fieldType="text"
-            value={description}
-            placeholder="Enter description"
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
-        <div>
-          <SelectField
-            label="Status"
-            value={status}
-            onChange={(option) => setStatus(option)}
-            options={statusOptions}
-            placeholder="Select status"
-            required
-          />
-        </div>
-        <div>
-          <SelectField
-            label="Inspection Interval"
-            value={inspectionInterval}
-            onChange={(option) => setInspectionInterval(option)}
-            options={inspectionIntervalOptions}
-            placeholder="Select Inspection Interval"
-            required
-          />
-        </div>
-        <div>
-          <InputField
-            label="QR Code"
-            name="qrCode"
-            fieldType="text"
-            value={qrCode}
-            placeholder="Enter QR code"
-            onChange={(e) => setQrCode(e.target.value)}
-          />
-        </div>
-        <div>
-          <InputField
-            label="NFC Code"
-            name="nfcCode"
-            fieldType="text"
-            value={nfcCode}
-            placeholder="Enter NFC code"
-            onChange={(e) => setNfcCode(e.target.value)}
-          />
-        </div>
-        <div>
-          <InputField
-            label="Pipe Diameter"
-            name="pipeDia"
-            fieldType="number"
-            value={pipeDia}
-            placeholder="Enter pipe diameter"
-            onChange={(e) => setPipeDia(parseFloat(e.target.value))}
-          />
-        </div>
-        <div>
-          <SelectField
-            label="Smart"
-            value={smart}
-            onChange={(option) => setSmart(option)}
-            options={smartOptions}
-            required
-          />
-        </div>
-        <div>
-          <SelectField
-            label="Size"
-            value={size}
-            onChange={(option) => setSize(option)}
-            options={sizeOptions}
-            placeholder="Select Size"
-            required
-          />
-        </div>
-        <div>
-          <SelectField
-            label="Material"
-            value={material}
-            onChange={(option) => setMaterial(option)}
-            options={materialOptions}
-            placeholder="Select Material"
-            required
-          />
-        </div>
-        <div>
-          <SelectField
-            label="Delete Protect"
-            value={deleteProtect}
-            onChange={(option) => setDeleteProtect(option)}
-            options={deleteProtectOptions}
-            required
-          />
-        </div>
-        <div>
-          <InputField
-            label="Duty"
-            name="duty"
-            fieldType="text"
-            value={duty}
-            placeholder="Enter duty"
-            onChange={(e) => setDuty(e.target.value)}
-          />
-        </div>
-        <div>
-          <SelectField
-            label="Rails"
-            value={rails}
-            onChange={(option) => setRails(option)}
-            options={railsOptions}
-            required
-          />
-        </div>
-        <div>
-          <InputField
-            label="Float"
-            name="float"
-            fieldType="number"
-            value={floatVal}
-            placeholder="Enter float"
-            onChange={(e) => setFloat(parseFloat(e.target.value))}
-          />
-        </div>
-        <div>
-          <InputField
-            label="Pumps"
-            name="pumps"
-            fieldType="number"
-            value={pumps}
-            placeholder="Enter pumps"
-            onChange={(e) => setPumps(parseFloat(e.target.value))}
-          />
-        </div>
+            </div>
+          ))}
         <div className="col-span-2 absolute bottom-0 right-0 flex justify-end space-x-[1vw]">
           <PurpleButton type="submit" text="Save" />
           <WhiteButton type="button" text="Cancel" onClick={handleCancel} />
         </div>
       </form>
+      {isModalOpen && (
+        <AddPhotos
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          onSubmit={handlePhotosSubmit}
+          type="Asset"
+        />
+      )}
     </div>
   );
 };

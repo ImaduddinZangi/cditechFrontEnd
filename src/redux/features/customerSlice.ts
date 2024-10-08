@@ -15,23 +15,12 @@ export interface Customer {
   previous_phone_number: string;
   service_contact: string;
   quickbooksCustomerId?: string;
-  photo?: string;
-  client?: Client;
-}
-
-export interface CreateCustomer {
-  id?: string;
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
-  service_address: string;
-  billing_address: string;
-  type: string;
-  status: string;
-  gate_code: string;
-  previous_phone_number: string;
-  service_contact: string;
+  previousProvider?: string;
+  billingContactEmail?: string;
+  client: Client;
+  photos: string[];
+  created_at: Date;
+  updated_at: Date;
 }
 
 interface CustomerState {

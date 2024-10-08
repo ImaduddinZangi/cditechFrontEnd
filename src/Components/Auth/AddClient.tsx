@@ -101,8 +101,6 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    const name = `${firstName} ${lastName}`;
-
     const companyFullAddress = `${companyAddress}, ${
       companyAddressLine2 ? companyAddressLine2 + ", " : ""
     } ${selectedCity?.label}, ${selectedState?.label}, ${companyZipCode}`;
@@ -116,7 +114,8 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
     const combinedPhones = `Company: ${phone}, Billing: ${billingPhone}`;
 
     const clientRegisterRequest = {
-      name,
+      first_name: firstName,
+      last_name: lastName,
       email: companyEmail,
       password,
       industry: industry?.value || "",
@@ -175,7 +174,7 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
             <h2 className="font-semibold text-[1.1vw]">Company Address</h2>
             <InputField
               label="Line 1"
-              name="companyAddress"
+              name="companyAddressLine1"
               fieldType="text"
               value={companyAddress}
               placeholder="Address"
@@ -231,8 +230,8 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
               </div>
               <div>
                 <PhoneInput
-                  label="Phone"
-                  name="phone"
+                  label="companyPhone"
+                  name="companyPhone"
                   value={phone}
                   onChange={setPhone}
                   required
@@ -245,7 +244,7 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
             <h2 className="font-semibold text-[1.1vw]">Billing Address</h2>
             <InputField
               label="Line 1"
-              name="billingAddress"
+              name="billingAddressLine1"
               fieldType="text"
               value={billingAddress}
               placeholder="Billing Address"

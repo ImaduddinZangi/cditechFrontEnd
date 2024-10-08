@@ -1,5 +1,8 @@
 import React from "react";
-import { ClientRegisterRequest, useRegisterClientMutation } from "../../redux/api/authApi";
+import {
+  ClientRegisterRequest,
+  useRegisterClientMutation,
+} from "../../redux/api/authApi";
 import { useDispatch } from "react-redux";
 import { setToken, setClient } from "../../redux/features/clientSlice";
 import { useNavigate } from "react-router-dom";
@@ -23,7 +26,9 @@ const ClientRegistrationPage: React.FC = () => {
     return error && error.data && typeof error.data.message === "string";
   };
 
-  const handleRegistration = async (registrationData: ClientRegisterRequest) => {
+  const handleRegistration = async (
+    registrationData: ClientRegisterRequest
+  ) => {
     try {
       const result = await registerClient(registrationData).unwrap();
       dispatch(setToken(result.access_token));

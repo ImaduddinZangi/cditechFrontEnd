@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ClientSignIn from "../../Components/Auth/ClientSignIn";
 import { useLoginClientMutation } from "../../redux/api/authApi";
 import { useDispatch } from "react-redux";
@@ -7,11 +7,20 @@ import { useNavigate } from "react-router-dom";
 import AuthLayout from "../../Layouts/AuthLayout";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ReCAPTCHA from "react-google-recaptcha";
+
+const RECAPTCHA_SITE_KEY = "your-site-key-here";
 
 const ClientSignInPage: React.FC = () => {
   const [loginClient] = useLoginClientMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // New states for failed attempts and reCAPTCHA token
+  const [failedAttempts, setFailedAttempts] = useState(0);
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+
+  const resetFailedAttempts = () => setFailedAttempts(0);
 
   type APIError = {
     data: {
@@ -23,10 +32,21 @@ const ClientSignInPage: React.FC = () => {
     return error && error.data && typeof error.data.message === "string";
   };
 
+  const handleRecaptchaChange = (token: string | null) => {
+    setRecaptchaToken(token);
+  };
+
   const handleLogin = async (email: string, password: string) => {
     try {
-      const result = await loginClient({ email, password }).unwrap();
+      const loginData: any = { email, password };
+      if (failedAttempts >= 3 && recaptchaToken) {
+        // Add the reCAPTCHA token to the request if attempts exceed the limit
+        loginData.recaptchaToken = recaptchaToken;
+      }
+
+      const result = await loginClient(loginData).unwrap();
       dispatch(setToken(result.access_token));
+      resetFailedAttempts();
       if (result.refresh_token) {
         localStorage.setItem("refresh_token", result.refresh_token);
       }
@@ -47,10 +67,13 @@ const ClientSignInPage: React.FC = () => {
     } catch (error) {
       if (isAPIError(error)) {
         toast.error("Login error: " + error.data.message);
+        setFailedAttempts((prev) => prev + 1); // Increment failed attempts
       } else if (error instanceof Error) {
         toast.error("Login error: " + error.message);
+        setFailedAttempts((prev) => prev + 1); // Increment failed attempts
       } else {
         toast.error("An unknown error occurred");
+        setFailedAttempts((prev) => prev + 1); // Increment failed attempts
       }
       console.error("Login error:", error);
     }
@@ -59,6 +82,17 @@ const ClientSignInPage: React.FC = () => {
   return (
     <AuthLayout>
       <ClientSignIn onSubmit={handleLogin} />
+
+      {/* Show ReCAPTCHA after 3 failed login attempts */}
+      {failedAttempts >= 3 && (
+        <div className="mt-4">
+          <ReCAPTCHA
+            sitekey={RECAPTCHA_SITE_KEY}
+            onChange={handleRecaptchaChange}
+          />
+        </div>
+      )}
+
       <ToastContainer
         position="top-right"
         autoClose={1000}

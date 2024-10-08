@@ -39,54 +39,9 @@ const EditAssetPage: React.FC = () => {
     return <div>Error fetching asset data.</div>;
   }
 
-  const handleUpdateAsset = async (
-    name: string,
-    type: string,
-    customerId: string,
-    clientId: string | undefined,
-    location: string,
-    latitude: number,
-    longitude: number,
-    description: string,
-    status: string,
-    inspectionInterval: string,
-    qrCode: string,
-    nfcCode: string,
-    pipeDia: number,
-    smart: string,
-    size: string,
-    material: string,
-    deleteProtect: string,
-    duty: string,
-    rails: string,
-    float: number,
-    pumps: number
-  ) => {
+  const handleUpdateAsset = async (formData: FormData) => {
     try {
-      const result = await updateAsset({
-        id,
-        name,
-        type,
-        customerId,
-        clientId,
-        location,
-        latitude,
-        longitude,
-        description,
-        status,
-        inspectionInterval,
-        qrCode,
-        nfcCode,
-        pipeDia,
-        smart,
-        size,
-        material,
-        deleteProtect,
-        duty,
-        rails,
-        float,
-        pumps,
-      }).unwrap();
+      const result = await updateAsset({ id: id, formData }).unwrap();
       toast.success("Asset updated successfully!", {
         onClose: () => navigate("/manage-customer"),
         autoClose: 1000,

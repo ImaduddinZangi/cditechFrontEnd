@@ -92,10 +92,10 @@ const DetailedCustomerInfo: React.FC = () => {
           </div>
           <div>
             <p className="text-[1vw] text-gray-0 font-medium font-inter">
-              Previous Phone Number:
+              Previous Provider:
             </p>
             <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {customer.previous_phone_number}
+              {customer.previousProvider}
             </p>
           </div>
         </div>

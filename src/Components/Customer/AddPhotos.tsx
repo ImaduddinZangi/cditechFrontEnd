@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import PurpleButton from "../Tags/PurpleButton";
@@ -7,11 +6,18 @@ import WhiteButton from "../Tags/WhiteButton";
 import Webcam from "react-webcam";
 
 interface AddPhotosProps {
-  onSubmit: (files: File[], id: string, type: string) => void;
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit: (photos: File[]) => void; // Updated to pass File objects
+  type: string;
 }
 
-const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
-  const { type, id } = useParams<{ type: string; id: string }>();
+const AddPhotos: React.FC<AddPhotosProps> = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  type,
+}) => {
   const [photos, setPhotos] = useState<(File | null)[]>([
     null,
     null,
@@ -27,7 +33,6 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
   const [isWebcamOpen, setIsWebcamOpen] = useState<boolean>(false);
   const [webcamIndex, setWebcamIndex] = useState<number | null>(null);
   const [hasWebcam, setHasWebcam] = useState<boolean>(true);
-  const navigate = useNavigate();
   const webcamRef = useRef<Webcam>(null);
 
   useEffect(() => {
@@ -89,18 +94,11 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
   const handleSave = (event: React.FormEvent) => {
     event.preventDefault();
     const validPhotos = photos.filter((photo): photo is File => photo !== null);
-    if (validPhotos.length > 0 && id && type) {
-      onSubmit(validPhotos, id, type);
+    if (validPhotos.length > 0) {
+      onSubmit(validPhotos); // Pass the File objects directly to the parent component
+      onClose(); // Close the modal after submission
     } else {
-      if (validPhotos.length === 0) {
-        toast.error("Please upload at least one photo.");
-      }
-      if (!id) {
-        toast.error("Invalid ID in URL.");
-      }
-      if (!type) {
-        toast.error("Invalid type in URL.");
-      }
+      toast.error("Please upload at least one photo.");
     }
   };
 
@@ -168,101 +166,104 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
     });
   };
 
-  const handleCancel = () => {
-    navigate("/client-dashboard");
-  };
+  if (!isOpen) {
+    return null;
+  }
 
   return (
-    <form
-      className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter"
-      onSubmit={handleSave}
-    >
-      <div className="grid grid-cols-2 gap-[1.5vw]">
-        {photos.map((_, index) => (
-          <div key={index} className="border rounded-lg p-[1vw] relative">
-            <div className="flex flex-row items-center justify-between">
-              <p className="text-[1.2vw] font-semibold mb-[1vw] font-inter">
-                Photo {index + 1}
-              </p>
-              <button
-                type="button"
-                className="flex flex-row items-center text-red-500 font-inter font-medium text-[1vw] focus:outline-none"
-                onClick={() => deletePhoto(index)}
-              >
-                <RiDeleteBin6Line className="mr-[0.5vw]" /> Delete
-              </button>
-            </div>
-            <div className="flex flex-col space-y-[0.5vw]">
-              {photoPreviews[index] ? (
-                <img
-                  src={photoPreviews[index] || ""}
-                  alt={`Preview of photo ${index + 1}`}
-                  className="w-full h-auto rounded-lg"
-                />
-              ) : (
-                <>
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+      <div className="bg-white p-[1.5vw] rounded-lg shadow-lg w-[80vw]">
+        <form onSubmit={handleSave}>
+          <div className="grid grid-cols-2 gap-[1.5vw]">
+            {photos.map((_, index) => (
+              <div key={index} className="border rounded-lg p-[1vw] relative">
+                <div className="flex flex-row items-center justify-between">
+                  <p className="text-[1.2vw] font-semibold mb-[1vw] font-inter">
+                    Photo {index + 1}
+                  </p>
                   <button
                     type="button"
-                    className="bg-purple-0 bg-opacity-20 py-[0.5vw] px-[1vw] rounded-lg flex items-center justify-center cursor-pointer border border-purple-0"
-                    onClick={() => openWebcam(index)}
+                    className="flex flex-row items-center text-red-500 font-inter font-medium text-[1vw] focus:outline-none"
+                    onClick={() => deletePhoto(index)}
                   >
-                    <span className="ml-[0.2vw] text-[1vw] font-medium text-purple-0 font-inter">
-                      Click to Take asset photo
-                    </span>
+                    <RiDeleteBin6Line className="mr-[0.5vw]" /> Delete
                   </button>
-                  <label className="bg-white py-[0.5vw] px-[1vw] rounded-lg flex items-center justify-center cursor-pointer border border-purple-0">
-                    <input
-                      type="file"
-                      accept=".svg,.png,.jpg,.jpeg,.gif"
-                      className="hidden"
-                      onChange={(event) => handleFileChange(event, index)}
+                </div>
+                <div className="flex flex-col space-y-[0.5vw]">
+                  {photoPreviews[index] ? (
+                    <img
+                      src={photoPreviews[index] || ""}
+                      alt={`Preview of photo ${index + 1}`}
+                      className="w-full h-[18vh] rounded-lg"
                     />
-                    <span className="ml-[0.2vw] text-[1vw] font-medium text-purple-0 font-inter">
-                      Click to upload asset photo
-                    </span>
-                  </label>
-                  <p className="text-lightgray-0 font-inter text-center text-[0.9vw]">
-                    SVG, PNG, JPG, JPEG or GIF (max. 1080x1080px each)
-                  </p>
-                </>
-              )}
-            </div>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        className="bg-purple-0 bg-opacity-20 py-[0.5vw] px-[1vw] rounded-lg flex items-center justify-center cursor-pointer border border-purple-0"
+                        onClick={() => openWebcam(index)}
+                      >
+                        <span className="ml-[0.2vw] text-[1vw] font-medium text-purple-0 font-inter">
+                          Click to Take {type} photo
+                        </span>
+                      </button>
+                      <label className="bg-white py-[0.5vw] px-[1vw] rounded-lg flex items-center justify-center cursor-pointer border border-purple-0">
+                        <input
+                          type="file"
+                          accept=".svg,.png,.jpg,.jpeg,.gif"
+                          className="hidden"
+                          onChange={(event) => handleFileChange(event, index)}
+                        />
+                        <span className="ml-[0.2vw] text-[1vw] font-medium text-purple-0 font-inter">
+                          Click to upload {type} photo
+                        </span>
+                      </label>
+                      <p className="text-lightgray-0 font-inter text-center text-[0.9vw]">
+                        SVG, PNG, JPG, JPEG, or GIF (max. 1080x1080px each)
+                      </p>
+                    </>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-
-      <div className="flex justify-end space-x-[1vw] mt-[1.5vw]">
-        <PurpleButton type="submit" text="Save" />
-        <WhiteButton type="button" text="Close" onClick={handleCancel} />
-      </div>
-
-      {isWebcamOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg">
-            <Webcam
-              audio={false}
-              ref={webcamRef}
-              screenshotFormat="image/jpeg"
-              width={320}
-              height={240}
-              videoConstraints={{
-                width: 1080,
-                height: 1080,
-                facingMode: "user",
-              }}
-            />
-            <div className="flex justify-end mt-4">
-              <PurpleButton
-                type="button"
-                text="Capture"
-                onClick={capturePhoto}
-                className="mr-[1vw]"
-              />
-              <WhiteButton type="button" text="Cancel" onClick={closeWebcam} />
+          {isWebcamOpen && (
+            <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+              <div className="bg-white p-6 rounded-lg shadow-lg">
+                <Webcam
+                  audio={false}
+                  ref={webcamRef}
+                  screenshotFormat="image/jpeg"
+                  width={320}
+                  height={240}
+                  videoConstraints={{
+                    width: 1080,
+                    height: 1080,
+                    facingMode: "user",
+                  }}
+                />
+                <div className="flex justify-end mt-4">
+                  <PurpleButton
+                    type="button"
+                    text="Capture"
+                    onClick={capturePhoto}
+                    className="mr-[1vw]"
+                  />
+                  <WhiteButton
+                    type="button"
+                    text="Cancel"
+                    onClick={closeWebcam}
+                  />
+                </div>
+              </div>
             </div>
+          )}
+          <div className="flex justify-end space-x-[1vw] mt-[1.5vw]">
+            <PurpleButton type="submit" text="Save" />
+            <WhiteButton type="button" text="Close" onClick={onClose} />
           </div>
-        </div>
-      )}
+        </form>
+      </div>
 
       <ToastContainer
         position="top-right"
@@ -275,7 +276,7 @@ const AddPhotos: React.FC<AddPhotosProps> = ({ onSubmit }) => {
         draggable
         pauseOnHover
       />
-    </form>
+    </div>
   );
 };
 

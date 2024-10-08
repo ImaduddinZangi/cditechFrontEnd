@@ -1,30 +1,27 @@
 import React, { useState, useEffect } from "react";
 import {
   useGetPumpsQuery,
-  useUpdatePumpMutation,
   useDeletePumpMutation,
 } from "../../../redux/api/pumpApi";
 import { useGetPhotosQuery } from "../../../redux/api/uploadPhotosApi";
-import AddPump from "../../../Components/Customer/Pump/AddPump";
 import { toast } from "react-toastify";
 import { Pump } from "../../../redux/features/pumpSlice";
 import ConfirmationModal from "../../Constants/ConfirmationModal";
 import PurpleButton from "../../Tags/PurpleButton";
 import PumpCard from "./PumpCard";
+import { useNavigate } from "react-router-dom";
 
-const Pumps: React.FC<{ onClick: () => void }> = ({ onClick }) => {
+const Pumps: React.FC = () => {
   const { data: pumpsData } = useGetPumpsQuery();
   const { data: photosData } = useGetPhotosQuery();
-  const [updatePump] = useUpdatePumpMutation();
   const [pumps, setPumps] = useState<Pump[]>([]);
-  const [selectedPump, setSelectedPump] = useState<Pump | undefined>(undefined);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const assetId = localStorage.getItem("assetId");
   const [deletePump] = useDeletePumpMutation();
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [pumpIdToDelete, setPumpIdToDelete] = useState<string | undefined>(
     undefined
   );
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (pumpsData && assetId) {
@@ -34,38 +31,6 @@ const Pumps: React.FC<{ onClick: () => void }> = ({ onClick }) => {
       setPumps(filteredPumps);
     }
   }, [pumpsData, assetId]);
-
-  const handleModalClose = () => {
-    setIsModalOpen(false);
-    setSelectedPump(undefined);
-  };
-
-  const handlePumpSubmit = async (pumpData: Pump) => {
-    if (selectedPump) {
-      try {
-        const updatedPump = {
-          ...selectedPump,
-          pumpData,
-        };
-        await updatePump(updatedPump).unwrap();
-        setPumps(
-          pumps.map((pump) =>
-            pump.id === selectedPump.id ? updatedPump : pump
-          )
-        );
-        toast.success("Pump Updated Successfully");
-        handleModalClose();
-      } catch (error) {
-        toast.error("Failed to update pump!");
-        console.error("Failed to update pump:", error);
-      }
-    }
-  };
-
-  const handlePumpEdit = (pump: Pump) => {
-    setSelectedPump(pump);
-    setIsModalOpen(true);
-  };
 
   const handleOpenDeleteModal = (id: string | undefined) => {
     setPumpIdToDelete(id);
@@ -97,7 +62,7 @@ const Pumps: React.FC<{ onClick: () => void }> = ({ onClick }) => {
       <PurpleButton
         type="button"
         text="Add New Pump"
-        onClick={onClick}
+        onClick={() => navigate("/add-pump")}
         className="mb-[2vw]"
       />
       {pumps.map((pump, index) => {
@@ -111,20 +76,11 @@ const Pumps: React.FC<{ onClick: () => void }> = ({ onClick }) => {
             key={pump.id}
             pump={pump}
             index={index}
-            onEdit={handlePumpEdit}
             onDelete={() => handleOpenDeleteModal(pump.id)}
             photoUrl={photoUrl}
           />
         );
       })}
-      {isModalOpen && (
-        <AddPump
-          isModalOpen={isModalOpen}
-          onClose={handleModalClose}
-          onSubmit={handlePumpSubmit}
-          initialData={selectedPump}
-        />
-      )}
 
       <ConfirmationModal
         isOpen={isConfirmationModalOpen}
