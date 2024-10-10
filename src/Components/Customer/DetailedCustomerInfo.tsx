@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useGetCustomerByIdQuery } from "../../redux/api/customerApi";
 import { useAppSelector } from "../../redux/store";
 import Loader from "../Constants/Loader";
 
 const DetailedCustomerInfo: React.FC = () => {
+  const [showGateCode, setShowGateCode] = useState(false);
   const selectedCustomerId = useAppSelector(
     (state) => state.customer.selectedCustomerId
   );
@@ -17,14 +18,13 @@ const DetailedCustomerInfo: React.FC = () => {
     if (!selectedCustomerId) {
       const idFromStorage = localStorage.getItem("selectedCustomerId");
       if (idFromStorage) {
-       
       }
     }
   }, [selectedCustomerId]);
 
   if (isLoading)
     return (
-      <div>
+      <div className="w-full h-[70vh] flex items-center justify-center">
         <Loader />
       </div>
     );
@@ -83,12 +83,31 @@ const DetailedCustomerInfo: React.FC = () => {
             </p>
           </div>
           <div>
-            <p className="text-[1vw] text-gray-0 font-medium font-inter">
+            <p className="text-[1vw] text-darkgray-0 font-medium font-inter">
               Gate Code:
             </p>
-            <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {customer.gate_code}
-            </p>
+            <div className="flex items-center">
+              {showGateCode ? (
+                <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
+                  {customer.gate_code}
+                </p>
+              ) : (
+                <button
+                  onClick={() => setShowGateCode(true)}
+                  className="text-purple-0 hover:underline text-[1vw] font-inter border-none"
+                >
+                  Show
+                </button>
+              )}
+              {showGateCode && (
+                <button
+                  onClick={() => setShowGateCode(false)}
+                  className="ml-[0.5vw] text-purple-0 hover:underline text-[1vw] font-inter border-none"
+                >
+                  Hide
+                </button>
+              )}
+            </div>
           </div>
           <div>
             <p className="text-[1vw] text-gray-0 font-medium font-inter">

@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import AuthFooter from "./AuthFooter";
 import { FiLogOut, FiChevronDown, FiChevronRight } from "react-icons/fi";
 import { toast, ToastContainer } from "react-toastify";
@@ -298,8 +298,15 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
   };
 
   const handleDropdownClick = (menuTitle: string) => {
+    if (!open) return;
     setActiveDropdown(activeDropdown === menuTitle ? null : menuTitle);
   };
+
+  useEffect(() => {
+    if (!open) {
+      setActiveDropdown(null);
+    }
+  }, [open]);
 
   return (
     <div className="flex font-inter">
