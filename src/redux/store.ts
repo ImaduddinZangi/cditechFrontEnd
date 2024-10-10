@@ -13,7 +13,6 @@ import uploadPhotosReducer from "./features/uploadPhotosSlice";
 import twoFactorAuthReducer from "./features/twoFactorAuthSlice";
 import inspectionReducer from "./features/inspectionSlice";
 import inspectionReportsReducer from "./features/inspectionReportsSlice";
-import inspectionScoresReducer from "./features/inspectionScoresSlice";
 import inspectionChecklistReducer from "./features/inspectionChecklistSlice";
 import checkListItemReducer from "./features/checkListItemSlice";
 import userGroupReducer from "./features/userGroupSlice";
@@ -38,7 +37,6 @@ import userGroupApi from "./api/userGroupApi";
 import clientUserApi from "./api/clientUserApi";
 import groupPermissionsApi from "./api/groupPermissionsApi";
 import invoiceApi from "./api/invoiceApi";
-import inspectionScoresApi from "./api/inspectionScoresApi";
 import inspectionChecklistApi from "./api/inspectionChecklistApi";
 import companyApi from "./api/companyApi";
 
@@ -54,7 +52,6 @@ const rootReducer = combineReducers({
   twoFactorAuth: twoFactorAuthReducer,
   inspection: inspectionReducer,
   inspectionReports: inspectionReportsReducer,
-  inspectionScores: inspectionScoresReducer,
   inspectionChecklists: inspectionChecklistReducer,
   checkListItem: checkListItemReducer,
   userGroup: userGroupReducer,
@@ -73,7 +70,6 @@ const rootReducer = combineReducers({
   [twoFactorAuthApi.reducerPath]: twoFactorAuthApi.reducer,
   [inspectionApi.reducerPath]: inspectionApi.reducer,
   [inspectionReportsApi.reducerPath]: inspectionReportsApi.reducer,
-  [inspectionScoresApi.reducerPath]: inspectionScoresApi.reducer,
   [inspectionChecklistApi.reducerPath]: inspectionChecklistApi.reducer,
   [checkListItemApi.reducerPath]: checkListItemApi.reducer,
   [userGroupApi.reducerPath]: userGroupApi.reducer,
@@ -97,7 +93,6 @@ const store = configureStore({
       uploadPhotosApi.middleware,
       inspectionApi.middleware,
       inspectionReportsApi.middleware,
-      inspectionScoresApi.middleware,
       inspectionChecklistApi.middleware,
       checkListItemApi.middleware,
       userGroupApi.middleware,

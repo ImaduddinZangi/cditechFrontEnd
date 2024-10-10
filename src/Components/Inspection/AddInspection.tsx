@@ -1,282 +1,254 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useGetCustomersQuery } from "../../redux/api/customerApi";
 import { useGetAssetsQuery } from "../../redux/api/assetApi";
 import { useGetClientUsersQuery } from "../../redux/api/clientUserApi";
 import { getUserId } from "../../utils/utils";
 import { useNavigate } from "react-router-dom";
 import {
-  GetInspection,
+  CreateInspection,
   Inspection,
-  IDs,
 } from "../../redux/features/inspectionSlice";
 import PurpleButton from "../Tags/PurpleButton";
 import WhiteButton from "../Tags/WhiteButton";
 import InputField from "../Tags/InputField";
-import { Customer } from "../../redux/features/customerSlice";
-import { Asset } from "../../redux/features/assetSlice";
-import { ClientUser } from "../../redux/features/clientUserSlice";
 import { useGetInspectionChecklistsQuery } from "../../redux/api/inspectionChecklistApi";
-import { useGetInspectionScoresQuery } from "../../redux/api/inspectionScoresApi";
-import { Scores } from "../../redux/features/inspectionScoresSlice";
-import { Checklist } from "../../redux/features/inspectionChecklistSlice";
+import SelectField, { Option } from "../Tags/SelectField";
+import OutlinePurpleButton from "../Tags/OutlinePurpleButton";
+import AddPhotos from "../Customer/AddPhotos";
 
 interface InspectionFormProps {
-  onSubmit: (data: Inspection) => void;
-  initialData?: Partial<GetInspection>;
+  onSubmit: (data: CreateInspection) => void;
+  onPhotosSubmit?: (photos: File[]) => void;
+  initialData?: Partial<Inspection>;
 }
 
 const InspectionForm: React.FC<InspectionFormProps> = ({
   onSubmit,
   initialData,
+  onPhotosSubmit,
 }) => {
-  const initialChecklistObjects: IDs[] = initialData?.checklists
-    ? initialData.checklists
-        .filter(
-          (checklist): checklist is Checklist => checklist.id !== undefined
-        )
-        .map((checklist) => ({ id: checklist.id as string }))
-    : [];
+  const [customers, setCustomers] = useState<Option[]>([]);
+  const [customerId, setCustomerId] = useState<Option | null>(
+    initialData?.customer
+      ? { label: initialData.customer.name, value: initialData.customer.id }
+      : null
+  );
+  const [assets, setAssets] = useState<Option[]>([]);
+  const [assetId, setAssetId] = useState<Option | null>(
+    initialData?.asset
+      ? { label: initialData.asset.name, value: initialData.asset.id }
+      : null
+  );
 
-  const [assetId, setAssetId] = useState<string>(initialData?.asset?.id || "");
-  const [scoreId, setScoreId] = useState<string>(
-    initialData?.scores?.[0]?.id ?? "" // Select the first score if available
+  const [users, setUsers] = useState<Option[]>([]);
+  const [userId, setUserId] = useState<Option | null>(
+    initialData?.assignedTo
+      ? { label: initialData.assignedTo.name, value: initialData.assignedTo.id }
+      : null
   );
-  const [checklistIds, setChecklistIds] = useState<IDs[]>(
-    initialChecklistObjects
+  const [checklists, setChecklists] = useState<Option[]>([]);
+  const [checklistId, setChecklistId] = useState<Option | null>(
+    initialData?.checklists
+      ? {
+          label: initialData.checklists[0].overallScore,
+          value: initialData.checklists[0].overallScore,
+        }
+      : null
   );
-  const [customerId, setCustomerId] = useState<string>(
-    initialData?.customer?.id || ""
-  );
-  const [name, setName] = useState<string>(initialData?.name || "");
   const [scheduledDate, setScheduledDate] = useState<string>(
     initialData?.scheduledDate || ""
   );
-  const [assignedTo, setAssignedTo] = useState<string>(
-    initialData?.assignedTo?.id || ""
+  const [reocurring, setReocurring] = useState<boolean>(
+    initialData?.isReocurring || false
   );
-  const [comments, setComments] = useState<string>(initialData?.comments || "");
-  const [serviceFee, setServiceFee] = useState<number>(
-    initialData?.serviceFee || 0
+  const [inspectionInterval, setinspectionInterval] = useState<number>(
+    initialData?.inspectionInterval || 0
   );
-  const [recording, setRecording] = useState<string>(
-    initialData?.recording || "no"
+  const [reocurrenceEndDate, setReocurrenceEndDate] = useState<string>(
+    initialData?.reocurrenceEndDate || ""
   );
+  const [photos, setPhotos] = useState<File[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
 
-  const { data: customers } = useGetCustomersQuery();
-  const { data: assets } = useGetAssetsQuery();
-  const { data: users } = useGetClientUsersQuery();
-  const { data: scores } = useGetInspectionScoresQuery();
-  const { data: checklists } = useGetInspectionChecklistsQuery();
+  const { data: customersData } = useGetCustomersQuery();
+  const { data: assetsData } = useGetAssetsQuery();
+  const { data: usersData } = useGetClientUsersQuery();
+  const { data: checklistsData } = useGetInspectionChecklistsQuery();
 
   const clientId = getUserId();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (customersData) {
+      const customerOptions = customersData.map((customer) => ({
+        label: customer.name,
+        value: customer.id,
+      }));
+      setCustomers(customerOptions);
+
+      if (initialData?.customer) {
+        const selectedCustomer = customerOptions.find(
+          (c) => c.value === initialData.customer?.id
+        );
+        setCustomerId(selectedCustomer || null);
+      }
+    }
+  }, [customersData, initialData]);
+
+  useEffect(() => {
+    if (assetsData) {
+      const assetOptions = assetsData.map((asset) => ({
+        label: asset.name,
+        value: asset.id,
+      }));
+      setAssets(assetOptions);
+
+      if (initialData?.asset) {
+        const selectedAsset = assetOptions.find(
+          (c) => c.value === initialData.asset?.id
+        );
+        setAssetId(selectedAsset || null);
+      }
+    }
+  }, [assetsData, initialData]);
+
+  useEffect(() => {
+    if (usersData) {
+      const userOptions = usersData.map((user) => ({
+        label: user.name,
+        value: user.id,
+      }));
+      setUsers(userOptions);
+
+      if (initialData?.assignedTo) {
+        const selecteduser = userOptions.find(
+          (c) => c.value === initialData.assignedTo?.id
+        );
+        setUserId(selecteduser || null);
+      }
+    }
+  }, [usersData, initialData]);
+
+  useEffect(() => {
+    if (checklistsData) {
+      const checklistOptions = checklistsData.map((checklist) => ({
+        label: checklist.overallScore,
+        value: checklist.overallScore,
+      }));
+      setChecklists(checklistOptions);
+
+      if (initialData?.assignedTo) {
+        const selectedchecklist = checklistOptions.find(
+          (c) => c.value === initialData.assignedTo?.id
+        );
+        setChecklistId(selectedchecklist || null);
+      }
+    }
+  }, [checklistsData, initialData]);
+
+  const handlePhotosSubmit = (uploadedPhotos: File[]) => {
+    setPhotos(uploadedPhotos);
+    handleCloseModal();
+    if (onPhotosSubmit) {
+      onPhotosSubmit(uploadedPhotos);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit({
       id: initialData?.id,
-      name,
       clientId: initialData?.client?.id ?? clientId,
-      customerId,
-      assetId,
-      assignedTo,
-      score: { scoreId }, // Use the selected scoreId
+      customerId: customerId?.value || "",
+      assetId: assetId?.value || "",
+      assignedTo: userId?.value || "",
+      status: "Not-Done",
       scheduledDate,
-      completedDate: initialData?.completedDate || null,
-      comments,
-      serviceFee,
-      checklists: checklistIds, // Now an array of objects with { id }
-      recording,
-      route: initialData?.route || [],
+      isReocurring: reocurring,
+      inspectionInterval,
+      reocurrenceEndDate,
+      checklists: [],
     });
   };
 
+  useEffect(() => {
+    if (onPhotosSubmit && photos.length > 0) {
+      onPhotosSubmit(photos);
+    }
+  }, [photos, onPhotosSubmit]);
+
   const handleCancel = () => {
     navigate("/inspection-table");
-  };
-
-  const handleChecklistSelection = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const selectedChecklistId = e.target.value;
-    if (!checklistIds.some((item) => item.id === selectedChecklistId)) {
-      setChecklistIds([...checklistIds, { id: selectedChecklistId }]);
-    }
-  };
-
-  const removeChecklist = (checklistId: string) => {
-    setChecklistIds(checklistIds.filter((item) => item.id !== checklistId));
   };
 
   return (
     <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-2 gap-[1vw]">
-          <InputField
-            label="Name"
-            htmlFor="name"
-            fieldType="text"
-            placeholder="Inspection name"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-            autoComplete="name"
-          />
           <div>
-            <label className="block text-darkgray-0 font-medium text-[1vw]">
-              Customer:
-            </label>
-            <select
-              className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-              name="customerId"
+            <SelectField
+              label="Customer"
               value={customerId}
-              onChange={(e) => setCustomerId(e.target.value)}
+              onChange={(option) => setCustomerId(option)}
+              options={customers}
+              placeholder="Select a customer"
               required
-            >
-              <option value="">Select Customer</option>
-              {customers?.map((customer: Customer) => (
-                <option key={customer.id} value={customer.id}>
-                  {customer.name}
-                </option>
-              ))}
-            </select>
+            />
           </div>
-          <InputField
-            htmlFor="scheduledDate"
-            label="Scheduled Date"
-            fieldType="datetime-local"
-            id="scheduledDate"
-            value={scheduledDate}
-            onChange={(e) => setScheduledDate(e.target.value)}
-            required
-            autoComplete="scheduledDate"
-          />
-          <InputField
-            htmlFor="serviceFee"
-            label="Service Fee"
-            fieldType="number"
-            id="serviceFee"
-            value={serviceFee}
-            onChange={(e) => setServiceFee(parseFloat(e.target.value))}
-            required
-            autoComplete="serviceFee"
-          />
           <div>
-            <label className="block text-darkgray-0 font-medium text-[1vw]">
-              Asset:
-            </label>
-            <select
-              className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-              name="assetId"
+            <SelectField
+              label="Asset"
               value={assetId}
-              onChange={(e) => setAssetId(e.target.value)}
+              onChange={(option) => setAssetId(option)}
+              options={assets}
+              placeholder="Select a asset"
               required
-            >
-              <option value="">Select Asset</option>
-              {assets?.map((asset: Asset) => (
-                <option key={asset.id} value={asset.id}>
-                  {asset.name}
-                </option>
-              ))}
-            </select>
+            />
           </div>
           <div>
-            <label className="block text-darkgray-0 font-medium text-[1vw]">
-              Assigned To:
-            </label>
-            <select
-              className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-              name="assignedTo"
-              value={assignedTo}
-              onChange={(e) => setAssignedTo(e.target.value)}
+            <SelectField
+              label="Checklist"
+              value={checklistId}
+              onChange={(option) => setChecklistId(option)}
+              options={checklists}
+              placeholder="Select a checklist"
               required
-            >
-              <option value="">Select User</option>
-              {users?.map((user: ClientUser) => (
-                <option key={user.id} value={user.id}>
-                  {user.username}
-                </option>
-              ))}
-            </select>
+            />
           </div>
           <div>
-            <label className="block text-darkgray-0 font-medium text-[1vw]">
-              Scores:
-            </label>
-            <select
-              className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-              name="scoreId"
-              value={scoreId}
-              onChange={(e) => setScoreId(e.target.value)}
+            <SelectField
+              label="Assigned To"
+              value={userId}
+              onChange={(option) => setUserId(option)}
+              options={users}
+              placeholder="Select a user"
               required
-            >
-              <option value="">Select Score</option>
-              {scores?.map((score: Scores) => (
-                <option key={score.id} value={score.id}>
-                  {score.name}
-                </option>
-              ))}
-            </select>
+            />
           </div>
           <div>
-            <label className="block text-darkgray-0 font-medium text-[1vw]">
-              Checklists:
-            </label>
-            <select
-              className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-              onChange={handleChecklistSelection}
-            >
-              <option value="">Select Checklist</option>
-              {checklists?.map((checklist: Checklist) => (
-                <option key={checklist.id} value={checklist.id}>
-                  {checklist.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="mt-[1vw]">
-            {checklistIds.map((item) => (
-              <div key={item.id} className="flex justify-between items-center">
-                <span>{checklists?.find((c) => c.id === item.id)?.name}</span>
-                <button
-                  type="button"
-                  onClick={() => removeChecklist(item.id)}
-                  className="text-red-500"
-                >
-                  Remove
-                </button>
-              </div>
-            ))}
+            <InputField
+              label="Scheduled Date"
+              fieldType="datetime-local"
+              value={scheduledDate}
+              onChange={(e) => setScheduledDate(e.target.value)}
+              required
+            />
           </div>
           <div className="flex flex-col gap-[1vw]">
-            <div>
-              <label
-                htmlFor="comments"
-                className="block text-darkgray-0 font-medium text-[1vw]"
-              >
-                Comments:
-              </label>
-              <textarea
-                id="comments"
-                value={comments}
-                onChange={(e) => setComments(e.target.value)}
-                className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-                required
-              />
-            </div>
-            <div className="col-span-2 flex items-center">
-              <span className="mr-[1vw] text-sm font-medium text-gray-700">
-                Inspection Recording:
+            <div className="col-span-2 flex items-center mt-[2vw]">
+              <span className="mr-[1vw] text-[1vw] font-medium text-darkgray-0">
+                Inspection Reocurring:
               </span>
               <label className="mr-2">
                 <input
                   type="radio"
-                  id="recordingTrue"
-                  name="recording"
+                  id="reocurringTrue"
+                  name="reocurring"
                   value="yes"
-                  checked={recording === "yes"}
-                  onChange={() => setRecording("yes")}
+                  checked={reocurring === true}
+                  onChange={() => setReocurring(true)}
                   className="mr-1 accent-darkpurple-0"
                 />
                 Yes
@@ -284,23 +256,58 @@ const InspectionForm: React.FC<InspectionFormProps> = ({
               <label>
                 <input
                   type="radio"
-                  name="recording"
-                  id="recordingFalse"
+                  name="reocurring"
+                  id="reocurringFalse"
                   value="no"
-                  checked={recording === "no"}
-                  onChange={() => setRecording("no")}
+                  checked={reocurring === false}
+                  onChange={() => setReocurring(false)}
                   className="mr-1 accent-darkpurple-0"
                 />
                 No
               </label>
             </div>
+            {reocurring && (
+              <div>
+                <InputField
+                  label="Reoccurence End Date"
+                  fieldType="Date"
+                  value={reocurrenceEndDate}
+                  onChange={(e) => setReocurrenceEndDate(e.target.value)}
+                  required
+                />
+              </div>
+            )}
+            {reocurring && (
+              <div>
+                <InputField
+                  label="inspectionInterval"
+                  fieldType="number"
+                  value={inspectionInterval}
+                  onChange={(e) =>
+                    setinspectionInterval(parseFloat(e.target.value))
+                  }
+                />
+              </div>
+            )}
+            <OutlinePurpleButton
+              onClick={handleOpenModal}
+              text="Upload Photos"
+            />
           </div>
         </div>
-        <div className="flex justify-end space-x-[1vw]">
+        <div className="flex justify-end space-x-[1vw] mt-[2vw]">
           <PurpleButton type="submit" text="Create" />
           <WhiteButton type="button" text="Cancel" onClick={handleCancel} />
         </div>
       </form>
+      {isModalOpen && (
+        <AddPhotos
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          onSubmit={handlePhotosSubmit}
+          type="Pump"
+        />
+      )}
     </div>
   );
 };

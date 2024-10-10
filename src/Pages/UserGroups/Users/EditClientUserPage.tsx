@@ -30,7 +30,7 @@ const EditClientUserPage: React.FC = () => {
     try {
       const result = await updateClientUser(clientUserData).unwrap();
       toast.success("Client User updated successfully!", {
-        onClose: () => navigate("/client-user-table"),
+        onClose: () => navigate("/manage-users"),
         autoClose: 1000,
       });
       console.log("Client user updated successfully", result);

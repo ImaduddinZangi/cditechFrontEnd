@@ -31,19 +31,19 @@ export const pumpApi = createApi({
       }),
       providesTags: (_result, _error, id) => [{ type: "Pump", id }],
     }),
-    createPump: builder.mutation<Pump, Partial<Pump>>({
-      query: (newPump) => ({
+    createPump: builder.mutation<Pump, Partial<FormData>>({
+      query: (formData) => ({
         url: "pumps",
         method: "POST",
-        body: newPump,
+        body: formData,
       }),
       invalidatesTags: ["Pump"],
     }),
-    updatePump: builder.mutation<Pump, Partial<Pump>>({
-      query: ({ id, ...rest }) => ({
+    updatePump: builder.mutation<Pump, Partial<{id: string, formData: FormData}>>({
+      query: ({ id, ...formData }) => ({
         url: `pumps/${id}`,
         method: "PATCH",
-        body: rest,
+        body: formData,
       }),
       invalidatesTags: (_result, _error, { id }) => [{ type: "Pump", id }],
     }),

@@ -170,7 +170,6 @@ const RouteModal: React.FC<RouteModalProps> = ({
               ref={inputRef}
               fieldType="text"
               placeholder="Enter a location to center the map"
-              id="location"
               name="location"
             />
           </Autocomplete>

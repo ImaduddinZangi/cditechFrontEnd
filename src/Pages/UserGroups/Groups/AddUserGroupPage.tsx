@@ -24,7 +24,7 @@ const AddUserGroupPage: React.FC = () => {
     try {
       const result = await createUserGroup(userGroupData).unwrap();
       toast.success("User Group added successfully!", {
-        onClose: () => navigate("/user-group-table"),
+        onClose: () => navigate("/manage-user-groups"),
         autoClose: 1000,
       });
       console.log("User group created successfully", result);

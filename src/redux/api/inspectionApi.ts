@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { GetInspection, Inspection } from "../features/inspectionSlice";
+import { CreateInspection, Inspection } from "../features/inspectionSlice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_BASE_URL,
@@ -15,31 +15,31 @@ const baseQuery = fetchBaseQuery({
 export const inspectionApi = createApi({
   reducerPath: "inspectionApi",
   baseQuery,
-  tagTypes: ["Inspection"], // Add tagTypes for caching
+  tagTypes: ["Inspection"],
   endpoints: (builder) => ({
-    getInspections: builder.query<GetInspection[], void>({
+    getInspections: builder.query<Inspection[], void>({
       query: () => ({
         url: "inspections",
         method: "GET",
       }),
-      providesTags: ["Inspection"], // Provide tags for inspection list
+      providesTags: ["Inspection"],
     }),
-    getInspectionById: builder.query<GetInspection, string>({
+    getInspectionById: builder.query<Inspection, string>({
       query: (inspectionId: string) => ({
         url: `inspections/${inspectionId}`,
         method: "GET",
       }),
-      providesTags: (_result, _error, id) => [{ type: "Inspection", id }], // Provide tags for specific inspection
+      providesTags: (_result, _error, id) => [{ type: "Inspection", id }],
     }),
-    createInspection: builder.mutation<Inspection, Partial<Inspection>>({
+    createInspection: builder.mutation<Inspection, Partial<CreateInspection>>({
       query: (newInspection) => ({
         url: "inspections",
         method: "POST",
         body: newInspection,
       }),
-      invalidatesTags: ["Inspection"], // Invalidate inspections list after creation
+      invalidatesTags: ["Inspection"],
     }),
-    updateInspection: builder.mutation<Inspection, Partial<Inspection>>({
+    updateInspection: builder.mutation<Inspection, Partial<CreateInspection>>({
       query: ({ id, ...rest }) => ({
         url: `inspections/${id}`,
         method: "PATCH",
@@ -47,14 +47,14 @@ export const inspectionApi = createApi({
       }),
       invalidatesTags: (_result, _error, { id }) => [
         { type: "Inspection", id },
-      ], // Invalidate specific inspection after update
+      ],
     }),
     deleteInspection: builder.mutation<{ success: boolean }, string>({
       query: (inspectionId: string) => ({
         url: `inspections/${inspectionId}`,
         method: "DELETE",
       }),
-      invalidatesTags: (_result, _error, id) => [{ type: "Inspection", id }], // Invalidate specific inspection after deletion
+      invalidatesTags: (_result, _error, id) => [{ type: "Inspection", id }],
     }),
     markInspectionCompleteAndBill: builder.mutation<
       { success: boolean },
@@ -64,7 +64,7 @@ export const inspectionApi = createApi({
         url: `inspections/${inspectionId}/complete-and-bill`,
         method: "PATCH",
       }),
-      invalidatesTags: (_result, _error, id) => [{ type: "Inspection", id }], // Invalidate specific inspection after marking complete and billing
+      invalidatesTags: (_result, _error, id) => [{ type: "Inspection", id }],
     }),
     markInspectionCompleteWithoutBilling: builder.mutation<
       { success: boolean },
@@ -74,7 +74,7 @@ export const inspectionApi = createApi({
         url: `inspections/${inspectionId}/complete-without-billing`,
         method: "PATCH",
       }),
-      invalidatesTags: (_result, _error, id) => [{ type: "Inspection", id }], // Invalidate specific inspection after marking complete without billing
+      invalidatesTags: (_result, _error, id) => [{ type: "Inspection", id }],
     }),
     markInspectionSubmitAndBill: builder.mutation<{ success: boolean }, string>(
       {
@@ -82,7 +82,7 @@ export const inspectionApi = createApi({
           url: `inspections/${inspectionId}/submit-bill`,
           method: "POST",
         }),
-        invalidatesTags: (_result, _error, id) => [{ type: "Inspection", id }], // Invalidate specific inspection after submitting and billing
+        invalidatesTags: (_result, _error, id) => [{ type: "Inspection", id }],
       }
     ),
     markInspectionSubmitWithoutBilling: builder.mutation<
@@ -93,7 +93,7 @@ export const inspectionApi = createApi({
         url: `inspections/${inspectionId}/submit-dont-bill`,
         method: "POST",
       }),
-      invalidatesTags: (_result, _error, id) => [{ type: "Inspection", id }], // Invalidate specific inspection after submitting without billing
+      invalidatesTags: (_result, _error, id) => [{ type: "Inspection", id }],
     }),
     addToExistingInvoice: builder.mutation<
       { success: boolean },
@@ -106,7 +106,7 @@ export const inspectionApi = createApi({
       }),
       invalidatesTags: (_result, _error, { inspectionId }) => [
         { type: "Inspection", id: inspectionId },
-      ], // Use the inspectionId as the tag invalidation id
+      ],
     }),
   }),
 });

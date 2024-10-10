@@ -21,7 +21,7 @@ const GrantGroupPermissionsPage: React.FC = () => {
       }).unwrap();
 
       toast.success("Permissions granted successfully!", {
-        onClose: () => navigate(`/user-group-table/`),
+        onClose: () => navigate(`/manage-user-groups`),
         autoClose: 1000,
       });
       console.log("Permissions granted successfully", result);

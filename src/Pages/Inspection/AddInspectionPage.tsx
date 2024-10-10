@@ -2,35 +2,22 @@ import React, { useState } from "react";
 import ClientLayout from "../../Layouts/ClientLayout";
 import InspectionForm from "../../Components/Inspection/AddInspection";
 import { useNavigate } from "react-router-dom";
-import AddCheckListItem from "../../Components/Inspection/AddCheckListItem";
 import RouteModal from "../../Components/Inspection/RouteModal";
-import { useCreateChecklistItemMutation } from "../../redux/api/checkListItemApi";
 import { useCreateInspectionMutation } from "../../redux/api/inspectionApi";
-import { RoutePoint, Inspection } from "../../redux/features/inspectionSlice";
+import { useUploadPhotoMutation } from "../../redux/api/uploadPhotosApi";
+import {
+  RoutePoint,
+  CreateInspection,
+} from "../../redux/features/inspectionSlice";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PurpleButton from "../../Components/Tags/PurpleButton";
 
-interface InspectionData {
-  name: string;
-  customerId?: string;
-  assetId?: string;
-  scheduledDate: string;
-  comments: string;
-  serviceFee: number;
-  recording?: string;
-  clientId?: string | null;
-  assignedTo?: string;
-  completedDate: string | null;
-  route: RoutePoint[];
-}
-
 const AddInspectionPage: React.FC = () => {
-  const [createChecklistItem] = useCreateChecklistItemMutation();
   const [createInspection] = useCreateInspectionMutation();
+  const [uploadPhoto] = useUploadPhotoMutation();
   const [route, setRoute] = useState<RoutePoint[]>([]);
-  const [isChecklistItemModalOpen, setIsChecklistItemModalOpen] =
-    useState(false);
+  const [photos, setPhotos] = useState<File[]>([]); // Moved photos state to this component
   const [isRouteModalOpen, setIsRouteModalOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -44,14 +31,15 @@ const AddInspectionPage: React.FC = () => {
     return error && error.data && typeof error.data.message === "string";
   };
 
-  const handleAddInspection = async (inspectionData: InspectionData) => {
+  const handleAddInspection = async (inspectionData: CreateInspection) => {
     try {
       const result = await createInspection(inspectionData).unwrap();
       toast.success("Inspection created successfully!", {
-        onClose: () => navigate("/inspection-table"),
+        onClose: () => navigate("/manage-inspections"),
         autoClose: 500,
       });
       console.log("Inspection created successfully", result);
+      return result;
     } catch (error) {
       if (isAPIError(error)) {
         toast.error("Error Adding Inspection: " + error.data.message);
@@ -61,103 +49,56 @@ const AddInspectionPage: React.FC = () => {
         toast.error("An unknown error occurred");
       }
       console.error("Error Adding Inspection:", error);
+      throw error;
     }
   };
 
-  const handleFormSubmit = (inspectionData: Inspection) => {
-    const {
-      name,
-      customerId,
-      assetId,
-      assignedTo,
-      scheduledDate,
-      serviceFee,
-      recording,
-      clientId,
-    } = inspectionData;
-
-    if (
-      !name ||
-      !customerId ||
-      !assetId ||
-      !scheduledDate ||
-      serviceFee === undefined ||
-      !recording ||
-      !clientId ||
-      !assignedTo
-    ) {
-      toast.error("Please fill in all required fields.");
-      return;
-    }
-
+  const handleFormSubmit = async (inspectionData: CreateInspection) => {
     if (route.length !== 2) {
       toast.error("The route data is not added.");
       return;
     }
 
-    const newInspectionData: InspectionData = {
+    const newInspectionData: CreateInspection = {
       ...inspectionData,
       route,
     };
 
-    handleAddInspection(newInspectionData);
+    try {
+      const createdInspection = await handleAddInspection(newInspectionData);
+      if (createdInspection && createdInspection.id && photos.length > 0) {
+        await handlePhotoUpload(photos, createdInspection.id);
+      }
+    } catch (error) {
+      console.error("Error in creating inspection or uploading photos:", error);
+    }
+  };
+
+  const handlePhotoUpload = async (files: File[], inspectionId: string) => {
+    try {
+      const formData = new FormData();
+      files.forEach((file) => {
+        formData.append("photos", file);
+      });
+      formData.append("inspectionId", inspectionId);
+      await uploadPhoto(formData).unwrap();
+      console.log("Photos uploaded successfully!");
+    } catch (error) {
+      console.error("Failed to upload photos", error);
+    }
   };
 
   const handleRouteModalSave = (selectedRoute: RoutePoint[]) => {
     setRoute(selectedRoute);
   };
 
-  const handleAddCheckListItemSubmit = async (data: {
-    name: string;
-    description: string;
-    is_completed: boolean;
-  }) => {
-    const { name, description, is_completed } = data;
-
-    try {
-      await createChecklistItem({ name, description, is_completed }).unwrap();
-      toast.success("Check List Item added successfully!", {
-        onClose: () => navigate("/add-inspection"),
-        autoClose: 1000,
-      });
-    } catch (error) {
-      if (isAPIError(error)) {
-        toast.error("Error adding Check List Item: " + error.data.message, {
-          onClose: () => navigate("/error/500"),
-          autoClose: 1000,
-        });
-      } else if (error instanceof Error) {
-        toast.error("Error adding Check List Item: " + error.message, {
-          onClose: () => navigate("/error/500"),
-          autoClose: 1000,
-        });
-      } else {
-        toast.error("An unknown error occurred.", {
-          onClose: () => navigate("/error/500"),
-          autoClose: 1000,
-        });
-      }
-      console.error("Error adding Check List Item:", error);
-    }
-  };
-
   return (
     <ClientLayout breadcrumb="Add New Inspection">
       <div className="space-x-[1vw] m-[2vw]">
         <PurpleButton
-          text="Check List Items"
-          type="button"
-          onClick={() => setIsChecklistItemModalOpen(true)}
-        />
-        <PurpleButton
           text="CheckList"
           type="button"
           onClick={() => navigate("/add-inspection/checklist")}
-        />
-        <PurpleButton
-          text="Inspection Score"
-          type="button"
-          onClick={() => navigate("/add-inspection/scores")}
         />
         <PurpleButton
           text="Route"
@@ -165,12 +106,7 @@ const AddInspectionPage: React.FC = () => {
           onClick={() => setIsRouteModalOpen(true)}
         />
       </div>
-      <InspectionForm onSubmit={handleFormSubmit} />
-      <AddCheckListItem
-        isOpen={isChecklistItemModalOpen}
-        onClose={() => setIsChecklistItemModalOpen(false)}
-        onSubmit={handleAddCheckListItemSubmit}
-      />
+      <InspectionForm onSubmit={handleFormSubmit} onPhotosSubmit={setPhotos} />
       <RouteModal
         isOpen={isRouteModalOpen}
         onClose={() => setIsRouteModalOpen(false)}

@@ -6,19 +6,14 @@ import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
 import InputField from "../../Tags/InputField";
 import PurpleButton from "../../Tags/PurpleButton";
 import WhiteButton from "../../Tags/WhiteButton";
-import SelectField from "../../Tags/SelectField";
+import SelectField, { Option } from "../../Tags/SelectField";
 import Loader from "../../Constants/Loader";
 import { useNavigate } from "react-router-dom";
 import { Asset } from "../../../redux/features/assetSlice";
 import AddPump from "../Pump/AddPump";
-import { Pump } from "../../../redux/features/pumpSlice";
 import AddPhotos from "../AddPhotos";
 import OutlinePurpleButton from "../../Tags/OutlinePurpleButton";
-
-interface Option {
-  label: string;
-  value: string;
-}
+import { Pump } from "../../../redux/features/pumpSlice";
 
 interface AddAssetProps {
   onSubmit: (assetData: FormData, pumpDataList: Pump[]) => void;
@@ -95,7 +90,8 @@ const libraries: ("places" | "drawing")[] = ["places"];
 const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
   const [customers, setCustomers] = useState<Option[]>([]);
   const [assetTypes, setAssetTypes] = useState<Option[]>([]);
-  const [pumpDataList, setPumpDataList] = useState<Partial<Pump>[]>([]);
+  const [pumpDataList, setPumpDataList] = useState<Pump[]>([]);
+
   const [name, setName] = useState<string>(initialData?.name || "");
   const [type, setType] = useState<Option | null>(
     initialData?.type
@@ -262,12 +258,12 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
     event.preventDefault();
 
     const formData = new FormData();
-    formData.append("name", name);
-    formData.append("type", type?.value || "");
-    formData.append("customerId", customerId?.value || "");
     if (clientId !== undefined && clientId != null) {
       formData.append("clientId", clientId);
     }
+    formData.append("customerId", customerId?.value || "");
+    formData.append("name", name);
+    formData.append("assetType", type?.value || "");
     formData.append("location", location);
     formData.append("latitude", latitude.toString());
     formData.append("longitude", longitude.toString());
@@ -289,13 +285,13 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
       formData.append("photos", photo);
     });
 
-    onSubmit(formData, pumpDataList as Pump[]);
+    onSubmit(formData, pumpDataList);
   };
 
   if (loadError) return <div>Error loading maps</div>;
   if (!isLoaded)
     return (
-      <div>
+      <div className="w-full h-[70vh] flex items-center justify-center">
         <Loader />
       </div>
     );
@@ -311,7 +307,7 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
               onChange={(option) => setCustomerId(option)}
               options={customers}
               placeholder="Select a customer"
-              // required
+              required
             />
           </div>
           <div>

@@ -30,7 +30,7 @@ const EditUserGroupPage: React.FC = () => {
     try {
       const result = await updateUserGroup(userGroupData).unwrap();
       toast.success("User Group updated successfully!", {
-        onClose: () => navigate("/user-group-table"),
+        onClose: () => navigate("/manage-user-groups"),
         autoClose: 1000,
       });
       console.log("User group updated successfully", result);

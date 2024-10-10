@@ -30,7 +30,7 @@ const EditPumpBrandPage: React.FC = () => {
     try {
       const result = await updatePumpBrand(pumpBrandData).unwrap();
       toast.success("Pump Brand updated successfully!", {
-        onClose: () => navigate("/pump-brands-table"),
+        onClose: () => navigate("/manage-pump-brands"),
         autoClose: 1000,
       });
       console.log("Pump brand updated successfully", result);

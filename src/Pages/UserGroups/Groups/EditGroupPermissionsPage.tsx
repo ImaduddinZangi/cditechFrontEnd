@@ -19,7 +19,7 @@ const EditGroupPermissionsPage: React.FC = () => {
       }).unwrap();
   
       toast.success("Permission updated successfully!", {
-        onClose: () => navigate(`/user-group-table`),
+        onClose: () => navigate(`/manage-user-groups`),
         autoClose: 1000,
       });
     } catch (error) {

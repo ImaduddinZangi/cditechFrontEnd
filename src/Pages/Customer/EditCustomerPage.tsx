@@ -8,6 +8,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AddCustomer from "../../Components/Customer/AddCustomer";
 import ClientLayout from "../../Layouts/ClientLayout";
+import Loader from "../../Components/Constants/Loader";
 
 const EditCustomerPage: React.FC = () => {
   const { customerId } = useParams<{ customerId: string }>();
@@ -57,7 +58,12 @@ const EditCustomerPage: React.FC = () => {
     }
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading)
+    return (
+      <div className="w-full h-[70vh] flex justify-center items-center">
+        <Loader />
+      </div>
+    );
   if (error) return <div>Error loading customer details</div>;
 
   return (

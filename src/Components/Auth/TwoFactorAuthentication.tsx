@@ -31,12 +31,9 @@ const TwoFactorAuthentication: React.FC<TwoFactorAuthenticationProps> = ({
         >
           <div>
             <InputField
-              htmlFor="code"
               label="Code"
-              id="code"
               name="code"
               fieldType="text"
-              autoComplete="code"
               placeholder="Enter your code"
               value={code}
               onChange={(e) => setCode(e.target.value)}

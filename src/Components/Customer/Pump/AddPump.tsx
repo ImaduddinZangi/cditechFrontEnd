@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-// import { useGetAssetsQuery } from "../../../redux/api/assetApi";
 import { useGetPumpBrandsQuery } from "../../../redux/api/pumpBrandApi";
 import { PumpBrand } from "../../../redux/features/pumpBrandSlice";
-// import { Asset } from "../../../redux/features/assetSlice";
 import { Pump } from "../../../redux/features/pumpSlice";
 import InputField from "../../Tags/InputField";
 import SelectField, { Option } from "../../Tags/SelectField";
+import OutlinePurpleButton from "../../Tags/OutlinePurpleButton";
+import AddPhotos from "../AddPhotos";
 
 const warrantyOptions = [
   { label: "1 Year", value: "1 Year" },
@@ -19,13 +19,16 @@ interface AddPumpProps {
 }
 
 const AddPump: React.FC<AddPumpProps> = ({ onChange, initialData }) => {
-  // const [assetId, setAssetId] = useState<string>(initialData?.asset?.id || "");
   const [name, setName] = useState<string>(initialData?.name || "");
   const [brandId, setBrandId] = useState<string>(initialData?.brand?.id || "");
   const [serial, setSerial] = useState<string>(initialData?.serial || "");
   const [avgAmps, setAvgAmps] = useState<string>(initialData?.avgAmps || "");
   const [maxAmps, setMaxAmps] = useState<string>(initialData?.maxAmps || "");
   const [hp, setHp] = useState<string>(initialData?.hp || "");
+  const [photos, setPhotos] = useState<File[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const handleOpenModal = () => setIsModalOpen(true);
+  const handleCloseModal = () => setIsModalOpen(false);
   const [warranty, setWarranty] = useState<Option | null>({
     label: "",
     value: "",
@@ -35,6 +38,11 @@ const AddPump: React.FC<AddPumpProps> = ({ onChange, initialData }) => {
   );
   // const { data: assets } = useGetAssetsQuery();
   const { data: pumpBrands } = useGetPumpBrandsQuery();
+
+  const handlePhotosSubmit = (uploadedPhotos: File[]) => {
+    setPhotos(uploadedPhotos);
+    handleCloseModal();
+  };
 
   useEffect(() => {
     const pumpData: Pump = {
@@ -46,9 +54,20 @@ const AddPump: React.FC<AddPumpProps> = ({ onChange, initialData }) => {
       hp,
       warranty: warranty?.value || "",
       installedDate,
+      photos,
     };
     onChange(pumpData);
-  }, [name, brandId, serial, avgAmps, maxAmps, hp, warranty, installedDate]);
+  }, [
+    name,
+    brandId,
+    serial,
+    avgAmps,
+    maxAmps,
+    hp,
+    warranty,
+    installedDate,
+    photos,
+  ]);
 
   return (
     <div className="grid grid-cols-2 gap-[1vw]">
@@ -80,25 +99,6 @@ const AddPump: React.FC<AddPumpProps> = ({ onChange, initialData }) => {
           ))}
         </select>
       </div>
-      {/* <div>
-        <label className="block text-darkgray-0 font-medium text-[1vw]">
-          Asset:
-        </label>
-        <select
-          className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
-          name="assetId"
-          value={assetId}
-          onChange={(e) => setAssetId(e.target.value)}
-          required
-        >
-          <option value="">Select Asset</option>
-          {assets?.map((asset: Asset) => (
-            <option key={asset.id} value={asset.id}>
-              {asset.name}
-            </option>
-          ))}
-        </select>
-      </div> */}
       <InputField
         label="AVG-Amps"
         name="avgAmps"
@@ -153,6 +153,15 @@ const AddPump: React.FC<AddPumpProps> = ({ onChange, initialData }) => {
         onChange={(e) => setInstalledDate(e.target.value)}
         required
       />
+      <OutlinePurpleButton onClick={handleOpenModal} text="Upload Photos" />
+      {isModalOpen && (
+        <AddPhotos
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          onSubmit={handlePhotosSubmit}
+          type="Pump"
+        />
+      )}
     </div>
   );
 };

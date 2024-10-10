@@ -8,61 +8,7 @@ import {
   StyleSheet,
 } from "@react-pdf/renderer";
 import { getAddressFromLatLng } from "../../../utils/utils";
-
-// Define TypeScript types
-interface RoutePoint {
-  latitude: number;
-  longitude: number;
-}
-
-interface FloatScores {
-  float1?: string;
-  float2?: string;
-  float3?: string;
-  float4?: string;
-  float5?: string;
-  float6?: string;
-  alarmFloat?: string;
-}
-
-interface PumpScores {
-  amps: string;
-  runs: boolean;
-  pumpName: string;
-  contactors: string;
-}
-
-interface Score {
-  overallScore?: string;
-  structureScore?: string;
-  panelScore?: string;
-  pipesScore?: string;
-  alarmScore?: string;
-  alarmLightScore?: string;
-  wiresScore?: string;
-  breakersScore?: string;
-  contactorsScore?: string;
-  thermalsScore?: string;
-  floatScores?: FloatScores;
-  pumpScores?: PumpScores[];
-  cleaning?: boolean;
-}
-
-interface Checklist {
-  name: string;
-}
-
-interface InspectionData {
-  id: string;
-  completedDate: string | null;
-  scores: Score[];
-  route: RoutePoint[];
-  comments: string;
-  client: {
-    name: string;
-  };
-  checklists: Checklist[];
-}
+import { Inspection } from "../../../redux/features/inspectionSlice";
 
 const styles = StyleSheet.create({
   page: {
@@ -142,12 +88,12 @@ const styles = StyleSheet.create({
   row: {
     display: "flex",
     flexDirection: "row",
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
 });
 
 interface MyDocumentProps {
-  data: InspectionData;
+  data: Inspection;
 }
 
 const MyDocument: React.FC<MyDocumentProps> = ({ data }) => {
@@ -180,7 +126,9 @@ const MyDocument: React.FC<MyDocumentProps> = ({ data }) => {
           <View style={styles.header}>
             <Text>Monthly Lift Station</Text>
             <Text>Inspection Default</Text>
-            <Text>Overall Score: {data.scores[0]?.overallScore || "N/A"}</Text>
+            <Text>
+              Overall Score: {data.checklists[0]?.overallScore || "N/A"}
+            </Text>
           </View>
           <Text>Oct 2, 2024</Text>
         </View>
@@ -195,85 +143,94 @@ const MyDocument: React.FC<MyDocumentProps> = ({ data }) => {
         <View style={styles.scoreSection}>
           <View style={styles.scoreRow}>
             <Text style={styles.fieldLabel}>Structure:</Text>
-            <Text>{data.scores[0]?.structureScore || "N/A"}</Text>
+            <Text>{data.checklists[0]?.structureScore || "N/A"}</Text>
           </View>
           <View style={styles.scoreRow}>
             <Text style={styles.fieldLabel}>Panel:</Text>
-            <Text>{data.scores[0]?.panelScore || "N/A"}</Text>
+            <Text>{data.checklists[0]?.panelScore || "N/A"}</Text>
           </View>
           <View style={styles.scoreRow}>
             <Text style={styles.fieldLabel}>Contactors:</Text>
-            <Text>{data.scores[0]?.contactorsScore || "N/A"}</Text>
+            <Text>{data.checklists[0]?.contactorsScore || "N/A"}</Text>
           </View>
           <View style={styles.scoreRow}>
             <Text style={styles.fieldLabel}>Pipes:</Text>
-            <Text>{data.scores[0]?.pipesScore || "N/A"}</Text>
+            <Text>{data.checklists[0]?.pipesScore || "N/A"}</Text>
           </View>
           <View style={styles.scoreRow}>
             <Text style={styles.fieldLabel}>Breakers:</Text>
-            <Text>{data.scores[0]?.breakersScore || "N/A"}</Text>
+            <Text>{data.checklists[0]?.breakersScore || "N/A"}</Text>
           </View>
           <View style={styles.scoreRow}>
             <Text style={styles.fieldLabel}>Alarm Light:</Text>
-            <Text>{data.scores[0]?.alarmLightScore || "N/A"}</Text>
+            <Text>{data.checklists[0]?.alarmLightScore || "N/A"}</Text>
           </View>
           <View style={styles.scoreRow}>
             <Text style={styles.fieldLabel}>Wires:</Text>
-            <Text>{data.scores[0]?.wiresScore || "N/A"}</Text>
+            <Text>{data.checklists[0]?.wiresScore || "N/A"}</Text>
           </View>
           <View style={styles.scoreRow}>
             <Text style={styles.fieldLabel}>Alarm:</Text>
-            <Text>{data.scores[0]?.alarmScore || "N/A"}</Text>
+            <Text>{data.checklists[0]?.alarmScore || "N/A"}</Text>
           </View>
           <View style={styles.scoreRow}>
             <Text style={styles.fieldLabel}>Thermals:</Text>
-            <Text>{data.scores[0]?.thermalsScore || "N/A"}</Text>
+            <Text>{data.checklists[0]?.thermalsScore || "N/A"}</Text>
           </View>
         </View>
 
         {/* Pumps Section */}
         <View style={styles.pumpsSection}>
-          {data.scores[0]?.pumpScores?.map((pump, index) => (
-            <View key={index} style={styles.pumpField}>
-              <Text>{pump.pumpName}:</Text>
-              <Text>Runs: {pump.runs ? "Yes" : "No"}</Text>
-              <Text>Amps: {pump.amps}</Text>
-              <Text>Contactors: {pump.contactors}</Text>
-            </View>
-          )) || <Text>No pump data available</Text>}
+          {data.checklists[0]?.pumpScores &&
+          Object.entries(data.checklists[0].pumpScores).length > 0 ? (
+            Object.entries(data.checklists[0].pumpScores).map(
+              ([pumpKey, pump]) => (
+                <View key={pumpKey} style={styles.pumpField}>
+                  <Text>{pump.pumpName}:</Text>
+                  <Text>Runs: {pump.runs ? "Yes" : "No"}</Text>
+                  <Text>Amps: {pump.amps ?? "N/A"}</Text>
+                  <Text>Contactors: {pump.contactors ?? "N/A"}</Text>
+                </View>
+              )
+            )
+          ) : (
+            <Text>No pump data available</Text>
+          )}
         </View>
 
         {/* Float Scores Section */}
         <View style={styles.floatScoreSection}>
-          {data.scores[0]?.floatScores && (
+          {data.checklists[0]?.floatScores && (
             <>
               <View style={styles.scoreRow}>
                 <Text style={styles.fieldLabel}>Float 1:</Text>
-                <Text>{data.scores[0].floatScores.float1 || "N/A"}</Text>
+                <Text>{data.checklists[0].floatScores.float1 || "N/A"}</Text>
               </View>
               <View style={styles.scoreRow}>
                 <Text style={styles.fieldLabel}>Float 2:</Text>
-                <Text>{data.scores[0].floatScores.float2 || "N/A"}</Text>
+                <Text>{data.checklists[0].floatScores.float2 || "N/A"}</Text>
               </View>
               <View style={styles.scoreRow}>
                 <Text style={styles.fieldLabel}>Float 3:</Text>
-                <Text>{data.scores[0].floatScores.float3 || "N/A"}</Text>
+                <Text>{data.checklists[0].floatScores.float3 || "N/A"}</Text>
               </View>
               <View style={styles.scoreRow}>
                 <Text style={styles.fieldLabel}>Float 4:</Text>
-                <Text>{data.scores[0].floatScores.float4 || "N/A"}</Text>
+                <Text>{data.checklists[0].floatScores.float4 || "N/A"}</Text>
               </View>
               <View style={styles.scoreRow}>
                 <Text style={styles.fieldLabel}>Float 5:</Text>
-                <Text>{data.scores[0].floatScores.float5 || "N/A"}</Text>
+                <Text>{data.checklists[0].floatScores.float5 || "N/A"}</Text>
               </View>
               <View style={styles.scoreRow}>
                 <Text style={styles.fieldLabel}>Float 6:</Text>
-                <Text>{data.scores[0].floatScores.float6 || "N/A"}</Text>
+                <Text>{data.checklists[0].floatScores.float6 || "N/A"}</Text>
               </View>
               <View style={styles.scoreRow}>
                 <Text style={styles.fieldLabel}>Alarm Float:</Text>
-                <Text>{data.scores[0].floatScores.alarmFloat || "N/A"}</Text>
+                <Text>
+                  {data.checklists[0].floatScores.alarmFloat || "N/A"}
+                </Text>
               </View>
             </>
           )}
@@ -283,7 +240,7 @@ const MyDocument: React.FC<MyDocumentProps> = ({ data }) => {
         <View style={styles.scoreSection}>
           <View style={styles.scoreRow}>
             <Text>Station Needs Cleaning: </Text>
-            <Text>{data.scores[0]?.cleaning ? "Yes" : "No"}</Text>
+            <Text>{data.checklists[0]?.cleaning ? "Yes" : "No"}</Text>
           </View>
           <View style={styles.scoreRow}>
             <Text>Tech Note: </Text>
@@ -298,7 +255,7 @@ const MyDocument: React.FC<MyDocumentProps> = ({ data }) => {
             <Text>Oct 2, 2024</Text>
           </View>
           <View style={styles.footerRow}>
-            <Text>Completed By: {data.client?.name || "N/A"}</Text>
+            <Text>Completed By: {data.client?.first_name || "N/A"}</Text>
             <Text>Inspection ID: {data.id || "N/A"}</Text>
           </View>
         </View>

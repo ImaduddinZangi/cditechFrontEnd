@@ -24,7 +24,7 @@ const AddClientUserPage: React.FC = () => {
     try {
       const result = await createClientUser(clientUserData).unwrap();
       toast.success("Client User added successfully!", {
-        onClose: () => navigate("/client-user-table"),
+        onClose: () => navigate("/manage-users"),
         autoClose: 1000,
       });
       console.log("Client user created successfully", result);

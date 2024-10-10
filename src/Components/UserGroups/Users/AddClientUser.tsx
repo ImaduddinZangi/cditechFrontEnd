@@ -18,7 +18,6 @@ const AddClientUser: React.FC<AddClientUserProps> = ({
   const [firstName, setFirstName] = useState<string>(
     initialData?.firstName || ""
   );
-  const [username, setUsername] = useState<string>(initialData?.username || "");
   const [lastName, setLastName] = useState<string>(initialData?.lastName || "");
   const [email, setEmail] = useState<string>(initialData?.email || "");
   const [password, setPassword] = useState<string>(initialData?.password || "");
@@ -49,7 +48,6 @@ const AddClientUser: React.FC<AddClientUserProps> = ({
     event.preventDefault();
     onSubmit({
       id: initialData?.id,
-      username,
       firstName,
       lastName,
       email,
@@ -78,8 +76,6 @@ const AddClientUser: React.FC<AddClientUserProps> = ({
           <InputField
             label="First Name"
             name="firstName"
-            id="firstName"
-            autoComplete="given-name"
             fieldType="text"
             value={firstName}
             placeholder="Enter First Name"
@@ -89,8 +85,6 @@ const AddClientUser: React.FC<AddClientUserProps> = ({
           <InputField
             label="Last Name"
             name="lastName"
-            id="lastName"
-            autoComplete="family-name"
             fieldType="text"
             value={lastName}
             placeholder="Enter Last Name"
@@ -116,33 +110,17 @@ const AddClientUser: React.FC<AddClientUserProps> = ({
         </div>
         <div className="w-full grid grid-cols-2 gap-[1vw]">
           <InputField
-            label="Username"
-            name="userame"
-            id="username"
-            autoComplete="userame"
-            fieldType="text"
-            value={username}
-            placeholder="Enter username"
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-          <InputField
             label="Email"
             name="email"
-            id="email"
-            autoComplete="email"
             fieldType="email"
             value={email}
             placeholder="Enter Email"
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-
           <InputField
             label="Password"
             name="password"
-            id="password"
-            autoComplete="new-password"
             fieldType="password"
             value={password}
             placeholder="Enter Password"
@@ -153,8 +131,6 @@ const AddClientUser: React.FC<AddClientUserProps> = ({
           <InputField
             label="Phone"
             name="phone"
-            id="phone"
-            autoComplete="tel"
             fieldType="tel"
             value={phone}
             placeholder="Enter Phone"
@@ -163,8 +139,6 @@ const AddClientUser: React.FC<AddClientUserProps> = ({
           <InputField
             label="Address Line 1"
             name="addressLine1"
-            id="addressLine1"
-            autoComplete="address-line1"
             fieldType="text"
             value={addressLine1}
             placeholder="Enter Address"
@@ -173,8 +147,6 @@ const AddClientUser: React.FC<AddClientUserProps> = ({
           <InputField
             label="City"
             name="city"
-            id="city"
-            autoComplete="address-level2"
             fieldType="text"
             value={city}
             placeholder="Enter City"
@@ -183,8 +155,6 @@ const AddClientUser: React.FC<AddClientUserProps> = ({
           <InputField
             label="State"
             name="state"
-            id="state"
-            autoComplete="address-level1"
             fieldType="text"
             value={state}
             placeholder="Enter State"
@@ -193,8 +163,6 @@ const AddClientUser: React.FC<AddClientUserProps> = ({
           <InputField
             label="Zip Code"
             name="zipcode"
-            id="zipcode"
-            autoComplete="postal-code"
             fieldType="text"
             value={zipcode}
             placeholder="Enter Zip Code"
@@ -203,7 +171,6 @@ const AddClientUser: React.FC<AddClientUserProps> = ({
           <InputField
             label="Division"
             name="division"
-            id="division"
             fieldType="text"
             value={division}
             placeholder="Enter Division"

@@ -28,10 +28,10 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
 
   const Menus: MenuItem[] = [
     { title: "Dashboard", src: "dashboard", href: "/client-dashboard" },
-    { title: "New Rapid Task", src: "client", href: "/new-rapid-task" },
+    { title: "New Rapid Task", src: "reminder", href: "/new-rapid-task" },
     {
       title: "Quick Search",
-      src: "table",
+      src: "find",
       href: "/quick-search",
     },
     {
@@ -39,45 +39,53 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
       src: "customer",
       isDropdown: true,
       dropdownItems: [
-        { title: "Manage Customers", src: "table", href: "/manage-customers" },
+        {
+          title: "Manage Customers",
+          src: "management",
+          href: "/manage-customers",
+        },
         {
           title: "Add New Customer",
-          src: "table",
+          src: "people",
           href: "/add-customer",
         },
       ],
     },
     {
       title: "Tasks",
-      src: "customer",
+      src: "clipboard",
       isDropdown: true,
       dropdownItems: [
-        { title: "Task Manager", src: "table", href: "/manage-tasks" },
+        {
+          title: "Task Manager",
+          src: "project-management",
+          href: "/manage-tasks",
+        },
         {
           title: "My Tasks",
-          src: "manage-customer",
+          src: "checklist",
           href: "/my-tasks",
         },
         {
           title: "My Task History",
-          src: "manage-customer",
+          src: "file",
           href: "/my-task-history",
         },
         {
           title: "Add New Customer Task",
-          src: "manage-customer",
+          src: "portfolio",
           href: "/add-new-customer-task",
         },
         {
           title: "Easy Task Editor",
-          src: "manage-customer",
+          src: "checklist1",
           href: "/easy-task-editor",
         },
       ],
     },
     {
       title: "Inspections",
-      src: "inspection",
+      src: "checked",
       isDropdown: true,
       dropdownItems: [
         {
@@ -87,190 +95,190 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
         },
         {
           title: "My Inspections",
-          src: "log",
+          src: "task",
           href: "/manage-inspections",
         },
         {
           title: "My Inspection History",
-          src: "log",
+          src: "history",
           href: "/my-inspection-history",
         },
         {
           title: "Add New Inspection",
-          src: "log",
+          src: "more",
           href: "/add-inspection",
         },
         {
           title: "Inspection Checklist Manager",
-          src: "log",
+          src: "quality-control",
           href: "/manage-inspection-checklists",
         },
       ],
     },
     {
       title: "Maps",
-      src: "map",
+      src: "placeholder",
       isDropdown: true,
       dropdownItems: [
-        { title: "Customers", src: "", href: "/customers-map" },
+        { title: "Customers", src: "customer-journey", href: "/customers-map" },
         {
           title: "Tasks",
-          src: "log",
+          src: "checklist",
           href: "/tasks-map",
         },
         {
           title: "Inspections",
-          src: "log",
+          src: "journey",
           href: "/inspections-map",
         },
         {
           title: "Assets",
-          src: "log",
+          src: "placeholder",
           href: "/assets-map",
         },
         {
           title: "One Click Task Route",
-          src: "log",
+          src: "location1",
           href: "/one-click-task-route",
         },
         {
           title: "One Click Inspection Route",
-          src: "log",
+          src: "location",
           href: "/one-click-inspection-route",
         },
       ],
     },
     {
       title: "Calendars",
-      src: "files",
+      src: "calendar",
       isDropdown: true,
       dropdownItems: [
         {
           title: "Task Calendar",
-          src: "reports",
+          src: "dummy",
           href: "/task-calendar",
         },
         {
           title: "Inspection Calendar",
-          src: "reports",
+          src: "dummy",
           href: "/inspection-calendar",
         },
       ],
     },
     {
       title: "Billing",
-      src: "files",
+      src: "dummy",
       isDropdown: true,
       dropdownItems: [
         {
           title: "Invoice Manager",
-          src: "reports",
+          src: "dummy",
           href: "/manage-invoices",
         },
         {
           title: "Products",
-          src: "reports",
+          src: "dummy",
           href: "/products",
         },
         {
           title: "Services",
-          src: "reports",
+          src: "dummy",
           href: "/services",
         },
       ],
     },
     {
       title: "Users & Groups",
-      src: "files",
+      src: "dummy",
       isDropdown: true,
       dropdownItems: [
         {
           title: "User Management",
-          src: "reports",
+          src: "dummy",
           href: "/manage-users",
         },
         {
           title: "Group Management",
-          src: "reports",
+          src: "dummy",
           href: "/manage-groups",
         },
         {
           title: "Add New User",
-          src: "reports",
+          src: "dummy",
           href: "/add-client-user",
         },
         {
           title: "Current User Sessions",
-          src: "reports",
+          src: "dummy",
           href: "/currect user sessions",
         },
       ],
     },
     {
       title: "Support",
-      src: "files",
+      src: "dummy",
       isDropdown: true,
       dropdownItems: [
         {
           title: "Support Case Management",
-          src: "reports",
+          src: "dummy",
           href: "/support-case-management",
         },
         {
           title: "Education Center",
-          src: "reports",
+          src: "dummy",
           href: "/education-center",
         },
         {
           title: "Chat With Support",
-          src: "reports",
+          src: "dummy",
           href: "/chat-with-support",
         },
         {
           title: "Contact Us",
-          src: "reports",
+          src: "dummy",
           href: "/contact-us",
         },
         {
           title: "About Us",
-          src: "reports",
+          src: "dummy",
           href: "/about-us",
         },
       ],
     },
     {
       title: "Settings",
-      src: "setting",
+      src: "dummy",
       isDropdown: true,
       dropdownItems: [
         {
           title: "Task Settings",
-          src: "reports",
+          src: "dummy",
           href: "/task-settings",
         },
         {
           title: "Client Profile",
-          src: "reports",
+          src: "dummy",
           href: "/client-profile",
         },
         {
           title: "My Fee Plan",
-          src: "reports",
+          src: "dummy",
           href: "/my-fee-plan",
         },
         {
           title: "Log Dashboard",
-          src: "reports",
+          src: "dummy",
           href: "/log-dashboard",
         },
         {
           title: "Pump Brands",
-          src: "reports",
+          src: "dummy",
           href: "/manage-pump-brands",
         },
         {
           title: "My User Profile",
-          src: "reports",
+          src: "dummy",
           href: "/my-user-profile",
         },
       ],
@@ -296,14 +304,14 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
   return (
     <div className="flex font-inter">
       <div
-        className={`${
+        className={`bg-white h-screen overflow-y-auto overflow-x-hidden fixed border-r p-[1.25vw] pt-[2vw] duration-300 ${
           open ? "w-[15vw]" : "w-[6vw]"
-        } bg-white h-screen fixed border-r p-[1.25vw] pt-[2vw] duration-300`}
+        } `}
       >
         <img
           src="/assets/control.png"
-          className={`absolute cursor-pointer -right-[1vw] top-[2.2vw] w-[2vw] border-dark-purple
-               border rounded-full  ${!open && "rotate-180"}`}
+          className={`absolute cursor-pointer right-0 top-[2.2vw] w-[2vw]
+                ${!open && "rotate-180"}`}
           onClick={() => setOpen(!open)}
         />
         <div className="flex gap-x-[1vw] items-center">
@@ -318,7 +326,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
           {Menus.map((Menu: MenuItem, index: number) => (
             <React.Fragment key={index}>
               <li
-                className={`flex rounded-md p-[0.5vw] cursor-pointer hover:bg-light-white text-gray-700 text-[0.9vw] items-center mt-[0.3vw] ${
+                className={`flex rounded-md p-[0.5vw] cursor-pointer hover:bg-slate-200 text-darkgray-0 text-[0.9vw] items-center mt-[0.3vw] ${
                   index === 0 && "bg-light-white"
                 } `}
               >
@@ -390,7 +398,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
                     (dropdownItem: SubMenuItem, idx: number) => (
                       <li
                         key={idx}
-                        className="flex rounded-md p-[0.5vw] cursor-pointer hover:bg-light-white text-gray-700 text-[0.9vw] items-center mt-[0.5vw]"
+                        className="flex rounded-md p-[0.5vw] cursor-pointer hover:bg-slate-200 text-darkgray-0 text-[0.9vw] items-center mt-[0.5vw]"
                       >
                         <Link
                           to={dropdownItem.href}

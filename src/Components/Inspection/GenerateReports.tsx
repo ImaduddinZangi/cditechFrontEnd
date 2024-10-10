@@ -13,10 +13,10 @@ import { useNavigate } from "react-router-dom";
 import Loader from "../Constants/Loader";
 import PurpleButton from "../Tags/PurpleButton";
 import WhiteButton from "../Tags/WhiteButton";
-import { GetInspection } from "../../redux/features/inspectionSlice";
+import { Inspection } from "../../redux/features/inspectionSlice";
 
 const GenerateReports: React.FC = () => {
-  const [inspections, setInspections] = useState<GetInspection[]>([]);
+  const [inspections, setInspections] = useState<Inspection[]>([]);
   const clientId = getUserId();
   const { data: inspectionsData } = useGetInspectionsQuery();
   const [selectedInspectionId, setSelectedInspectionId] = useState<

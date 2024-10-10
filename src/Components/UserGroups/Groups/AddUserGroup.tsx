@@ -37,8 +37,6 @@ const AddUserGroup: React.FC<AddUserGroupProps> = ({
         <InputField
           label="Group Name"
           name="name"
-          id="name"
-          autoComplete="name"
           fieldType="text"
           value={name}
           placeholder="Enter Group name"
@@ -48,8 +46,6 @@ const AddUserGroup: React.FC<AddUserGroupProps> = ({
         <InputField
           label="Description"
           name="description"
-          id="description"
-          autoComplete="description"
           fieldType="text"
           value={description}
           placeholder="Enter Group description"

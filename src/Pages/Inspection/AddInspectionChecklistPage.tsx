@@ -5,7 +5,7 @@ import { useCreateInspectionChecklistMutation } from "../../redux/api/inspection
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
-import { ChecklistData } from "../../redux/features/inspectionChecklistSlice";
+import { Checklist } from "../../redux/features/inspectionChecklistSlice";
 
 const AddInspectionChecklistPage: React.FC = () => {
   const [createInspectionChecklist] = useCreateInspectionChecklistMutation();
@@ -21,7 +21,7 @@ const AddInspectionChecklistPage: React.FC = () => {
     return error && error.data && typeof error.data.message === "string";
   };
 
-  const handleAddInspectionChecklist = async (checklistData: ChecklistData) => {
+  const handleAddInspectionChecklist = async (checklistData: Checklist) => {
     try {
       const result = await createInspectionChecklist(checklistData).unwrap();
       toast.success("Inspection Checklist added successfully!", {
@@ -55,7 +55,7 @@ const AddInspectionChecklistPage: React.FC = () => {
 
   return (
     <ClientLayout breadcrumb="Add Inspection Checklist">
-      <AddInspectionChecklist onSave={handleAddInspectionChecklist} />
+      <AddInspectionChecklist onSubmit={handleAddInspectionChecklist} />
     </ClientLayout>
   );
 };

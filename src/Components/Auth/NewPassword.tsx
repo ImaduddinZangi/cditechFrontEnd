@@ -34,10 +34,8 @@ const NewPassword: React.FC<NewPasswordProps> = ({ onSubmit }) => {
           <div className="mt-[4vw] md:mt-[2vw]">
             <InputField
               label="New Password"
-              id="new-password"
               name="new-password"
               fieldType="password"
-              autoComplete="new-password"
               placeholder="Enter new password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -47,10 +45,8 @@ const NewPassword: React.FC<NewPasswordProps> = ({ onSubmit }) => {
           <div>
             <InputField
               label="Confirm Password"
-              id="confirm-password"
               name="confirm-password"
               fieldType="password"
-              autoComplete="confirm-password"
               placeholder="Confirm new password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}

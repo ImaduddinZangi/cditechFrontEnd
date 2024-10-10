@@ -1,51 +1,70 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ChecklistItem } from "./checkListItemSlice";
+
+export interface FloatScores {
+  float1: string;
+  float2: string;
+  float3: string;
+  float4: string;
+  float5: string;
+  float6: string;
+  alarmFloat: string;
+}
+
+export interface PumpData {
+  pumpName: string;
+  runs: boolean;
+  amps: string;
+  contactors: string;
+}
 
 export interface Checklist {
   id?: string;
-  name: string;
+  structureScore: string;
+  panelScore: string;
+  pipesScore: string;
+  alarmScore: string;
+  alarmLightScore: string;
+  wiresScore: string;
+  breakersScore: string;
+  contactorsScore: string;
+  thermalsScore: string;
   overallScore: string;
-  checklistItemIds?: string[];
-  items?: ChecklistItem[];
-  created_at?: string;
-  updated_at?: string;
-}
-
-export interface ChecklistData {
-  id?: string;
-  name: string;
-  checklistItemIds: string[];
+  cleaning: boolean;
+  floatScores: FloatScores;
+  pumpScores: { [key: string]: PumpData };
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface InspectionChecklistState {
-  inspectionChecklists: Checklist[] | null;
+  inspectionChecklist: Checklist[] | null;
 }
 
 const initialState: InspectionChecklistState = {
-  inspectionChecklists: null,
+  inspectionChecklist: null,
 };
 
 const inspectionChecklistSlice = createSlice({
   name: "inspectionChecklist",
   initialState,
   reducers: {
-    setInspectionChecklists: (state, action: PayloadAction<Checklist[]>) => {
-      state.inspectionChecklists = action.payload;
+    setInspectionChecklist: (state, action: PayloadAction<Checklist[]>) => {
+      state.inspectionChecklist = action.payload;
     },
     addInspectionChecklist: (state, action: PayloadAction<Checklist>) => {
-      state.inspectionChecklists?.push(action.payload);
+      state.inspectionChecklist?.push(action.payload);
     },
     updateInspectionChecklist: (state, action: PayloadAction<Checklist>) => {
-      const index = state.inspectionChecklists?.findIndex(
+      const index = state.inspectionChecklist?.findIndex(
         (inspectionChecklist) => inspectionChecklist.id === action.payload.id
       );
-      if (index !== undefined && index !== -1 && state.inspectionChecklists) {
-        state.inspectionChecklists[index] = action.payload;
+      if (index !== undefined && index !== -1 && state.inspectionChecklist) {
+        state.inspectionChecklist[index] = action.payload;
       }
     },
     removeInspectionChecklist: (state, action: PayloadAction<string>) => {
-      state.inspectionChecklists =
-        state.inspectionChecklists?.filter(
+      state.inspectionChecklist =
+        state.inspectionChecklist?.filter(
           (inspectionChecklist) => inspectionChecklist.id !== action.payload
         ) || null;
     },
@@ -53,9 +72,10 @@ const inspectionChecklistSlice = createSlice({
 });
 
 export const {
-  setInspectionChecklists,
+  setInspectionChecklist,
   addInspectionChecklist,
   updateInspectionChecklist,
   removeInspectionChecklist,
 } = inspectionChecklistSlice.actions;
+
 export default inspectionChecklistSlice.reducer;

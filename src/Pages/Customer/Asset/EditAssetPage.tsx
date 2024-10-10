@@ -43,7 +43,7 @@ const EditAssetPage: React.FC = () => {
     try {
       const result = await updateAsset({ id: id, formData }).unwrap();
       toast.success("Asset updated successfully!", {
-        onClose: () => navigate("/manage-customer"),
+        onClose: () => navigate("/manage-customers"),
         autoClose: 1000,
       });
       console.log("Asset updated successfully", result);

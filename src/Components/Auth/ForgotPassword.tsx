@@ -31,10 +31,8 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onSubmit }) => {
           <div className="mt-[4vw] md:mt-[2vw]">
             <InputField
               label="Email"
-              id="email"
               name="email"
               fieldType="email"
-              autoComplete="email"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}

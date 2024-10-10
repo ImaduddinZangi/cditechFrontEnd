@@ -32,10 +32,8 @@ const ClientSignIn: React.FC<ClientSignInProps> = ({ onSubmit }) => {
           <div className="mt-[2vw]">
             <InputField
               label="Email"
-              id="email"
               name="email"
               fieldType="email"
-              autoComplete="email"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -45,10 +43,8 @@ const ClientSignIn: React.FC<ClientSignInProps> = ({ onSubmit }) => {
           <div>
             <InputField
               label="Password"
-              id="password"
               name="password"
               fieldType="password"
-              autoComplete="current-password"
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

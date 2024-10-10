@@ -30,7 +30,6 @@ const AddPumpBrandPage = lazy(
 const ManageCustomerPage = lazy(
   () => import("../Pages/Customer/ManageCustomerPage")
 );
-const AddPhotosPage = lazy(() => import("../Pages/Customer/AddPhotosPage"));
 const TwoFactorAuthPage = lazy(() => import("../Pages/Auth/twoFactorAuthPage"));
 const EditCustomerPage = lazy(
   () => import("../Pages/Customer/EditCustomerPage")
@@ -122,9 +121,6 @@ const VerifyPhoneNumberPage = lazy(
 const PumpBrandDetailsPage = lazy(
   () => import("../Pages/Customer/Pump/PumpBrandDetailsPage")
 );
-const AddInspectionScoresPage = lazy(
-  () => import("../Pages/Inspection/AddInspectionScoresPage")
-);
 const AddInspectionChecklistPage = lazy(
   () => import("../Pages/Inspection/AddInspectionChecklistPage")
 );
@@ -137,7 +133,7 @@ const ManagementLogsTablePage = lazy(
 const ClientUsersSessionsTablePage = lazy(
   () => import("../Pages/Logs/ClientUsersSessionsTablePage")
 );
-
+const EditPumpPage = lazy(() => import("../Pages/Customer/Pump/EditPumpPage"));
 const RoutesContent: React.FC = () => {
   return (
     <Suspense
@@ -207,16 +203,9 @@ const RoutesContent: React.FC = () => {
             path="/pump-brand-detail/:pumpBrandId"
             element={<PumpBrandDetailsPage />}
           />
-
-          {/* Photo */}
-          <Route path="/add-photos/:type/:id" element={<AddPhotosPage />} />
-
+          <Route path="/edit-pump/:pumpId" element={<EditPumpPage />} />
           {/* Inspection */}
           <Route path="/add-inspection" element={<AddInspectionPage />} />
-          <Route
-            path="/add-inspection/scores"
-            element={<AddInspectionScoresPage />}
-          />
           <Route
             path="/add-inspection/checklist"
             element={<AddInspectionChecklistPage />}

@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Checklist, ChecklistData } from "../features/inspectionChecklistSlice";
+import { Checklist } from "../features/inspectionChecklistSlice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_BASE_URL,
@@ -13,46 +13,48 @@ const baseQuery = fetchBaseQuery({
 });
 
 export const inspectionChecklistApi = createApi({
-  reducerPath: "inspectionChecklistApi",
+  reducerPath: "inspectionChecklistsApi",
   baseQuery,
-  tagTypes: ["Checklist"], // Add tagTypes for caching
+  tagTypes: ["Checklists"],
   endpoints: (builder) => ({
     getInspectionChecklists: builder.query<Checklist[], void>({
       query: () => ({
         url: "checklists",
         method: "GET",
       }),
-      providesTags: ["Checklist"], // Provide tags for checklist list
+      providesTags: ["Checklists"],
     }),
     getInspectionChecklistById: builder.query<Checklist, string>({
       query: (checklistId: string) => ({
         url: `checklists/${checklistId}`,
         method: "GET",
       }),
-      providesTags: (_result, _error, id) => [{ type: "Checklist", id }], // Provide tags for a specific checklist
+      providesTags: (_result, _error, id) => [{ type: "Checklists", id }],
     }),
-    createInspectionChecklist: builder.mutation<ChecklistData, Partial<ChecklistData>>({
+    createInspectionChecklist: builder.mutation<Checklist, Partial<Checklist>>({
       query: (newChecklist) => ({
         url: "checklists",
         method: "POST",
         body: newChecklist,
       }),
-      invalidatesTags: ["Checklist"], // Invalidate checklist list after creation
+      invalidatesTags: ["Checklists"],
     }),
-    updateInspectionChecklist: builder.mutation<ChecklistData, Partial<ChecklistData>>({
+    updateInspectionChecklist: builder.mutation<Checklist, Partial<Checklist>>({
       query: ({ id, ...rest }) => ({
         url: `checklists/${id}`,
         method: "PATCH",
         body: rest,
       }),
-      invalidatesTags: (_result, _error, { id }) => [{ type: "Checklist", id }], // Invalidate specific checklist after update
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: "Checklists", id },
+      ],
     }),
     deleteInspectionChecklist: builder.mutation<{ success: boolean }, string>({
       query: (checklistId: string) => ({
         url: `checklists/${checklistId}`,
         method: "DELETE",
       }),
-      invalidatesTags: (_result, _error, id) => [{ type: "Checklist", id }], // Invalidate specific checklist after deletion
+      invalidatesTags: (_result, _error, id) => [{ type: "Checklists", id }],
     }),
   }),
 });

@@ -8,8 +8,8 @@ import InspectionForm from "../../Components/Inspection/AddInspection";
 import ClientLayout from "../../Layouts/ClientLayout";
 import RouteModal from "../../Components/Inspection/RouteModal";
 import {
+  CreateInspection,
   Inspection,
-  GetInspection,
 } from "../../redux/features/inspectionSlice";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -40,7 +40,7 @@ const EditInspectionPage: React.FC = () => {
     return error && error.data && typeof error.data.message === "string";
   };
 
-  const handleSubmit = async (data: Inspection) => {
+  const handleSubmit = async (data: CreateInspection) => {
     try {
       await updateInspection({
         ...data,
@@ -48,7 +48,7 @@ const EditInspectionPage: React.FC = () => {
         route,
       }).unwrap();
       toast.success("Inspection updated successfully!", {
-        onClose: () => navigate("/inspection-table"),
+        onClose: () => navigate("/manage-inspections"),
         autoClose: 1000,
       });
     } catch (error) {
@@ -86,7 +86,7 @@ const EditInspectionPage: React.FC = () => {
     );
   if (error) return <div>Error loading inspection details.</div>;
 
-  const initialData: GetInspection = {
+  const initialData: Inspection = {
     ...inspection!,
     clientId: inspection?.client?.id ?? null,
   };

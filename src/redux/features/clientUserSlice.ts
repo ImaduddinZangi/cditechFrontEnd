@@ -3,7 +3,7 @@ import { Client } from "./clientSlice";
 
 export interface ClientUser {
   id?: string;
-  username: string;
+  username?: string;
   firstName: string;
   name?: string;
   lastName: string;
@@ -28,6 +28,35 @@ export interface ClientUser {
   two_factor_enabled?: boolean;
   created_at?: boolean;
   updated_at?: boolean;
+}
+
+export interface GetClientUser {
+  id: string;
+  username: string;
+  firstName: string;
+  name: string;
+  lastName: string;
+  email: string;
+  password: string;
+  status: string;
+  addressLine1: string;
+  city: string;
+  state: string;
+  zipcode: string;
+  phone: string;
+  division: string;
+  receiveSms: boolean;
+  requirePasswordChange: boolean;
+  sendWelcomeMessage: boolean;
+  groupId: string;
+  client: Client;
+  is_active: boolean;
+  is_client_admin: boolean;
+  is_customer_admin: boolean;
+  isProtectedUser: boolean;
+  two_factor_enabled: boolean;
+  created_at: boolean;
+  updated_at: boolean;
 }
 
 interface AuthState {

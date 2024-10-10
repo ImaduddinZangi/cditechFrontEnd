@@ -2,8 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Client } from "./clientSlice";
 import { Asset } from "./assetSlice";
 import { Customer } from "./customerSlice";
-import { ClientUser } from "./clientUserSlice";
-import { Scores } from "./inspectionScoresSlice";
+import { GetClientUser } from "./clientUserSlice";
 import { Checklist } from "./inspectionChecklistSlice";
 
 export interface RoutePoint {
@@ -11,52 +10,41 @@ export interface RoutePoint {
   longitude: number;
 }
 
-export interface Score {
-  scoreId: string;
-}
-
-export interface IDs {
-  id: string;
+export interface CreateInspection {
+  id?: string;
+  clientId?: string | null;
+  customerId: string;
+  assetId: string;
+  assignedTo: string;
+  status: string;
+  scheduledDate: string;
+  isReocurring?: boolean;
+  inspectionInterval?: number;
+  reocurrenceEndDate?: string;
+  route?: RoutePoint[];
+  checklists?: string[];
 }
 
 export interface Inspection {
-  id?: string;
-  clientId?: string | null;
-  customerId?: string;
-  assetId?: string;
-  checklists?: IDs[];
-  score?: Score;
-  name: string;
-  assignedTo?: string;
-  status?: string;
-  scheduledDate: string;
-  completedDate: string | null;
-  route: RoutePoint[];
-  comments: string;
-  serviceFee: number;
-  recording: string;
-}
-
-export interface GetInspection {
   id: string;
   name: string;
-  clientId?: string | null;
-  assignedTo?: ClientUser;
+  clientId: string | null;
   status: string;
-  pdfFilePath?: string;
+  pdfFilePath: string;
   scheduledDate: string;
   completedDate: string | null;
-  route: RoutePoint[];
   comments: string;
-  serviceFee: number;
+  inspectionInterval: number;
+  isReocurring: boolean;
+  reocurrenceEndDate?: string;
   checklists: Checklist[];
-  scores: Scores[];
-  recording?: string;
-  createdAt: string;
-  updatedAt: string;
+  route: RoutePoint[];
   client: Client;
   asset: Asset;
+  assignedTo: GetClientUser;
   customer: Customer;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface InspectionState {

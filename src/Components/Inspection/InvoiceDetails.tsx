@@ -109,7 +109,7 @@ const InvoiceDetails: React.FC = () => {
                 Client:
               </p>
               <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                {invoice.client.name}
+                {invoice.client.first_name},&nbsp;{invoice.client.last_name}
               </p>
             </div>
           )}

@@ -67,7 +67,7 @@ const InspectionDetails: React.FC = () => {
                 Checklist:
               </p>
               <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                {inspection.checklists?.[0]?.name ?? "N/A"}
+                {inspection.checklists?.[0]?.id ?? "N/A"}
               </p>
             </div>
             <div>
@@ -81,7 +81,7 @@ const InspectionDetails: React.FC = () => {
           </div>
 
           {/* Score Section */}
-          {inspection.scores && inspection.scores.length > 0 && (
+          {inspection.checklists && inspection.checklists.length > 0 && (
             <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg">
               <div className="flex items-center justify-between">
                 <div>
@@ -89,7 +89,7 @@ const InspectionDetails: React.FC = () => {
                     Overall Score:
                   </p>
                   <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.scores?.[0]?.overallScore ?? "N/A"}
+                    {inspection.checklists?.[0]?.overallScore ?? "N/A"}
                   </p>
                 </div>
                 <div className="flex space-x-[1vw]">
@@ -112,7 +112,7 @@ const InspectionDetails: React.FC = () => {
                     Structure:
                   </p>
                   <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.scores?.[0]?.structureScore ?? "N/A"}
+                    {inspection.checklists?.[0]?.structureScore ?? "N/A"}
                   </p>
                 </div>
                 <div>
@@ -120,7 +120,7 @@ const InspectionDetails: React.FC = () => {
                     Panel:
                   </p>
                   <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.scores?.[0]?.panelScore ?? "N/A"}
+                    {inspection.checklists?.[0]?.panelScore ?? "N/A"}
                   </p>
                 </div>
                 <div>
@@ -128,7 +128,7 @@ const InspectionDetails: React.FC = () => {
                     Pipes:
                   </p>
                   <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.scores?.[0]?.pipesScore ?? "N/A"}
+                    {inspection.checklists?.[0]?.pipesScore ?? "N/A"}
                   </p>
                 </div>
                 <div>
@@ -136,7 +136,7 @@ const InspectionDetails: React.FC = () => {
                     Breakers:
                   </p>
                   <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.scores?.[0]?.breakersScore ?? "N/A"}
+                    {inspection.checklists?.[0]?.breakersScore ?? "N/A"}
                   </p>
                 </div>
                 <div>
@@ -144,7 +144,7 @@ const InspectionDetails: React.FC = () => {
                     Alarm:
                   </p>
                   <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.scores?.[0]?.alarmScore ?? "N/A"}
+                    {inspection.checklists?.[0]?.alarmScore ?? "N/A"}
                   </p>
                 </div>
                 <div>
@@ -152,7 +152,7 @@ const InspectionDetails: React.FC = () => {
                     Alarm Light:
                   </p>
                   <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.scores?.[0]?.alarmLightScore ?? "N/A"}
+                    {inspection.checklists?.[0]?.alarmLightScore ?? "N/A"}
                   </p>
                 </div>
                 <div>
@@ -160,7 +160,7 @@ const InspectionDetails: React.FC = () => {
                     Wires:
                   </p>
                   <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.scores?.[0]?.wiresScore ?? "N/A"}
+                    {inspection.checklists?.[0]?.wiresScore ?? "N/A"}
                   </p>
                 </div>
                 <div>
@@ -168,7 +168,7 @@ const InspectionDetails: React.FC = () => {
                     Contactors:
                   </p>
                   <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.scores?.[0]?.contactorsScore ?? "N/A"}
+                    {inspection.checklists?.[0]?.contactorsScore ?? "N/A"}
                   </p>
                 </div>
                 <div>
@@ -176,7 +176,7 @@ const InspectionDetails: React.FC = () => {
                     Thermals:
                   </p>
                   <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.scores?.[0]?.thermalsScore ?? "N/A"}
+                    {inspection.checklists?.[0]?.thermalsScore ?? "N/A"}
                   </p>
                 </div>
               </div>
@@ -184,52 +184,54 @@ const InspectionDetails: React.FC = () => {
           )}
 
           {/* Pump Section */}
-          {inspection.scores?.[0]?.pumpScores &&
-            inspection.scores?.[0]?.pumpScores.length > 0 && (
+          {inspection.checklists?.[0]?.pumpScores &&
+            Object.entries(inspection.checklists[0].pumpScores).length > 0 && (
               <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg">
-                {inspection.scores[0].pumpScores.map((pump, index) => (
-                  <div key={index} className="flex justify-between">
-                    <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                      {index + 1}: {pump.pumpName ?? "N/A"}
-                    </p>
-                    <div className="flex flex-row items-center gap-[1vw]">
+                {Object.entries(inspection.checklists[0].pumpScores).map(
+                  ([pumpKey, pump]) => (
+                    <div key={pumpKey} className="flex justify-between">
                       <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                        Runs:
+                        {pumpKey}: {pump.pumpName ?? "N/A"}
                       </p>
-                      <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                        {pump.runs ? "Yes" : "No"}
-                      </p>
+                      <div className="flex flex-row items-center gap-[1vw]">
+                        <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
+                          Runs:
+                        </p>
+                        <p className="text-[1vw] text-gray-0 font-medium font-inter">
+                          {pump.runs ? "Yes" : "No"}
+                        </p>
+                      </div>
+                      <div className="flex flex-row items-center gap-[1vw]">
+                        <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
+                          Amps:
+                        </p>
+                        <p className="text-[1vw] text-gray-0 font-medium font-inter">
+                          {pump.amps ?? "N/A"}
+                        </p>
+                      </div>
+                      <div className="flex flex-row items-center gap-[1vw]">
+                        <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
+                          Contactor:
+                        </p>
+                        <p className="text-[1vw] text-gray-0 font-medium font-inter">
+                          {pump.contactors ?? "N/A"}
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex flex-row items-center gap-[1vw]">
-                      <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                        Amps:
-                      </p>
-                      <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                        {pump.amps ?? "N/A"}
-                      </p>
-                    </div>
-                    <div className="flex flex-row items-center gap-[1vw]">
-                      <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                        Contactor:
-                      </p>
-                      <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                        {pump.contactors ?? "N/A"}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                  )
+                )}
               </div>
             )}
 
           {/* Station Needs Cleaning */}
-          {inspection.scores?.[0]?.cleaning !== undefined && (
+          {inspection.checklists?.[0]?.cleaning !== undefined && (
             <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg">
               <div className="flex flex-row items-center gap-[1vw]">
                 <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
                   Station Needs Cleaning:
                 </p>
                 <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                  {inspection.scores?.[0]?.cleaning ? "Yes" : "No"}
+                  {inspection.checklists?.[0]?.cleaning ? "Yes" : "No"}
                 </p>
               </div>
               <div className="grid grid-cols-3 gap-[1vw]">
@@ -238,7 +240,7 @@ const InspectionDetails: React.FC = () => {
                     Float 1:
                   </p>
                   <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.scores?.[0]?.floatScores?.float1 ?? "N/A"}
+                    {inspection.checklists?.[0]?.floatScores?.float1 ?? "N/A"}
                   </p>
                 </div>
                 <div>
@@ -246,7 +248,7 @@ const InspectionDetails: React.FC = () => {
                     Float 2:
                   </p>
                   <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.scores?.[0]?.floatScores?.float2 ?? "N/A"}
+                    {inspection.checklists?.[0]?.floatScores?.float2 ?? "N/A"}
                   </p>
                 </div>
                 <div>
@@ -254,7 +256,7 @@ const InspectionDetails: React.FC = () => {
                     Float 3:
                   </p>
                   <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.scores?.[0]?.floatScores?.float3 ?? "N/A"}
+                    {inspection.checklists?.[0]?.floatScores?.float3 ?? "N/A"}
                   </p>
                 </div>
                 <div>
@@ -262,7 +264,7 @@ const InspectionDetails: React.FC = () => {
                     Float 4:
                   </p>
                   <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.scores?.[0]?.floatScores?.float4 ?? "N/A"}
+                    {inspection.checklists?.[0]?.floatScores?.float4 ?? "N/A"}
                   </p>
                 </div>
                 <div>
@@ -270,7 +272,7 @@ const InspectionDetails: React.FC = () => {
                     Float 5:
                   </p>
                   <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.scores?.[0]?.floatScores?.float5 ?? "N/A"}
+                    {inspection.checklists?.[0]?.floatScores?.float5 ?? "N/A"}
                   </p>
                 </div>
                 <div>
@@ -278,7 +280,8 @@ const InspectionDetails: React.FC = () => {
                     Alarm Float:
                   </p>
                   <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.scores?.[0]?.floatScores?.alarmFloat ?? "N/A"}
+                    {inspection.checklists?.[0]?.floatScores?.alarmFloat ??
+                      "N/A"}
                   </p>
                 </div>
               </div>

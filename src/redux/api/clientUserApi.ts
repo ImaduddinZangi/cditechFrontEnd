@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { ClientUser } from "../features/clientUserSlice";
+import { ClientUser, GetClientUser } from "../features/clientUserSlice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_BASE_URL,
@@ -15,21 +15,21 @@ const baseQuery = fetchBaseQuery({
 export const clientUserApi = createApi({
   reducerPath: "clientUserApi",
   baseQuery,
-  tagTypes: ["ClientUser"], // Add tagTypes for caching
+  tagTypes: ["ClientUser"],
   endpoints: (builder) => ({
-    getClientUsers: builder.query<ClientUser[], void>({
+    getClientUsers: builder.query<GetClientUser[], void>({
       query: () => ({
         url: "users/client/associated",
         method: "GET",
       }),
-      providesTags: ["ClientUser"], // Provide tags for client users
+      providesTags: ["ClientUser"],
     }),
     getClientUserById: builder.query<ClientUser, string>({
       query: (clientUserId: string) => ({
         url: `users/${clientUserId}`,
         method: "GET",
       }),
-      providesTags: (_result, _error, id) => [{ type: "ClientUser", id }], // Provide tags for specific client user
+      providesTags: (_result, _error, id) => [{ type: "ClientUser", id }],
     }),
     createClientUser: builder.mutation<ClientUser, Partial<ClientUser>>({
       query: (newClientUser) => ({
@@ -37,7 +37,7 @@ export const clientUserApi = createApi({
         method: "POST",
         body: newClientUser,
       }),
-      invalidatesTags: ["ClientUser"], // Invalidate client users list after creation
+      invalidatesTags: ["ClientUser"],
     }),
     updateClientUser: builder.mutation<ClientUser, Partial<ClientUser>>({
       query: ({ id, ...rest }) => ({
@@ -45,14 +45,14 @@ export const clientUserApi = createApi({
         method: "PATCH",
         body: rest,
       }),
-      invalidatesTags: (_result, _error, { id }) => [{ type: "ClientUser", id }], // Invalidate specific client user after update
+      invalidatesTags: (_result, _error, { id }) => [{ type: "ClientUser", id }],
     }),
     deleteClientUser: builder.mutation<{ success: boolean }, string>({
       query: (clientUserId: string) => ({
         url: `users/${clientUserId}`,
         method: "DELETE",
       }),
-      invalidatesTags: (_result, _error, id) => [{ type: "ClientUser", id }], // Invalidate specific client user after deletion
+      invalidatesTags: (_result, _error, id) => [{ type: "ClientUser", id }],
     }),
   }),
 });

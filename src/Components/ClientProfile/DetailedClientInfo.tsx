@@ -11,11 +11,12 @@ const DetailedClientInfo: React.FC = () => {
     isLoading,
   } = useGetClientByIdQuery(clientId || "");
 
-  if (isLoading) return (
-    <div className="w-full h-[80vh]">
-      <Loader />
-    </div>
-  );
+  if (isLoading)
+    return (
+      <div className="w-full h-[80vh] felx items-center justify-center">
+        <Loader />
+      </div>
+    );
   if (error) return <p>Error loading client details</p>;
 
   return (
@@ -27,7 +28,7 @@ const DetailedClientInfo: React.FC = () => {
               Client Name:
             </p>
             <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {client.name}
+              {client.first_name},&nbsp; {client.last_name}
             </p>
           </div>
           <div>

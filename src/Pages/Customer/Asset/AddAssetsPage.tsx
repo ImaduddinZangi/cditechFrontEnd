@@ -1,5 +1,3 @@
-// AddAssetsPage.tsx
-
 import React from "react";
 import ClientLayout from "../../../Layouts/ClientLayout";
 import AddAsset from "../../../Components/Customer/Asset/AddAsset";
@@ -25,20 +23,34 @@ const AddAssetsPage: React.FC = () => {
     return error && error.data && typeof error.data.message === "string";
   };
 
-  const handleAddAsset = async (
-    assetData: FormData,
-    pumpDataList: Pump[]
-  ) => {
+  const handleAddAsset = async (assetData: FormData, pumpDataList: Pump[]) => {
     try {
+      // Create the asset
       const assetResult = await createAsset(assetData).unwrap();
       const assetId = assetResult.id;
-
+      // Create pumps
       for (const pumpData of pumpDataList) {
-        await createPump({ ...pumpData, assetId }).unwrap();
+        const pumpFormData = new FormData();
+        pumpFormData.append("assetId", assetId);
+        pumpFormData.append("name", pumpData.name);
+        if (pumpData.brandId !== undefined) {
+          pumpFormData.append("brandId", pumpData.brandId);
+        }
+        pumpFormData.append("serial", pumpData.serial);
+        pumpFormData.append("avgAmps", pumpData.avgAmps);
+        pumpFormData.append("maxAmps", pumpData.maxAmps);
+        pumpFormData.append("hp", pumpData.hp);
+        pumpFormData.append("warranty", pumpData.warranty);
+        pumpFormData.append("installedDate", pumpData.installedDate);
+        pumpData.photos?.forEach((photo) => {
+          pumpFormData.append("photos", photo);
+        });
+
+        await createPump(pumpFormData).unwrap();
       }
 
       toast.success("Asset and pumps added successfully!", {
-        onClose: () => navigate("/manage-customer"),
+        onClose: () => navigate("/manage-customers"),
         autoClose: 1000,
       });
       console.log("Asset and pumps created successfully");
