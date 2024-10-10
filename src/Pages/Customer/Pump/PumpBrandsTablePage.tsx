@@ -4,7 +4,7 @@ import PumpBrandsTable from "../../../Components/Customer/Pump/PumpBrandsTable";
 
 const PumpBrandsTablePage: React.FC = () => {
   return (
-    <ClientLayout breadcrumb="Pump Brands Table">
+    <ClientLayout breadcrumb="Manage Pump Brands">
       <PumpBrandsTable />
     </ClientLayout>
   );

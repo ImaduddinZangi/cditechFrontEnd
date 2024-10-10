@@ -9,6 +9,7 @@ import SelectField, { Option } from "../Tags/SelectField";
 import { Customer } from "../../redux/features/customerSlice";
 import OutlinePurpleButton from "../Tags/OutlinePurpleButton";
 import AddPhotos from "./AddPhotos";
+import PhoneInput from "../Tags/PhoneInput";
 
 interface City {
   name: string;
@@ -364,13 +365,12 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
         </div>
         <div className="grid grid-cols-3 gap-[1.5vw]">
           <div>
-            <InputField
-              label="Service Contact Email"
-              name="serviceContactEmail"
-              fieldType="email"
+            <PhoneInput
+              label="Service Contact"
+              name="serviceContact"
               value={phone}
-              placeholder="servicecontact@gmail.com"
-              onChange={(e) => setPhone(e.target.value)}
+              placeholder="123456789"
+              onChange={setPhone}
               required
             />
           </div>

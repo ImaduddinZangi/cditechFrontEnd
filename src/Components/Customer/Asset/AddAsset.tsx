@@ -320,159 +320,194 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
               required
             />
           </div>
-          <div>
-            <InputField
-              label="Asset Name"
-              name="name"
-              fieldType="text"
-              value={name}
-              placeholder="Enter asset name"
-              onChange={(e) => setName(e.target.value)}
+          {type && (
+            <div>
+              <InputField
+                label="Asset Name"
+                name="name"
+                fieldType="text"
+                value={name}
+                placeholder="Enter asset name"
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+          )}
+          {type && (
+            <div>
+              {isLoaded && (
+                <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
+                  <InputField
+                    ref={inputRef}
+                    label="Lat/Lng"
+                    name="location"
+                    fieldType="text"
+                    value={location}
+                    placeholder="Enter asset location"
+                    onChange={(e) => setLocation(e.target.value)}
+                  />
+                </Autocomplete>
+              )}
+            </div>
+          )}
+          {type && (
+            <div>
+              <SelectField
+                label="Status"
+                value={status}
+                onChange={(option) => setStatus(option)}
+                options={statusOptions}
+                placeholder="Select status"
+                required
+              />
+            </div>
+          )}
+          {type && (
+            <div>
+              <SelectField
+                label="Inspection Interval"
+                value={inspectionInterval}
+                onChange={(option) => setInspectionInterval(option)}
+                options={inspectionIntervalOptions}
+                placeholder="Select Inspection Interval"
+                required
+              />
+            </div>
+          )}
+          {type && (
+            <div>
+              <InputField
+                label="QR Code"
+                name="qrCode"
+                fieldType="text"
+                value={qrCode}
+                placeholder="Enter QR code"
+                onChange={(e) => setQrCode(e.target.value)}
+              />
+            </div>
+          )}
+          {type && (
+            <div>
+              <InputField
+                label="NFC Code"
+                name="nfcCode"
+                fieldType="text"
+                value={nfcCode}
+                placeholder="Enter NFC code"
+                onChange={(e) => setNfcCode(e.target.value)}
+              />
+            </div>
+          )}
+          {type && (
+            <div>
+              <InputField
+                label="Pipe Diameter"
+                name="pipeDia"
+                fieldType="number"
+                value={pipeDia}
+                placeholder="Enter pipe diameter"
+                onChange={(e) => setPipeDia(e.target.value)}
+              />
+            </div>
+          )}
+          {type && (
+            <div>
+              <SelectField
+                label="Smart"
+                value={smart}
+                onChange={(option) => setSmart(option)}
+                options={smartOptions}
+                required
+              />
+            </div>
+          )}
+          {type && (
+            <div>
+              <SelectField
+                label="Size"
+                value={size}
+                onChange={(option) => setSize(option)}
+                options={sizeOptions}
+                placeholder="Select Size"
+                required
+              />
+            </div>
+          )}
+          {type && (
+            <div>
+              <SelectField
+                label="Material"
+                value={material}
+                onChange={(option) => setMaterial(option)}
+                options={materialOptions}
+                placeholder="Select Material"
+                required
+              />
+            </div>
+          )}
+          {type && (
+            <div>
+              <SelectField
+                label="Duty"
+                name="duty"
+                value={duty}
+                placeholder="Select Duty"
+                onChange={(option) => setDuty(option)}
+                options={dutyOptions}
+              />
+            </div>
+          )}
+          {type && (
+            <div>
+              <SelectField
+                label="Rails"
+                value={rails}
+                onChange={(option) => setRails(option)}
+                options={railsOptions}
+                required
+              />
+            </div>
+          )}
+          {type && (
+            <div>
+              <SelectField
+                label="Power"
+                value={power}
+                onChange={(option) => setPower(option)}
+                options={powerOptions}
+                required
+              />
+            </div>
+          )}
+          {type && (
+            <div>
+              <InputField
+                label="Floats"
+                name="floats"
+                fieldType="number"
+                value={floatVal}
+                placeholder="Enter float"
+                onChange={(e) => setFloat(e.target.value)}
+              />
+            </div>
+          )}
+          {type && (
+            <div>
+              <SelectField
+                label="Pumps"
+                name="pumps"
+                value={pumps}
+                placeholder="Select pumps"
+                onChange={(option) => setPumps(option)}
+                options={pumpOptions}
+              />
+            </div>
+          )}
+          {type && (
+            <OutlinePurpleButton
+              onClick={handleOpenModal}
+              text="Upload Photos"
             />
-          </div>
-          <div>
-            {isLoaded && (
-              <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
-                <InputField
-                  ref={inputRef}
-                  label="Lat/Lng"
-                  name="location"
-                  fieldType="text"
-                  value={location}
-                  placeholder="Enter asset location"
-                  onChange={(e) => setLocation(e.target.value)}
-                />
-              </Autocomplete>
-            )}
-          </div>
-          <div>
-            <SelectField
-              label="Status"
-              value={status}
-              onChange={(option) => setStatus(option)}
-              options={statusOptions}
-              placeholder="Select status"
-              required
-            />
-          </div>
-          <div>
-            <SelectField
-              label="Inspection Interval"
-              value={inspectionInterval}
-              onChange={(option) => setInspectionInterval(option)}
-              options={inspectionIntervalOptions}
-              placeholder="Select Inspection Interval"
-              required
-            />
-          </div>
-          <div>
-            <InputField
-              label="QR Code"
-              name="qrCode"
-              fieldType="text"
-              value={qrCode}
-              placeholder="Enter QR code"
-              onChange={(e) => setQrCode(e.target.value)}
-            />
-          </div>
-          <div>
-            <InputField
-              label="NFC Code"
-              name="nfcCode"
-              fieldType="text"
-              value={nfcCode}
-              placeholder="Enter NFC code"
-              onChange={(e) => setNfcCode(e.target.value)}
-            />
-          </div>
-          <div>
-            <InputField
-              label="Pipe Diameter"
-              name="pipeDia"
-              fieldType="number"
-              value={pipeDia}
-              placeholder="Enter pipe diameter"
-              onChange={(e) => setPipeDia(e.target.value)}
-            />
-          </div>
-          <div>
-            <SelectField
-              label="Smart"
-              value={smart}
-              onChange={(option) => setSmart(option)}
-              options={smartOptions}
-              required
-            />
-          </div>
-          <div>
-            <SelectField
-              label="Size"
-              value={size}
-              onChange={(option) => setSize(option)}
-              options={sizeOptions}
-              placeholder="Select Size"
-              required
-            />
-          </div>
-          <div>
-            <SelectField
-              label="Material"
-              value={material}
-              onChange={(option) => setMaterial(option)}
-              options={materialOptions}
-              placeholder="Select Material"
-              required
-            />
-          </div>
-          <div>
-            <SelectField
-              label="Duty"
-              name="duty"
-              value={duty}
-              placeholder="Select Duty"
-              onChange={(option) => setDuty(option)}
-              options={dutyOptions}
-            />
-          </div>
-          <div>
-            <SelectField
-              label="Rails"
-              value={rails}
-              onChange={(option) => setRails(option)}
-              options={railsOptions}
-              required
-            />
-          </div>
-          <div>
-            <SelectField
-              label="Power"
-              value={power}
-              onChange={(option) => setPower(option)}
-              options={powerOptions}
-              required
-            />
-          </div>
-          <div>
-            <InputField
-              label="Floats"
-              name="floats"
-              fieldType="number"
-              value={floatVal}
-              placeholder="Enter float"
-              onChange={(e) => setFloat(e.target.value)}
-            />
-          </div>
-          <div>
-            <SelectField
-              label="Pumps"
-              name="pumps"
-              value={pumps}
-              placeholder="Select pumps"
-              onChange={(option) => setPumps(option)}
-              options={pumpOptions}
-            />
-          </div>
-          <OutlinePurpleButton onClick={handleOpenModal} text="Upload Photos" />
+          )}
         </div>
         {pumps &&
           pumpDataList.map((pumpData, index) => (

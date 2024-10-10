@@ -4,7 +4,7 @@ import InspectionTable from '../../Components/Inspection/InspectionTable'
 
 const InspectionTablePage: React.FC = () => {
   return (
-    <ClientLayout breadcrumb='Inspection Table'>
+    <ClientLayout breadcrumb='Manage Inspections'>
         <InspectionTable />
     </ClientLayout>
   )

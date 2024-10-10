@@ -4,7 +4,7 @@ import UserGroupTable from '../../../Components/UserGroups/Groups/UserGroupTable
 
 const UserGroupTablePage: React.FC = () => {
   return (
-    <ClientLayout breadcrumb='User Group Table'>
+    <ClientLayout breadcrumb='Manage User Groups'>
         <UserGroupTable />
     </ClientLayout>
   )

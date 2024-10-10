@@ -17,6 +17,7 @@ const overallScoreOptions = [
   { label: "C+", value: "C+" },
   { label: "D-", value: "D-" },
   { label: "E-", value: "E-" },
+  { label: "F-", value: "F-" },
 ];
 
 interface AddInspectionChecklistProps {

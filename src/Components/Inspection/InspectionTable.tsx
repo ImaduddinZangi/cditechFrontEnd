@@ -218,10 +218,16 @@ const InspectionTable: React.FC = () => {
                 Customer
               </th>
               <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
-                Status
+                Asset
               </th>
               <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
-                Scheduled Date
+                Checklist
+              </th>
+              <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
+                Due By
+              </th>
+              <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
+                Status
               </th>
               <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
                 Actions
@@ -258,6 +264,18 @@ const InspectionTable: React.FC = () => {
                       {highlightText(inspection.customer.name, searchTerm)}
                     </td>
                     <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
+                      {highlightText(inspection.asset.name, searchTerm)}
+                    </td>
+                    <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
+                      {highlightText(inspection.checklists[0].overallScore, searchTerm)}
+                    </td>
+                    <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
+                      {highlightText(
+                        new Date(inspection.scheduledDate).toLocaleDateString(),
+                        searchTerm
+                      )}
+                    </td>
+                    <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
                       {inspection.status === "Complete Billed" ? (
                         highlightText(
                           inspection.status ? inspection.status : "N/A",
@@ -285,12 +303,6 @@ const InspectionTable: React.FC = () => {
                             Submit & Add to Existing Invoice
                           </option>
                         </select>
-                      )}
-                    </td>
-                    <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                      {highlightText(
-                        new Date(inspection.scheduledDate).toLocaleDateString(),
-                        searchTerm
                       )}
                     </td>
                     <td className="flex flex-row items-center gap-x-[1vw] py-[1vw] px-[1.5vw] text-center">

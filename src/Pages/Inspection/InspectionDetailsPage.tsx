@@ -4,7 +4,7 @@ import InspectionDetails from "../../Components/Inspection/Constants/InspectionD
 
 const InspectionDetailsPage: React.FC = () => {
   return (
-    <ClientLayout breadcrumb="Inspection Details">
+    <ClientLayout breadcrumb="View Inspection">
       <InspectionDetails />
     </ClientLayout>
   );

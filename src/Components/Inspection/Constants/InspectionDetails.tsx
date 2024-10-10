@@ -97,12 +97,6 @@ const InspectionDetails: React.FC = () => {
                     text="Send PDF"
                     onClick={() => navigate("/inspection-reports")}
                   />
-                  <PurpleButton
-                    text="Upload Photos"
-                    onClick={() =>
-                      navigate(`/add-photos/inspection/${inspectionId}`)
-                    }
-                  />
                   <OutlinePurpleButton text="Print" />
                 </div>
               </div>

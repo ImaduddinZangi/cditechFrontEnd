@@ -1,19 +1,13 @@
 import React, { useState } from "react";
-import {
-  useGetCustomersQuery,
-  useDeleteCustomerMutation,
-} from "../../redux/api/customerApi";
+import { useGetCustomersQuery } from "../../redux/api/customerApi";
 import { useAppDispatch } from "../../redux/store";
 import { setSelectedCustomerId } from "../../redux/features/customerSlice";
 import { useGetPhotosQuery } from "../../redux/api/uploadPhotosApi";
 import ActiveBadge from "./Constants/ActiveBadge";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import ConfirmationModal from "../Constants/ConfirmationModal";
 import Loader from "../Constants/Loader";
 import { FiSearch } from "react-icons/fi";
 import PurpleButton from "../Tags/PurpleButton";
-import WhiteButton from "../Tags/WhiteButton";
 
 const truncateAddress = (address: string, maxLength = 25) => {
   if (address.length > maxLength) {
@@ -37,15 +31,10 @@ const highlightText = (text: string, searchTerm: string) => {
 };
 
 const CustomerTable: React.FC = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: customersData, isLoading } = useGetCustomersQuery();
   const { data: photosData } = useGetPhotosQuery();
-  const [deleteCustomer] = useDeleteCustomerMutation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [customerIdToDelete, setCustomerIdToDelete] = useState<string | null>(
-    null
-  );
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const customersPerPage = 10;
@@ -88,33 +77,6 @@ const CustomerTable: React.FC = () => {
     navigate("/add-customer");
   };
 
-  const handleOpenDeleteModal = (id: string) => {
-    setCustomerIdToDelete(id);
-    setIsModalOpen(true);
-  };
-
-  const handleConfirmDelete = async () => {
-    if (customerIdToDelete) {
-      try {
-        await deleteCustomer(customerIdToDelete).unwrap();
-        toast.success("Customer deleted successfully!", {
-          onClose: () => window.location.reload(),
-          autoClose: 500,
-        });
-      } catch (error) {
-        toast.error("Error deleting customer!");
-      } finally {
-        setIsModalOpen(false);
-        setCustomerIdToDelete(null);
-      }
-    }
-  };
-
-  const handleCancelDelete = () => {
-    setIsModalOpen(false);
-    setCustomerIdToDelete(null);
-  };
-
   return (
     <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
       <div className="overflow-x-auto">
@@ -123,12 +85,9 @@ const CustomerTable: React.FC = () => {
             <div className="bg-white my-[1.5vw]">
               <div className="flex justify-between items-center px-[1.5vw] py-[1vw]">
                 <div className="flex space-x-[1vw]">
-                  <PurpleButton 
-                  text="Add New Customer"
-                  onClick={handleAddCustomer}
-                  />
-                  <PurpleButton 
-                  text="Import New Customers"
+                  <PurpleButton
+                    text="Add New Customer"
+                    onClick={handleAddCustomer}
                   />
                 </div>
                 <div className="relative">
@@ -259,11 +218,6 @@ const CustomerTable: React.FC = () => {
                                 handleClickManageCustomer(customer.id)
                               }
                             />
-                            <WhiteButton
-                              type="button"
-                              text="Delete"
-                              onClick={() => handleOpenDeleteModal(customer.id)}
-                            />
                           </td>
                         </tr>
                       );
@@ -306,12 +260,6 @@ const CustomerTable: React.FC = () => {
           </div>
         </div>
       </div>
-      <ConfirmationModal
-        isOpen={isModalOpen}
-        message="Are you sure you want to delete this customer?"
-        onConfirm={handleConfirmDelete}
-        onCancel={handleCancelDelete}
-      />
     </div>
   );
 };

@@ -4,7 +4,7 @@ import ClientUserTable from '../../../Components/UserGroups/Users/ClientUserTabl
 
 const ClientUserTablePage: React.FC = () => {
   return (
-    <ClientLayout breadcrumb='Client User Table'>
+    <ClientLayout breadcrumb='Manage Users'>
         <ClientUserTable />
     </ClientLayout>
   )

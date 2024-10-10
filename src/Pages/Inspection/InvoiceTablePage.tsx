@@ -4,7 +4,7 @@ import InvoiceTable from "../../Components/Inspection/InvoiceTable";
 
 const InvoiceTablePage: React.FC = () => {
   return (
-    <ClientLayout breadcrumb="Invoiced Inspections Table">
+    <ClientLayout breadcrumb="Manage Invoices">
       <InvoiceTable />
     </ClientLayout>
   );

@@ -96,7 +96,7 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             <span className="text-[1vw] font-medium px-2">
-              {selectedCountry ? selectedCountry.iso2 : "Select"}
+              {selectedCountry ? selectedCountry.iso2 : "US"}
             </span>
             <FiChevronDown className="w-[1vw] h-[1vw] text-gray-0" />
           </button>

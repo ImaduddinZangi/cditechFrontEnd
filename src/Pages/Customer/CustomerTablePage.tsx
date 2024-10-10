@@ -4,7 +4,7 @@ import ClientLayout from "../../Layouts/ClientLayout";
 
 const CustomerTablePage: React.FC = () => {
   return (
-    <ClientLayout breadcrumb="Customer Table">
+    <ClientLayout breadcrumb="Manage Customers">
       <CustomerTable />
     </ClientLayout>
   );

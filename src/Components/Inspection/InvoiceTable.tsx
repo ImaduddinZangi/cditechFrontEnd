@@ -13,9 +13,9 @@ import Loader from "../Constants/Loader";
 
 const InvoiceTable: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [invoiceIdToDelete, setInvoiceIdToDelete] = useState<string | null | undefined>(
-    null
-  );
+  const [invoiceIdToDelete, setInvoiceIdToDelete] = useState<
+    string | null | undefined
+  >(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const invoicesPerPage = 10;
@@ -98,10 +98,6 @@ const InvoiceTable: React.FC = () => {
           <PurpleButton
             text="Inspections Table"
             onClick={() => navigate("/inspection-table")}
-          />
-          <PurpleButton
-            text="Uploaded PDF Table"
-            onClick={() => navigate("/pdf-uploaded-table")}
           />
         </div>
         <div className="relative">
@@ -194,15 +190,11 @@ const InvoiceTable: React.FC = () => {
                   <td className="flex flex-row items-center gap-x-[1vw] py-[1vw] px-[1.5vw] text-center">
                     <PurpleButton
                       text="View Invoice"
-                      onClick={() =>
-                        handleDetails(invoice.id)
-                      }
+                      onClick={() => handleDetails(invoice.id)}
                     />
                     <WhiteButton
                       text="Delete"
-                      onClick={() =>
-                        handleOpenDeleteModal(invoice.id)
-                      }
+                      onClick={() => handleOpenDeleteModal(invoice.id)}
                     />
                   </td>
                 </tr>
