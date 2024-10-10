@@ -112,10 +112,12 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
         } ${billingCity?.label}, ${billingState?.label}, ${billingZipCode}`;
 
     const combinedPhones = `Company: ${phone}, Billing: ${billingPhone}`;
+    const name = `${firstName} ${lastName}`;
 
     const clientRegisterRequest = {
       first_name: firstName,
       last_name: lastName,
+      name,
       email: companyEmail,
       password,
       industry: industry?.value || "",
@@ -137,7 +139,7 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
   return (
     <div className="p-[2vw] m-[2vw] bg-white shadow-lg rounded-lg">
       <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-3 gap-[1vw]">
+        <div className="grid grid-cols-2 gap-[1vw]">
           {/* User Information */}
           <InputField
             label="First Name"
@@ -155,6 +157,15 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
             value={lastName}
             placeholder="Enter last name"
             onChange={(e) => setLastName(e.target.value)}
+            required
+          />
+          <InputField
+            label="Email"
+            name="email"
+            fieldType="email"
+            value={companyEmail}
+            placeholder="Enter company email"
+            onChange={(e) => setCompanyEmail(e.target.value)}
             required
           />
           <InputField
@@ -308,7 +319,6 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
                   name="phone"
                   value={billingPhone}
                   onChange={setBillingPhone}
-                  disabled={sameAsCompanyAddress}
                   required
                 />
               </div>
@@ -336,15 +346,6 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
             value={companyName}
             placeholder="Enter company name"
             onChange={(e) => setCompanyName(e.target.value)}
-            required
-          />
-          <InputField
-            label="Company Email"
-            name="companyEmail"
-            fieldType="email"
-            value={companyEmail}
-            placeholder="Enter company email"
-            onChange={(e) => setCompanyEmail(e.target.value)}
             required
           />
           <div>

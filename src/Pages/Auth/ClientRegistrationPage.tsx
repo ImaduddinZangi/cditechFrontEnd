@@ -30,6 +30,7 @@ const ClientRegistrationPage: React.FC = () => {
     registrationData: ClientRegisterRequest
   ) => {
     try {
+      localStorage.clear();
       const result = await registerClient(registrationData).unwrap();
       dispatch(setToken(result.access_token));
       if (result.client) {
