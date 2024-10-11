@@ -72,7 +72,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ breadcrumb }) => {
             {company?.company_name}
           </p>
           <p className="text-gray-0 text-[1vw] font-inter">
-            {client?.userGroups[0].name}
+            {client?.userGroups?.find(() => true)?.name || "No group assigned"}
           </p>
         </div>
         <Link to={`/add-photos/client/${clientId}`}>

@@ -16,7 +16,6 @@ const ClientSignInPage: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // New states for failed attempts and reCAPTCHA token
   const [failedAttempts, setFailedAttempts] = useState(0);
   const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
 
@@ -40,7 +39,6 @@ const ClientSignInPage: React.FC = () => {
     try {
       const loginData: any = { email, password };
       if (failedAttempts >= 3 && recaptchaToken) {
-        // Add the reCAPTCHA token to the request if attempts exceed the limit
         loginData.recaptchaToken = recaptchaToken;
       }
 
@@ -67,13 +65,13 @@ const ClientSignInPage: React.FC = () => {
     } catch (error) {
       if (isAPIError(error)) {
         toast.error("Login error: " + error.data.message);
-        setFailedAttempts((prev) => prev + 1); // Increment failed attempts
+        setFailedAttempts((prev) => prev + 1);
       } else if (error instanceof Error) {
         toast.error("Login error: " + error.message);
-        setFailedAttempts((prev) => prev + 1); // Increment failed attempts
+        setFailedAttempts((prev) => prev + 1);
       } else {
         toast.error("An unknown error occurred");
-        setFailedAttempts((prev) => prev + 1); // Increment failed attempts
+        setFailedAttempts((prev) => prev + 1);
       }
       console.error("Login error:", error);
     }
@@ -83,9 +81,8 @@ const ClientSignInPage: React.FC = () => {
     <AuthLayout>
       <ClientSignIn onSubmit={handleLogin} />
 
-      {/* Show ReCAPTCHA after 3 failed login attempts */}
       {failedAttempts >= 3 && (
-        <div className="mt-4">
+        <div className="mt-[1vw]">
           <ReCAPTCHA
             sitekey={RECAPTCHA_SITE_KEY}
             onChange={handleRecaptchaChange}
