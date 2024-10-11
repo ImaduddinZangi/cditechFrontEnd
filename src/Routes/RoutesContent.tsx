@@ -148,7 +148,7 @@ const RoutesContent: React.FC = () => {
         <Route path="/error/500" element={<Error500 />} />
 
         {/* Authentication */}
-        <Route path="" element={<ClientSignInPage />} />
+        <Route path="/" element={<ClientSignInPage />} />
         <Route path="/client-login" element={<ClientSignInPage />} />
         <Route path="/management-login" element={<ManagementSignInPage />} />
         <Route
