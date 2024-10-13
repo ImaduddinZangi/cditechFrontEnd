@@ -4,16 +4,15 @@ import PurpleButton from "../Tags/PurpleButton";
 import WhiteButton from "../Tags/WhiteButton";
 import ConfirmationModal from "../Constants/ConfirmationModal";
 
-interface ProductService {
+interface Service {
   id: string;
   name: string;
   description: string;
   price: string;
 }
 
-const ProductServicesTable: React.FC = () => {
-  // Dummy data for product services
-  const initialProductServices: ProductService[] = [
+const ManageServices: React.FC = () => {
+  const initialServices: Service[] = [
     {
       id: "1",
       name: "Service Name",
@@ -58,9 +57,7 @@ const ProductServicesTable: React.FC = () => {
     },
   ];
 
-  const [productServices, setProductServices] = useState<ProductService[]>(
-    initialProductServices
-  );
+  const [Services, setServices] = useState<Service[]>(initialServices);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [serviceIdToDelete, setServiceIdToDelete] = useState<string | null>(
     null
@@ -71,7 +68,7 @@ const ProductServicesTable: React.FC = () => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredProductServices = productServices.filter((service) =>
+  const filteredServices = Services.filter((service) =>
     service.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -81,7 +78,7 @@ const ProductServicesTable: React.FC = () => {
   };
 
   const handleConfirmDelete = () => {
-    setProductServices((prev) =>
+    setServices((prev) =>
       prev.filter((service) => service.id !== serviceIdToDelete)
     );
     setIsModalOpen(false);
@@ -99,7 +96,7 @@ const ProductServicesTable: React.FC = () => {
 
   return (
     <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
-      <div className="flex justify-between items-center px-[1.5vw] py-[1vw]">
+      <div className="flex justify-between items-center py-[1vw]">
         <div className="flex space-x-[1vw]">
           <PurpleButton text="Add New Services" onClick={() => {}} />
           <PurpleButton text="Import Services" onClick={() => {}} />
@@ -139,7 +136,7 @@ const ProductServicesTable: React.FC = () => {
             </tr>
           </thead>
           <tbody className="text-gray-600 text-[1vw] font-light">
-            {filteredProductServices.length === 0 ? (
+            {filteredServices.length === 0 ? (
               <tr>
                 <td colSpan={4} className="text-center py-[2vw]">
                   <p className="text-[1.5vw] font-semibold">
@@ -148,7 +145,7 @@ const ProductServicesTable: React.FC = () => {
                 </td>
               </tr>
             ) : (
-              filteredProductServices.map((service) => (
+              filteredServices.map((service) => (
                 <tr
                   key={service.id}
                   className="border-b border-gray-200 hover:bg-gray-100"
@@ -190,4 +187,4 @@ const ProductServicesTable: React.FC = () => {
   );
 };
 
-export default ProductServicesTable;
+export default ManageServices;

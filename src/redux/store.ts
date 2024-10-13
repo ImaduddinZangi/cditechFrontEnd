@@ -20,6 +20,7 @@ import clientUserReducer from "./features/clientUserSlice";
 import groupPermissionsReducer from "./features/groupPermissionsSlice";
 import invoiceReducer from "./features/invoiceSlice";
 import companyReducer from "./features/companySlice";
+import serviceReducer from "./features/serviceSlice";
 
 import { authApi } from "./api/authApi";
 import clientApi from "./api/clientApi";
@@ -39,6 +40,7 @@ import groupPermissionsApi from "./api/groupPermissionsApi";
 import invoiceApi from "./api/invoiceApi";
 import inspectionChecklistApi from "./api/inspectionChecklistApi";
 import companyApi from "./api/companyApi";
+import serviceApi from "./api/serviceApi";
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -59,6 +61,7 @@ const rootReducer = combineReducers({
   groupPermissions: groupPermissionsReducer,
   invoices: invoiceReducer,
   company: companyReducer,
+  service: serviceReducer,
   [authApi.reducerPath]: authApi.reducer,
   [clientApi.reducerPath]: clientApi.reducer,
   [customerApi.reducerPath]: customerApi.reducer,
@@ -77,6 +80,7 @@ const rootReducer = combineReducers({
   [groupPermissionsApi.reducerPath]: groupPermissionsApi.reducer,
   [invoiceApi.reducerPath]: invoiceApi.reducer,
   [companyApi.reducerPath]: companyApi.reducer,
+  [serviceApi.reducerPath]: serviceApi.reducer,
 });
 
 const store = configureStore({
@@ -99,7 +103,8 @@ const store = configureStore({
       clientUserApi.middleware,
       groupPermissionsApi.middleware,
       invoiceApi.middleware,
-      companyApi.middleware
+      companyApi.middleware,
+      serviceApi.middleware
     ),
 });
 

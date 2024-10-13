@@ -5,6 +5,10 @@ import {
 } from "../../redux/features/inspectionChecklistSlice";
 import ChecklistPumps from "./Constants/ChecklistPumps";
 import SelectField, { Option } from "../Tags/SelectField";
+import PurpleButton from "../Tags/PurpleButton";
+import WhiteButton from "../Tags/WhiteButton";
+import { useNavigate } from "react-router-dom";
+import SubmitInvoiceModal from "./Constants/SubmitInvoiceModal";
 
 const scoreOptions = [
   { label: "OK", value: "OK" },
@@ -33,6 +37,7 @@ const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({
     pump3: { pumpName: "Pump #3", runs: false, amps: "", contactors: "" },
     pump4: { pumpName: "Pump #4", runs: false, amps: "", contactors: "" },
   });
+  const [isModalOpen, setModalOpen] = useState(false);
   const [cleaning, setCleaning] = useState<boolean>(false);
   const [overallScore, setoverAllScore] = useState<Option | null>({
     label: "",
@@ -145,6 +150,21 @@ const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({
     });
   };
 
+  const navigate = useNavigate();
+
+  const handleModalOpen = () => {
+    setModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
+
+  const handleConfirm = (option: string) => {
+    setModalOpen(false);
+    console.log("Selected option:", option);
+  };
+
   const renderSelectField = (
     label: string,
     value: Option | null,
@@ -251,16 +271,24 @@ const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({
           </div>
         </div>
 
-        {/* Submit Button */}
-        <div className="flex justify-end m-[2vw] pb-[3vw]">
-          <button
+        <div className="flex justify-end gap-x-[1vw] m-[2vw] pb-[3vw]">
+          <PurpleButton
             type="submit"
-            className="bg-purple-0 text-white py-2 px-4 rounded-lg"
-          >
-            Submit Scores
-          </button>
+            text="Save And Submit"
+            onClick={handleModalOpen}
+          />
+          <PurpleButton type="submit" text="Save And Close" />
+          <WhiteButton
+            text="Don't Save And Close"
+            onClick={() => navigate("/manage-inspections")}
+          />
         </div>
       </form>
+      <SubmitInvoiceModal
+        isOpen={isModalOpen}
+        onConfirm={handleConfirm}
+        onCancel={handleModalClose}
+      />
     </div>
   );
 };

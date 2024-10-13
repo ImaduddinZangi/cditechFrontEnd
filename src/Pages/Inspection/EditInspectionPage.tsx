@@ -97,16 +97,6 @@ const EditInspectionPage: React.FC = () => {
         <div>
           <div className="space-x-[1vw] m-[2vw]">
             <PurpleButton
-              text="CheckList"
-              type="button"
-              onClick={() => navigate("/add-inspection/checklist")}
-            />
-            <PurpleButton
-              text="Inspection Score"
-              type="button"
-              onClick={() => navigate("/add-inspection/scores")}
-            />
-            <PurpleButton
               text="Route"
               type="button"
               onClick={() => setIsRouteModalOpen(true)}

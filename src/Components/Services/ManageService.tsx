@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import PurpleButton from "../Tags/PurpleButton";
 import WhiteButton from "../Tags/WhiteButton";
+import OutlinePurpleButton from "../Tags/OutlinePurpleButton";
 
 interface ServiceDetails {
   serviceName: string;
@@ -12,7 +12,7 @@ interface ServiceDetails {
   isTaxable: boolean;
 }
 
-const ManageServices: React.FC = () => {
+const ManageService: React.FC = () => {
   const [serviceDetails] = useState<ServiceDetails>({
     serviceName: "Monthly Lift Station Inspection",
     serviceNo: "918267",
@@ -105,11 +105,11 @@ const ManageServices: React.FC = () => {
         </div>
       </div>
       <div className="flex justify-end space-x-4 mt-[-2vw]">
-        <PurpleButton text="Edit Service" onClick={handleEdit} />
+        <OutlinePurpleButton text="Edit Service" onClick={handleEdit} />
         <WhiteButton text="Refresh" onClick={handleRefresh} />
       </div>
     </div>
   );
 };
 
-export default ManageServices;
+export default ManageService;

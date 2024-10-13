@@ -43,8 +43,8 @@ const ClientProfilePage = lazy(
 const InspectionReportsPage = lazy(
   () => import("../Pages/Inspection/InspectionReportsPage")
 );
-const InspectionTablePage = lazy(
-  () => import("../Pages/Inspection/InspectionTablePage")
+const ManageInspectionsPage = lazy(
+  () => import("../Pages/Inspection/ManageInspectionsPage")
 );
 const EditInspectionPage = lazy(
   () => import("../Pages/Inspection/EditInspectionPage")
@@ -99,11 +99,11 @@ const ForgotPasswordPage = lazy(
 );
 const NewPasswordPage = lazy(() => import("../Pages/Auth/NewPasswordPage"));
 const ViewFullMapPage = lazy(() => import("../Pages/Extras/ViewFullMapPage"));
-const ProductServicesTablePage = lazy(
-  () => import("../Pages/Extras/ProductServicesTablePage")
-);
 const ManageServicesPage = lazy(
-  () => import("../Pages/Extras/ManageServicesPage")
+  () => import("../Pages/Services/ManageServicesPage")
+);
+const ManageServicePage = lazy(
+  () => import("../Pages/Services/ManageServicePage")
 );
 const FeePlanPage = lazy(() => import("../Pages/Extras/FeePlanPage"));
 const BackupCodesPage = lazy(() => import("../Pages/Auth/BackupCodesPage"));
@@ -134,6 +134,8 @@ const ClientUsersSessionsTablePage = lazy(
   () => import("../Pages/Logs/ClientUsersSessionsTablePage")
 );
 const EditPumpPage = lazy(() => import("../Pages/Customer/Pump/EditPumpPage"));
+const AddServicePage = lazy(() => import("../Pages/Services/AddServicePage"));
+
 const RoutesContent: React.FC = () => {
   return (
     <Suspense
@@ -146,117 +148,66 @@ const RoutesContent: React.FC = () => {
       <Routes>
         {/* Error 500 */}
         <Route path="/error/500" element={<Error500 />} />
-        <Route path="/error/500/" element={<Error500 />} />
 
         {/* Authentication */}
-        <Route path="/" element={<ClientSignInPage />} />
         <Route path="/client-login" element={<ClientSignInPage />} />
-        <Route path="/client-login/" element={<ClientSignInPage />} />
         <Route path="/management-login" element={<ManagementSignInPage />} />
-        <Route path="/management-login/" element={<ManagementSignInPage />} />
         <Route
           path="/client-registration"
           element={<ClientRegistrationPage />}
         />
-        <Route
-          path="/client-registration/"
-          element={<ClientRegistrationPage />}
-        />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/forgot-password/" element={<ForgotPasswordPage />} />
         <Route path="/new-password" element={<NewPasswordPage />} />
-        <Route path="/new-password/" element={<NewPasswordPage />} />
         <Route path="/backup-codes" element={<BackupCodesPage />} />
-        <Route path="/backup-codes/" element={<BackupCodesPage />} />
         <Route path="/sms-code" element={<EnterSMSCodePage />} />
-        <Route path="/sms-code/" element={<EnterSMSCodePage />} />
         <Route path="/other-options" element={<OtherOptionsInitialPage />} />
-        <Route path="/other-options/" element={<OtherOptionsInitialPage />} />
         <Route path="/two-factor-setup" element={<TwoFactorSetupPage />} />
-        <Route path="/two-factor-setup/" element={<TwoFactorSetupPage />} />
         <Route path="/use-backup-code" element={<UseBackupCodePage />} />
-        <Route path="/use-backup-code/" element={<UseBackupCodePage />} />
         <Route
           path="/verify-phone-number"
           element={<VerifyPhoneNumberPage />}
         />
-        <Route
-          path="/verify-phone-number/"
-          element={<VerifyPhoneNumberPage />}
-        />
-
-        {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>
+          {/* Protected Routes */}
           <Route path="/2fa" element={<TwoFactorAuthPage />} />
-          <Route path="/2fa/" element={<TwoFactorAuthPage />} />
 
           {/* Client */}
           <Route path="/client-dashboard" element={<ClientDashboardPage />} />
-          <Route path="/client-dashboard/" element={<ClientDashboardPage />} />
           <Route path="/client-profile" element={<ClientProfilePage />} />
-          <Route path="/client-profile/" element={<ClientProfilePage />} />
 
           {/* Customer */}
           <Route path="/manage-customer" element={<ManageCustomerPage />} />
-          <Route path="/manage-customer/" element={<ManageCustomerPage />} />
           <Route path="/add-customer" element={<AddCustomerPage />} />
-          <Route path="/add-customer/" element={<AddCustomerPage />} />
           <Route
             path="/edit-customer/:customerId"
             element={<EditCustomerPage />}
           />
-          <Route
-            path="/edit-customer/:customerId/"
-            element={<EditCustomerPage />}
-          />
           <Route path="/manage-customers" element={<CustomerTablePage />} />
-          <Route path="/manage-customers/" element={<CustomerTablePage />} />
 
           {/* Asset */}
           <Route path="/add-asset" element={<AddAssetsPage />} />
-          <Route path="/add-asset/" element={<AddAssetsPage />} />
           <Route path="/edit-asset/:id" element={<EditAssetPage />} />
-          <Route path="/edit-asset/:id/" element={<EditAssetPage />} />
           <Route
             path="/asset-details/:assetId"
-            element={<AssetDetailsPage />}
-          />
-          <Route
-            path="/asset-details/:assetId/"
             element={<AssetDetailsPage />}
           />
 
           {/* Pump */}
           <Route path="/add-pump-brand" element={<AddPumpBrandPage />} />
-          <Route path="/add-pump-brand/" element={<AddPumpBrandPage />} />
           <Route
             path="/edit-pump-brand/:pumpId"
             element={<EditPumpBrandPage />}
           />
           <Route path="/manage-pump-brands" element={<PumpBrandsTablePage />} />
           <Route
-            path="/manage-pump-brands/"
-            element={<PumpBrandsTablePage />}
-          />
-          <Route
             path="/pump-brand-detail/:pumpBrandId"
             element={<PumpBrandDetailsPage />}
           />
-          <Route
-            path="/pump-brand-detail/:pumpBrandId/"
-            element={<PumpBrandDetailsPage />}
-          />
           <Route path="/edit-pump/:pumpId" element={<EditPumpPage />} />
-          <Route path="/edit-pump/:pumpId/" element={<EditPumpPage />} />
           {/* Inspection */}
           <Route path="/add-inspection" element={<AddInspectionPage />} />
-          <Route path="/add-inspection/" element={<AddInspectionPage />} />
           <Route
-            path="/add-inspection/checklist"
-            element={<AddInspectionChecklistPage />}
-          />
-          <Route
-            path="/add-inspection/checklist/"
+            path="/inspection-checklist/:inspectionId"
             element={<AddInspectionChecklistPage />}
           />
           <Route
@@ -264,54 +215,29 @@ const RoutesContent: React.FC = () => {
             element={<InspectionReportsPage />}
           />
           <Route
-            path="/inspection-reports/"
-            element={<InspectionReportsPage />}
-          />
-          <Route path="/manage-inspections" element={<InspectionTablePage />} />
-          <Route
-            path="/manage-inspections/"
-            element={<InspectionTablePage />}
+            path="/manage-inspections"
+            element={<ManageInspectionsPage />}
           />
           <Route path="/manage-invoices" element={<InvoiceTablePage />} />
-          <Route path="/manage-invoices/" element={<InvoiceTablePage />} />
           <Route path="/invoice/:invoiceId" element={<InvoiceDetailsPage />} />
-          <Route path="/invoice/:invoiceId/" element={<InvoiceDetailsPage />} />
           <Route
             path="/update-inspection/:inspectionId"
-            element={<EditInspectionPage />}
-          />
-          <Route
-            path="/update-inspection/:inspectionId/"
             element={<EditInspectionPage />}
           />
           <Route
             path="/inspection-details/:inspectionId"
             element={<InspectionDetailsPage />}
           />
-          <Route
-            path="/inspection-details/:inspectionId/"
-            element={<InspectionDetailsPage />}
-          />
 
           {/* UserGroups */}
           <Route path="/add-user-group" element={<AddUserGroupPage />} />
-          <Route path="/add-user-group/" element={<AddUserGroupPage />} />
           <Route
             path="/edit-user-group/:userGroupId"
             element={<EditUserGroupPage />}
           />
-          <Route
-            path="/edit-user-group/:userGroupId/"
-            element={<EditUserGroupPage />}
-          />
           <Route path="/manage-user-groups" element={<UserGroupTablePage />} />
-          <Route path="/manage-user-groups/" element={<UserGroupTablePage />} />
           <Route
             path="/user-group-details/:userGroupId"
-            element={<UserGroupDetailsPage />}
-          />
-          <Route
-            path="/user-group-details/:userGroupId/"
             element={<UserGroupDetailsPage />}
           />
           <Route
@@ -319,29 +245,15 @@ const RoutesContent: React.FC = () => {
             element={<EditGroupPermissionsPage />}
           />
           <Route
-            path="/user-group-details/:groupId/edit-permission/:permissionId/"
-            element={<EditGroupPermissionsPage />}
-          />
-          <Route
             path="/user-group-permissions"
             element={<GrantGroupPermissionsPage />}
           />
-          <Route
-            path="/user-group-permissions/"
-            element={<GrantGroupPermissionsPage />}
-          />
           <Route path="/add-client-user" element={<AddClientUserPage />} />
-          <Route path="/add-client-user/" element={<AddClientUserPage />} />
           <Route
             path="/edit-client-user/:clientUserId"
             element={<EditClientUserPage />}
           />
-          <Route
-            path="/edit-client-user/:clientUserId/"
-            element={<EditClientUserPage />}
-          />
           <Route path="/manage-users" element={<ClientUserTablePage />} />
-          <Route path="/manage-users/" element={<ClientUserTablePage />} />
 
           {/* LOGS */}
           <Route
@@ -349,41 +261,23 @@ const RoutesContent: React.FC = () => {
             element={<ClientLogsTablePage />}
           />
           <Route
-            path="/client-logs-dashboard/"
-            element={<ClientLogsTablePage />}
-          />
-          <Route
             path="/management-logs-dashboard"
-            element={<ManagementLogsTablePage />}
-          />
-          <Route
-            path="/management-logs-dashboard/"
             element={<ManagementLogsTablePage />}
           />
           <Route
             path="/client-users-sessions"
             element={<ClientUsersSessionsTablePage />}
           />
-          <Route
-            path="/client-users-sessions/"
-            element={<ClientUsersSessionsTablePage />}
-          />
+
+          {/* Services */}
+          <Route path="/manage-service" element={<ManageServicePage />} />
+          <Route path="/manage-services" element={<ManageServicesPage />} />
+          <Route path="/add-service" element={<AddServicePage />} />
 
           {/* EXTRAS */}
           <Route path="/full-view-map" element={<ViewFullMapPage />} />
-          <Route path="/full-view-map/" element={<ViewFullMapPage />} />
-          <Route
-            path="/product-services-list"
-            element={<ProductServicesTablePage />}
-          />
-          <Route
-            path="/product-services-list/"
-            element={<ProductServicesTablePage />}
-          />
-          <Route path="/manage-services" element={<ManageServicesPage />} />
-          <Route path="/manage-services/" element={<ManageServicesPage />} />
+
           <Route path="/my-fee-plan" element={<FeePlanPage />} />
-          <Route path="/my-fee-plan/" element={<FeePlanPage />} />
         </Route>
 
         {/* Catch-all for 404 errors */}

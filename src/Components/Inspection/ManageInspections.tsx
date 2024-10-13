@@ -14,8 +14,9 @@ import PurpleButton from "../Tags/PurpleButton";
 import Loader from "../Constants/Loader";
 import { getUserId } from "../../utils/utils";
 import { Inspection } from "../../redux/features/inspectionSlice";
+import WhiteButton from "../Tags/WhiteButton";
 
-const InspectionTable: React.FC = () => {
+const ManageInspections: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [actionType, setActionType] = useState<string | null>(null);
   const { data: inspectionsData, isLoading } = useGetInspectionsQuery();
@@ -188,7 +189,7 @@ const InspectionTable: React.FC = () => {
 
   return (
     <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
-      <div className="flex justify-between items-center px-[1.5vw] py-[1vw]">
+      <div className="flex justify-between items-center py-[1vw]">
         <div className="flex space-x-[1vw]">
           <PurpleButton
             text="Add New Inspection"
@@ -267,7 +268,10 @@ const InspectionTable: React.FC = () => {
                       {highlightText(inspection.asset.name, searchTerm)}
                     </td>
                     <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                      {highlightText(inspection.checklists[0].overallScore, searchTerm)}
+                      {highlightText(
+                        inspection.checklists[0].overallScore,
+                        searchTerm
+                      )}
                     </td>
                     <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
                       {highlightText(
@@ -307,11 +311,14 @@ const InspectionTable: React.FC = () => {
                     </td>
                     <td className="flex flex-row items-center gap-x-[1vw] py-[1vw] px-[1.5vw] text-center">
                       <PurpleButton
-                        text="Download PDF"
-                        onClick={() => {
-                          const url = `https://inspection-point-s3.s3.us-east-2.amazonaws.com/${inspection.pdfFilePath}`;
-                          window.open(url, "_blank");
-                        }}
+                        text="Begin"
+                        onClick={() =>
+                          navigate(`inspection-checklist/${inspection.id}`)
+                        }
+                      />
+                      <WhiteButton
+                        text="View"
+                        onClick={() => navigate(`inspections/${inspection.id}`)}
                       />
                     </td>
                   </tr>
@@ -321,7 +328,7 @@ const InspectionTable: React.FC = () => {
         </table>
       </div>
 
-      <div className="flex items-center justify-between py-[1vw] px-[1.5vw]">
+      <div className="flex items-center justify-between py-[1vw]">
         <button
           onClick={handlePreviousPage}
           disabled={currentPage === 1}
@@ -369,4 +376,4 @@ const InspectionTable: React.FC = () => {
   );
 };
 
-export default InspectionTable;
+export default ManageInspections;

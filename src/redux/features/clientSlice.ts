@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Company } from "./companySlice";
 
 export interface Client {
   id: string;
@@ -28,6 +29,7 @@ export interface Client {
   updated_at: string;
   user: User;
   userGroups: UserGroups[];
+  company: Company;
 }
 
 interface User {

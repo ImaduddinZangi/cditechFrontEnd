@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { useGetClientByIdQuery } from "../../redux/api/clientApi";
 import { useGetPhotosQuery } from "../../redux/api/uploadPhotosApi";
-import { useGetCompanyByClientIdQuery } from "../../redux/api/companyApi";
 import { getUserId } from "../../utils/utils";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -20,8 +19,6 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ breadcrumb }) => {
     error,
     isLoading,
   } = useGetClientByIdQuery(clientId || "");
-
-  const { data: company } = useGetCompanyByClientIdQuery(clientId || "");
 
   useEffect(() => {
     if (error) {
@@ -69,7 +66,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ breadcrumb }) => {
             {client?.first_name}, {client?.last_name}
           </p>
           <p className="text-gray-0 text-[1vw] font-inter">
-            {company?.company_name}
+            {client?.company.company_name}
           </p>
           <p className="text-gray-0 text-[1vw] font-inter">
             {client?.userGroups?.find(() => true)?.name || "No group assigned"}

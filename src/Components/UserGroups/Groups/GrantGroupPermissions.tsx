@@ -82,6 +82,14 @@ const defaultPermissions: InternalPermission[] = [
     resource: "permissions",
     actions: { create: false, view: false, edit: false, delete: false },
   },
+  {
+    resource: "companies",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
+  {
+    resource: "services",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
 ];
 
 const GrantGroupPermissions: React.FC<GrantGroupPermissionsProps> = ({
@@ -117,7 +125,6 @@ const GrantGroupPermissions: React.FC<GrantGroupPermissionsProps> = ({
     );
   };
 
-  // Grant all permissions
   const grantAllPermissions = () => {
     setPermissions((prevPermissions) =>
       prevPermissions.map((perm) => ({
@@ -151,14 +158,13 @@ const GrantGroupPermissions: React.FC<GrantGroupPermissionsProps> = ({
     event.preventDefault();
     if (groupId) {
       const formattedPermissions = permissions.map((perm) => {
-        // Filter actions to include only those that are true
         const allowedActions = Object.entries(perm.actions)
-          .filter(([_, isAllowed]) => isAllowed) // Keep only the actions that are true
-          .map(([action]) => action); // Extract the action names
+          .filter(([_, isAllowed]) => isAllowed)
+          .map(([action]) => action);
 
         return {
           resource: perm.resource,
-          actions: allowedActions, // This will contain the array of true actions
+          actions: allowedActions,
         };
       });
 

@@ -17,7 +17,7 @@ const AddInspectionPage: React.FC = () => {
   const [createInspection] = useCreateInspectionMutation();
   const [uploadPhoto] = useUploadPhotoMutation();
   const [route, setRoute] = useState<RoutePoint[]>([]);
-  const [photos, setPhotos] = useState<File[]>([]); // Moved photos state to this component
+  const [photos, setPhotos] = useState<File[]>([]);
   const [isRouteModalOpen, setIsRouteModalOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -95,11 +95,6 @@ const AddInspectionPage: React.FC = () => {
   return (
     <ClientLayout breadcrumb="Add New Inspection">
       <div className="space-x-[1vw] m-[2vw]">
-        <PurpleButton
-          text="CheckList"
-          type="button"
-          onClick={() => navigate("/add-inspection/checklist")}
-        />
         <PurpleButton
           text="Route"
           type="button"

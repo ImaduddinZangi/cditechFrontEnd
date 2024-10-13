@@ -18,7 +18,7 @@ const PurpleButton: React.FC<PurpleButtonProps> = ({
   return (
     <button
       type={type}
-      className={`px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-[0.4vw] text-[1vw] font-inter hover:shadow-lg active:opacity-90 font-medium ${className}`}
+      className={`px-[1vw] py-[0.5vw] bg-purple-0 text-white rounded-[0.4vw] text-[1vw] font-inter hover:shadow-lg active:shadow-none font-medium ${className}`}
       onClick={onClick}
       disabled={disabled}
     >
