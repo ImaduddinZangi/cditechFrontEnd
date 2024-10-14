@@ -8,7 +8,7 @@ import { PumpBrand } from "../../../redux/features/pumpBrandSlice";
 import Loader from "../../Constants/Loader";
 import { useNavigate } from "react-router-dom";
 
-const PumpBrandsTable: React.FC = React.memo(() => {
+const ManagePumpBrands: React.FC = React.memo(() => {
   const [searchTerm, setSearchTerm] = useState("");
   const { data: pumpBrands, error, isLoading } = useGetPumpBrandsQuery();
   const { data: photosData } = useGetPhotosQuery();
@@ -63,7 +63,7 @@ const PumpBrandsTable: React.FC = React.memo(() => {
 
   return (
     <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
-      <div className="flex justify-between items-center px-[1.5vw] py-[1vw]">
+      <div className="flex justify-between items-center py-[1vw]">
         <div className="flex space-x-[1vw]">
           <PurpleButton
             text="Add New Pump Brand"
@@ -183,4 +183,4 @@ const PumpBrandsTable: React.FC = React.memo(() => {
   );
 });
 
-export default PumpBrandsTable;
+export default ManagePumpBrands;

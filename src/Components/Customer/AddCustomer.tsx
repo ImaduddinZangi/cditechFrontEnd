@@ -177,10 +177,6 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
     onSubmit(formData);
   };
 
-  const handleCancel = () => {
-    navigate("/customer-table");
-  };
-
   return (
     <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
       <form className="space-y-6" onSubmit={handleSubmit}>
@@ -389,7 +385,11 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
         </div>
         <div className="flex justify-end space-x-[1vw]">
           <PurpleButton type="submit" text="Create" />
-          <WhiteButton type="button" text="Cancel" onClick={handleCancel} />
+          <WhiteButton
+            type="button"
+            text="Cancel"
+            onClick={() => navigate("/manage-customers")}
+          />
         </div>
       </form>
       {isModalOpen && (

@@ -91,12 +91,11 @@ const AddPhotos: React.FC<AddPhotosProps> = ({
     });
   };
 
-  const handleSave = (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleSave = () => {
     const validPhotos = photos.filter((photo): photo is File => photo !== null);
     if (validPhotos.length > 0) {
-      onSubmit(validPhotos); // Pass the File objects directly to the parent component
-      onClose(); // Close the modal after submission
+      onSubmit(validPhotos);
+      onClose();
     } else {
       toast.error("Please upload at least one photo.");
     }
@@ -173,96 +172,94 @@ const AddPhotos: React.FC<AddPhotosProps> = ({
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
       <div className="bg-white p-[1.5vw] rounded-lg shadow-lg w-[80vw]">
-        <form onSubmit={handleSave}>
-          <div className="grid grid-cols-2 gap-[1.5vw]">
-            {photos.map((_, index) => (
-              <div key={index} className="border rounded-lg p-[1vw] relative">
-                <div className="flex flex-row items-center justify-between">
-                  <p className="text-[1.2vw] font-semibold mb-[1vw] font-inter">
-                    Photo {index + 1}
-                  </p>
-                  <button
-                    type="button"
-                    className="flex flex-row items-center text-red-500 font-inter font-medium text-[1vw] focus:outline-none"
-                    onClick={() => deletePhoto(index)}
-                  >
-                    <RiDeleteBin6Line className="mr-[0.5vw]" /> Delete
-                  </button>
-                </div>
-                <div className="flex flex-col space-y-[0.5vw]">
-                  {photoPreviews[index] ? (
-                    <img
-                      src={photoPreviews[index] || ""}
-                      alt={`Preview of photo ${index + 1}`}
-                      className="w-full h-[18vh] rounded-lg"
-                    />
-                  ) : (
-                    <>
-                      <button
-                        type="button"
-                        className="bg-purple-0 bg-opacity-20 py-[0.5vw] px-[1vw] rounded-lg flex items-center justify-center cursor-pointer border border-purple-0"
-                        onClick={() => openWebcam(index)}
-                      >
-                        <span className="ml-[0.2vw] text-[1vw] font-medium text-purple-0 font-inter">
-                          Click to Take {type} photo
-                        </span>
-                      </button>
-                      <label className="bg-white py-[0.5vw] px-[1vw] rounded-lg flex items-center justify-center cursor-pointer border border-purple-0">
-                        <input
-                          type="file"
-                          accept=".svg,.png,.jpg,.jpeg,.gif"
-                          className="hidden"
-                          onChange={(event) => handleFileChange(event, index)}
-                        />
-                        <span className="ml-[0.2vw] text-[1vw] font-medium text-purple-0 font-inter">
-                          Click to upload {type} photo
-                        </span>
-                      </label>
-                      <p className="text-lightgray-0 font-inter text-center text-[0.9vw]">
-                        SVG, PNG, JPG, JPEG, or GIF (max. 1080x1080px each)
-                      </p>
-                    </>
-                  )}
-                </div>
+        <div className="grid grid-cols-2 gap-[1.5vw]">
+          {photos.map((_, index) => (
+            <div key={index} className="border rounded-lg p-[1vw] relative">
+              <div className="flex flex-row items-center justify-between">
+                <p className="text-[1.2vw] font-semibold mb-[1vw] font-inter">
+                  Photo {index + 1}
+                </p>
+                <button
+                  type="button"
+                  className="flex flex-row items-center text-red-500 font-inter font-medium text-[1vw] focus:outline-none"
+                  onClick={() => deletePhoto(index)}
+                >
+                  <RiDeleteBin6Line className="mr-[0.5vw]" /> Delete
+                </button>
               </div>
-            ))}
-          </div>
-          {isWebcamOpen && (
-            <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-              <div className="bg-white p-6 rounded-lg shadow-lg">
-                <Webcam
-                  audio={false}
-                  ref={webcamRef}
-                  screenshotFormat="image/jpeg"
-                  width={320}
-                  height={240}
-                  videoConstraints={{
-                    width: 1080,
-                    height: 1080,
-                    facingMode: "user",
-                  }}
-                />
-                <div className="flex justify-end mt-4">
-                  <PurpleButton
-                    type="button"
-                    text="Capture"
-                    onClick={capturePhoto}
-                    className="mr-[1vw]"
+              <div className="flex flex-col space-y-[0.5vw]">
+                {photoPreviews[index] ? (
+                  <img
+                    src={photoPreviews[index] || ""}
+                    alt={`Preview of photo ${index + 1}`}
+                    className="w-full h-[18vh] rounded-lg"
                   />
-                  <WhiteButton
-                    type="button"
-                    text="Cancel"
-                    onClick={closeWebcam}
-                  />
-                </div>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      className="bg-purple-0 bg-opacity-20 py-[0.5vw] px-[1vw] rounded-lg flex items-center justify-center cursor-pointer border border-purple-0"
+                      onClick={() => openWebcam(index)}
+                    >
+                      <span className="ml-[0.2vw] text-[1vw] font-medium text-purple-0 font-inter">
+                        Click to Take {type} photo
+                      </span>
+                    </button>
+                    <label className="bg-white py-[0.5vw] px-[1vw] rounded-lg flex items-center justify-center cursor-pointer border border-purple-0">
+                      <input
+                        type="file"
+                        accept=".svg,.png,.jpg,.jpeg,.gif"
+                        className="hidden"
+                        onChange={(event) => handleFileChange(event, index)}
+                      />
+                      <span className="ml-[0.2vw] text-[1vw] font-medium text-purple-0 font-inter">
+                        Click to upload {type} photo
+                      </span>
+                    </label>
+                    <p className="text-lightgray-0 font-inter text-center text-[0.9vw]">
+                      SVG, PNG, JPG, JPEG, or GIF (max. 1080x1080px each)
+                    </p>
+                  </>
+                )}
               </div>
             </div>
-          )}
-          <div className="flex justify-end space-x-[1vw] mt-[1.5vw]">
-            <PurpleButton type="submit" text="Save" />
-            <WhiteButton type="button" text="Close" onClick={onClose} />
+          ))}
+        </div>
+        {isWebcamOpen && (
+          <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg">
+              <Webcam
+                audio={false}
+                ref={webcamRef}
+                screenshotFormat="image/jpeg"
+                width={320}
+                height={240}
+                videoConstraints={{
+                  width: 1080,
+                  height: 1080,
+                  facingMode: "user",
+                }}
+              />
+              <div className="flex justify-end mt-4">
+                <PurpleButton
+                  type="button"
+                  text="Capture"
+                  onClick={capturePhoto}
+                  className="mr-[1vw]"
+                />
+                <WhiteButton
+                  type="button"
+                  text="Cancel"
+                  onClick={closeWebcam}
+                />
+              </div>
+            </div>
           </div>
-        </form>
+        )}
+        <div className="flex justify-end space-x-[1vw] mt-[1.5vw]">
+          <PurpleButton type="submit" text="Save" onClick={handleSave} />
+          <WhiteButton type="button" text="Close" onClick={onClose} />
+        </div>
       </div>
 
       <ToastContainer

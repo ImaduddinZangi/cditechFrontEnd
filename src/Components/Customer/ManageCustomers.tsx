@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useGetCustomersQuery } from "../../redux/api/customerApi";
 import { useAppDispatch } from "../../redux/store";
 import { setSelectedCustomerId } from "../../redux/features/customerSlice";
-import { useGetPhotosQuery } from "../../redux/api/uploadPhotosApi";
 import ActiveBadge from "./Constants/ActiveBadge";
 import { useNavigate } from "react-router-dom";
 import Loader from "../Constants/Loader";
@@ -32,7 +31,6 @@ const highlightText = (text: string, searchTerm: string) => {
 
 const CustomerTable: React.FC = () => {
   const { data: customersData, isLoading } = useGetCustomersQuery();
-  const { data: photosData } = useGetPhotosQuery();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
@@ -83,7 +81,7 @@ const CustomerTable: React.FC = () => {
         <div className="flex flex-col items-center justify-center overflow-hidden">
           <div className="w-full">
             <div className="bg-white my-[1.5vw]">
-              <div className="flex justify-between items-center px-[1.5vw] py-[1vw]">
+              <div className="flex justify-between items-center py-[1vw]">
                 <div className="flex space-x-[1vw]">
                   <PurpleButton
                     text="Add New Customer"
@@ -105,7 +103,7 @@ const CustomerTable: React.FC = () => {
                 </div>
               </div>
 
-              <table className="min-w-max w-full table-auto">
+              <table className="min-w-full bg-white border border-gray-200">
                 <thead>
                   <tr className="h-[3vw] text-darkgray-0 border-b uppercase text-[1vw] leading-normal">
                     <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
@@ -149,13 +147,6 @@ const CustomerTable: React.FC = () => {
                   {!isLoading &&
                     paginatedData &&
                     paginatedData.map((customer) => {
-                      const customerPhoto = photosData?.find(
-                        (photo) => photo.customerId === customer.id
-                      );
-                      const photoUrl = customerPhoto
-                        ? `https://inspection-point-s3.s3.us-east-2.amazonaws.com/${customerPhoto.url}`
-                        : "/assets/no-image.jpg";
-
                       return (
                         <tr
                           key={customer.id}
@@ -172,7 +163,13 @@ const CustomerTable: React.FC = () => {
                               <div className="mr-2">
                                 <img
                                   className="w-6 h-6 rounded-full"
-                                  src={photoUrl}
+                                  src={
+                                    customer.photos
+                                      ? `https://inspection-point-s3.s3.us-east-2.amazonaws.com/${customer.photos.find(
+                                          () => true
+                                        )}`
+                                      : "/assets/no-image.jpg"
+                                  }
                                   alt={customer.name}
                                 />
                               </div>
@@ -224,8 +221,7 @@ const CustomerTable: React.FC = () => {
                     })}
                 </tbody>
               </table>
-
-              <div className="flex items-center justify-between py-[1vw] px-[1.5vw]">
+              <div className="flex items-center justify-between py-[1vw]">
                 <button
                   onClick={handlePreviousPage}
                   disabled={currentPage === 1}

@@ -36,7 +36,6 @@ const AddPump: React.FC<AddPumpProps> = ({ onChange, initialData }) => {
   const [installedDate, setInstalledDate] = useState<string>(
     initialData?.installedDate || ""
   );
-  // const { data: assets } = useGetAssetsQuery();
   const { data: pumpBrands } = useGetPumpBrandsQuery();
 
   const handlePhotosSubmit = (uploadedPhotos: File[]) => {

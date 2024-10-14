@@ -28,6 +28,7 @@ export interface Asset {
   updatedAt: string;
   client: Client;
   customer: Customer;
+  photos?: File[];
 }
 
 interface AssetState {

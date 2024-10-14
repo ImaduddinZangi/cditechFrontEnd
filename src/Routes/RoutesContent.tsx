@@ -11,8 +11,8 @@ const ClientDashboardPage = lazy(
 const ManagementSignInPage = lazy(
   () => import("../Pages/Auth/ManagementSignInPage")
 );
-const CustomerTablePage = lazy(
-  () => import("../Pages/Customer/CustomerTablePage")
+const ManageCustomersPage = lazy(
+  () => import("../Pages/Customer/ManageCustomersPage")
 );
 const ClientRegistrationPage = lazy(
   () => import("../Pages/Auth/ClientRegistrationPage")
@@ -49,8 +49,8 @@ const ManageInspectionsPage = lazy(
 const EditInspectionPage = lazy(
   () => import("../Pages/Inspection/EditInspectionPage")
 );
-const PumpBrandsTablePage = lazy(
-  () => import("../Pages/Customer/Pump/PumpBrandsTablePage")
+const ManagePumpBrandsPage = lazy(
+  () => import("../Pages/Customer/Pump/ManagePumpBrandsPage")
 );
 const InspectionDetailsPage = lazy(
   () => import("../Pages/Inspection/InspectionDetailsPage")
@@ -150,6 +150,7 @@ const RoutesContent: React.FC = () => {
         <Route path="/error/500" element={<Error500 />} />
 
         {/* Authentication */}
+        <Route path="/" element={<ClientSignInPage />} />
         <Route path="/client-login" element={<ClientSignInPage />} />
         <Route path="/management-login" element={<ManagementSignInPage />} />
         <Route
@@ -182,7 +183,7 @@ const RoutesContent: React.FC = () => {
             path="/edit-customer/:customerId"
             element={<EditCustomerPage />}
           />
-          <Route path="/manage-customers" element={<CustomerTablePage />} />
+          <Route path="/manage-customers" element={<ManageCustomersPage />} />
 
           {/* Asset */}
           <Route path="/add-asset" element={<AddAssetsPage />} />
@@ -198,7 +199,10 @@ const RoutesContent: React.FC = () => {
             path="/edit-pump-brand/:pumpId"
             element={<EditPumpBrandPage />}
           />
-          <Route path="/manage-pump-brands" element={<PumpBrandsTablePage />} />
+          <Route
+            path="/manage-pump-brands"
+            element={<ManagePumpBrandsPage />}
+          />
           <Route
             path="/pump-brand-detail/:pumpBrandId"
             element={<PumpBrandDetailsPage />}

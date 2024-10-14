@@ -14,7 +14,6 @@ const AddPumpBrand: React.FC<AddPumpBrandProps> = ({
   onSubmit,
   initialData,
 }) => {
-  // Split the address into streetAddress, city, state, and zipcode
   const splitAddress = (address: string | undefined) => {
     if (!address) return { streetAddress: "", city: "", state: "", zipcode: "" };
     
@@ -150,7 +149,7 @@ const AddPumpBrand: React.FC<AddPumpBrandProps> = ({
           onChange={(e) => setLogoUrl(e.target.value)}
           required
         />
-        <div className="flex flex-row items-center gap-x-[1vw] mt-[0.5vw]">
+        <div className="flex flex-row items-center gap-x-[1vw] mt-[3.6vh]">
           <label className="block text-darkgray-0 font-medium text-[1vw]">
             Made In USA:
           </label>
