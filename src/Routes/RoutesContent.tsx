@@ -135,6 +135,8 @@ const ClientUsersSessionsTablePage = lazy(
 );
 const EditPumpPage = lazy(() => import("../Pages/Customer/Pump/EditPumpPage"));
 const AddServicePage = lazy(() => import("../Pages/Services/AddServicePage"));
+const ViewCustomersMapPage = lazy(() => import("../Pages/Customer/ViewCustomersMapPage"));
+const UpdateCompanyPage = lazy(() => import("../Pages/ClientProfile/UpdateCompanyPage"));
 
 const RoutesContent: React.FC = () => {
   return (
@@ -175,6 +177,7 @@ const RoutesContent: React.FC = () => {
           {/* Client */}
           <Route path="/client-dashboard" element={<ClientDashboardPage />} />
           <Route path="/client-profile" element={<ClientProfilePage />} />
+          <Route path="/update-company" element={<UpdateCompanyPage />} />
 
           {/* Customer */}
           <Route path="/manage-customer" element={<ManageCustomerPage />} />
@@ -184,6 +187,7 @@ const RoutesContent: React.FC = () => {
             element={<EditCustomerPage />}
           />
           <Route path="/manage-customers" element={<ManageCustomersPage />} />
+          <Route path="/customers-map" element={<ViewCustomersMapPage />} />
 
           {/* Asset */}
           <Route path="/add-asset" element={<AddAssetsPage />} />

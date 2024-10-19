@@ -26,16 +26,44 @@ interface AddClientProps {
 const companyTypeOptions: Option[] = [
   { label: "LLC", value: "llc" },
   { label: "Corporation", value: "corporation" },
+  { label: "Sole Proprietorship", value: "sole_proprietorship" },
+  { label: "Partnership", value: "partnership" },
+  { label: "Limited Liability Partnership (LLP)", value: "llp" },
+  { label: "Cooperative", value: "cooperative" },
+  { label: "Non-Profit Organization", value: "non_profit" },
+  { label: "Trust", value: "trust" },
+  { label: "Other", value: "other" },
 ];
 
 const industryOptions: Option[] = [
   { label: "Technology", value: "tech" },
   { label: "Healthcare", value: "health" },
+  { label: "Finance", value: "finance" },
+  { label: "Retail", value: "retail" },
+  { label: "Manufacturing", value: "manufacturing" },
+  { label: "Education", value: "education" },
+  { label: "Hospitality", value: "hospitality" },
+  { label: "Construction", value: "construction" },
+  { label: "Transportation", value: "transportation" },
+  { label: "Government", value: "government" },
+  { label: "Media & Entertainment", value: "media_entertainment" },
+  { label: "Professional Services", value: "professional_services" },
+  { label: "Non-Profit", value: "non_profit" },
+  { label: "Other", value: "other" },
 ];
 
 const paymentMethodOptions: Option[] = [
-  { label: "Credit Card", value: "credit card" },
-  { label: "Bank", value: "bank" },
+  { label: "Credit Card", value: "credit_card" },
+  { label: "Debit Card", value: "debit_card" },
+  { label: "Bank Transfer", value: "bank_transfer" },
+  { label: "PayPal", value: "paypal" },
+  { label: "Google Pay", value: "google_pay" },
+  { label: "Apple Pay", value: "apple_pay" },
+  { label: "Cash by Hand", value: "cash_by_hand" },
+  { label: "Check", value: "check" },
+  { label: "Money Order", value: "money_order" },
+  { label: "Bitcoin", value: "bitcoin" },
+  { label: "Other", value: "other" },
 ];
 
 const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
@@ -44,33 +72,20 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
   const [password, setPassword] = useState<string>("");
   const [companyName, setCompanyName] = useState("");
   const [companyEmail, setCompanyEmail] = useState<string>("");
-  const [industry, setIndustry] = useState<Option | null>({
-    label: "",
-    value: "",
-  });
+  const [industry, setIndustry] = useState<Option | null>(null);
   const [companyWebsite, setCompanyWebsite] = useState<string>("");
-  const [companyType, setCompanyType] = useState<Option | null>({
-    label: "",
-    value: "",
-  });
+  const [companyType, setCompanyType] = useState<Option | null>(null);
   const [phone, setPhone] = useState<string>("");
   const [billingPhone, setBillingPhone] = useState<string>("");
-  const [paymentMethod, setPaymentMethod] = useState<Option | null>({
-    label: "",
-    value: "",
-  });
+  const [paymentMethod, setPaymentMethod] = useState<Option | null>(null);
   const [nextBillDate, setNextBillDate] = useState<string>("");
 
-  // Addresses
   const [selectedState, setSelectedState] = useState<Option | null>(null);
   const [selectedCity, setSelectedCity] = useState<Option | null>(null);
   const [billingState, setBillingState] = useState<Option | null>(null);
   const [billingCity, setBillingCity] = useState<Option | null>(null);
-  const [citiesOfSelectedState, setCitiesOfSelectedState] = useState<Option[]>(
-    []
-  );
-  const [billingCitiesOfSelectedState, setBillingCitiesOfSelectedState] =
-    useState<Option[]>([]);
+  const [citiesOfSelectedState, setCitiesOfSelectedState] = useState<Option[]>([]);
+  const [billingCitiesOfSelectedState, setBillingCitiesOfSelectedState] = useState<Option[]>([]);
   const [companyAddress, setCompanyAddress] = useState("");
   const [companyAddressLine2, setCompanyAddressLine2] = useState("");
   const [companyZipCode, setCompanyZipCode] = useState("");
@@ -97,6 +112,24 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
     setCitiesOfSelectedState(getCities(selectedState?.value || null));
     setBillingCitiesOfSelectedState(getCities(billingState?.value || null));
   }, [selectedState, billingState]);
+
+  useEffect(() => {
+    if (sameAsCompanyAddress) {
+      setBillingAddress(companyAddress);
+      setBillingAddressLine2(companyAddressLine2);
+      setBillingCity(selectedCity);
+      setBillingState(selectedState);
+      setBillingZipCode(companyZipCode);
+      setBillingPhone(phone);
+    } else {
+      setBillingAddress("");
+      setBillingAddressLine2("");
+      setBillingCity(null);
+      setBillingState(null);
+      setBillingZipCode("");
+      setBillingPhone("");
+    }
+  }, [sameAsCompanyAddress, companyAddress, companyAddressLine2, selectedCity, selectedState, companyZipCode, phone]);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -241,8 +274,8 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
               </div>
               <div>
                 <PhoneInput
-                  label="companyPhone"
-                  name="companyPhone"
+                  label="Phone"
+                  name="phone"
                   value={phone}
                   onChange={setPhone}
                   required
@@ -250,7 +283,6 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
               </div>
             </div>
           </div>
-
           <div className="grid gap-y-[1vw]">
             <h2 className="font-semibold text-[1.1vw]">Billing Address</h2>
             <InputField
@@ -260,7 +292,6 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
               value={billingAddress}
               placeholder="Billing Address"
               onChange={(e) => setBillingAddress(e.target.value)}
-              disabled={sameAsCompanyAddress}
               required
             />
             <InputField
@@ -270,7 +301,6 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
               placeholder="Billing Address"
               value={billingAddressLine2}
               onChange={(e) => setBillingAddressLine2(e.target.value)}
-              disabled={sameAsCompanyAddress}
               required
             />
             <div className="grid grid-cols-2 gap-[1vw]">
@@ -284,7 +314,6 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
                   }}
                   options={states}
                   placeholder="Select State"
-                  disabled={sameAsCompanyAddress}
                   required
                 />
               </div>
@@ -294,7 +323,6 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
                   value={billingCity}
                   onChange={(option) => setBillingCity(option)}
                   options={billingCitiesOfSelectedState}
-                  disabled={!billingState || sameAsCompanyAddress}
                   placeholder="Select City"
                   required
                 />
@@ -309,14 +337,13 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
                   value={billingZipCode}
                   placeholder="Enter Zip Code"
                   onChange={(e) => setBillingZipCode(e.target.value)}
-                  disabled={sameAsCompanyAddress}
                   required
                 />
               </div>
               <div>
                 <PhoneInput
                   label="Phone"
-                  name="phone"
+                  name="billingPhone"
                   value={billingPhone}
                   onChange={setBillingPhone}
                   required
@@ -331,7 +358,7 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
               type="checkbox"
               checked={sameAsCompanyAddress}
               onChange={() => setSameAsCompanyAddress(!sameAsCompanyAddress)}
-              className="accent-purple-0 w-[1vw] h-[1vw]"
+              className="accent-purple-0 w-[1vw] h-[1vw] cursor-pointer focus:outline-none"
             />
             <span className="text-darkgray-0">Same as company address</span>
           </div>

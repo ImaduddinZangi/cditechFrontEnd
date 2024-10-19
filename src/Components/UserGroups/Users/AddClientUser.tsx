@@ -1,35 +1,50 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import InputField from "../../Tags/InputField";
 import PurpleButton from "../../Tags/PurpleButton";
 import WhiteButton from "../../Tags/WhiteButton";
-import { ClientUser } from "../../../redux/features/clientUserSlice";
+import {
+  ClientUser,
+  GetClientUser,
+} from "../../../redux/features/clientUserSlice";
 import { useGetUserGroupsQuery } from "../../../redux/api/userGroupApi";
+import SelectField, { Option } from "../../Tags/SelectField";
 
 interface AddClientUserProps {
   onSubmit: (data: ClientUser) => void;
-  initialData?: Partial<ClientUser>;
+  initialData?: Partial<GetClientUser>;
 }
+
+const statusOptions = [
+  { label: "Active", value: "Active" },
+  { label: "Disabled", value: "Disabled" },
+];
 
 const AddClientUser: React.FC<AddClientUserProps> = ({
   onSubmit,
   initialData,
 }) => {
-  const [firstName, setFirstName] = useState<string>(
-    initialData?.firstName || ""
-  );
-  const [lastName, setLastName] = useState<string>(initialData?.lastName || "");
-  const [email, setEmail] = useState<string>(initialData?.email || "");
-  const [password, setPassword] = useState<string>(initialData?.password || "");
-  const [phone, setPhone] = useState<string>(initialData?.phone || "");
-  const [status, setStatus] = useState<string>(initialData?.status || "");
-  const [addressLine1, setAddressLine1] = useState<string>(
-    initialData?.addressLine1 || ""
-  );
+  const [groups, setGroups] = useState<Option[]>([]);
   const [city, setCity] = useState<string>(initialData?.city || "");
   const [state, setState] = useState<string>(initialData?.state || "");
   const [zipcode, setZipcode] = useState<string>(initialData?.zipcode || "");
   const [division, setDivision] = useState<string>(initialData?.division || "");
+  const [lastName, setLastName] = useState<string>(initialData?.lastName || "");
+  const [email, setEmail] = useState<string>(initialData?.email || "");
+  const [password, setPassword] = useState<string>(initialData?.password || "");
+  const [phone, setPhone] = useState<string>(initialData?.phone || "");
+  const [firstName, setFirstName] = useState<string>(
+    initialData?.firstName || ""
+  );
+
+  const [status, setStatus] = useState<Option | null>({
+    label: "",
+    value: "",
+  });
+  const [addressLine1, setAddressLine1] = useState<string>(
+    initialData?.addressLine1 || ""
+  );
+
   const [receiveSms, setReceiveSms] = useState<boolean>(
     initialData?.receiveSms || false
   );
@@ -39,10 +54,28 @@ const AddClientUser: React.FC<AddClientUserProps> = ({
   const [sendWelcomeMessage, setSendWelcomeMessage] = useState<boolean>(
     initialData?.sendWelcomeMessage || false
   );
-  const [groupId, setGroupId] = useState<string>(initialData?.groupId || "");
-  const { data: userGroups } = useGetUserGroupsQuery();
+  const [groupId, setGroupId] = useState<Option | null>(null);
+
+  const { data: groupsData } = useGetUserGroupsQuery();
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (groupsData) {
+      const groupOptions = groupsData.map((group) => ({
+        label: group.name,
+        value: group.id ? group.id : "",
+      }));
+      setGroups(groupOptions);
+
+      if (initialData?.usergroups) {
+        const selectedGroup = groupOptions.find(
+          (c) => c.value === initialData.usergroups?.id
+        );
+        setGroupId(selectedGroup || null);
+      }
+    }
+  }, [groupsData, initialData]);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -52,6 +85,7 @@ const AddClientUser: React.FC<AddClientUserProps> = ({
       lastName,
       email,
       password,
+      status: status?.value || "",
       phone,
       addressLine1,
       city,
@@ -61,7 +95,7 @@ const AddClientUser: React.FC<AddClientUserProps> = ({
       receiveSms,
       requirePasswordChange,
       sendWelcomeMessage,
-      groupId,
+      groupId: groupId?.value || "",
     });
   };
 
@@ -92,20 +126,15 @@ const AddClientUser: React.FC<AddClientUserProps> = ({
             required
           />
           <div className="w-full">
-            <label className="block text-darkgray-0 font-medium text-[1vw]">
-              Status
-            </label>
-            <select
+            <SelectField
+              label="Status"
               name="status"
-              id="status"
-              className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
               value={status}
-              onChange={(e) => setStatus(e.target.value)}
+              placeholder="Active"
+              options={statusOptions}
+              onChange={(option) => setStatus(option)}
               required
-            >
-              <option value="Active">Active</option>
-              <option value="Inactive">Inactive</option>
-            </select>
+            />
           </div>
         </div>
         <div className="w-full grid grid-cols-2 gap-[1vw]">
@@ -217,24 +246,13 @@ const AddClientUser: React.FC<AddClientUserProps> = ({
           </label>
         </div>
         <div className="mt-[1vw] w-1/2 pr-[1vw]">
-          <label className="block text-darkgray-0 font-medium text-[1vw]">
-            User Group
-          </label>
-          <select
+          <SelectField
+            label="User Group"
             name="groupId"
-            id="groupId"
-            className="mt-1 block w-full border py-[0.2vw] px-[0.5vw] rounded-[0.4vw] placeholder:text-[1vw] placeholder:text-lightgray-0 opacity-[60%] focus:outline-none"
             value={groupId}
-            onChange={(e) => setGroupId(e.target.value)}
-            required
-          >
-            <option value="">Select a group</option>
-            {userGroups?.map((group) => (
-              <option value={group.id} key={group.id}>
-                {group.name}
-              </option>
-            ))}
-          </select>
+            options={groups}
+            onChange={(option) => setGroupId(option)}
+          />
         </div>
         <div className="mt-[1vw] flex justify-end">
           <PurpleButton type="submit" text="Save" className="mr-[1vw]" />

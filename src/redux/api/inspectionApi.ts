@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { CreateInspection, Inspection } from "../features/inspectionSlice";
+import { Inspection, EditInspection, SubmitBill, SubmitDontBill, SubmitExistingInvoice } from "../features/inspectionSlice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_BASE_URL,
@@ -31,15 +31,15 @@ export const inspectionApi = createApi({
       }),
       providesTags: (_result, _error, id) => [{ type: "Inspection", id }],
     }),
-    createInspection: builder.mutation<Inspection, Partial<CreateInspection>>({
-      query: (newInspection) => ({
+    createInspection: builder.mutation<Inspection, FormData>({
+      query: (formData) => ({
         url: "inspections",
         method: "POST",
-        body: newInspection,
+        body: formData,
       }),
       invalidatesTags: ["Inspection"],
     }),
-    updateInspection: builder.mutation<Inspection, Partial<CreateInspection>>({
+    updateInspection: builder.mutation<Inspection, Partial<EditInspection>>({
       query: ({ id, ...rest }) => ({
         url: `inspections/${id}`,
         method: "PATCH",
@@ -56,57 +56,43 @@ export const inspectionApi = createApi({
       }),
       invalidatesTags: (_result, _error, id) => [{ type: "Inspection", id }],
     }),
-    markInspectionCompleteAndBill: builder.mutation<
-      { success: boolean },
-      string
-    >({
+    markInspectionCompleteAndBill: builder.mutation<{ success: boolean }, string>({
       query: (inspectionId: string) => ({
         url: `inspections/${inspectionId}/complete-and-bill`,
         method: "PATCH",
       }),
       invalidatesTags: (_result, _error, id) => [{ type: "Inspection", id }],
     }),
-    markInspectionCompleteWithoutBilling: builder.mutation<
-      { success: boolean },
-      string
-    >({
+    markInspectionCompleteWithoutBilling: builder.mutation<{ success: boolean }, string>({
       query: (inspectionId: string) => ({
         url: `inspections/${inspectionId}/complete-without-billing`,
         method: "PATCH",
       }),
       invalidatesTags: (_result, _error, id) => [{ type: "Inspection", id }],
     }),
-    markInspectionSubmitAndBill: builder.mutation<{ success: boolean }, string>(
-      {
-        query: (inspectionId: string) => ({
-          url: `inspections/${inspectionId}/submit-bill`,
-          method: "POST",
-        }),
-        invalidatesTags: (_result, _error, id) => [{ type: "Inspection", id }],
-      }
-    ),
-    markInspectionSubmitWithoutBilling: builder.mutation<
-      { success: boolean },
-      string
-    >({
-      query: (inspectionId: string) => ({
-        url: `inspections/${inspectionId}/submit-dont-bill`,
+    markInspectionSubmitAndBill: builder.mutation<{ success: boolean }, SubmitBill>({
+      query: (body: SubmitBill) => ({
+        url: `inspections/${body.inspectionId}/submit-bill`,
         method: "POST",
+        body,
       }),
-      invalidatesTags: (_result, _error, id) => [{ type: "Inspection", id }],
+      invalidatesTags: (_result, _error, { inspectionId }) => [{ type: "Inspection", id: inspectionId }],
     }),
-    addToExistingInvoice: builder.mutation<
-      { success: boolean },
-      { inspectionId: string; invoiceId: string | undefined }
-    >({
-      query: ({ inspectionId, invoiceId }) => ({
-        url: `inspections/${inspectionId}/add-to-existing-invoice`,
+    markInspectionSubmitWithoutBilling: builder.mutation<{ success: boolean }, SubmitDontBill>({
+      query: (body: SubmitDontBill) => ({
+        url: `inspections/${body.inspectionId}/submit-dont-bill`,
         method: "POST",
-        body: { invoiceId },
+        body,
       }),
-      invalidatesTags: (_result, _error, { inspectionId }) => [
-        { type: "Inspection", id: inspectionId },
-      ],
+      invalidatesTags: (_result, _error, { inspectionId }) => [{ type: "Inspection", id: inspectionId }],
+    }),
+    addToExistingInvoice: builder.mutation<{ success: boolean }, SubmitExistingInvoice>({
+      query: (body: SubmitExistingInvoice) => ({
+        url: `inspections/${body.inspectionId}/add-to-existing-invoice`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: (_result, _error, { inspectionId }) => [{ type: "Inspection", id: inspectionId }],
     }),
   }),
 });

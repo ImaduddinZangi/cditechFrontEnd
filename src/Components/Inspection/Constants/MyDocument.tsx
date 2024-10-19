@@ -143,39 +143,39 @@ const MyDocument: React.FC<MyDocumentProps> = ({ data }) => {
         <View style={styles.scoreSection}>
           <View style={styles.scoreRow}>
             <Text style={styles.fieldLabel}>Structure:</Text>
-            <Text>{data.checklists[0]?.structureScore || "N/A"}</Text>
+            <Text>{data.checklists[0]?.structure || "N/A"}</Text>
           </View>
           <View style={styles.scoreRow}>
             <Text style={styles.fieldLabel}>Panel:</Text>
-            <Text>{data.checklists[0]?.panelScore || "N/A"}</Text>
+            <Text>{data.checklists[0]?.panel || "N/A"}</Text>
           </View>
           <View style={styles.scoreRow}>
             <Text style={styles.fieldLabel}>Contactors:</Text>
-            <Text>{data.checklists[0]?.contactorsScore || "N/A"}</Text>
+            <Text>{data.checklists[0]?.contactors || "N/A"}</Text>
           </View>
           <View style={styles.scoreRow}>
             <Text style={styles.fieldLabel}>Pipes:</Text>
-            <Text>{data.checklists[0]?.pipesScore || "N/A"}</Text>
+            <Text>{data.checklists[0]?.pipes || "N/A"}</Text>
           </View>
           <View style={styles.scoreRow}>
             <Text style={styles.fieldLabel}>Breakers:</Text>
-            <Text>{data.checklists[0]?.breakersScore || "N/A"}</Text>
+            <Text>{data.checklists[0]?.breakers || "N/A"}</Text>
           </View>
           <View style={styles.scoreRow}>
             <Text style={styles.fieldLabel}>Alarm Light:</Text>
-            <Text>{data.checklists[0]?.alarmLightScore || "N/A"}</Text>
+            <Text>{data.checklists[0]?.alarmLight || "N/A"}</Text>
           </View>
           <View style={styles.scoreRow}>
             <Text style={styles.fieldLabel}>Wires:</Text>
-            <Text>{data.checklists[0]?.wiresScore || "N/A"}</Text>
+            <Text>{data.checklists[0]?.wires || "N/A"}</Text>
           </View>
           <View style={styles.scoreRow}>
             <Text style={styles.fieldLabel}>Alarm:</Text>
-            <Text>{data.checklists[0]?.alarmScore || "N/A"}</Text>
+            <Text>{data.checklists[0]?.alarm || "N/A"}</Text>
           </View>
           <View style={styles.scoreRow}>
             <Text style={styles.fieldLabel}>Thermals:</Text>
-            <Text>{data.checklists[0]?.thermalsScore || "N/A"}</Text>
+            <Text>{data.checklists[0]?.thermals || "N/A"}</Text>
           </View>
         </View>
 

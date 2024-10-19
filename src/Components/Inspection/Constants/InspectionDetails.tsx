@@ -106,7 +106,7 @@ const InspectionDetails: React.FC = () => {
                     Structure:
                   </p>
                   <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.checklists?.[0]?.structureScore ?? "N/A"}
+                    {inspection.checklists?.[0]?.structure ?? "N/A"}
                   </p>
                 </div>
                 <div>
@@ -114,7 +114,7 @@ const InspectionDetails: React.FC = () => {
                     Panel:
                   </p>
                   <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.checklists?.[0]?.panelScore ?? "N/A"}
+                    {inspection.checklists?.[0]?.panel ?? "N/A"}
                   </p>
                 </div>
                 <div>
@@ -122,7 +122,7 @@ const InspectionDetails: React.FC = () => {
                     Pipes:
                   </p>
                   <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.checklists?.[0]?.pipesScore ?? "N/A"}
+                    {inspection.checklists?.[0]?.pipes ?? "N/A"}
                   </p>
                 </div>
                 <div>
@@ -130,7 +130,7 @@ const InspectionDetails: React.FC = () => {
                     Breakers:
                   </p>
                   <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.checklists?.[0]?.breakersScore ?? "N/A"}
+                    {inspection.checklists?.[0]?.breakers ?? "N/A"}
                   </p>
                 </div>
                 <div>
@@ -138,7 +138,7 @@ const InspectionDetails: React.FC = () => {
                     Alarm:
                   </p>
                   <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.checklists?.[0]?.alarmScore ?? "N/A"}
+                    {inspection.checklists?.[0]?.alarm ?? "N/A"}
                   </p>
                 </div>
                 <div>
@@ -146,7 +146,7 @@ const InspectionDetails: React.FC = () => {
                     Alarm Light:
                   </p>
                   <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.checklists?.[0]?.alarmLightScore ?? "N/A"}
+                    {inspection.checklists?.[0]?.alarmLight ?? "N/A"}
                   </p>
                 </div>
                 <div>
@@ -154,7 +154,7 @@ const InspectionDetails: React.FC = () => {
                     Wires:
                   </p>
                   <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.checklists?.[0]?.wiresScore ?? "N/A"}
+                    {inspection.checklists?.[0]?.wires ?? "N/A"}
                   </p>
                 </div>
                 <div>
@@ -162,7 +162,7 @@ const InspectionDetails: React.FC = () => {
                     Contactors:
                   </p>
                   <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.checklists?.[0]?.contactorsScore ?? "N/A"}
+                    {inspection.checklists?.[0]?.contactors ?? "N/A"}
                   </p>
                 </div>
                 <div>
@@ -170,7 +170,7 @@ const InspectionDetails: React.FC = () => {
                     Thermals:
                   </p>
                   <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.checklists?.[0]?.thermalsScore ?? "N/A"}
+                    {inspection.checklists?.[0]?.thermals ?? "N/A"}
                   </p>
                 </div>
               </div>

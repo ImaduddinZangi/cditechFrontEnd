@@ -25,7 +25,7 @@ const AddPump: React.FC<AddPumpProps> = ({ onChange, initialData }) => {
   const [avgAmps, setAvgAmps] = useState<string>(initialData?.avgAmps || "");
   const [maxAmps, setMaxAmps] = useState<string>(initialData?.maxAmps || "");
   const [hp, setHp] = useState<string>(initialData?.hp || "");
-  const [photos, setPhotos] = useState<File[]>([]);
+  const [files, setFiles] = useState<File[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
@@ -39,7 +39,7 @@ const AddPump: React.FC<AddPumpProps> = ({ onChange, initialData }) => {
   const { data: pumpBrands } = useGetPumpBrandsQuery();
 
   const handlePhotosSubmit = (uploadedPhotos: File[]) => {
-    setPhotos(uploadedPhotos);
+    setFiles(uploadedPhotos);
     handleCloseModal();
   };
 
@@ -53,7 +53,7 @@ const AddPump: React.FC<AddPumpProps> = ({ onChange, initialData }) => {
       hp,
       warranty: warranty?.value || "",
       installedDate,
-      photos,
+      files,
     };
     onChange(pumpData);
   }, [
@@ -65,7 +65,7 @@ const AddPump: React.FC<AddPumpProps> = ({ onChange, initialData }) => {
     hp,
     warranty,
     installedDate,
-    photos,
+    files,
   ]);
 
   return (

@@ -9,11 +9,13 @@ import { useGetClientByIdQuery } from "../../redux/api/clientApi";
 import { getUserId } from "../../utils/utils";
 import CompanyExtraDetails from "../../Components/ClientProfile/CompanyExtraDetails";
 import PurpleButton from "../../Components/Tags/PurpleButton";
+import { useNavigate } from "react-router-dom";
 
 const ClientProfilePage: React.FC = () => {
   const dispatch = useDispatch();
   const { data } = useGetQuickBookSignUpLinkQuery();
   const clientId = getUserId();
+  const navigate = useNavigate();
   const { data: client } = useGetClientByIdQuery(clientId as string);
   const quickbooksAuthUrl = useSelector(
     (state: RootState) => state.client.quickbooksAuthUrl
@@ -42,7 +44,10 @@ const ClientProfilePage: React.FC = () => {
         />
         <PurpleButton text="Edit Profile" />
         <PurpleButton text="Edit Payment" />
-        <PurpleButton text="Edit Company Logo" />
+        <PurpleButton
+          text="Edit Company"
+          onClick={() => navigate("/update-company")}
+        />
         <PurpleButton text="Change Fee Plan" />
       </div>
       <CompanyExtraDetails />

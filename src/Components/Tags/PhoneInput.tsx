@@ -23,8 +23,9 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
   placeholder = "Enter phone number",
   disabled = false,
 }) => {
-  const [inputValue, setInputValue] = useState<string>(value);
-  const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
+  const defaultCountry = countries.find((country) => country.iso2 === "US") || null;
+  const [inputValue, setInputValue] = useState<string>(defaultCountry ? defaultCountry.dialCode : value);
+  const [selectedCountry, setSelectedCountry] = useState<Country | null>(defaultCountry);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -96,7 +97,7 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             <span className="text-[1vw] font-medium px-2">
-              {selectedCountry ? selectedCountry.iso2 : "US"}
+              {selectedCountry ? selectedCountry.iso2 : "Select"}
             </span>
             <FiChevronDown className="w-[1vw] h-[1vw] text-gray-0" />
           </button>

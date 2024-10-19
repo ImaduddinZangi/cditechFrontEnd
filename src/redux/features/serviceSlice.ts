@@ -3,7 +3,6 @@ import { Client } from "./clientSlice";
 
 export interface CreateService {
   id?: string;
-  clientId: string | null;
   name: string;
   description: string;
   price: number;

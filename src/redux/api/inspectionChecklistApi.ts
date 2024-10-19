@@ -1,5 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Checklist } from "../features/inspectionChecklistSlice";
+import {
+  Checklist,
+  UpdateChecklist,
+} from "../features/inspectionChecklistSlice";
+import { Inspection } from "../features/inspectionSlice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_BASE_URL,
@@ -39,6 +43,16 @@ export const inspectionChecklistApi = createApi({
       }),
       invalidatesTags: ["Checklists"],
     }),
+    updateChecklist: builder.mutation<Inspection, Partial<UpdateChecklist>>({
+      query: ({ id, ...rest }) => ({
+        url: `inspections/${id}`,
+        method: "PATCH",
+        body: rest,
+      }),
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: "Checklists", id },
+      ],
+    }),
     updateInspectionChecklist: builder.mutation<Checklist, Partial<Checklist>>({
       query: ({ id, ...rest }) => ({
         url: `checklists/${id}`,
@@ -63,6 +77,7 @@ export const {
   useGetInspectionChecklistsQuery,
   useGetInspectionChecklistByIdQuery,
   useCreateInspectionChecklistMutation,
+  useUpdateChecklistMutation,
   useUpdateInspectionChecklistMutation,
   useDeleteInspectionChecklistMutation,
 } = inspectionChecklistApi;

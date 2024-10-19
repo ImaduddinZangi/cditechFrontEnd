@@ -2,21 +2,18 @@ import React, { useEffect, useState } from "react";
 import { useGetCustomersQuery } from "../../redux/api/customerApi";
 import { useGetAssetsQuery } from "../../redux/api/assetApi";
 import { useGetClientUsersQuery } from "../../redux/api/clientUserApi";
-import { getUserId } from "../../utils/utils";
 import { useNavigate } from "react-router-dom";
-import { Inspection, RoutePoint } from "../../redux/features/inspectionSlice";
+import { Inspection, RoutePoint, EditInspection } from "../../redux/features/inspectionSlice";
 import PurpleButton from "../Tags/PurpleButton";
 import WhiteButton from "../Tags/WhiteButton";
 import InputField from "../Tags/InputField";
 import { useGetChecklistTemplatesQuery } from "../../redux/api/checklistTemplateApi";
 import SelectField, { Option } from "../Tags/SelectField";
-import OutlinePurpleButton from "../Tags/OutlinePurpleButton";
-import AddPhotos from "../Customer/AddPhotos";
 import { toast, ToastContainer } from "react-toastify";
 import RouteModal from "./RouteModal";
 
-interface AddInspectionProps {
-  onSubmit: (data: FormData) => void;
+interface UpdateInspectionProps {
+  onSubmit: (data: EditInspection) => void;
   initialData?: Partial<Inspection>;
 }
 
@@ -30,7 +27,7 @@ const intervalOptions = [
   { label: "One-Time", value: "One-Time" },
 ];
 
-const AddInspection: React.FC<AddInspectionProps> = ({
+const UpdateInspection: React.FC<UpdateInspectionProps> = ({
   onSubmit,
   initialData,
 }) => {
@@ -70,17 +67,11 @@ const AddInspection: React.FC<AddInspectionProps> = ({
   const [reocurrenceEndDate, setReocurrenceEndDate] = useState<string>(
     initialData?.reocurrenceEndDate || ""
   );
-  const [photos, setPhotos] = useState<File[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleOpenModal = () => setIsModalOpen(true);
-  const handleCloseModal = () => setIsModalOpen(false);
 
   const { data: customersData } = useGetCustomersQuery();
   const { data: assetsData } = useGetAssetsQuery();
   const { data: usersData } = useGetClientUsersQuery();
   const { data: checklistTemplatesData } = useGetChecklistTemplatesQuery();
-
-  const clientId = getUserId();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -120,7 +111,7 @@ const AddInspection: React.FC<AddInspectionProps> = ({
   useEffect(() => {
     if (usersData) {
       const userOptions = usersData.map((user) => ({
-        label: user.client.first_name,
+        label: user.name,
         value: user.id,
       }));
       setUsers(userOptions);
@@ -151,11 +142,6 @@ const AddInspection: React.FC<AddInspectionProps> = ({
     }
   }, [checklistTemplatesData, initialData]);
 
-  const handlePhotosSubmit = (uploadedPhotos: File[]) => {
-    setPhotos(uploadedPhotos);
-    handleCloseModal();
-  };
-
   const handleRouteModalSave = (selectedRoute: RoutePoint[]) => {
     setRoute(selectedRoute);
   };
@@ -163,32 +149,22 @@ const AddInspection: React.FC<AddInspectionProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (route.length !== 2) {
-      toast.error("The route data is not added.");
-      return;
-    }
-    const formData = new FormData();
-    if (clientId !== undefined && clientId != null) {
-      formData.append("clientId", clientId);
-    }
-    if (serviceFeeId) {
-      const checklistData = [{ templateId: serviceFeeId.value }];
-      formData.append("checklists", JSON.stringify(checklistData));
-    }
-    formData.append("customerId", customerId?.value || "");
-    formData.append("assetId", assetId?.value || "");
-    formData.append("assignedTo", userId?.value || "");
-    formData.append("status", "Not-Done");
-    formData.append("scheduledDate", scheduledDate);
-    formData.append("isReocurring", JSON.stringify(reocurring));
-    formData.append("inspectionInterval", inspectionInterval?.value || "");
-    formData.append("reocurrenceEndDate", reocurrenceEndDate);
-    formData.append("serviceFeeId", serviceFeeId?.value || "");
-    formData.append("route", JSON.stringify(route));
-    photos.forEach((photo) => {
-      formData.append("photos", photo);
-    });
-
-    onSubmit(formData);
+        toast.error("The route data is not added.");
+        return;
+      }
+    onSubmit({
+        id: initialData?.id,
+        customerId: customerId?.value || "",
+        assetId: assetId?.value || "",
+        assignedTo: userId?.value || "",
+        status: initialData?.status || "Not-Done",
+        scheduledDate,
+        isReocurring: reocurring,
+        inspectionInterval: inspectionInterval?.value || "",
+        reocurrenceEndDate,
+        serviceFeeId: serviceFeeId?.value || "",
+        route,
+      });
   };
 
   const handleCancel = () => {
@@ -307,10 +283,6 @@ const AddInspection: React.FC<AddInspectionProps> = ({
                 />
               </div>
             )}
-            <OutlinePurpleButton
-              onClick={handleOpenModal}
-              text="Upload Photos"
-            />
           </div>
         </div>
         <div className="flex justify-end space-x-[1vw] mt-[2vw]">
@@ -323,14 +295,6 @@ const AddInspection: React.FC<AddInspectionProps> = ({
         onClose={() => setIsRouteModalOpen(false)}
         onSave={handleRouteModalSave}
       />
-      {isModalOpen && (
-        <AddPhotos
-          isOpen={isModalOpen}
-          onClose={handleCloseModal}
-          onSubmit={handlePhotosSubmit}
-          type="Inspection"
-        />
-      )}
       <ToastContainer
         position="top-right"
         autoClose={1000}
@@ -346,4 +310,4 @@ const AddInspection: React.FC<AddInspectionProps> = ({
   );
 };
 
-export default AddInspection;
+export default UpdateInspection;

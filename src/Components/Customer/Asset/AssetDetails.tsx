@@ -80,7 +80,7 @@ const AssetDetails: React.FC = () => {
             </div>
             <div>
               <p className="text-[1vw] font-semibold">Asset Type:</p>
-              <p className="text-[1vw]">{asset.type.name || "N/A"}</p>
+              <p className="text-[1vw]">{asset.customer.name || "N/A"}</p>
             </div>
             <div>
               <p className="text-[1vw] font-semibold">Asset Duty:</p>
@@ -150,7 +150,6 @@ const AssetDetails: React.FC = () => {
               type="button"
               className="shadow-md"
               text="Asset Photos"
-              onClick={() => navigate(`/add-photos/asset/${asset.id}`)}
             />
             <WhiteButton
               type="button"

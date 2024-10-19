@@ -24,23 +24,22 @@ const AddCustomerPage: React.FC = () => {
     try {
       await createCustomer(formData).unwrap();
       toast.success("Customer added successfully!", {
-        onClose: () => navigate("/client-dashboard"),
         autoClose: 1000,
       });
+      setTimeout(() => {
+        navigate("/manage-customers");
+      }, 1000);
     } catch (error) {
       if (isAPIError(error)) {
         toast.error("Error Adding Customer: " + error.data.message, {
-          onClose: () => navigate("/error/500"),
           autoClose: 1000,
         });
       } else if (error instanceof Error) {
         toast.error("Error Adding Customer: " + error.message, {
-          onClose: () => navigate("/error/500"),
           autoClose: 1000,
         });
       } else {
         toast.error("An unknown error occurred", {
-          onClose: () => navigate("/error/500"),
           autoClose: 1000,
         });
       }

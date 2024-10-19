@@ -152,7 +152,7 @@ const ClientUserTable: React.FC = () => {
                       {displayIndex}
                     </td>
                     <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                      {highlightText(user.username, searchTerm)}
+                      {highlightText(user.username || `${user.firstName} ${user.lastName}`, searchTerm)}
                     </td>
                     <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
                       {highlightText(user.email, searchTerm)}

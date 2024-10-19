@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import InputField from "../Tags/InputField";
 import { CreateService, Service } from "../../redux/features/serviceSlice";
-import { getUserId } from "../../utils/utils";
 import PurpleButton from "../Tags/PurpleButton";
 import WhiteButton from "../Tags/WhiteButton";
 
@@ -19,12 +18,10 @@ const AddService: React.FC<AddServiceProps> = ({ onSubmit, initialData }) => {
   const [isTaxable, setIsTaxable] = useState<boolean>(
     initialData?.isTaxable || false
   );
-  const clientId = getUserId();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit({
-      clientId: initialData?.client?.id ?? clientId,
       name,
       price,
       description,

@@ -3,26 +3,55 @@ import { Client } from "./clientSlice";
 import { Asset } from "./assetSlice";
 import { Customer } from "./customerSlice";
 import { GetClientUser } from "./clientUserSlice";
-import { Checklist } from "./inspectionChecklistSlice";
+import { Checklist, EditChecklist } from "./inspectionChecklistSlice";
+import { Invoice } from "./invoiceSlice";
 
 export interface RoutePoint {
   latitude: number;
   longitude: number;
 }
 
-export interface CreateInspection {
+export interface SubmitBill {
+  clientId: string,
+  inspectionId: string,
+  serviceFee: string,
+}
+
+export interface SubmitDontBill {
+  clientId: string,
+  inspectionId: string,
+  serviceFee: string,
+}
+
+export interface SubmitExistingInvoice {
+  clientId: string,
+  inspectionId: string,
+  serviceFee: string,
+  invoiceId: string,
+}
+
+export interface EditInspection {
   id?: string;
+  name?: string;
   clientId?: string | null;
-  customerId: string;
-  assetId: string;
-  assignedTo: string;
-  status: string;
-  scheduledDate: string;
+  status?: string;
+  pdfFilePath?: string;
+  scheduledDate?: string;
+  completedDate?: string | null;
+  comments?: string;
+  inspectionInterval?: string;
   isReocurring?: boolean;
-  inspectionInterval?: number;
-  reocurrenceEndDate?: string;
+  checklists?: EditChecklist[];
   route?: RoutePoint[];
-  checklists?: string[];
+  client?: Client;
+  assetId?: string;
+  serviceFeeId?: string;
+  invoices?: Invoice[];
+  assignedTo?: string;
+  customerId?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  reocurrenceEndDate?: string;
 }
 
 export interface Inspection {
@@ -34,17 +63,18 @@ export interface Inspection {
   scheduledDate: string;
   completedDate: string | null;
   comments: string;
-  inspectionInterval: number;
+  inspectionInterval: string;
   isReocurring: boolean;
-  reocurrenceEndDate?: string;
   checklists: Checklist[];
   route: RoutePoint[];
   client: Client;
   asset: Asset;
+  invoices: Invoice[];
   assignedTo: GetClientUser;
   customer: Customer;
   createdAt: string;
   updatedAt: string;
+  reocurrenceEndDate?: string;
 }
 
 interface InspectionState {

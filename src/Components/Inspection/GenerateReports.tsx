@@ -78,7 +78,7 @@ const GenerateReports: React.FC = () => {
           clientId,
         });
         toast.success("PDF uploaded successfully", {
-          onClose: () => navigate("/client-dashboard"),
+          onClose: () => navigate("/manage-inspections"),
           autoClose: 500,
         });
       } catch (error) {
@@ -122,7 +122,7 @@ const GenerateReports: React.FC = () => {
             </option>
             {inspections?.map((inspection) => (
               <option key={inspection.id} value={inspection.id}>
-                {inspection.name}
+                {inspection.customer.name}
               </option>
             ))}
           </select>

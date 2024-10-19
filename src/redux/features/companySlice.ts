@@ -16,10 +16,11 @@ export interface Company {
   email: string;
   website: string;
   payment_method: string;
-  clientId: string;
+  clientId?: string;
   created_at?: string;
   updated_at?: string;
 }
+
 
 interface CompanyState {
   companies: Company[] | null;

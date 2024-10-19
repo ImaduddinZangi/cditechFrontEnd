@@ -32,7 +32,7 @@ const ManageCustomerPage: React.FC = () => {
           <PurpleButton text="New Task" />
           <PurpleButton
             text="New Inspection"
-            onClick={() => navigate("add-inspection")}
+            onClick={() => navigate("/add-inspection")}
           />
           <PurpleButton text="Add New Asset" onClick={handleAddAsset} />
           <PurpleButton text="Send to GPS" />

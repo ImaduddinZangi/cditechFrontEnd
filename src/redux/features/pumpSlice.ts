@@ -15,7 +15,7 @@ export interface Pump {
   maxAmps: string;
   createdAt?: string;
   updatedAt?: string;
-  photos?: File[];
+  files?: File[];
   asset?: Asset;
   brand?: PumpBrand;
 }

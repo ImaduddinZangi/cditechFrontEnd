@@ -11,6 +11,7 @@ interface InputFieldProps {
   labelClassName?: string;
   fieldClassName?: string;
   disabled?: boolean;
+  readOnly?: boolean;
 }
 
 const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
@@ -26,6 +27,7 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
       labelClassName,
       fieldClassName,
       disabled,
+      readOnly
     },
     ref
   ) => {
@@ -52,6 +54,7 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
           value={value}
           onChange={onChange}
           disabled={disabled}
+          readOnly={readOnly}
         />
       </div>
     );

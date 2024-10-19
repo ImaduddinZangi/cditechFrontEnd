@@ -4,17 +4,17 @@ import {
   useGetInspectionByIdQuery,
   useUpdateInspectionMutation,
 } from "../../redux/api/inspectionApi";
-import InspectionForm from "../../Components/Inspection/AddInspection";
 import ClientLayout from "../../Layouts/ClientLayout";
 import RouteModal from "../../Components/Inspection/RouteModal";
 import {
-  CreateInspection,
+  EditInspection,
   Inspection,
 } from "../../redux/features/inspectionSlice";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../Components/Constants/Loader";
 import PurpleButton from "../../Components/Tags/PurpleButton";
+import UpdateInspection from "../../Components/Inspection/UpdateInspection";
 
 const EditInspectionPage: React.FC = () => {
   const { inspectionId } = useParams<{ inspectionId: string }>();
@@ -40,13 +40,9 @@ const EditInspectionPage: React.FC = () => {
     return error && error.data && typeof error.data.message === "string";
   };
 
-  const handleSubmit = async (data: CreateInspection) => {
+  const handleSubmit = async (inspectionData: EditInspection) => {
     try {
-      await updateInspection({
-        ...data,
-        id: inspectionId,
-        route,
-      }).unwrap();
+      await updateInspection(inspectionData).unwrap();
       toast.success("Inspection updated successfully!", {
         onClose: () => navigate("/manage-inspections"),
         autoClose: 1000,
@@ -102,7 +98,7 @@ const EditInspectionPage: React.FC = () => {
               onClick={() => setIsRouteModalOpen(true)}
             />
           </div>
-          <InspectionForm onSubmit={handleSubmit} initialData={initialData} />
+          <UpdateInspection onSubmit={handleSubmit} initialData={initialData} />
           <RouteModal
             isOpen={isRouteModalOpen}
             onClose={() => setIsRouteModalOpen(false)}

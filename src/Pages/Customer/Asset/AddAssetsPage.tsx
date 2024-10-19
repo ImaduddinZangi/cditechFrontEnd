@@ -42,7 +42,7 @@ const AddAssetsPage: React.FC = () => {
         pumpFormData.append("hp", pumpData.hp);
         pumpFormData.append("warranty", pumpData.warranty);
         pumpFormData.append("installedDate", pumpData.installedDate);
-        pumpData.photos?.forEach((photo) => {
+        pumpData.files?.forEach((photo) => {
           pumpFormData.append("photos", photo);
         });
 

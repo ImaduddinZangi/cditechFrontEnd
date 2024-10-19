@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { ChecklistTemplate } from "./checklistTemplateSlice";
 
 export interface FloatScores {
   float1: string;
@@ -17,20 +18,44 @@ export interface PumpData {
   contactors: string;
 }
 
+export interface Questions {
+  questionId: string;
+  questionText: string;
+  questionType: string | boolean;
+  options: string[] | null;
+}
+
+export interface Answer {
+  questionId: string;
+  answer: string;
+}
+
+export interface EditChecklist {
+  id?: string;
+  templateId: string;
+  answers: Answer[];
+}
+
+export interface UpdateChecklist {
+  id?: string;
+  checklists: EditChecklist[];
+}
+
 export interface Checklist {
   id?: string;
-  structureScore: string;
-  panelScore: string;
-  pipesScore: string;
-  alarmScore: string;
-  alarmLightScore: string;
-  wiresScore: string;
-  breakersScore: string;
-  contactorsScore: string;
-  thermalsScore: string;
+  structure: string;
+  panel: string;
+  pipes: string;
+  alarm: string;
+  alarmLight: string;
+  wires: string;
+  breakers: string;
+  contactors: string;
+  thermals: string;
   overallScore: string;
   cleaning: boolean;
   floatScores: FloatScores;
+  template?: ChecklistTemplate;
   pumpScores: { [key: string]: PumpData };
   createdAt?: string;
   updatedAt?: string;

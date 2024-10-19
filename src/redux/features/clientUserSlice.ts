@@ -1,11 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Client } from "./clientSlice";
+import { UserGroup } from "./userGroupSlice";
 
 export interface ClientUser {
   id?: string;
-  username?: string;
   firstName: string;
-  name?: string;
   lastName: string;
   email: string;
   password: string;
@@ -57,6 +56,7 @@ export interface GetClientUser {
   two_factor_enabled: boolean;
   created_at: boolean;
   updated_at: boolean;
+  usergroups: UserGroup;
 }
 
 interface AuthState {

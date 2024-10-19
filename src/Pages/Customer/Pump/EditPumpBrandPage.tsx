@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { PumpBrand } from "../../../redux/features/pumpBrandSlice";
+import Loader from "../../../Components/Constants/Loader";
 
 const EditPumpBrandPage: React.FC = () => {
   const { pumpId } = useParams<{ pumpId: string }>();
@@ -56,7 +57,11 @@ const EditPumpBrandPage: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="w-full h-[70vh] flex items-center justify-center">
+        <Loader />
+      </div>
+    );
   }
 
   return (
