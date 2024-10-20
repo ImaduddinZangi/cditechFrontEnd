@@ -72,7 +72,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ breadcrumb }) => {
             {client?.userGroups?.find(() => true)?.name || "No group assigned"}
           </p>
         </div>
-        <Link to={`/add-photos/client/${clientId}`}>
+        <Link to={`/client-profile`}>
           <img
             className="ml-[1vw] w-[4vw] h-[4vw] rounded-full cursor-pointer"
             src={photoUrl || "https://via.placeholder.com/150"}

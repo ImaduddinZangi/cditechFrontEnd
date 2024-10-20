@@ -126,7 +126,11 @@ const SubmitInvoiceModal: React.FC<SubmitInvoiceModalProps> = ({
       const requestBody = {
         inspectionId,
         clientId,
-        serviceFee: serviceFee.value,
+        amountDue: parseInt(serviceFee.value),
+        quickbooksCustomerId: inspection?.customer.quickbooksCustomerId as string,
+        customerId: inspection?.customer.id as string,
+        pdfReportPath: inspection?.pdfFilePath as string,
+        imagePaths: inspection?.photos as string[],
       };
 
       if (actionType === "Submit & Bill Customer") {
@@ -219,7 +223,6 @@ const SubmitInvoiceModal: React.FC<SubmitInvoiceModalProps> = ({
             </div>
           </>
         ) : (
-          // Original buttons
           <>
             <div className="w-full grid grid-cols-2 mb-[1vw]">
               <div className="w-full">

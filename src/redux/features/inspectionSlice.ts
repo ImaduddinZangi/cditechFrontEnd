@@ -11,23 +11,21 @@ export interface RoutePoint {
   longitude: number;
 }
 
-export interface SubmitBill {
-  clientId: string,
-  inspectionId: string,
-  serviceFee: string,
-}
-
-export interface SubmitDontBill {
-  clientId: string,
-  inspectionId: string,
-  serviceFee: string,
+export interface SubmitInvoice {
+  clientId: string;
+  quickbooksCustomerId: string;
+  customerId: string;
+  inspectionId: string;
+  amountDue: number;
+  pdfReportPath: string;
+  imagePaths: string[];
 }
 
 export interface SubmitExistingInvoice {
-  clientId: string,
-  inspectionId: string,
-  serviceFee: string,
-  invoiceId: string,
+  clientId: string;
+  inspectionId: string;
+  serviceFee: string;
+  invoiceId: string;
 }
 
 export interface EditInspection {
@@ -75,6 +73,7 @@ export interface Inspection {
   createdAt: string;
   updatedAt: string;
   reocurrenceEndDate?: string;
+  photos: string[];
 }
 
 interface InspectionState {

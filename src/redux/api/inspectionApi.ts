@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Inspection, EditInspection, SubmitBill, SubmitDontBill, SubmitExistingInvoice } from "../features/inspectionSlice";
+import { Inspection, EditInspection, SubmitInvoice, SubmitExistingInvoice } from "../features/inspectionSlice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_BASE_URL,
@@ -70,16 +70,16 @@ export const inspectionApi = createApi({
       }),
       invalidatesTags: (_result, _error, id) => [{ type: "Inspection", id }],
     }),
-    markInspectionSubmitAndBill: builder.mutation<{ success: boolean }, SubmitBill>({
-      query: (body: SubmitBill) => ({
+    markInspectionSubmitAndBill: builder.mutation<{ success: boolean }, SubmitInvoice>({
+      query: (body: SubmitInvoice) => ({
         url: `inspections/${body.inspectionId}/submit-bill`,
         method: "POST",
         body,
       }),
       invalidatesTags: (_result, _error, { inspectionId }) => [{ type: "Inspection", id: inspectionId }],
     }),
-    markInspectionSubmitWithoutBilling: builder.mutation<{ success: boolean }, SubmitDontBill>({
-      query: (body: SubmitDontBill) => ({
+    markInspectionSubmitWithoutBilling: builder.mutation<{ success: boolean }, SubmitInvoice>({
+      query: (body: SubmitInvoice) => ({
         url: `inspections/${body.inspectionId}/submit-dont-bill`,
         method: "POST",
         body,

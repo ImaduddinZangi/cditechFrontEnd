@@ -107,9 +107,6 @@ const CustomerTable: React.FC = () => {
                 <thead>
                   <tr className="h-[3vw] text-darkgray-0 border-b uppercase text-[1vw] leading-normal">
                     <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
-                      ID
-                    </th>
-                    <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
                       Name
                     </th>
                     <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
@@ -152,12 +149,6 @@ const CustomerTable: React.FC = () => {
                           key={customer.id}
                           className="border-b border-gray-200 hover:bg-gray-100"
                         >
-                          <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                            {highlightText(
-                              customer.quickbooksCustomerId ?? "",
-                              searchTerm
-                            )}
-                          </td>
                           <td className="py-[1vw] px-[1.5vw] text-left whitespace-nowrap">
                             <div className="flex items-center">
                               <div className="mr-2">

@@ -6,7 +6,7 @@ export default defineConfig({
   base: "/",
   plugins: [react()],
   optimizeDeps: {
-    include: ["react", "react-dom", "your-slow-dependency"],
+    include: ["react", "react-dom"],
   },
   build: {
     minify: "terser",

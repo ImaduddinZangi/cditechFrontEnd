@@ -9,11 +9,11 @@ const DashButtons: React.FC = () => {
     <div className="m-[2vw] grid grid-cols-4 gap-[2vw]">
       <OutlinePurpleButton
         text="Manage Customer"
-        onClick={() => navigate("/manage-customer")}
+        onClick={() => navigate("/manage-customers")}
       />
       <OutlinePurpleButton
         text="Inspection Manager"
-        onClick={() => navigate("/inspection-manager")}
+        onClick={() => navigate("/manage-inspections")}
       />
       <OutlinePurpleButton
         text="My Inspection History"
@@ -25,11 +25,11 @@ const DashButtons: React.FC = () => {
       />
       <OutlinePurpleButton
         text="Inspection List"
-        onClick={() => navigate("/inspection-table")}
+        onClick={() => navigate("/manage-inspections")}
       />
       <OutlinePurpleButton
         text="Past-Due Inspection List"
-        onClick={() => navigate("/inspection-table-past-due")}
+        onClick={() => navigate("/manage-inspections")}
       />
       <OutlinePurpleButton
         text="Begin Inspection List Now"
@@ -45,7 +45,7 @@ const DashButtons: React.FC = () => {
       />
       <OutlinePurpleButton
         text="Customer Asset Manager"
-        onClick={() => navigate("/customer-asset-manager")}
+        onClick={() => navigate("/manage-customers")}
       />
       <PurpleButton
         text="Add New Quickbook"

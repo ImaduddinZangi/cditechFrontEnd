@@ -56,8 +56,15 @@ const ManageInspections: React.FC = () => {
     ).toString();
     return (
       indexString.includes(searchTerm) ||
-      inspection.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      inspection.status?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      inspection.customer.name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      inspection.asset.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      inspection.checklists[0].template?.name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      inspection.createdAt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      inspection.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
       new Date(inspection.scheduledDate)
         .toLocaleDateString()
         .includes(searchTerm)
@@ -181,18 +188,20 @@ const ManageInspections: React.FC = () => {
                       )}
                     </td>
                     <td className="flex flex-row items-center gap-x-[1vw] py-[1vw] px-[1.5vw] text-center">
-                      <PurpleButton
-                        text="Begin"
-                        onClick={() =>
-                          navigate(`/inspection-checklist/${inspection.id}`)
-                        }
-                      />
                       <WhiteButton
                         text="View"
                         onClick={() =>
                           navigate(`/inspection-details/${inspection.id}`)
                         }
                       />
+                      {inspection.status === "Not-Done" && (
+                        <PurpleButton
+                          text="Begin"
+                          onClick={() =>
+                            navigate(`/inspection-checklist/${inspection.id}`)
+                          }
+                        />
+                      )}
                     </td>
                   </tr>
                 );

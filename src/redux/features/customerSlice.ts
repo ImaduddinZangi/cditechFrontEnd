@@ -14,9 +14,9 @@ export interface Customer {
   gate_code: string;
   previous_phone_number: string;
   service_contact: string;
-  quickbooksCustomerId?: string;
-  previousProvider?: string;
-  billingContactEmail?: string;
+  quickbooksCustomerId: string;
+  previousProvider: string;
+  billingContactEmail: string;
   client: Client;
   photos: string[];
   created_at: Date;
