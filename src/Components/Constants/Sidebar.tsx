@@ -52,6 +52,28 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
       ],
     },
     {
+      title: "Extras",
+      src: "dummy",
+      isDropdown: true,
+      dropdownItems: [
+        {
+          title: "Client Profile",
+          src: "dummy",
+          href: "/client-profile",
+        },
+        {
+          title: "Services",
+          src: "dummy",
+          href: "/manage-services",
+        },
+        {
+          title: "Pump Brands",
+          src: "dummy",
+          href: "/manage-pump-brands",
+        },
+      ],
+    },
+    {
       title: "Tasks",
       src: "clipboard",
       isDropdown: true,
@@ -311,7 +333,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
   return (
     <div className="flex font-inter">
       <div
-        className={`bg-white h-screen overflow-y-auto overflow-x-hidden fixed border-r p-[1.25vw] pt-[2vw] duration-300 ${
+        className={`bg-white h-screen overflow-y-auto overflow-x-hidden fixed border-r p-[1.25vw] pt-[2vw] duration-300 pb-[12vh] ${
           open ? "w-[15vw]" : "w-[6vw]"
         } `}
       >
