@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ClientLayout from "../../../Layouts/ClientLayout";
 import AddPumpBrand from "../../../Components/Customer/Pump/AddPumpBrand";
 import { useCreatePumpBrandMutation } from "../../../redux/api/pumpBrandApi";
@@ -6,8 +6,10 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { PumpBrand } from "../../../redux/features/pumpBrandSlice";
+import Loader from "../../../Components/Constants/Loader";
 
 const AddPumpBrandPage: React.FC = () => {
+  const [loading, setLoading] = useState(false);
   const [createPumpBrand] = useCreatePumpBrandMutation();
   const navigate = useNavigate();
 
@@ -23,6 +25,7 @@ const AddPumpBrandPage: React.FC = () => {
 
   const handleAddPumpBrand = async (pumpBrandData: PumpBrand) => {
     try {
+      setLoading(true);
       const result = await createPumpBrand(pumpBrandData).unwrap();
       toast.success("Pump Brand added successfully!", {
         onClose: () => navigate("/manage-pump-brands"),
@@ -47,12 +50,20 @@ const AddPumpBrandPage: React.FC = () => {
         });
       }
       console.error("Error Adding Pump Brand:", error);
+    }finally {
+      setLoading(false);
     }
   };
 
   return (
     <ClientLayout breadcrumb="Add Pump Brand">
+      {loading ? (
+       <div className="w-full h-[70vh] flex items-center justify-center">
+          <Loader text="Processing..." />
+        </div>
+      ) : (
       <AddPumpBrand onSubmit={handleAddPumpBrand} />
+      )}
       <ToastContainer
         position="top-right"
         autoClose={1000}

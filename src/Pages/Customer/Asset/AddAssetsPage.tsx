@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ClientLayout from "../../../Layouts/ClientLayout";
 import AddAsset from "../../../Components/Customer/Asset/AddAsset";
 import { useCreateAssetMutation } from "../../../redux/api/assetApi";
@@ -7,8 +7,10 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { Pump } from "../../../redux/features/pumpSlice";
+import Loader from "../../../Components/Constants/Loader";
 
 const AddAssetsPage: React.FC = () => {
+  const [loading, setLoading] = useState(false);
   const [createAsset] = useCreateAssetMutation();
   const [createPump] = useCreatePumpMutation();
   const navigate = useNavigate();
@@ -25,10 +27,9 @@ const AddAssetsPage: React.FC = () => {
 
   const handleAddAsset = async (assetData: FormData, pumpDataList: Pump[]) => {
     try {
-      // Create the asset
+      setLoading(true);
       const assetResult = await createAsset(assetData).unwrap();
       const assetId = assetResult.id;
-      // Create pumps
       for (const pumpData of pumpDataList) {
         const pumpFormData = new FormData();
         pumpFormData.append("assetId", assetId);
@@ -72,12 +73,20 @@ const AddAssetsPage: React.FC = () => {
         });
       }
       console.error("Error Adding Asset/Pumps:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <ClientLayout breadcrumb="Add Asset">
-      <AddAsset onSubmit={handleAddAsset} />
+      {loading ? (
+       <div className="w-full h-[70vh] flex items-center justify-center">
+          <Loader text="Processing..." />
+        </div>
+      ) : (
+        <AddAsset onSubmit={handleAddAsset} />
+      )}
       <ToastContainer
         position="top-right"
         autoClose={1000}

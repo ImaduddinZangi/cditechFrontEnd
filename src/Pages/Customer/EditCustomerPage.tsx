@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   useGetCustomerByIdQuery,
   useUpdateCustomerMutation,
@@ -12,6 +12,7 @@ import Loader from "../../Components/Constants/Loader";
 
 const EditCustomerPage: React.FC = () => {
   const { customerId } = useParams<{ customerId: string }>();
+  const [loading, setLoading] = useState(false);
   const {
     data: customer,
     error,
@@ -32,6 +33,7 @@ const EditCustomerPage: React.FC = () => {
 
   const handleSubmit = async (formData: FormData) => {
     try {
+      setLoading(true);
       await updateCustomer({ id: customerId, formData }).unwrap();
       toast.success("Customer updated successfully!", {
         onClose: () => navigate("/client-dashboard"),
@@ -55,6 +57,8 @@ const EditCustomerPage: React.FC = () => {
         });
       }
       console.error("Error Updating Customer:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -68,7 +72,13 @@ const EditCustomerPage: React.FC = () => {
 
   return (
     <ClientLayout breadcrumb="Edit Customer">
-      <AddCustomer onSubmit={handleSubmit} initialData={customer} />
+      {loading ? (
+        <div className="w-full h-[70vh] flex items-center justify-center">
+          <Loader text="Processing..." />
+        </div>
+      ) : (
+        <AddCustomer onSubmit={handleSubmit} initialData={customer} />
+      )}
       <ToastContainer
         position="top-right"
         autoClose={1000}

@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import ClientLayout from "../../../Layouts/ClientLayout";
 import AddClientUser from "../../../Components/UserGroups/Users/AddClientUser";
 import { useCreateClientUserMutation } from "../../../redux/api/clientUserApi";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { ClientUser } from "../../../redux/features/clientUserSlice";
+import Loader from "../../../Components/Constants/Loader";
 
 const AddClientUserPage: React.FC = () => {
   const [createClientUser] = useCreateClientUserMutation();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   type APIError = {
@@ -22,6 +24,7 @@ const AddClientUserPage: React.FC = () => {
 
   const handleAddClientUser = async (clientUserData: ClientUser) => {
     try {
+      setLoading(true);
       const result = await createClientUser(clientUserData).unwrap();
       toast.success("Client User added successfully!", {
         onClose: () => navigate("/manage-users"),
@@ -46,12 +49,31 @@ const AddClientUserPage: React.FC = () => {
         });
       }
       console.error("Error Adding Client User:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <ClientLayout breadcrumb="Add Client User">
-      <AddClientUser onSubmit={handleAddClientUser} />
+      {loading ? (
+       <div className="w-full h-[70vh] flex items-center justify-center">
+          <Loader text="Processing..." />
+        </div>
+      ) : (
+        <AddClientUser onSubmit={handleAddClientUser} />
+      )}
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </ClientLayout>
   );
 };

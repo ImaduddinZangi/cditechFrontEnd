@@ -4,7 +4,7 @@ import PurpleButton from "../../Tags/PurpleButton";
 import WhiteButton from "../../Tags/WhiteButton";
 import SelectField, { Option } from "../../Tags/SelectField";
 import { useGetServicesQuery } from "../../../redux/api/serviceApi";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { pdf } from "@react-pdf/renderer";
 import MyDocument from "../Constants/MyDocument";
 import {
@@ -18,40 +18,38 @@ import { toast } from "react-toastify";
 import Loader from "../../Constants/Loader";
 import { getUserId } from "../../../utils/utils";
 import { useGenerateReportMutation } from "../../../redux/api/inspectionReportsApi";
+import { useUpdateInspectionMutation } from "../../../redux/api/inspectionApi";
 
 interface SubmitInvoiceModalProps {
   isOpen: boolean;
-  onConfirm: (option: string) => void;
+  inspectionId: string;
   onCancel: () => void;
 }
 
 const SubmitInvoiceModal: React.FC<SubmitInvoiceModalProps> = ({
   isOpen,
-  onConfirm,
   onCancel,
+  inspectionId,
 }) => {
   const [serviceFee, setServiceFee] = useState<Option | null>(null);
   const [services, setServices] = useState<Option[]>([]);
   const { data: servicesData } = useGetServicesQuery();
-  const { inspectionId } = useParams<{ inspectionId: string }>();
   const { data: inspection } = useGetInspectionByIdQuery(inspectionId || "", {
     skip: !inspectionId,
   });
+  const [updateInspection] = useUpdateInspectionMutation();
   const [generateReport] = useGenerateReportMutation();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const clientId = getUserId();
-
   const [markSubmitAndBill] = useMarkInspectionSubmitAndBillMutation();
   const [markSubmitWithoutBilling] =
     useMarkInspectionSubmitWithoutBillingMutation();
   const [addToExistingInvoiceMutation] = useAddToExistingInvoiceMutation();
-
   const [showExistingInvoiceOptions, setShowExistingInvoiceOptions] =
     useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState<Option | null>(null);
   const [existingInvoices, setExistingInvoices] = useState<Option[]>([]);
-
   const { data: inspectionsData } = useGetInspectionsQuery();
 
   useEffect(() => {
@@ -74,7 +72,7 @@ const SubmitInvoiceModal: React.FC<SubmitInvoiceModalProps> = ({
   useEffect(() => {
     if (servicesData) {
       const serviceOptions = servicesData.map((service) => ({
-        label: `${service.name} - $${service.price.toFixed(2)}`,
+        label: `${service.name} - $${service.price}`,
         value: service.id,
       }));
       setServices(serviceOptions);
@@ -87,9 +85,27 @@ const SubmitInvoiceModal: React.FC<SubmitInvoiceModalProps> = ({
 
   if (!isOpen) return null;
 
+  const handleUpdateService = async (selectedServiceId: string) => {
+    try {
+      await updateInspection({
+        id: inspectionId,
+        serviceFeeId: selectedServiceId,
+      }).unwrap();
+      toast.success(
+        "Inspection updated successfully with the selected service!"
+      );
+    } catch (error) {
+      if (error) {
+        toast.error("Error Updating Inspection: " + error);
+      } else {
+        toast.error("An unknown error occurred!");
+      }
+      console.error("Error Updating Inspection:", error);
+    }
+  };
+
   const handleUpload = async () => {
     if (!inspectionId || !inspection) return;
-
     try {
       setLoading(true);
       const doc = <MyDocument data={inspection} />;
@@ -99,10 +115,8 @@ const SubmitInvoiceModal: React.FC<SubmitInvoiceModalProps> = ({
         type: "application/pdf",
         lastModified: Date.now(),
       });
-
       const formData = new FormData();
       formData.append("file", pdfFile);
-
       await generateReport({
         file: pdfFile,
         inspectionId,
@@ -117,28 +131,27 @@ const SubmitInvoiceModal: React.FC<SubmitInvoiceModalProps> = ({
 
   const handleActionSubmit = async (actionType: string) => {
     if (!inspectionId || !clientId || !serviceFee?.value) return;
-
     try {
       setLoading(true);
+      if (!inspection?.pdfFilePath) {
+        await handleUpload();
+      }
 
-      await handleUpload();
+      await handleUpdateService(serviceFee.value);
 
       const requestBody = {
         inspectionId,
-        clientId,
-        amountDue: parseInt(serviceFee.value),
-        quickbooksCustomerId: inspection?.customer.quickbooksCustomerId as string,
-        customerId: inspection?.customer.id as string,
-        pdfReportPath: inspection?.pdfFilePath as string,
-        imagePaths: inspection?.photos as string[],
+        serviceFee: parseFloat(serviceFee.label.split("- $")[1]),
       };
 
       if (actionType === "Submit & Bill Customer") {
         await markSubmitAndBill(requestBody).unwrap();
         toast.success("Inspection marked as complete and billed!");
+        window.location.reload();
       } else if (actionType === "Submit & Don't Bill Customer") {
         await markSubmitWithoutBilling(requestBody).unwrap();
         toast.success("Inspection marked as complete without billing!");
+        window.location.reload();
       } else if (actionType === "Submit & Add to Existing Invoice") {
         if (!selectedInvoice?.value) {
           toast.error("Please select an existing invoice.");
@@ -147,10 +160,10 @@ const SubmitInvoiceModal: React.FC<SubmitInvoiceModalProps> = ({
         await addToExistingInvoiceMutation({
           inspectionId,
           invoiceId: selectedInvoice.value,
-          clientId: clientId,
-          serviceFee: serviceFee.value,
+          serviceFee: parseFloat(serviceFee.label.split("- $")[1]),
         }).unwrap();
         toast.success("Inspection added to existing invoice!");
+        window.location.reload();
       }
 
       navigate("/manage-inspections");
@@ -162,7 +175,6 @@ const SubmitInvoiceModal: React.FC<SubmitInvoiceModalProps> = ({
   };
 
   const handleConfirm = (option: string) => {
-    onConfirm(option);
     if (option === "Submit & Add to Existing Invoice") {
       setShowExistingInvoiceOptions(true);
     } else {

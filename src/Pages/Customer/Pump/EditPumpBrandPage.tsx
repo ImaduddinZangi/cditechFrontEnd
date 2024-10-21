@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import ClientLayout from "../../../Layouts/ClientLayout";
 import AddPumpBrand from "../../../Components/Customer/Pump/AddPumpBrand";
 import {
   useGetPumpBrandByIdQuery,
   useUpdatePumpBrandMutation,
 } from "../../../redux/api/pumpBrandApi";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { PumpBrand } from "../../../redux/features/pumpBrandSlice";
@@ -13,6 +13,7 @@ import Loader from "../../../Components/Constants/Loader";
 
 const EditPumpBrandPage: React.FC = () => {
   const { pumpId } = useParams<{ pumpId: string }>();
+  const [loading, setLoading] = useState(false);
   const { data: pumpBrand, isLoading } = useGetPumpBrandByIdQuery(pumpId!);
   const [updatePumpBrand] = useUpdatePumpBrandMutation();
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ const EditPumpBrandPage: React.FC = () => {
 
   const handleUpdatePumpBrand = async (pumpBrandData: PumpBrand) => {
     try {
+      setLoading(true);
       const result = await updatePumpBrand(pumpBrandData).unwrap();
       toast.success("Pump Brand updated successfully!", {
         onClose: () => navigate("/manage-pump-brands"),
@@ -53,6 +55,8 @@ const EditPumpBrandPage: React.FC = () => {
         });
       }
       console.error("Error Updating Pump Brand:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,7 +70,27 @@ const EditPumpBrandPage: React.FC = () => {
 
   return (
     <ClientLayout breadcrumb="Edit Pump Brand">
-      <AddPumpBrand onSubmit={handleUpdatePumpBrand} initialData={pumpBrand} />
+      {loading ? (
+        <div className="w-full h-[70vh] flex items-center justify-center">
+          <Loader text="Processing..." />
+        </div>
+      ) : (
+        <AddPumpBrand
+          onSubmit={handleUpdatePumpBrand}
+          initialData={pumpBrand}
+        />
+      )}
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </ClientLayout>
   );
 };

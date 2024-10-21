@@ -8,9 +8,11 @@ import {
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, useParams } from "react-router-dom";
+import Loader from "../../../Components/Constants/Loader";
 
 const EditAssetPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const [loading, setLoading] = useState(false);
   const { data: asset, error, isLoading } = useGetAssetByIdQuery(id || "");
   const [updateAsset] = useUpdateAssetMutation();
   const [initialData, setInitialData] = useState(asset);
@@ -41,6 +43,7 @@ const EditAssetPage: React.FC = () => {
 
   const handleUpdateAsset = async (formData: FormData) => {
     try {
+      setLoading(true);
       const result = await updateAsset({ id: id, formData }).unwrap();
       toast.success("Asset updated successfully!", {
         onClose: () => navigate("/manage-customers"),
@@ -65,13 +68,21 @@ const EditAssetPage: React.FC = () => {
         });
       }
       console.error("Error Updating Assets:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <ClientLayout breadcrumb="Edit Asset">
-      {initialData && (
-        <AddAsset onSubmit={handleUpdateAsset} initialData={initialData} />
+      {loading ? (
+       <div className="w-full h-[70vh] flex items-center justify-center">
+          <Loader text="Processing..." />
+        </div>
+      ) : (
+        initialData && (
+          <AddAsset onSubmit={handleUpdateAsset} initialData={initialData} />
+        )
       )}
       <ToastContainer
         position="top-right"

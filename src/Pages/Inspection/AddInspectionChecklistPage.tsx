@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import ClientLayout from "../../Layouts/ClientLayout";
 import AddInspectionChecklist from "../../Components/Inspection/AddInspectionChecklist";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { getUserId } from "../../utils/utils";
@@ -13,6 +13,7 @@ import Loader from "../../Components/Constants/Loader";
 
 const AddInspectionChecklistPage: React.FC = () => {
   const [updateInspection] = useUpdateChecklistMutation();
+  const [loading, setLoading] = useState(false);
   const { inspectionId } = useParams<{ inspectionId: string }>();
   const navigate = useNavigate();
   const clientId = getUserId();
@@ -41,6 +42,7 @@ const AddInspectionChecklistPage: React.FC = () => {
     updatedInspection: UpdateChecklist
   ) => {
     try {
+      setLoading(true);
       await updateInspection(updatedInspection).unwrap();
     } catch (error) {
       if (isAPIError(error)) {
@@ -60,23 +62,47 @@ const AddInspectionChecklistPage: React.FC = () => {
         });
       }
       console.error("Error Updating Inspection:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <ClientLayout breadcrumb="Update Inspection">
-      <div className="mx-[2vw] flex flex-row items-center justify-between">
-        <p className="text-[1.1vw] text-darkgray-0 font-medium font-inter">
-          {client?.company?.company_name || "Company Name"}
-        </p>
-        <p className="text-[1.1vw] text-darkgray-0 font-medium font-inter">
-          {inspection?.checklists?.[0]?.template?.name ||
-            "No template available"}
-        </p>
-      </div>
-      <AddInspectionChecklist
-        inspection={inspection}
-        onSubmit={handleAddInspectionChecklist}
+      {loading ? (
+        <div className="w-full h-[70vh] flex items-center justify-center">
+          <Loader text="Processing..." />
+        </div>
+      ) : (
+        <>
+          <div className="mx-[2vw] flex flex-row items-center justify-between">
+            <p className="text-[1.1vw] text-darkgray-0 font-medium font-inter">
+              {client?.company?.company_name || "Company Name"}
+            </p>
+            <p className="text-[1.1vw] text-darkgray-0 font-medium font-inter">
+              {inspection?.asset?.type?.name || "Asset Type unavailable"}
+            </p>
+            <p className="text-[1.1vw] text-darkgray-0 font-medium font-inter">
+              {inspection?.checklists?.[0]?.template?.name ||
+                "No template available"}
+            </p>
+          </div>
+          <AddInspectionChecklist
+            inspection={inspection}
+            onSubmit={handleAddInspectionChecklist}
+          />
+        </>
+      )}
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
       />
     </ClientLayout>
   );

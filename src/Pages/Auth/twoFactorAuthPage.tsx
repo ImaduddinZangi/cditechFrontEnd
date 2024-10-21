@@ -7,9 +7,11 @@ import {
 } from "../../redux/api/twoFactorAuthApi";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import Loader from "../../Components/Constants/Loader";
 
 const TwoFactorAuthPage: React.FC = () => {
   const [generateQrCode] = useGenerateQrCodeMutation();
+  const [loading, setLoading] = useState(false);
   const [verifyCode] = useVerifyCodeMutation();
   const [qrCode, setQrCode] = useState<string>("");
   const navigate = useNavigate();
@@ -29,6 +31,7 @@ const TwoFactorAuthPage: React.FC = () => {
 
   const handleSubmit = async (code: string) => {
     try {
+      setLoading(true);
       await verifyCode({ code }).unwrap();
       toast.success("2FA verified successfully", {
         onClose: () => navigate("/client-dashboard"),
@@ -39,13 +42,21 @@ const TwoFactorAuthPage: React.FC = () => {
         onClose: () => navigate("/error/500"),
         autoClose: 1000,
       });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <AuthLayout>
-      {qrCode && (
-        <TwoFactorAuthentication src={qrCode} onSubmit={handleSubmit} />
+      {loading ? (
+        <div className="w-full h-[70vh] flex items-center justify-center">
+          <Loader text="Processing..." />
+        </div>
+      ) : (
+        qrCode && (
+          <TwoFactorAuthentication src={qrCode} onSubmit={handleSubmit} />
+        )
       )}
       <ToastContainer
         position="top-right"

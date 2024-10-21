@@ -233,11 +233,6 @@ const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({
     setModalOpen(false);
   };
 
-  const handleConfirm = (option: string) => {
-    setModalOpen(false);
-    console.log("Selected option:", option);
-  };
-
   if (!inspection) {
     return (
       <div className="w-full h-[70vh] flex items-center justify-center">
@@ -271,8 +266,8 @@ const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({
       </form>
       <SubmitInvoiceModal
         isOpen={isModalOpen}
-        onConfirm={handleConfirm}
         onCancel={handleModalClose}
+        inspectionId={inspection.id}
       />
     </div>
   );

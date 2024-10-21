@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import ClientLayout from "../../Layouts/ClientLayout";
 import AddCustomer from "../../Components/Customer/AddCustomer";
 import { useCreateCustomerMutation } from "../../redux/api/customerApi";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Loader from "../../Components/Constants/Loader";
 
 const AddCustomerPage: React.FC = () => {
   const [createCustomer] = useCreateCustomerMutation();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   type APIError = {
@@ -22,6 +24,7 @@ const AddCustomerPage: React.FC = () => {
 
   const handleSubmit = async (formData: FormData) => {
     try {
+      setLoading(true);
       await createCustomer(formData).unwrap();
       toast.success("Customer added successfully!", {
         autoClose: 1000,
@@ -44,12 +47,20 @@ const AddCustomerPage: React.FC = () => {
         });
       }
       console.error("Error Adding Customer:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <ClientLayout breadcrumb="Add Customer">
-      <AddCustomer onSubmit={handleSubmit} />
+      {loading ? (
+        <div className="w-full h-[70vh] flex items-center justify-center">
+          <Loader text="Processing..." />
+        </div>
+      ) : (
+        <AddCustomer onSubmit={handleSubmit} />
+      )}
       <ToastContainer
         position="top-right"
         autoClose={1000}

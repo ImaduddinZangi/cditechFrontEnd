@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ClientLayout from "../../../Layouts/ClientLayout";
 import AddClientUser from "../../../Components/UserGroups/Users/AddClientUser";
 import {
@@ -6,13 +6,16 @@ import {
   useUpdateClientUserMutation,
 } from "../../../redux/api/clientUserApi";
 import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { ClientUser } from "../../../redux/features/clientUserSlice";
 import Loader from "../../../Components/Constants/Loader";
 
 const EditClientUserPage: React.FC = () => {
   const { clientUserId } = useParams<{ clientUserId: string }>();
-  const { data: clientUser, isLoading } = useGetClientUserByIdQuery(clientUserId!);
+  const [loading, setLoading] = useState(false);
+  const { data: clientUser, isLoading } = useGetClientUserByIdQuery(
+    clientUserId!
+  );
   const [updateClientUser] = useUpdateClientUserMutation();
   const navigate = useNavigate();
 
@@ -28,6 +31,7 @@ const EditClientUserPage: React.FC = () => {
 
   const handleUpdateClientUser = async (clientUserData: ClientUser) => {
     try {
+      setLoading(true);
       const result = await updateClientUser(clientUserData).unwrap();
       toast.success("Client User updated successfully!", {
         onClose: () => navigate("/manage-users"),
@@ -52,6 +56,8 @@ const EditClientUserPage: React.FC = () => {
         });
       }
       console.error("Error Updating Client User:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -65,7 +71,27 @@ const EditClientUserPage: React.FC = () => {
 
   return (
     <ClientLayout breadcrumb="Edit Client User">
-      <AddClientUser onSubmit={handleUpdateClientUser} initialData={clientUser} />
+      {loading ? (
+        <div className="w-full h-[70vh] flex items-center justify-center">
+          <Loader text="Processing..." />
+        </div>
+      ) : (
+        <AddClientUser
+          onSubmit={handleUpdateClientUser}
+          initialData={clientUser}
+        />
+      )}
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </ClientLayout>
   );
 };

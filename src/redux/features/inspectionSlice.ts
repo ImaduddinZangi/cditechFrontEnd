@@ -12,19 +12,13 @@ export interface RoutePoint {
 }
 
 export interface SubmitInvoice {
-  clientId: string;
-  quickbooksCustomerId: string;
-  customerId: string;
   inspectionId: string;
-  amountDue: number;
-  pdfReportPath: string;
-  imagePaths: string[];
+  serviceFee: number;
 }
 
 export interface SubmitExistingInvoice {
-  clientId: string;
   inspectionId: string;
-  serviceFee: string;
+  serviceFee: number;
   invoiceId: string;
 }
 
@@ -44,7 +38,7 @@ export interface EditInspection {
   client?: Client;
   assetId?: string;
   serviceFeeId?: string;
-  invoices?: Invoice[];
+  invoice?: Invoice;
   assignedTo?: string;
   customerId?: string;
   createdAt?: string;
@@ -67,7 +61,7 @@ export interface Inspection {
   route: RoutePoint[];
   client: Client;
   asset: Asset;
-  invoices: Invoice[];
+  invoice: Invoice;
   assignedTo: GetClientUser;
   customer: Customer;
   createdAt: string;

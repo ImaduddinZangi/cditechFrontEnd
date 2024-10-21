@@ -3,74 +3,21 @@ import { FiSearch } from "react-icons/fi";
 import PurpleButton from "../Tags/PurpleButton";
 import WhiteButton from "../Tags/WhiteButton";
 import ConfirmationModal from "../Constants/ConfirmationModal";
-
-interface Service {
-  id: string;
-  name: string;
-  description: string;
-  price: string;
-}
+import { useGetServicesQuery } from "../../redux/api/serviceApi";
+import { useNavigate } from "react-router-dom";
 
 const ManageServices: React.FC = () => {
-  const initialServices: Service[] = [
-    {
-      id: "1",
-      name: "Service Name",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      price: "$473.85",
-    },
-    {
-      id: "2",
-      name: "Service Name",
-      description: "Aliquam pulvinar vestibulum blandit.",
-      price: "$944.85",
-    },
-    {
-      id: "3",
-      name: "Service Name",
-      description: "Vestibulum eu quam nec neque pellentesque.",
-      price: "$446.61",
-    },
-    {
-      id: "4",
-      name: "Service Name",
-      description: "In a laoreet purus.",
-      price: "$854.08",
-    },
-    {
-      id: "5",
-      name: "Service Name",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      price: "$854.08",
-    },
-    {
-      id: "6",
-      name: "Service Name",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      price: "$858.08",
-    },
-    {
-      id: "7",
-      name: "Service Name",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      price: "$824.08",
-    },
-  ];
-
-  const [Services, setServices] = useState<Service[]>(initialServices);
+  const { data: servicesData } = useGetServicesQuery();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [serviceIdToDelete, setServiceIdToDelete] = useState<string | null>(
     null
   );
-  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
-
-  const filteredServices = Services.filter((service) =>
-    service.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   const handleDelete = (id: string) => {
     setServiceIdToDelete(id);
@@ -78,11 +25,8 @@ const ManageServices: React.FC = () => {
   };
 
   const handleConfirmDelete = () => {
-    setServices((prev) =>
-      prev.filter((service) => service.id !== serviceIdToDelete)
-    );
     setIsModalOpen(false);
-    setServiceIdToDelete(null);
+    setServiceIdToDelete(serviceIdToDelete);
   };
 
   const handleCancelDelete = () => {
@@ -90,15 +34,14 @@ const ManageServices: React.FC = () => {
     setServiceIdToDelete(null);
   };
 
-  const handleManage = (id: string) => {
-    console.log("Manage service with id:", id);
-  };
-
   return (
     <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
       <div className="flex justify-between items-center py-[1vw]">
         <div className="flex space-x-[1vw]">
-          <PurpleButton text="Add New Services" onClick={() => {}} />
+          <PurpleButton
+            text="Add New Services"
+            onClick={() => navigate("/add-service/")}
+          />
           <PurpleButton text="Import Services" onClick={() => {}} />
           <PurpleButton text="Sort" onClick={() => {}} />
         </div>
@@ -136,43 +79,32 @@ const ManageServices: React.FC = () => {
             </tr>
           </thead>
           <tbody className="text-gray-600 text-[1vw] font-light">
-            {filteredServices.length === 0 ? (
-              <tr>
-                <td colSpan={4} className="text-center py-[2vw]">
-                  <p className="text-[1.5vw] font-semibold">
-                    No services found
-                  </p>
+            {servicesData?.map((service) => (
+              <tr
+                key={service.id}
+                className="border-b border-gray-200 hover:bg-gray-100"
+              >
+                <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
+                  {service.name}
+                </td>
+                <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
+                  {service.description}
+                </td>
+                <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
+                  {`$${service.price}`}
+                </td>
+                <td className="flex flex-row items-center gap-x-[1vw] py-[1vw] px-[1.5vw] text-center">
+                  <PurpleButton
+                    text="Manage"
+                    onClick={() => navigate(`/services/${service.id}`)}
+                  />
+                  <WhiteButton
+                    text="Delete"
+                    onClick={() => handleDelete(service.id)}
+                  />
                 </td>
               </tr>
-            ) : (
-              filteredServices.map((service) => (
-                <tr
-                  key={service.id}
-                  className="border-b border-gray-200 hover:bg-gray-100"
-                >
-                  <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                    {service.name}
-                  </td>
-                  <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                    {service.description}
-                  </td>
-                  <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                    {service.price}
-                  </td>
-                  <td className="flex flex-row items-center gap-x-[1vw] py-[1vw] px-[1.5vw] text-center">
-                    <WhiteButton
-                      text="Manage"
-                      onClick={() => handleManage(service.id)}
-                    />
-
-                    <PurpleButton
-                      text="Edit"
-                      onClick={() => handleDelete(service.id)}
-                    />
-                  </td>
-                </tr>
-              ))
-            )}
+            ))}
           </tbody>
         </table>
       </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   ClientRegisterRequest,
   useRegisterClientMutation,
@@ -10,8 +10,10 @@ import AuthLayout from "../../Layouts/AuthLayout";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AddClient from "../../Components/Auth/AddClient";
+import Loader from "../../Components/Constants/Loader";
 
 const ClientRegistrationPage: React.FC = () => {
+  const [loading, setLoading] = useState(false);
   const [registerClient] = useRegisterClientMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -30,6 +32,7 @@ const ClientRegistrationPage: React.FC = () => {
     registrationData: ClientRegisterRequest
   ) => {
     try {
+      setLoading(true);
       localStorage.clear();
       const result = await registerClient(registrationData).unwrap();
       dispatch(setToken(result.access_token));
@@ -49,12 +52,20 @@ const ClientRegistrationPage: React.FC = () => {
         toast.error("An unknown error occurred");
       }
       console.error("Registration error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <AuthLayout>
-      <AddClient onSubmit={handleRegistration} />
+      {loading ? (
+        <div className="w-full h-[70vh] flex items-center justify-center">
+          <Loader text="Processing..." />
+        </div>
+      ) : (
+        <AddClient onSubmit={handleRegistration} />
+      )}
       <ToastContainer
         position="top-right"
         autoClose={1000}

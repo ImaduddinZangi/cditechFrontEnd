@@ -7,10 +7,13 @@ import Loader from "../Constants/Loader";
 import { getUserId } from "../../utils/utils";
 import { Inspection } from "../../redux/features/inspectionSlice";
 import WhiteButton from "../Tags/WhiteButton";
+import SubmitInvoiceModal from "./Constants/SubmitInvoiceModal";
 
 const ManageInspections: React.FC = () => {
   const { data: inspectionsData, isLoading } = useGetInspectionsQuery();
   const [inspections, setInspections] = useState<Inspection[]>([]);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [inspectionId, setInspectionId] = useState<string>("");
   const navigate = useNavigate();
   const clientId = getUserId();
   const [searchTerm, setSearchTerm] = useState("");
@@ -60,7 +63,7 @@ const ManageInspections: React.FC = () => {
         .toLowerCase()
         .includes(searchTerm.toLowerCase()) ||
       inspection.asset.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      inspection.checklists[0].template?.name
+      inspection.checklists[0]?.template?.name
         .toLowerCase()
         .includes(searchTerm.toLowerCase()) ||
       inspection.createdAt.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -78,6 +81,15 @@ const ManageInspections: React.FC = () => {
     (currentPage - 1) * inspectionsPerPage,
     currentPage * inspectionsPerPage
   );
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
+
+  const handleModalOpen = (id: string) => {
+    setModalOpen(true);
+    setInspectionId(id);
+  };
 
   const handlePreviousPage = () => {
     setCurrentPage((prev) => Math.max(prev - 1, 1));
@@ -188,12 +200,6 @@ const ManageInspections: React.FC = () => {
                       )}
                     </td>
                     <td className="flex flex-row items-center gap-x-[1vw] py-[1vw] px-[1.5vw] text-center">
-                      <WhiteButton
-                        text="View"
-                        onClick={() =>
-                          navigate(`/inspection-details/${inspection.id}`)
-                        }
-                      />
                       {inspection.status === "Not-Done" && (
                         <PurpleButton
                           text="Begin"
@@ -202,6 +208,18 @@ const ManageInspections: React.FC = () => {
                           }
                         />
                       )}
+                      {inspection.status !== "Not-Done" && (
+                        <PurpleButton
+                          text="Submit"
+                          onClick={() => handleModalOpen(inspection.id)}
+                        />
+                      )}
+                      <WhiteButton
+                        text="View"
+                        onClick={() =>
+                          navigate(`/inspection-details/${inspection.id}`)
+                        }
+                      />
                     </td>
                   </tr>
                 );
@@ -241,6 +259,11 @@ const ManageInspections: React.FC = () => {
           Next
         </button>
       </div>
+      <SubmitInvoiceModal
+        isOpen={isModalOpen}
+        onCancel={handleModalClose}
+        inspectionId={inspectionId}
+      />
     </div>
   );
 };

@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import ClientLayout from "../../../Layouts/ClientLayout";
 import GrantGroupPermissions from "../../../Components/UserGroups/Groups/GrantGroupPermissions";
 import { useAssignCustomPermissionsMutation } from "../../../redux/api/groupPermissionsApi";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { Permission } from "../../../redux/features/groupPermissionsSlice";
+import Loader from "../../../Components/Constants/Loader";
 
 const GrantGroupPermissionsPage: React.FC = () => {
   const [assignCustomPermissions] = useAssignCustomPermissionsMutation();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleGrantPermissions = async (
@@ -15,6 +17,7 @@ const GrantGroupPermissionsPage: React.FC = () => {
     permissions: Permission[]
   ) => {
     try {
+      setLoading(true);
       const result = await assignCustomPermissions({
         groupId,
         permissions,
@@ -31,12 +34,31 @@ const GrantGroupPermissionsPage: React.FC = () => {
         onClose: () => navigate("/error/500"),
         autoClose: 1000,
       });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <ClientLayout breadcrumb="Grant Group Permissions">
-      <GrantGroupPermissions onSubmit={handleGrantPermissions} />
+      {loading ? (
+       <div className="w-full h-[70vh] flex items-center justify-center">
+          <Loader text="Processing..." />
+        </div>
+      ) : (
+        <GrantGroupPermissions onSubmit={handleGrantPermissions} />
+      )}
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </ClientLayout>
   );
 };

@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import ClientLayout from "../../Layouts/ClientLayout";
 import InspectionForm from "../../Components/Inspection/AddInspection";
 import { useNavigate } from "react-router-dom";
 import { useCreateInspectionMutation } from "../../redux/api/inspectionApi";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Loader from "../../Components/Constants/Loader";
 
 const AddInspectionPage: React.FC = () => {
   const [createInspection] = useCreateInspectionMutation();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   type APIError = {
@@ -22,6 +24,7 @@ const AddInspectionPage: React.FC = () => {
 
   const handleSubmit = async (formData: FormData) => {
     try {
+      setLoading(true);
       await createInspection(formData).unwrap();
       toast.success("Inspection added successfully!", {
         autoClose: 1000,
@@ -44,12 +47,20 @@ const AddInspectionPage: React.FC = () => {
         });
       }
       console.error("Error Adding Inspection:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <ClientLayout breadcrumb="Add New Inspection">
-      <InspectionForm onSubmit={handleSubmit} />
+      {loading ? (
+        <div className="w-full h-[70vh] flex items-center justify-center">
+          <Loader text="Processing..." />
+        </div>
+      ) : (
+        <InspectionForm onSubmit={handleSubmit} />
+      )}
       <ToastContainer
         position="top-right"
         autoClose={1000}

@@ -8,11 +8,13 @@ import AuthLayout from "../../Layouts/AuthLayout";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ReCAPTCHA from "react-google-recaptcha";
+import Loader from "../../Components/Constants/Loader";
 
 const RECAPTCHA_SITE_KEY = "your-site-key-here";
 
 const ClientSignInPage: React.FC = () => {
   const [loginClient] = useLoginClientMutation();
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -37,6 +39,7 @@ const ClientSignInPage: React.FC = () => {
 
   const handleLogin = async (email: string, password: string) => {
     try {
+      setLoading(true);
       const loginData: any = { email, password };
       if (failedAttempts >= 3 && recaptchaToken) {
         loginData.recaptchaToken = recaptchaToken;
@@ -74,22 +77,31 @@ const ClientSignInPage: React.FC = () => {
         setFailedAttempts((prev) => prev + 1);
       }
       console.error("Login error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <AuthLayout>
-      <ClientSignIn onSubmit={handleLogin} />
-
-      {failedAttempts >= 3 && (
-        <div className="mt-[1vw]">
-          <ReCAPTCHA
-            sitekey={RECAPTCHA_SITE_KEY}
-            onChange={handleRecaptchaChange}
-          />
+      {loading ? (
+        <div className="w-full h-[70vh] flex items-center justify-center">
+          <Loader text="Processing..." />
         </div>
-      )}
+      ) : (
+        <>
+          <ClientSignIn onSubmit={handleLogin} />
 
+          {failedAttempts >= 3 && (
+            <div className="mt-[1vw]">
+              <ReCAPTCHA
+                sitekey={RECAPTCHA_SITE_KEY}
+                onChange={handleRecaptchaChange}
+              />
+            </div>
+          )}
+        </>
+      )}
       <ToastContainer
         position="top-right"
         autoClose={1000}

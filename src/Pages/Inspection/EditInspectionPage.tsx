@@ -18,6 +18,7 @@ import UpdateInspection from "../../Components/Inspection/UpdateInspection";
 
 const EditInspectionPage: React.FC = () => {
   const { inspectionId } = useParams<{ inspectionId: string }>();
+  const [loading, setLoading] = useState(false);
   const {
     data: inspection,
     isLoading,
@@ -42,6 +43,7 @@ const EditInspectionPage: React.FC = () => {
 
   const handleSubmit = async (inspectionData: EditInspection) => {
     try {
+      setLoading(true);
       await updateInspection(inspectionData).unwrap();
       toast.success("Inspection updated successfully!", {
         onClose: () => navigate("/manage-inspections"),
@@ -65,6 +67,8 @@ const EditInspectionPage: React.FC = () => {
         });
       }
       console.error("Error Updating Inspection:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -89,35 +93,44 @@ const EditInspectionPage: React.FC = () => {
 
   return (
     <ClientLayout breadcrumb="Edit Inspection">
-      {inspection && (
-        <div>
-          <div className="space-x-[1vw] m-[2vw]">
-            <PurpleButton
-              text="Route"
-              type="button"
-              onClick={() => setIsRouteModalOpen(true)}
+      {loading ? (
+        <div className="w-full h-[70vh] flex items-center justify-center">
+          <Loader text="Processing..." />
+        </div>
+      ) : (
+        inspection && (
+          <div>
+            <div className="space-x-[1vw] m-[2vw]">
+              <PurpleButton
+                text="Route"
+                type="button"
+                onClick={() => setIsRouteModalOpen(true)}
+              />
+            </div>
+            <UpdateInspection
+              onSubmit={handleSubmit}
+              initialData={initialData}
             />
           </div>
-          <UpdateInspection onSubmit={handleSubmit} initialData={initialData} />
-          <RouteModal
-            isOpen={isRouteModalOpen}
-            onClose={() => setIsRouteModalOpen(false)}
-            onSave={handleRouteModalSave}
-            initialRoute={route}
-          />
-          <ToastContainer
-            position="top-right"
-            autoClose={1000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-          />
-        </div>
+        )
       )}
+      <RouteModal
+        isOpen={isRouteModalOpen}
+        onClose={() => setIsRouteModalOpen(false)}
+        onSave={handleRouteModalSave}
+        initialRoute={route}
+      />
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </ClientLayout>
   );
 };

@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import ClientLayout from "../../../Layouts/ClientLayout";
 import AddUserGroup from "../../../Components/UserGroups/Groups/AddUserGroup";
 import { useCreateUserGroupMutation } from "../../../redux/api/userGroupApi";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { UserGroup } from "../../../redux/features/userGroupSlice";
+import Loader from "../../../Components/Constants/Loader";
 
 const AddUserGroupPage: React.FC = () => {
   const [createUserGroup] = useCreateUserGroupMutation();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   type APIError = {
@@ -22,6 +24,7 @@ const AddUserGroupPage: React.FC = () => {
 
   const handleAddUserGroup = async (userGroupData: UserGroup) => {
     try {
+      setLoading(true);
       const result = await createUserGroup(userGroupData).unwrap();
       toast.success("User Group added successfully!", {
         onClose: () => navigate("/manage-user-groups"),
@@ -46,12 +49,31 @@ const AddUserGroupPage: React.FC = () => {
         });
       }
       console.error("Error Adding User Group:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <ClientLayout breadcrumb="Add User Group">
-      <AddUserGroup onSubmit={handleAddUserGroup} />
+      {loading ? (
+        <div className="w-full h-[70vh] flex items-center justify-center">
+          <Loader text="Processing..." />
+        </div>
+      ) : (
+        <AddUserGroup onSubmit={handleAddUserGroup} />
+      )}
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </ClientLayout>
   );
 };

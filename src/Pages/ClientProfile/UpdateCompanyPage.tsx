@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ClientLayout from "../../Layouts/ClientLayout";
 import UpdateCompany from "../../Components/ClientProfile/UpdateCompany";
 import {
@@ -7,12 +7,13 @@ import {
 } from "../../redux/api/companyApi";
 import { getUserId } from "../../utils/utils";
 import { Company } from "../../redux/features/companySlice";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../Components/Constants/Loader";
 
 const UpdateCompanyPage: React.FC = () => {
   const clientId = getUserId();
+  const [loading, setLoading] = useState(false);
   if (!clientId) {
     toast.error("Client ID not found. Please log in again.", {
       onClose: () => navigate("/client-login"),
@@ -41,6 +42,7 @@ const UpdateCompanyPage: React.FC = () => {
 
   const handleUpdateCompany = async (companyData: Company) => {
     try {
+      setLoading(true);
       const result = await updateCompany({
         id: companyData.id,
         ...companyData,
@@ -68,6 +70,8 @@ const UpdateCompanyPage: React.FC = () => {
         });
       }
       console.error("Error Updating Company:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -80,7 +84,24 @@ const UpdateCompanyPage: React.FC = () => {
   }
   return (
     <ClientLayout breadcrumb="Edit Company">
-      <UpdateCompany onSubmit={handleUpdateCompany} initialData={company} />
+      {loading ? (
+        <div className="w-full h-[70vh] flex items-center justify-center">
+          <Loader text="Processing..." />
+        </div>
+      ) : (
+        <UpdateCompany onSubmit={handleUpdateCompany} initialData={company} />
+      )}
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </ClientLayout>
   );
 };

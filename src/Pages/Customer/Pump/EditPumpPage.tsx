@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ClientLayout from "../../../Layouts/ClientLayout";
 import EditPump from "../../../Components/Customer/Pump/EditPump";
 import {
@@ -7,10 +7,11 @@ import {
 } from "../../../redux/api/pumpApi";
 import { useNavigate, useParams } from "react-router-dom";
 import Loader from "../../../Components/Constants/Loader";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 const EditPumpPage: React.FC = () => {
   const { pumpId } = useParams<{ pumpId: string }>();
+  const [loading, setLoading] = useState(false);
   const {
     data: pumpData,
     isLoading,
@@ -31,6 +32,7 @@ const EditPumpPage: React.FC = () => {
 
   const handleEditPump = async (formData: FormData) => {
     try {
+      setLoading(true);
       await updatePump({ id: pumpId, formData }).unwrap();
       toast.success("pump updated successfully!", {
         onClose: () => navigate("/client-dashboard"),
@@ -54,6 +56,8 @@ const EditPumpPage: React.FC = () => {
         });
       }
       console.error("Error Updating pump:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -67,7 +71,24 @@ const EditPumpPage: React.FC = () => {
 
   return (
     <ClientLayout breadcrumb="Edit Pump">
-      <EditPump initialData={pumpData} onEdit={handleEditPump} />
+      {loading ? (
+        <div className="w-full h-[70vh] flex items-center justify-center">
+          <Loader text="Processing..." />
+        </div>
+      ) : (
+        <EditPump initialData={pumpData} onEdit={handleEditPump} />
+      )}
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </ClientLayout>
   );
 };
