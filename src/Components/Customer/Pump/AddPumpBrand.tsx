@@ -38,9 +38,9 @@ const AddPumpBrand: React.FC<AddPumpBrandProps> = ({
   const [city, setCity] = useState<string>(initialCity);
   const [state, setState] = useState<string>(initialState);
   const [zipcode, setZipcode] = useState<string>(initialZip);
-  const [madeInUsa, setMadeInUsa] = useState<boolean>(
-    initialData?.madeInUsa || false
-  );
+  // const [madeInUsa, setMadeInUsa] = useState<boolean>(
+  //   initialData?.madeInUsa || false
+  // );
   const navigate = useNavigate();
 
   const handleSubmit = (event: React.FormEvent) => {
@@ -53,7 +53,7 @@ const AddPumpBrand: React.FC<AddPumpBrandProps> = ({
       website,
       phone,
       address,
-      madeInUsa,
+      // madeInUsa,
     });
   };
 
@@ -156,8 +156,8 @@ const AddPumpBrand: React.FC<AddPumpBrandProps> = ({
           <input
             type="checkbox"
             className="mt-[0.2vw] block accent-purple-0 border-gray-300 rounded-md shadow-sm cursor-pointer"
-            checked={madeInUsa}
-            onChange={(e) => setMadeInUsa(e.target.checked)}
+            // checked={madeInUsa}
+            // onChange={(e) => setMadeInUsa(e.target.checked)}
           />
         </div>
         <div className="mt-[1vw] flex justify-end col-span-2">

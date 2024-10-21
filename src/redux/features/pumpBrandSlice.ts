@@ -7,7 +7,7 @@ export interface PumpBrand {
   website?: string;
   phone: string;
   address: string;
-  madeInUsa: boolean;
+  // madeInUsa: boolean;
   logoUrl?: string;
   photos?: [];
 }
