@@ -9,16 +9,17 @@ const PumpBrandDetails: React.FC = () => {
   const { pumpBrandId } = useParams<{ pumpBrandId?: string }>();
   const navigate = useNavigate();
 
-  if (!pumpBrandId) {
-    return <div>Error: Pump Brand ID is not available.</div>;
-  }
+  const { data: photosData } = useGetPhotosQuery();
 
   const {
     data: pumpBrand,
     isLoading,
     error,
-  } = useGetPumpBrandByIdQuery(pumpBrandId);
-  const { data: photosData } = useGetPhotosQuery();
+  } = useGetPumpBrandByIdQuery(pumpBrandId!);
+
+  if (!pumpBrandId) {
+    return <div>Error: Pump Brand ID is not available.</div>;
+  }
 
   const brandPhoto = photosData?.find(
     (photo) => photo.pumpBrandId === pumpBrandId
@@ -107,7 +108,7 @@ const PumpBrandDetails: React.FC = () => {
             <p className="text-[1.1vw] text-darkgray-0 font-semibold mr-[2vw]">
               Made in USA:
             </p>
-            <div className="flex items-center space-x-[1vw]">
+            {/* <div className="flex items-center space-x-[1vw]">
               <label className="text-[1vw] text-gray-0 font-medium">
                 <input
                   type="radio"
@@ -128,7 +129,7 @@ const PumpBrandDetails: React.FC = () => {
                 />
                 No
               </label>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="flex justify-center items-center">
