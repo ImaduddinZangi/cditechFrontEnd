@@ -222,7 +222,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
         {
           title: "Group Management",
           src: "dummy",
-          href: "/manage-groups",
+          href: "/manage-user-groups",
         },
         {
           title: "Add New User",
