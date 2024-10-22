@@ -94,8 +94,8 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
 
   const [name, setName] = useState<string>(initialData?.name || "");
   const [type, setType] = useState<Option | null>(
-    initialData?.type
-      ? { label: initialData.type.name, value: initialData.type.id }
+    initialData?.assetType
+      ? { label: initialData.assetType.name, value: initialData.assetType.id }
       : null
   );
   const [customerId, setCustomerId] = useState<Option | null>(
@@ -219,9 +219,9 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
       }));
       setAssetTypes(assetTypeOptions);
 
-      if (initialData?.type) {
+      if (initialData?.assetType) {
         const selectedAssetType = assetTypeOptions.find(
-          (a) => a.value === initialData.type?.id
+          (a) => a.value === initialData.assetType?.id
         );
         setType(selectedAssetType || null);
       }
