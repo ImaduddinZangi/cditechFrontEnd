@@ -15,14 +15,15 @@ const AddPumpBrand: React.FC<AddPumpBrandProps> = ({
   initialData,
 }) => {
   const splitAddress = (address: string | undefined) => {
-    if (!address) return { streetAddress: "", city: "", state: "", zipcode: "" };
-    
+    if (!address)
+      return { streetAddress: "", city: "", state: "", zipcode: "" };
+
     const parts = address.split(", ");
     return {
       streetAddress: parts[0] || "",
       city: parts[1] || "",
       state: parts[2] || "",
-      zipcode: parts[3] || ""
+      zipcode: parts[3] || "",
     };
   };
 
@@ -32,15 +33,18 @@ const AddPumpBrand: React.FC<AddPumpBrandProps> = ({
   const [phone, setPhone] = useState<string>(initialData?.phone || "");
   const [logoUrl, setLogoUrl] = useState<string>(initialData?.logoUrl || "");
 
-  const { streetAddress: initialStreet, city: initialCity, state: initialState, zipcode: initialZip } = splitAddress(initialData?.address);
+  const {
+    streetAddress: initialStreet,
+    city: initialCity,
+    state: initialState,
+    zipcode: initialZip,
+  } = splitAddress(initialData?.address);
 
   const [streetAddress, setStreetAddress] = useState<string>(initialStreet);
   const [city, setCity] = useState<string>(initialCity);
   const [state, setState] = useState<string>(initialState);
   const [zipcode, setZipcode] = useState<string>(initialZip);
-  // const [madeInUsa, setMadeInUsa] = useState<boolean>(
-  //   initialData?.madeInUsa || false
-  // );
+  const [madeInUsa, setMadeInUsa] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const handleSubmit = (event: React.FormEvent) => {
@@ -94,7 +98,7 @@ const AddPumpBrand: React.FC<AddPumpBrandProps> = ({
           onChange={(e) => setWebsite(e.target.value)}
           required
         />
-        
+
         <InputField
           label="Brand Phone Number"
           name="phone"
@@ -156,13 +160,21 @@ const AddPumpBrand: React.FC<AddPumpBrandProps> = ({
           <input
             type="checkbox"
             className="mt-[0.2vw] block accent-purple-0 border-gray-300 rounded-md shadow-sm cursor-pointer"
-            // checked={madeInUsa}
-            // onChange={(e) => setMadeInUsa(e.target.checked)}
+            checked={madeInUsa}
+            onChange={(e) => setMadeInUsa(e.target.checked)}
           />
         </div>
         <div className="mt-[1vw] flex justify-end col-span-2">
-          <PurpleButton type="submit" text="Save & Close" className="mr-[1vw]" />
-          <WhiteButton type="button" text="Do Not Save & Cancel" onClick={handleCancel} />
+          <PurpleButton
+            type="submit"
+            text="Save & Close"
+            className="mr-[1vw]"
+          />
+          <WhiteButton
+            type="button"
+            text="Do Not Save & Cancel"
+            onClick={handleCancel}
+          />
         </div>
       </form>
     </div>
