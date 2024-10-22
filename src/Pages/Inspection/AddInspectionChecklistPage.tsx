@@ -80,7 +80,7 @@ const AddInspectionChecklistPage: React.FC = () => {
               {client?.company?.company_name || "Company Name"}
             </p>
             <p className="text-[1.1vw] text-darkgray-0 font-medium font-inter">
-              {inspection?.asset?.type?.name || "Asset Type unavailable"}
+              {inspection?.asset?.assetType?.name || "Asset Type unavailable"}
             </p>
             <p className="text-[1.1vw] text-darkgray-0 font-medium font-inter">
               {inspection?.checklists?.[0]?.template?.name ||

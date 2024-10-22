@@ -80,7 +80,7 @@ const AssetDetails: React.FC = () => {
             </div>
             <div>
               <p className="text-[1vw] font-semibold">Asset Type:</p>
-              <p className="text-[1vw]">{asset.customer.name || "N/A"}</p>
+              <p className="text-[1vw]">{asset.assetType.name || "N/A"}</p>
             </div>
             <div>
               <p className="text-[1vw] font-semibold">Asset Duty:</p>

@@ -23,7 +23,7 @@ export interface Asset {
   float: string;
   pumps: string;
   power: string;
-  type: AssetType;
+  assetType: AssetType;
   createdAt: string;
   updatedAt: string;
   client: Client;

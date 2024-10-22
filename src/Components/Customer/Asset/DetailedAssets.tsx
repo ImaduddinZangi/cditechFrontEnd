@@ -29,6 +29,14 @@ const DetailedAssets: React.FC = () => {
           </div>
           <div>
             <p className="text-[1vw] text-gray-0 font-medium font-inter">
+              Asset Type:
+            </p>
+            <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
+              {asset.assetType.name}
+            </p>
+          </div>
+          <div>
+            <p className="text-[1vw] text-gray-0 font-medium font-inter">
               Status:
             </p>
             <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
