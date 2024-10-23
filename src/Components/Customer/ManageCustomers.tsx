@@ -46,10 +46,7 @@ const CustomerTable: React.FC = () => {
       customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       customer.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
       customer.type.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      customer.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      customer.quickbooksCustomerId
-        ?.toLowerCase()
-        .includes(searchTerm.toLowerCase())
+      customer.status.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const totalPages = Math.ceil((filteredData?.length || 0) / customersPerPage);
@@ -157,8 +154,8 @@ const CustomerTable: React.FC = () => {
                                   src={
                                     customer.photos
                                       ? `https://inspection-point-s3.s3.us-east-2.amazonaws.com/${customer.photos.find(
-                                          () => true
-                                        )}`
+                                        () => true
+                                      )}`
                                       : "/assets/no-image.jpg"
                                   }
                                   alt={customer.name}
@@ -225,11 +222,10 @@ const CustomerTable: React.FC = () => {
                     <button
                       key={page}
                       onClick={() => setCurrentPage(page + 1)}
-                      className={`${
-                        currentPage === page + 1
+                      className={`${currentPage === page + 1
                           ? "bg-purple-0 text-white"
                           : "bg-gray-300 text-gray-600"
-                      } py-1 px-3 rounded`}
+                        } py-1 px-3 rounded`}
                     >
                       {page + 1}
                     </button>

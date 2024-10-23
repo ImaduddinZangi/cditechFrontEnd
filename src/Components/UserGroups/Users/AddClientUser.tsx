@@ -164,6 +164,7 @@ const AddClientUser: React.FC<AddClientUserProps> = ({
             value={phone}
             placeholder="Enter Phone"
             onChange={(e) => setPhone(e.target.value)}
+            required
           />
           <InputField
             label="Address Line 1"
@@ -172,6 +173,7 @@ const AddClientUser: React.FC<AddClientUserProps> = ({
             value={addressLine1}
             placeholder="Enter Address"
             onChange={(e) => setAddressLine1(e.target.value)}
+            required
           />
           <InputField
             label="City"
@@ -180,6 +182,7 @@ const AddClientUser: React.FC<AddClientUserProps> = ({
             value={city}
             placeholder="Enter City"
             onChange={(e) => setCity(e.target.value)}
+            required
           />
           <InputField
             label="State"
@@ -188,6 +191,7 @@ const AddClientUser: React.FC<AddClientUserProps> = ({
             value={state}
             placeholder="Enter State"
             onChange={(e) => setState(e.target.value)}
+            required
           />
           <InputField
             label="Zip Code"
@@ -196,6 +200,7 @@ const AddClientUser: React.FC<AddClientUserProps> = ({
             value={zipcode}
             placeholder="Enter Zip Code"
             onChange={(e) => setZipcode(e.target.value)}
+            required
           />
           <InputField
             label="Division"
@@ -204,6 +209,7 @@ const AddClientUser: React.FC<AddClientUserProps> = ({
             value={division}
             placeholder="Enter Division"
             onChange={(e) => setDivision(e.target.value)}
+            required
           />
         </div>
         <div className="flex flex-row items-center gap-x-[1vw] mt-[0.5vw]">
@@ -252,6 +258,7 @@ const AddClientUser: React.FC<AddClientUserProps> = ({
             value={groupId}
             options={groups}
             onChange={(option) => setGroupId(option)}
+            required
           />
         </div>
         <div className="mt-[1vw] flex justify-end">

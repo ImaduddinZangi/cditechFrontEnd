@@ -249,7 +249,7 @@ const AddInspection: React.FC<AddInspectionProps> = ({
           <div>
             <InputField
               label="Scheduled Date"
-              fieldType="datetime-local"
+              fieldType="Date"
               value={scheduledDate}
               onChange={(e) => setScheduledDate(e.target.value)}
               required

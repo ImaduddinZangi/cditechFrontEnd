@@ -44,17 +44,16 @@ const AddAssetsPage: React.FC = () => {
         pumpFormData.append("warranty", pumpData.warranty);
         pumpFormData.append("installedDate", pumpData.installedDate);
         pumpData.files?.forEach((photo) => {
-          pumpFormData.append("photos", photo);
+          pumpFormData.append("files", photo);
         });
 
         await createPump(pumpFormData).unwrap();
       }
-
+      console.log("Asset and pumps created successfully");
       toast.success("Asset and pumps added successfully!", {
         onClose: () => navigate("/manage-customers"),
         autoClose: 1000,
       });
-      console.log("Asset and pumps created successfully");
     } catch (error) {
       if (isAPIError(error)) {
         toast.error("Error Adding Asset/Pumps: " + error.data.message, {
