@@ -12,22 +12,9 @@ const warrantyOptions = [
   { label: "2 Year", value: "2 Year" },
   { label: "3 Year", value: "3 Year" },
 ];
-interface PumpLocal {
-  id?: string;
-  name: string;
-  assetId?: string;
-  brandId: string;
-  hp: string;
-  serial: string;
-  warranty: string;
-  installedDate: string;
-  avgAmps: string;
-  maxAmps: string;
-  photos?: File[];
-}
 
 interface AddPumpProps {
-  onChange: (data: PumpLocal) => void;
+  onChange: (data: Pump) => void;
   initialData?: Partial<Pump>;
 }
 
@@ -38,7 +25,7 @@ const AddPump: React.FC<AddPumpProps> = ({ onChange, initialData }) => {
   const [avgAmps, setAvgAmps] = useState<string>(initialData?.avgAmps || "");
   const [maxAmps, setMaxAmps] = useState<string>(initialData?.maxAmps || "");
   const [hp, setHp] = useState<string>(initialData?.hp || "");
-  const [photos, setPhotos] = useState<File[]>([]);
+  const [files, setFiles] = useState<File[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
@@ -52,12 +39,12 @@ const AddPump: React.FC<AddPumpProps> = ({ onChange, initialData }) => {
   const { data: pumpBrands } = useGetPumpBrandsQuery();
 
   const handlePhotosSubmit = (uploadedPhotos: File[]) => {
-    setPhotos(uploadedPhotos);
+    setFiles(uploadedPhotos);
     handleCloseModal();
   };
 
   useEffect(() => {
-    const pumpData: PumpLocal = {
+    const pumpData: Pump = {
       name,
       brandId,
       serial,
@@ -66,7 +53,7 @@ const AddPump: React.FC<AddPumpProps> = ({ onChange, initialData }) => {
       hp,
       warranty: warranty?.value || "",
       installedDate,
-      photos,
+      files,
     };
     onChange(pumpData);
   }, [
@@ -78,7 +65,7 @@ const AddPump: React.FC<AddPumpProps> = ({ onChange, initialData }) => {
     hp,
     warranty,
     installedDate,
-    photos,
+    files,
   ]);
 
   return (

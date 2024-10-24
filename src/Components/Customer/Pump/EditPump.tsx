@@ -53,7 +53,6 @@ const EditPump: React.FC<EditPumpProps> = ({ onEdit, initialData }) => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-
     const formData = new FormData();
     formData.append("assetId", assetId);
     formData.append("brandId", brandId);

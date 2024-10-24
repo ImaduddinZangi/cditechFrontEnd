@@ -71,11 +71,13 @@ export interface Inspection {
 }
 
 interface InspectionState {
+  selectedInspection?: Inspection | null;
   inspections: Inspection[] | null;
 }
 
 const initialState: InspectionState = {
   inspections: null,
+  selectedInspection: null,
 };
 
 const inspectionSlice = createSlice({

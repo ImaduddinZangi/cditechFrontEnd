@@ -1,18 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import PurpleButton from "../Tags/PurpleButton";
 import WhiteButton from "../Tags/WhiteButton";
 import { useNavigate } from "react-router-dom";
-import SubmitInvoiceModal from "./Constants/SubmitInvoiceModal";
-import Loader from "../Constants/Loader";
 import InputField from "../Tags/InputField";
-import SelectField from "../Tags/SelectField";
+import SelectField, { Option } from "../Tags/SelectField";
 import { toast } from "react-toastify";
-import {
-  Answer,
-  EditChecklist,
-  Questions,
-  UpdateChecklist,
-} from "../../redux/features/inspectionChecklistSlice";
+import { UpdateChecklist, EditChecklist, Answer, Checklist } from "../../redux/features/inspectionChecklistSlice";
+import SubmitInvoiceModal from "./Constants/SubmitInvoiceModal";
 import { Inspection } from "../../redux/features/inspectionSlice";
 
 interface AddInspectionChecklistProps {
@@ -20,257 +14,153 @@ interface AddInspectionChecklistProps {
   onSubmit: (data: UpdateChecklist) => Promise<void>;
 }
 
-const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({
-  inspection,
-  onSubmit,
-}) => {
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [questions, setQuestions] = useState<Questions[]>([]);
+const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({ onSubmit, inspection }) => {
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [isModalOpen, setModalOpen] = useState(false);
 
-  useEffect(() => {
-    if (
-      inspection &&
-      inspection.checklists &&
-      inspection.checklists.length > 0
-    ) {
-      const questionsSet = new Set<string>();
-      const collectedQuestions: Questions[] = [];
+  const fields = [
+    { label: "Structure", question_text: "structure", fieldType: "select", options: ["OK", "Needs Attention", "Not OK"] },
+    { label: "Panel", question_text: "panel", fieldType: "select", options: ["OK", "Needs Attention", "Not OK"] },
+    { label: "Breakers", question_text: "breakers", fieldType: "select", options: ["OK", "Needs Attention", "Not OK"] },
+    { label: "Pipes", question_text: "pipes", fieldType: "select", options: ["OK", "Needs Attention", "Not OK"] },
+    { label: "Alarm", question_text: "alarm", fieldType: "select", options: ["OK", "Needs Attention", "Not OK"] },
+    { label: "Alarm Light", question_text: "alarmLight", fieldType: "select", options: ["OK", "Needs Attention", "Not OK"] },
+    { label: "Overall Score", question_text: "overallScore", fieldType: "select", options: ["A+", "B+", "C+", "D-", "E-", "F-"] },
+    { label: "Pump1#", question_text: "pump1Amps", fieldType: "input" },
+    { label: "Pump2#", question_text: "pump2Amps", fieldType: "input" },
+    { label: "Station Needs Cleaning", question_text: "stationNeedsCleaning", fieldType: "boolean" },
+    { label: "Float 1", question_text: "float1", fieldType: "select", options: ["OK", "Needs Attention", "Not OK"] },
+    { label: "Float 2", question_text: "float2", fieldType: "select", options: ["OK", "Needs Attention", "Not OK"] },
+    { label: "Float 3", question_text: "float3", fieldType: "select", options: ["OK", "Needs Attention", "Not OK"] },
+    { label: "Float 4", question_text: "float4", fieldType: "select", options: ["OK", "Needs Attention", "Not OK"] },
+    { label: "Float 5", question_text: "float5", fieldType: "select", options: ["OK", "Needs Attention", "Not OK"] },
+    { label: "Float 6", question_text: "float6", fieldType: "select", options: ["OK", "Needs Attention", "Not OK"] },
+    { label: "Alarm Float", question_text: "alarmFloat", fieldType: "select", options: ["OK", "Needs Attention", "Not OK"] },
+  ];
 
-      inspection.checklists.forEach((checklist) => {
-        const templateQuestions = checklist.template?.questions || [];
-        templateQuestions.forEach((question) => {
-          if (!questionsSet.has(question.id)) {
-            questionsSet.add(question.id);
-            collectedQuestions.push({
-              questionId: question.id,
-              questionText: question.question_text,
-              questionType: question.question_type,
-              options: question.options ? JSON.parse(question.options) : null,
-            });
-          }
-        });
-      });
+  const getOptionFromValue = (value: string, options: string[]): Option | null => {
+    const option = options.find((opt) => opt === value);
+    return option ? { label: option, value: option } : null;
+  };
 
-      setQuestions(collectedQuestions);
-    } else {
-      console.error("Inspection data is incomplete.");
-    }
-  }, [inspection]);
-
-  const handleInputChange = (questionId: string, value: string) => {
+  const handleInputChange = (question_text: string, value: string) => {
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
-      [questionId]: value,
+      [question_text]: value,
     }));
   };
 
-  const handleSubmit = async (event?: React.FormEvent, openModal?: boolean) => {
-    if (event) {
-      event.preventDefault();
-    }
-
-    const updatedChecklists: EditChecklist[] =
-      inspection?.checklists.map((checklist) => {
-        const templateQuestions = checklist.template?.questions || [];
-        const answersForChecklist: Answer[] = templateQuestions
-          .filter((question) => answers.hasOwnProperty(question.id))
-          .map((question) => ({
-            questionId: question.id,
-            answer: answers[question.id],
-          }));
-
-        return {
-          id: checklist.id,
-          templateId: checklist.template?.id || "",
-          answers: answersForChecklist,
-        };
-      }) || [];
-
+  const handleSubmit = async (event?: React.FormEvent) => {
+    if (event) event.preventDefault();
+  
+    setIsSubmitting(true);
+  
+    const updatedChecklists: EditChecklist[] = (inspection?.checklists || []).map((checklist: Checklist) => {
+      const templateQuestions = checklist.template?.questions || [];
+      const answersForChecklist: Answer[] = templateQuestions
+        .filter((question) => answers[question.question_text])
+        .map((question) => ({
+          questionId: question.id,
+          answer: answers[question.question_text],
+        }));
+  
+      return {
+        id: checklist.id,
+        templateId: checklist.template?.id || "",
+        answers: answersForChecklist,
+      };
+    });
+  
     const updatedInspection: UpdateChecklist = {
       id: inspection?.id,
       checklists: updatedChecklists,
     };
-
+  
     try {
       await onSubmit(updatedInspection);
-      if (openModal) {
-        setModalOpen(true);
-      } else {
-        toast.success("Inspection Updated successfully!", {
-          onClose: () => navigate("/manage-inspections"),
-          autoClose: 1000,
-        });
-      }
+      toast.success("Inspection Updated successfully!", {
+        onClose: () => navigate("/manage-inspections"),
+        autoClose: 1000,
+      });
     } catch (err) {
-      console.error("Failed to update checklists.", err);
+      toast.error("Failed to update checklists.");
+      console.error("Error:", err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
-
-  const renderInputField = (question: Questions) => {
-    const { questionId, questionText } = question;
-
-    switch (questionText) {
-      case "pump1Runs":
-      case "pump2Runs":
-      case "pump3Runs":
-      case "pump4Runs":
-      case "pump5Runs":
-      case "pump6Runs":
-      case "stationNeedsCleaning":
-        return (
-          <div key={questionId} className="flex items-center space-x-2">
-            <label>{questionText}</label>
-            <label>
-              <input
-                type="radio"
-                name={questionId}
-                checked={answers[questionId] === "true"}
-                onChange={() => handleInputChange(questionId, "true")}
-              />
-              Yes
-            </label>
-            <label>
-              <input
-                type="radio"
-                name={questionId}
-                checked={answers[questionId] === "false"}
-                onChange={() => handleInputChange(questionId, "false")}
-              />
-              No
-            </label>
-          </div>
-        );
-
-      case "pump1Amps":
-      case "pump2Amps":
-      case "pump3Amps":
-      case "pump4Amps":
-      case "pump5Amps":
-      case "pump6Amps":
-      case "pump1Contactors":
-      case "pump2Contactors":
-      case "pump3Contactors":
-      case "pump4Contactors":
-      case "pump5Contactors":
-      case "pump6Contactors":
-        return (
-          <InputField
-            key={questionId}
-            label={questionText}
-            value={answers[questionId] || ""}
-            fieldType="number"
-            onChange={(e) => handleInputChange(questionId, e.target.value)}
-          />
-        );
-
-      case "structure":
-      case "panel":
-      case "pipes":
-      case "alarm":
-      case "alarmLight":
-      case "wires":
-      case "breakers":
-      case "thermals":
-      case "float1":
-      case "float2":
-      case "float3":
-      case "float4":
-      case "float5":
-      case "float6":
-      case "alarmFloat":
-        {
-          const selectOptions = [
-            { label: "OK", value: "OK" },
-            { label: "Needs Attention", value: "Needs Attention" },
-            { label: "Not OK", value: "Not OK" },
-          ];
-          return (
-            <SelectField
-              key={questionId}
-              label={questionText}
-              value={
-                selectOptions.find((opt) => opt.value === answers[questionId]) ||
-                null
-              }
-              onChange={(option) =>
-                handleInputChange(questionId, option?.value || "")
-              }
-              options={selectOptions}
-            />
-          );
-        }
-      case "overallScore": {
-        const overallScoreOptions = [
-          { label: "A+", value: "A+" },
-          { label: "B+", value: "B+" },
-          { label: "C+", value: "C+" },
-          { label: "D-", value: "D-" },
-          { label: "E-", value: "E-" },
-          { label: "F-", value: "F-" },
-        ];
-        return (
-          <SelectField
-            key={questionId}
-            label={questionText}
-            value={
-              overallScoreOptions.find(
-                (opt) => opt.value === answers[questionId]
-              ) || null
-            }
-            onChange={(option) =>
-              handleInputChange(questionId, option?.value || "")
-            }
-            options={overallScoreOptions}
-          />
-        );
-      }
-      default:
-        return null;
-    }
-  };
-
-  const handleModalClose = () => {
-    setModalOpen(false);
-  };
-
-  if (!inspection) {
-    return (
-      <div className="w-full h-[70vh] flex items-center justify-center">
-        <Loader />
-      </div>
-    );
-  }
+  
 
   return (
     <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
-      <form
-        className="space-y-4"
-        onSubmit={(event) => handleSubmit(event, false)}
-      >
+      <form className="space-y-4" onSubmit={handleSubmit}>
         <div className="grid grid-cols-3 gap-4">
-          {questions.map((question) => (
-            <div key={question.questionId}>{renderInputField(question)}</div>
-          ))}
+          {fields.map((field) => {
+            const question = inspection?.checklists[0]?.template?.questions.find(q => q.question_text === field.question_text);
+            if (!question) return null;
+
+            switch (field.fieldType) {
+              case "select":
+                return (
+                  <SelectField
+                    key={field.question_text}
+                    label={field.label}
+                    value={getOptionFromValue(answers[field.question_text], field.options || []) || null} // Use empty array if options is undefined
+                    onChange={(option) => handleInputChange(field.question_text, option?.value || "")}
+                    options={field.options?.map((option) => ({ label: option, value: option })) || []} // Default to empty array
+                  />
+                );
+              case "input":
+                return (
+                  <InputField
+                    key={field.question_text}
+                    label={field.label}
+                    value={answers[field.question_text] || ""}
+                    fieldType="number"
+                    onChange={(e) => handleInputChange(field.question_text, e.target.value)}
+                  />
+                );
+              case "boolean":
+                return (
+                  <div key={field.question_text} className="flex items-center space-x-2">
+                    <label>{field.label}</label>
+                    <label>
+                      <input
+                        type="radio"
+                        name={field.question_text}
+                        checked={answers[field.question_text] === "true"}
+                        onChange={() => handleInputChange(field.question_text, "true")}
+                      />
+                      Yes
+                    </label>
+                    <label>
+                      <input
+                        type="radio"
+                        name={field.question_text}
+                        checked={answers[field.question_text] === "false"}
+                        onChange={() => handleInputChange(field.question_text, "false")}
+                      />
+                      No
+                    </label>
+                  </div>
+                );
+              default:
+                return null;
+            }
+          })}
         </div>
         <div className="flex justify-end gap-x-[1vw] m-[2vw] pb-[3vw]">
           <PurpleButton
-            text="Save And Submit"
-            onClick={() => handleSubmit(undefined, true)}
+            text={isSubmitting ? "Compiling..." : "Save and Submit"}
+            disabled={isSubmitting}
+            onClick={handleSubmit}
           />
-          <PurpleButton type="submit" text="Save And Close" />
-          <WhiteButton
-            text="Don't Save And Close"
-            onClick={() => navigate("/manage-inspections")}
-          />
+          <WhiteButton text="Don't Save and Close" onClick={() => navigate("/manage-inspections")} />
         </div>
       </form>
-      <SubmitInvoiceModal
-        isOpen={isModalOpen}
-        onCancel={handleModalClose}
-        inspectionId={inspection.id}
-      />
+      <SubmitInvoiceModal isOpen={isModalOpen} onCancel={() => setModalOpen(false)} inspectionId={inspection?.id} />
     </div>
   );
 };

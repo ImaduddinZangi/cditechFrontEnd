@@ -22,7 +22,7 @@ import { useUpdateInspectionMutation } from "../../../redux/api/inspectionApi";
 
 interface SubmitInvoiceModalProps {
   isOpen: boolean;
-  inspectionId: string;
+  inspectionId?: string;
   onCancel: () => void;
 }
 
