@@ -1,20 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { useGetPumpBrandsQuery } from "../../../redux/api/pumpBrandApi";
 import { PumpBrand } from "../../../redux/features/pumpBrandSlice";
-import { Pump } from "../../../redux/features/pumpSlice";
 import InputField from "../../Tags/InputField";
 import SelectField, { Option } from "../../Tags/SelectField";
 import OutlinePurpleButton from "../../Tags/OutlinePurpleButton";
 import AddPhotos from "../AddPhotos";
+import { Pump } from "../../../redux/features/pumpSlice";
 
 const warrantyOptions = [
   { label: "1 Year", value: "1 Year" },
   { label: "2 Year", value: "2 Year" },
   { label: "3 Year", value: "3 Year" },
 ];
+interface PumpLocal {
+  id?: string;
+  name: string;
+  assetId?: string;
+  brandId: string;
+  hp: string;
+  serial: string;
+  warranty: string;
+  installedDate: string;
+  avgAmps: string;
+  maxAmps: string;
+  photos?: File[];
+}
 
 interface AddPumpProps {
-  onChange: (data: Pump) => void;
+  onChange: (data: PumpLocal) => void;
   initialData?: Partial<Pump>;
 }
 
@@ -25,7 +38,7 @@ const AddPump: React.FC<AddPumpProps> = ({ onChange, initialData }) => {
   const [avgAmps, setAvgAmps] = useState<string>(initialData?.avgAmps || "");
   const [maxAmps, setMaxAmps] = useState<string>(initialData?.maxAmps || "");
   const [hp, setHp] = useState<string>(initialData?.hp || "");
-  const [files, setFiles] = useState<File[]>([]);
+  const [photos, setPhotos] = useState<File[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
@@ -39,12 +52,12 @@ const AddPump: React.FC<AddPumpProps> = ({ onChange, initialData }) => {
   const { data: pumpBrands } = useGetPumpBrandsQuery();
 
   const handlePhotosSubmit = (uploadedPhotos: File[]) => {
-    setFiles(uploadedPhotos);
+    setPhotos(uploadedPhotos);
     handleCloseModal();
   };
 
   useEffect(() => {
-    const pumpData: Pump = {
+    const pumpData: PumpLocal = {
       name,
       brandId,
       serial,
@@ -53,7 +66,7 @@ const AddPump: React.FC<AddPumpProps> = ({ onChange, initialData }) => {
       hp,
       warranty: warranty?.value || "",
       installedDate,
-      files,
+      photos,
     };
     onChange(pumpData);
   }, [
@@ -65,7 +78,7 @@ const AddPump: React.FC<AddPumpProps> = ({ onChange, initialData }) => {
     hp,
     warranty,
     installedDate,
-    files,
+    photos,
   ]);
 
   return (
