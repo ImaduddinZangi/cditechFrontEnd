@@ -13,8 +13,7 @@ const PumpCard: React.FC<{
   pump: Pump;
   index: number;
   onDelete: () => void;
-  photoUrl: string;
-}> = ({ pump, index, photoUrl, onDelete }) => {
+}> = ({ pump, index, onDelete }) => {
   const navigate = useNavigate();
   return (
     <div className="flex items-center justify-between border p-[1vw] mb-[1vw] rounded-lg">
@@ -28,7 +27,8 @@ const PumpCard: React.FC<{
           </p>
         </div>
         <img
-          src={photoUrl}
+          src={pump.photos ? `https://inspection-point-s3.s3.us-east-2.amazonaws.com/${pump.photos[0].url}`
+          : "/assets/no-image.jpg"}
           alt={pump.name}
           className="w-[8vw] h-[8vw] object-cover rounded-md mb-0"
         />
@@ -98,12 +98,7 @@ const PumpCard: React.FC<{
         </div>
       </div>
       <div className="w-[21.333334%] flex justify-center space-x-[1vw]">
-        <PurpleButton type="button" text="Edit" />
-        <PurpleButton
-          type="button"
-          text="Photos"
-          onClick={() => navigate(`/add-photos/pump/${pump.id}`)}
-        />
+        <PurpleButton type="button" text="Edit" onClick={() => navigate(`/edit-pump/${pump.id}`)} />
         <WhiteButton type="button" text="Delete" onClick={onDelete} />
       </div>
     </div>

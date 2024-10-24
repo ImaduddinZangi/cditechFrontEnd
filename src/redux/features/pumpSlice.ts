@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { PumpBrand } from "./pumpBrandSlice";
 import { Asset } from "./assetSlice";
+import { Photo } from "../api/uploadPhotosApi";
 
 export interface Pump {
   id?: string;
@@ -15,7 +16,7 @@ export interface Pump {
   maxAmps: string;
   createdAt?: string;
   updatedAt?: string;
-  files?: File[];
+  photos?: Photo[];
   asset?: Asset;
   brand?: PumpBrand;
 }

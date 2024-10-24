@@ -11,7 +11,7 @@ export interface UploadPhotoPayload {
   files: File;
 }
 
-interface Photo {
+export interface Photo {
   id: string;
   url: string;
   assetId?: string;

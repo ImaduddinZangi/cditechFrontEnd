@@ -65,7 +65,7 @@ const EditPump: React.FC<EditPumpProps> = ({ onEdit, initialData }) => {
     formData.append("warranty", warranty?.value || "");
     formData.append("installedDate", installedDate);
     photos.forEach((photo) => {
-      formData.append("photos", photo);
+      formData.append("files", photo);
     });
 
     onEdit(formData);
@@ -191,7 +191,7 @@ const EditPump: React.FC<EditPumpProps> = ({ onEdit, initialData }) => {
         <WhiteButton
           type="button"
           text="Cancel"
-          onClick={() => navigate("/manage-assets")}
+          onClick={() => navigate("/manage-customer")}
         />
       </div>
     </form>

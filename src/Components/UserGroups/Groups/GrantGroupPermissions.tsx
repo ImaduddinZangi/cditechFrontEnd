@@ -23,11 +23,7 @@ interface GrantGroupPermissionsProps {
 
 const defaultPermissions: InternalPermission[] = [
   {
-    resource: "customers",
-    actions: { create: false, view: false, edit: false, delete: false },
-  },
-  {
-    resource: "asset-types",
+    resource: "inspections",
     actions: { create: false, view: false, edit: false, delete: false },
   },
   {
@@ -35,23 +31,11 @@ const defaultPermissions: InternalPermission[] = [
     actions: { create: false, view: false, edit: false, delete: false },
   },
   {
-    resource: "pump-brands",
-    actions: { create: false, view: false, edit: false, delete: false },
-  },
-  {
-    resource: "pumps",
-    actions: { create: false, view: false, edit: false, delete: false },
-  },
-  {
-    resource: "photos",
-    actions: { create: false, view: false, edit: false, delete: false },
-  },
-  {
-    resource: "inspections",
-    actions: { create: false, view: false, edit: false, delete: false },
-  },
-  {
     resource: "reports",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
+  {
+    resource: "customers",
     actions: { create: false, view: false, edit: false, delete: false },
   },
   {
@@ -71,15 +55,27 @@ const defaultPermissions: InternalPermission[] = [
     actions: { create: false, view: false, edit: false, delete: false },
   },
   {
-    resource: "inspection-scores",
-    actions: { create: false, view: false, edit: false, delete: false },
-  },
-  {
-    resource: "checklists-items",
-    actions: { create: false, view: false, edit: false, delete: false },
-  },
-  {
     resource: "permissions",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
+  {
+    resource: "clients",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
+  {
+    resource: "pump-brands",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
+  {
+    resource: "pumps",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
+  {
+    resource: "asset-types",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
+  {
+    resource: "photos",
     actions: { create: false, view: false, edit: false, delete: false },
   },
   {
@@ -88,6 +84,18 @@ const defaultPermissions: InternalPermission[] = [
   },
   {
     resource: "services",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
+  {
+    resource: "checklist-templates",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
+  {
+    resource: "inspection-checklists",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
+  {
+    resource: "logs",
     actions: { create: false, view: false, edit: false, delete: false },
   },
 ];
@@ -114,12 +122,12 @@ const GrantGroupPermissions: React.FC<GrantGroupPermissionsProps> = ({
       prevPermissions.map((perm) =>
         perm.resource === resource
           ? {
-              ...perm,
-              actions: {
-                ...perm.actions,
-                [action]: !perm.actions[action],
-              },
-            }
+            ...perm,
+            actions: {
+              ...perm.actions,
+              [action]: !perm.actions[action],
+            },
+          }
           : perm
       )
     );
@@ -220,7 +228,7 @@ const GrantGroupPermissions: React.FC<GrantGroupPermissionsProps> = ({
                       className="w-[2.5vw] md:w-[1vw] h-[2.5vw] md:h-[1vw] accent-purple-0 border-lightgray-0 rounded focus:ring-offset-white focus:ring-purple-0 cursor-pointer"
                       checked={
                         perm.actions[
-                          action as keyof InternalPermission["actions"]
+                        action as keyof InternalPermission["actions"]
                         ]
                       }
                       onChange={() =>

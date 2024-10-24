@@ -180,26 +180,28 @@ const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({
       case "float5":
       case "float6":
       case "alarmFloat":
-        const selectOptions = [
-          { label: "OK", value: "OK" },
-          { label: "Needs Attention", value: "Needs Attention" },
-          { label: "Not OK", value: "Not OK" },
-        ];
-        return (
-          <SelectField
-            key={questionId}
-            label={questionText}
-            value={
-              selectOptions.find((opt) => opt.value === answers[questionId]) ||
-              null
-            }
-            onChange={(option) =>
-              handleInputChange(questionId, option?.value || "")
-            }
-            options={selectOptions}
-          />
-        );
-      case "overallScore":
+        {
+          const selectOptions = [
+            { label: "OK", value: "OK" },
+            { label: "Needs Attention", value: "Needs Attention" },
+            { label: "Not OK", value: "Not OK" },
+          ];
+          return (
+            <SelectField
+              key={questionId}
+              label={questionText}
+              value={
+                selectOptions.find((opt) => opt.value === answers[questionId]) ||
+                null
+              }
+              onChange={(option) =>
+                handleInputChange(questionId, option?.value || "")
+              }
+              options={selectOptions}
+            />
+          );
+        }
+      case "overallScore": {
         const overallScoreOptions = [
           { label: "A+", value: "A+" },
           { label: "B+", value: "B+" },
@@ -223,7 +225,7 @@ const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({
             options={overallScoreOptions}
           />
         );
-
+      }
       default:
         return null;
     }
