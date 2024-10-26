@@ -134,13 +134,13 @@ const ManageInspections: React.FC = () => {
                 Asset
               </th>
               <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
-                Checklist
-              </th>
-              <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
                 Due By
               </th>
               <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
                 Status
+              </th>
+              <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
+                Assigned User
               </th>
               <th className="py-[1vw] px-[1.5vw] font-inter font-medium text-[1vw] text-left">
                 Actions
@@ -180,14 +180,6 @@ const ManageInspections: React.FC = () => {
                       {highlightText(inspection.asset.name, searchTerm)}
                     </td>
                     <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                      {inspection?.checklists?.[0]?.template?.name
-                        ? highlightText(
-                            inspection.checklists[0].template.name as string,
-                            searchTerm
-                          )
-                        : "No template available"}
-                    </td>
-                    <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
                       {highlightText(
                         new Date(inspection.scheduledDate).toLocaleDateString(),
                         searchTerm
@@ -198,6 +190,9 @@ const ManageInspections: React.FC = () => {
                         inspection.status ? inspection.status : "N/A",
                         searchTerm
                       )}
+                    </td>
+                    <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
+                      {highlightText(inspection.assignedTo.username, searchTerm)}
                     </td>
                     <td className="flex flex-row items-center gap-x-[1vw] py-[1vw] px-[1.5vw] text-center">
                       {inspection.status === "Not-Done" && (
@@ -241,11 +236,10 @@ const ManageInspections: React.FC = () => {
             <button
               key={page}
               onClick={() => setCurrentPage(page + 1)}
-              className={`${
-                currentPage === page + 1
-                  ? "bg-purple-0 text-white"
-                  : "bg-gray-300 text-gray-600"
-              } py-1 px-3 rounded`}
+              className={`${currentPage === page + 1
+                ? "bg-purple-0 text-white"
+                : "bg-gray-300 text-gray-600"
+                } py-1 px-3 rounded`}
             >
               {page + 1}
             </button>

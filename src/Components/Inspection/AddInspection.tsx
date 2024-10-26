@@ -60,9 +60,6 @@ const AddInspection: React.FC<AddInspectionProps> = ({
   const [scheduledDate, setScheduledDate] = useState<string>(
     initialData?.scheduledDate || ""
   );
-  const [reocurring, setReocurring] = useState<boolean>(
-    initialData?.isReocurring || false
-  );
   const [inspectionInterval, setinspectionInterval] = useState<Option | null>({
     label: "",
     value: "",
@@ -177,9 +174,7 @@ const AddInspection: React.FC<AddInspectionProps> = ({
     formData.append("customerId", customerId?.value || "");
     formData.append("assetId", assetId?.value || "");
     formData.append("assignedTo", userId?.value || "");
-    formData.append("status", "Not-Done");
     formData.append("scheduledDate", scheduledDate);
-    formData.append("isReocurring", JSON.stringify(reocurring));
     formData.append("inspectionInterval", inspectionInterval?.value || "");
     formData.append("reocurrenceEndDate", reocurrenceEndDate);
     formData.append("serviceFeeId", serviceFeeId?.value || "");
@@ -238,6 +233,33 @@ const AddInspection: React.FC<AddInspectionProps> = ({
           </div>
           <div>
             <SelectField
+              label="Inspection Interval"
+              value={inspectionInterval}
+              onChange={(option) => setinspectionInterval(option)}
+              options={intervalOptions}
+              required
+            />
+          </div>
+          <div>
+            <InputField
+              label="First Inspection Due Date"
+              fieldType="Date"
+              value={scheduledDate}
+              onChange={(e) => setScheduledDate(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <InputField
+              label="Reoccurence End Date"
+              fieldType="Date"
+              value={reocurrenceEndDate}
+              onChange={(e) => setReocurrenceEndDate(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <SelectField
               label="Assigned To"
               value={userId}
               onChange={(option) => setUserId(option)}
@@ -246,76 +268,15 @@ const AddInspection: React.FC<AddInspectionProps> = ({
               required
             />
           </div>
-          <div>
-            <InputField
-              label="Scheduled Date"
-              fieldType="Date"
-              value={scheduledDate}
-              onChange={(e) => setScheduledDate(e.target.value)}
-              required
-            />
-          </div>
-          <div className="flex flex-col gap-[1vw]">
-            <div className="col-span-2 flex items-center mt-[2vw]">
-              <span className="mr-[1vw] text-[1vw] font-medium text-darkgray-0">
-                Inspection Reocurring:
-              </span>
-              <label className="mr-2">
-                <input
-                  type="radio"
-                  id="reocurringTrue"
-                  name="reocurring"
-                  value="yes"
-                  checked={reocurring === true}
-                  onChange={() => setReocurring(true)}
-                  className="mr-1 accent-darkpurple-0"
-                />
-                Yes
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="reocurring"
-                  id="reocurringFalse"
-                  value="no"
-                  checked={reocurring === false}
-                  onChange={() => setReocurring(false)}
-                  className="mr-1 accent-darkpurple-0"
-                />
-                No
-              </label>
-            </div>
-            {reocurring && (
-              <div>
-                <InputField
-                  label="Reoccurence End Date"
-                  fieldType="Date"
-                  value={reocurrenceEndDate}
-                  onChange={(e) => setReocurrenceEndDate(e.target.value)}
-                  required
-                />
-              </div>
-            )}
-            {reocurring && (
-              <div>
-                <SelectField
-                  label="Inspection Interval"
-                  value={inspectionInterval}
-                  onChange={(option) => setinspectionInterval(option)}
-                  options={intervalOptions}
-                  required
-                />
-              </div>
-            )}
-            <OutlinePurpleButton
-              onClick={handleOpenModal}
-              text="Upload Photos"
-            />
-          </div>
+          <OutlinePurpleButton
+            onClick={handleOpenModal}
+            text="Upload Photos"
+          />
         </div>
         <div className="flex justify-end space-x-[1vw] mt-[2vw]">
-          <PurpleButton type="submit" text="Create" />
-          <WhiteButton type="button" text="Cancel" onClick={handleCancel} />
+          <PurpleButton type="submit" text="Save New Inspection" />
+          <PurpleButton type="button" text="Save & Start First Inspection" />
+          <WhiteButton type="button" text="Do Not Save & Cancel" onClick={handleCancel} />
         </div>
       </form>
       <RouteModal

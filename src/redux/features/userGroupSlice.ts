@@ -5,6 +5,7 @@ export interface UserGroup {
   id?: string;
   name: string;
   description?: string;
+  color?: string;
   isDefaultAdminGroup?: boolean;
   createdAt?: string;
   updatedAt?: string;

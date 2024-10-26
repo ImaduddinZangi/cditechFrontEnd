@@ -6,31 +6,38 @@ import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { Permission } from "../../../redux/features/groupPermissionsSlice";
 import Loader from "../../../Components/Constants/Loader";
+import { useUpdateUserGroupMutation } from "../../../redux/api/userGroupApi";
 
 const GrantGroupPermissionsPage: React.FC = () => {
   const [assignCustomPermissions] = useAssignCustomPermissionsMutation();
+  const [updateGroup] = useUpdateUserGroupMutation();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleGrantPermissions = async (
     groupId: string,
-    permissions: Permission[]
+    permissions: Permission[],
+    hexColor: string
   ) => {
     try {
       setLoading(true);
-      const result = await assignCustomPermissions({
+      await assignCustomPermissions({
         groupId,
         permissions,
       }).unwrap();
 
-      toast.success("Permissions granted successfully!", {
+      await updateGroup({
+        id: groupId,
+        color: hexColor,
+      }).unwrap();
+
+      toast.success("Permissions and group color updated successfully!", {
         onClose: () => navigate(`/manage-user-groups`),
         autoClose: 1000,
       });
-      console.log("Permissions granted successfully", result);
     } catch (error) {
-      console.error("Error granting permissions:", error);
-      toast.error("Error granting permissions. Please try again.", {
+      console.error("Error granting permissions or updating group color:", error);
+      toast.error("Error granting permissions or updating group color. Please try again.", {
         onClose: () => navigate("/error/500"),
         autoClose: 1000,
       });
@@ -46,7 +53,7 @@ const GrantGroupPermissionsPage: React.FC = () => {
           <Loader text="Processing..." />
         </div>
       ) : (
-        <GrantGroupPermissions onSubmit={handleGrantPermissions} />
+        <GrantGroupPermissions onSubmit={handleGrantPermissions}/>
       )}
       <ToastContainer
         position="top-right"

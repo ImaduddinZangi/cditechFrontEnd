@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import PurpleButton from "../Tags/PurpleButton";
 import WhiteButton from "../Tags/WhiteButton";
 import { useNavigate } from "react-router-dom";
@@ -20,7 +20,7 @@ const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({ onSubmi
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [isModalOpen, setModalOpen] = useState(false);
 
-  const fields = [
+  const fields = useMemo(() => [
     { label: "Structure", question_text: "structure", fieldType: "select", options: ["OK", "Needs Attention", "Not OK"] },
     { label: "Panel", question_text: "panel", fieldType: "select", options: ["OK", "Needs Attention", "Not OK"] },
     { label: "Breakers", question_text: "breakers", fieldType: "select", options: ["OK", "Needs Attention", "Not OK"] },
@@ -28,8 +28,18 @@ const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({ onSubmi
     { label: "Alarm", question_text: "alarm", fieldType: "select", options: ["OK", "Needs Attention", "Not OK"] },
     { label: "Alarm Light", question_text: "alarmLight", fieldType: "select", options: ["OK", "Needs Attention", "Not OK"] },
     { label: "Overall Score", question_text: "overallScore", fieldType: "select", options: ["A+", "B+", "C+", "D-", "E-", "F-"] },
-    { label: "Pump1#", question_text: "pump1Amps", fieldType: "input" },
-    { label: "Pump2#", question_text: "pump2Amps", fieldType: "input" },
+    { label: "Runs", question_text: "pump1Runs", fieldType: "boolean" },
+    { label: "Amps", question_text: "pump1Amps", fieldType: "input" },
+    { label: "Contactors", question_text: "pump1Contactors", fieldType: "input" },
+    { label: "Runs", question_text: "pump2Runs", fieldType: "boolean" },
+    { label: "Amps", question_text: "pump2Amps", fieldType: "input" },
+    { label: "Contactors", question_text: "pump2Contactors", fieldType: "input" },
+    { label: "Runs", question_text: "pump3Runs", fieldType: "boolean" },
+    { label: "Amps", question_text: "pump3Amps", fieldType: "input" },
+    { label: "Contactors", question_text: "pump3Contactors", fieldType: "input" },
+    { label: "Runs", question_text: "pump4Runs", fieldType: "boolean" },
+    { label: "Amps", question_text: "pump4Amps", fieldType: "input" },
+    { label: "Contactors", question_text: "pump4Contactors", fieldType: "input" },
     { label: "Station Needs Cleaning", question_text: "stationNeedsCleaning", fieldType: "boolean" },
     { label: "Float 1", question_text: "float1", fieldType: "select", options: ["OK", "Needs Attention", "Not OK"] },
     { label: "Float 2", question_text: "float2", fieldType: "select", options: ["OK", "Needs Attention", "Not OK"] },
@@ -38,7 +48,7 @@ const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({ onSubmi
     { label: "Float 5", question_text: "float5", fieldType: "select", options: ["OK", "Needs Attention", "Not OK"] },
     { label: "Float 6", question_text: "float6", fieldType: "select", options: ["OK", "Needs Attention", "Not OK"] },
     { label: "Alarm Float", question_text: "alarmFloat", fieldType: "select", options: ["OK", "Needs Attention", "Not OK"] },
-  ];
+  ], []);
 
   const getOptionFromValue = (value: string, options: string[]): Option | null => {
     const option = options.find((opt) => opt === value);
@@ -92,7 +102,6 @@ const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({ onSubmi
     }
   };
   
-
   return (
     <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
       <form className="space-y-4" onSubmit={handleSubmit}>

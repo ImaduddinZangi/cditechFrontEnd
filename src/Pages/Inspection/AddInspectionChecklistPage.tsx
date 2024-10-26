@@ -4,8 +4,6 @@ import AddInspectionChecklist from "../../Components/Inspection/AddInspectionChe
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate, useParams } from "react-router-dom";
-import { getUserId } from "../../utils/utils";
-import { useGetClientByIdQuery } from "../../redux/api/clientApi";
 import { useGetInspectionByIdQuery } from "../../redux/api/inspectionApi";
 import { useUpdateChecklistMutation } from "../../redux/api/inspectionChecklistApi";
 import { UpdateChecklist } from "../../redux/features/inspectionChecklistSlice";
@@ -15,15 +13,10 @@ const AddInspectionChecklistPage: React.FC = () => {
   const [updateInspection] = useUpdateChecklistMutation();
   const { inspectionId } = useParams<{ inspectionId: string }>();
   const navigate = useNavigate();
-  const clientId = getUserId();
-
-  const { data: client, isLoading: isClientLoading } = useGetClientByIdQuery(
-    clientId as string
-  );
   const { data: inspection, isLoading: isInspectionLoading } =
     useGetInspectionByIdQuery(inspectionId as string);
 
-  if (isClientLoading || isInspectionLoading) {
+  if (isInspectionLoading) {
     return <Loader />;
   }
 
@@ -68,7 +61,7 @@ const AddInspectionChecklistPage: React.FC = () => {
     <ClientLayout breadcrumb="Update Inspection">
       <div className="mx-[2vw] flex flex-row items-center justify-between">
         <p className="text-[1.1vw] text-darkgray-0 font-medium font-inter">
-          {client?.company?.company_name || "Company Name"}
+          {inspection?.customer.name || "Customer Name"}
         </p>
         <p className="text-[1.1vw] text-darkgray-0 font-medium font-inter">
           {inspection?.asset?.assetType?.name || "Asset Type unavailable"}

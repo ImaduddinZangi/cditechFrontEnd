@@ -56,7 +56,6 @@ export interface Inspection {
   completedDate: string | null;
   comments: string;
   inspectionInterval: string;
-  isReocurring: boolean;
   checklists: Checklist[];
   route: RoutePoint[];
   client: Client;
