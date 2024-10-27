@@ -57,9 +57,6 @@ const UpdateInspection: React.FC<UpdateInspectionProps> = ({
   const [scheduledDate, setScheduledDate] = useState<string>(
     initialData?.scheduledDate || ""
   );
-  const [reocurring, setReocurring] = useState<boolean>(
-    initialData?.isReocurring || false
-  );
   const [inspectionInterval, setinspectionInterval] = useState<Option | null>({
     label: "",
     value: "",
@@ -149,22 +146,21 @@ const UpdateInspection: React.FC<UpdateInspectionProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (route.length !== 2) {
-        toast.error("The route data is not added.");
-        return;
-      }
+      toast.error("The route data is not added.");
+      return;
+    }
     onSubmit({
-        id: initialData?.id,
-        customerId: customerId?.value || "",
-        assetId: assetId?.value || "",
-        assignedTo: userId?.value || "",
-        status: initialData?.status || "Not-Done",
-        scheduledDate,
-        isReocurring: reocurring,
-        inspectionInterval: inspectionInterval?.value || "",
-        reocurrenceEndDate,
-        serviceFeeId: serviceFeeId?.value || "",
-        route,
-      });
+      id: initialData?.id,
+      customerId: customerId?.value || "",
+      assetId: assetId?.value || "",
+      assignedTo: userId?.value || "",
+      status: initialData?.status || "Not-Done",
+      scheduledDate,
+      inspectionInterval: inspectionInterval?.value || "",
+      reocurrenceEndDate,
+      serviceFeeId: serviceFeeId?.value || "",
+      route,
+    });
   };
 
   const handleCancel = () => {
@@ -232,57 +228,24 @@ const UpdateInspection: React.FC<UpdateInspectionProps> = ({
             />
           </div>
           <div className="flex flex-col gap-[1vw]">
-            <div className="col-span-2 flex items-center mt-[2vw]">
-              <span className="mr-[1vw] text-[1vw] font-medium text-darkgray-0">
-                Inspection Reocurring:
-              </span>
-              <label className="mr-2">
-                <input
-                  type="radio"
-                  id="reocurringTrue"
-                  name="reocurring"
-                  value="yes"
-                  checked={reocurring === true}
-                  onChange={() => setReocurring(true)}
-                  className="mr-1 accent-darkpurple-0"
-                />
-                Yes
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="reocurring"
-                  id="reocurringFalse"
-                  value="no"
-                  checked={reocurring === false}
-                  onChange={() => setReocurring(false)}
-                  className="mr-1 accent-darkpurple-0"
-                />
-                No
-              </label>
+            <div>
+              <InputField
+                label="Reoccurence End Date"
+                fieldType="Date"
+                value={reocurrenceEndDate}
+                onChange={(e) => setReocurrenceEndDate(e.target.value)}
+                required
+              />
             </div>
-            {reocurring && (
-              <div>
-                <InputField
-                  label="Reoccurence End Date"
-                  fieldType="Date"
-                  value={reocurrenceEndDate}
-                  onChange={(e) => setReocurrenceEndDate(e.target.value)}
-                  required
-                />
-              </div>
-            )}
-            {reocurring && (
-              <div>
-                <SelectField
-                  label="Inspection Interval"
-                  value={inspectionInterval}
-                  onChange={(option) => setinspectionInterval(option)}
-                  options={intervalOptions}
-                  required
-                />
-              </div>
-            )}
+            <div>
+              <SelectField
+                label="Inspection Interval"
+                value={inspectionInterval}
+                onChange={(option) => setinspectionInterval(option)}
+                options={intervalOptions}
+                required
+              />
+            </div>
           </div>
         </div>
         <div className="flex justify-end space-x-[1vw] mt-[2vw]">
