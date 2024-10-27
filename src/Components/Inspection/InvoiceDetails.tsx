@@ -131,7 +131,7 @@ const InvoiceDetails: React.FC = () => {
                 Inspection Related:
               </p>
               <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                {invoice.inspection.name}
+                {invoice.inspection.id}
               </p>
               {fallbackInspection && (
                 <div className="mt-[1vw]">

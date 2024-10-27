@@ -61,11 +61,13 @@ export interface Inspection {
   checklists: Checklist[];
   client: Client;
   customer: Customer;
+  comments: string;
   assignedTo: GetClientUser;
   asset: Asset;
   invoice: Invoice | null;
   serviceFee: number | null;
   photos: Photo[];
+  clientId?: string | null;
 }
 
 interface InspectionState {
