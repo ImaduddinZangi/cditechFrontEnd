@@ -5,6 +5,7 @@ import { Customer } from "./customerSlice";
 import { GetClientUser } from "./clientUserSlice";
 import { Checklist, EditChecklist } from "./inspectionChecklistSlice";
 import { Invoice } from "./invoiceSlice";
+import { Photo } from "../api/uploadPhotosApi";
 
 export interface RoutePoint {
   latitude: number;
@@ -48,25 +49,23 @@ export interface EditInspection {
 
 export interface Inspection {
   id: string;
-  name: string;
-  clientId: string | null;
+  inspectionInterval: string;
+  reocurrenceEndDate: string | null;
   status: string;
-  pdfFilePath: string;
+  pdfFilePath: string | null;
   scheduledDate: string;
   completedDate: string | null;
-  comments: string;
-  inspectionInterval: string;
-  checklists: Checklist[];
   route: RoutePoint[];
-  client: Client;
-  asset: Asset;
-  invoice: Invoice;
-  assignedTo: GetClientUser;
-  customer: Customer;
   createdAt: string;
   updatedAt: string;
-  reocurrenceEndDate?: string;
-  photos: string[];
+  checklists: Checklist[];
+  client: Client;
+  customer: Customer;
+  assignedTo: GetClientUser;
+  asset: Asset;
+  invoice: Invoice | null;
+  serviceFee: number | null;
+  photos: Photo[];
 }
 
 interface InspectionState {

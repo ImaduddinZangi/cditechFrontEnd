@@ -6,6 +6,7 @@ export interface ChecklistQuestion {
   question_type: string | boolean;
   options: null;
   is_required: boolean;
+  answer: string;
   created_at: string;
   updated_at: string;
 }

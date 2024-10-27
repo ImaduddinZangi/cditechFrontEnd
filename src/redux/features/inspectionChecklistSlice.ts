@@ -56,6 +56,7 @@ export interface Checklist {
   cleaning: boolean;
   floatScores: FloatScores;
   template?: ChecklistTemplate;
+  answers: Answer[];
   pumpScores: { [key: string]: PumpData };
   createdAt?: string;
   updatedAt?: string;

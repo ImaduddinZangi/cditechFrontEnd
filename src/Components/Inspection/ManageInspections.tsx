@@ -195,7 +195,7 @@ const ManageInspections: React.FC = () => {
                       {highlightText(inspection.assignedTo.username, searchTerm)}
                     </td>
                     <td className="flex flex-row items-center gap-x-[1vw] py-[1vw] px-[1.5vw] text-center">
-                      {inspection.status === "Not-Done" && (
+                      {inspection.status === "Not-Complete" && (
                         <PurpleButton
                           text="Begin"
                           onClick={() =>
@@ -203,7 +203,7 @@ const ManageInspections: React.FC = () => {
                           }
                         />
                       )}
-                      {inspection.status !== "Not-Done" && (
+                      {inspection.status !== "Not-Complete" && (
                         <PurpleButton
                           text="Submit"
                           onClick={() => handleModalOpen(inspection.id)}

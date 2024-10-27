@@ -8,6 +8,7 @@ import { useGetInspectionByIdQuery } from "../../redux/api/inspectionApi";
 import { useUpdateChecklistMutation } from "../../redux/api/inspectionChecklistApi";
 import { UpdateChecklist } from "../../redux/features/inspectionChecklistSlice";
 import Loader from "../../Components/Constants/Loader";
+import { Inspection } from "../../redux/features/inspectionSlice";
 
 const AddInspectionChecklistPage: React.FC = () => {
   const [updateInspection] = useUpdateChecklistMutation();
@@ -35,6 +36,10 @@ const AddInspectionChecklistPage: React.FC = () => {
   ) => {
     try {
       await updateInspection(updatedInspection).unwrap();
+      toast.success("Inspeciton Checklist Updated Successfully!", {
+        onClose: () => navigate("/manage-inspections"),
+        autoClose: 1000,
+      });
     } catch (error) {
       if (isAPIError(error)) {
         toast.error("Error Updating Inspection: " + error.data.message, {
@@ -72,7 +77,7 @@ const AddInspectionChecklistPage: React.FC = () => {
         </p>
       </div>
       <AddInspectionChecklist
-        inspection={inspection}
+        inspection={inspection as Inspection}
         onSubmit={handleAddInspectionChecklist}
       />
       <ToastContainer
