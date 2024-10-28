@@ -4,6 +4,8 @@ import { Inspection } from "../../redux/features/inspectionSlice";
 import PurpleButton from "../Tags/PurpleButton";
 import InputField from "../Tags/InputField";
 import SelectField, { Option } from "../Tags/SelectField";
+import { useNavigate } from "react-router-dom";
+import OutlinePurpleButton from "../Tags/OutlinePurpleButton";
 
 const selectOptions = [
   { label: "OK", value: "OK" },
@@ -30,14 +32,17 @@ const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({
   onSubmit,
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const navigate = useNavigate();
   const [questionIds, setQuestionIds] = useState({
     structure: "",
     panel: "",
     breakers: "",
     pipes: "",
+    wires: "",
+    contactors: "",
     alarm: "",
     alarmLight: "",
+    thermals: "",
     overallScore: "",
     pump1Runs: "",
     pump1Amps: "",
@@ -66,8 +71,11 @@ const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({
   const [panel, setPanel] = useState<Option | null>({ label: "", value: "OK" });
   const [breakers, setBreakers] = useState<Option | null>({ label: "", value: "OK" });
   const [pipes, setPipes] = useState<Option | null>({ label: "", value: "OK" });
+  const [wires, setWires] = useState<Option | null>({ label: "", value: "OK" });
+  const [contactors, setContactors] = useState<Option | null>({ label: "", value: "OK" });
   const [alarm, setAlarm] = useState<Option | null>({ label: "", value: "OK" });
   const [alarmLight, setAlarmLight] = useState<Option | null>({ label: "", value: "OK" });
+  const [thermals, setThermals] = useState<Option | null>({ label: "", value: "OK" });
   const [overallScore, setOverallScore] = useState<Option | null>({ label: "", value: "A+" });
 
   const [pump1Runs, setPump1Runs] = useState(false);
@@ -106,8 +114,11 @@ const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({
           panel: template.questions.find(q => q.question_text === "panel")?.id || "",
           breakers: template.questions.find(q => q.question_text === "breakers")?.id || "",
           pipes: template.questions.find(q => q.question_text === "pipes")?.id || "",
+          wires: template.questions.find(q => q.question_text === "wires")?.id || "",
+          contactors: template.questions.find(q => q.question_text === "contactors")?.id || "",
           alarm: template.questions.find(q => q.question_text === "alarm")?.id || "",
           alarmLight: template.questions.find(q => q.question_text === "alarmLight")?.id || "",
+          thermals: template.questions.find(q => q.question_text === "thermals")?.id || "",
           overallScore: template.questions.find(q => q.question_text === "overallScore")?.id || "",
           pump1Runs: template.questions.find(q => q.question_text === "pump1Runs")?.id || "",
           pump1Amps: template.questions.find(q => q.question_text === "pump1Amps")?.id || "",
@@ -145,8 +156,11 @@ const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({
       { questionId: questionIds.panel, answer: panel?.value || "" },
       { questionId: questionIds.breakers, answer: breakers?.value || "" },
       { questionId: questionIds.pipes, answer: pipes?.value || "" },
+      { questionId: questionIds.wires, answer: wires?.value || "" },
+      { questionId: questionIds.contactors, answer: contactors?.value || "" },
       { questionId: questionIds.alarm, answer: alarm?.value || "" },
       { questionId: questionIds.alarmLight, answer: alarmLight?.value || "" },
+      { questionId: questionIds.thermals, answer: thermals?.value || "" },
       { questionId: questionIds.overallScore, answer: overallScore?.value || "" },
 
       { questionId: questionIds.pump1Runs, answer: pump1Runs.toString() },
@@ -189,57 +203,100 @@ const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({
     onSubmit(updatedInspection);
   };
   return (
-    <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
-      <form onSubmit={handleSubmit} className="grid grid-cols-3 gap-[1vw]">
-        <div>
-          <SelectField
-            label="Structure"
-            value={structure}
-            onChange={(option) => setStructure(option)}
-            options={selectOptions}
+    <form onSubmit={handleSubmit}>
+      <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
+        <div className="grid grid-cols-3 gap-[1vw]">
+          <div>
+            <SelectField
+              label="Structure"
+              value={structure}
+              onChange={(option) => setStructure(option)}
+              options={selectOptions}
+            />
+          </div>
+          <div>
+            <SelectField
+              label="Panel"
+              value={panel}
+              onChange={(option) => setPanel(option)}
+              options={selectOptions}
+            />
+          </div>
+          <div>
+            <SelectField
+              label="Breakers"
+              value={breakers}
+              onChange={(option) => setBreakers(option)}
+              options={selectOptions}
+            />
+          </div>
+          <div>
+            <SelectField
+              label="Pipes"
+              value={pipes}
+              onChange={(option) => setPipes(option)}
+              options={selectOptions}
+            />
+          </div>
+          <div>
+            <SelectField
+              label="Wires"
+              value={wires}
+              onChange={(option) => setWires(option)}
+              options={selectOptions}
+            />
+          </div>
+          <div>
+            <SelectField
+              label="Contactors"
+              value={contactors}
+              onChange={(option) => setContactors(option)}
+              options={selectOptions}
+            />
+          </div>
+          <div>
+            <SelectField
+              label="Alarm"
+              value={alarm}
+              onChange={(option) => setAlarm(option)}
+              options={selectOptions}
+            />
+          </div>
+          <div>
+            <SelectField
+              label="Alarm Light"
+              value={alarmLight}
+              onChange={(option) => setAlarmLight(option)}
+              options={selectOptions}
+            />
+          </div>
+          <div>
+            <SelectField
+              label="Thermals"
+              value={thermals}
+              onChange={(option) => setThermals(option)}
+              options={selectOptions}
+            />
+          </div>
+        </div>
+        <div className="mt-[2vw] w-full flex flex-row items-center justify-end gap-[1vw]">
+          <PurpleButton
+            text="Save & close"
+            type="submit"
+            disabled={isSubmitting}
+          />
+          <PurpleButton
+            text="Don't Save and close"
+            onClick={() => navigate('/manage-inspections')}
+            disabled={isSubmitting}
+          />
+          <OutlinePurpleButton
+            text="Save & Submit"
           />
         </div>
-        <div>
-          <SelectField
-            label="Panel"
-            value={panel}
-            onChange={(option) => setPanel(option)}
-            options={selectOptions}
-          />
-        </div>
-        <div>
-          <SelectField
-            label="Breakers"
-            value={breakers}
-            onChange={(option) => setBreakers(option)}
-            options={selectOptions}
-          />
-        </div>
-        <div>
-          <SelectField
-            label="Pipes"
-            value={pipes}
-            onChange={(option) => setPipes(option)}
-            options={selectOptions}
-          />
-        </div>
-        <div>
-          <SelectField
-            label="Alarm"
-            value={alarm}
-            onChange={(option) => setAlarm(option)}
-            options={selectOptions}
-          />
-        </div>
-        <div>
-          <SelectField
-            label="Alarm Light"
-            value={alarmLight}
-            onChange={(option) => setAlarmLight(option)}
-            options={selectOptions}
-          />
-        </div>
-        <div>
+      </div>
+      <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
+        <div className="grid grid-cols-4">
           <SelectField
             label="Overall Score"
             value={overallScore}
@@ -247,161 +304,280 @@ const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({
             options={overAllScoreOptions}
           />
         </div>
-
-        {/* Pumps */}
-        {["pump1", "pump2", "pump3", "pump4"].map((pump, index) => (
-          <div key={pump}>
-            <label>{pump} Runs</label>
-            <label>
-              <input
-                type="radio"
-                name={`${pump}Runs`}
-                value="true"
-                checked={index === 0 ? pump1Runs : index === 1 ? pump2Runs : index === 2 ? pump3Runs : pump4Runs}
-                onChange={() =>
-                  index === 0
-                    ? setPump1Runs(true)
-                    : index === 1
-                      ? setPump2Runs(true)
-                      : index === 2
-                        ? setPump3Runs(true)
-                        : setPump4Runs(true)
-                }
-              />
-              Yes
-            </label>
-            <label>
-              <input
-                type="radio"
-                name={`${pump}Runs`}
-                value="false"
-                checked={
-                  index === 0 ? !pump1Runs : index === 1 ? !pump2Runs : index === 2 ? !pump3Runs : !pump4Runs
-                }
-                onChange={() =>
-                  index === 0
-                    ? setPump1Runs(false)
-                    : index === 1
-                      ? setPump2Runs(false)
-                      : index === 2
-                        ? setPump3Runs(false)
-                        : setPump4Runs(false)
-                }
-              />
-              No
-            </label>
-            <div>
+        <div className="space-y-[1vw] mt-[1vw]">
+          <div className="flex flex-row items-center justify-between gap-[1vw]">
+            <div className="w-full">
+              <p className="text-[1vw] text-darkgray-0 font-medium">
+                Pump #1:
+              </p>
+            </div>
+            <div className="w-full flex items-center space-x-[1vw]">
+              <p className="text-[1vw] text-darkgray-0 font-medium">Runs:</p>
+              <label className="flex items-center space-x-[0.2vw]">
+                <input
+                  type="radio"
+                  name="pump1Runs"
+                  checked={pump1Runs}
+                  onChange={() => setPump1Runs(true)}
+                  className="accent-purple-0"
+                />
+                <p className="text-[1vw] text-darkgray-0 font-medium">Yes</p>
+              </label>
+              <label className="flex items-center space-x-[0.2vw]">
+                <input
+                  type="radio"
+                  name="pump1Runs"
+                  className="accent-purple-0"
+                  checked={!pump1Runs}
+                  onChange={() => setPump1Runs(false)}
+                />
+                <p className="text-[1vw] text-darkgray-0 font-medium">No</p>
+              </label>
+            </div>
+            <div className="w-full">
               <InputField
-                label={`${pump} Amps`}
+                label="Amps:"
                 fieldType="number"
-                value={index === 0 ? pump1Amps : index === 1 ? pump2Amps : index === 2 ? pump3Amps : pump4Amps}
-                onChange={(e) =>
-                  index === 0
-                    ? setPump1Amps(e.target.value)
-                    : index === 1
-                      ? setPump2Amps(e.target.value)
-                      : index === 2
-                        ? setPump3Amps(e.target.value)
-                        : setPump4Amps(e.target.value)
-                }
+                value={pump1Amps}
+                onChange={(e) => setPump1Amps(e.target.value)}
               />
             </div>
-            <div>
+            <div className="w-full">
               <InputField
-                label={`${pump} Contactors`}
+                label="Contactors:"
                 fieldType="number"
-                value={
-                  index === 0
-                    ? pump1Contactors
-                    : index === 1
-                      ? pump2Contactors
-                      : index === 2
-                        ? pump3Contactors
-                        : pump4Contactors
-                }
-                onChange={(e) =>
-                  index === 0
-                    ? setPump1Contactors(e.target.value)
-                    : index === 1
-                      ? setPump2Contactors(e.target.value)
-                      : index === 2
-                        ? setPump3Contactors(e.target.value)
-                        : setPump4Contactors(e.target.value)
-                }
+                value={pump1Contactors}
+                onChange={(e) => setPump1Contactors(e.target.value)}
               />
             </div>
           </div>
-        ))}
-
-        <div>
-          <label>Station Needs Cleaning</label>
-          <label>
-            <input
-              type="radio"
-              value="true"
-              checked={stationNeedsCleaning === true}
-              onChange={() => setStationNeedsCleaning(true)}
-            />
-            Yes
-          </label>
-          <label>
-            <input
-              type="radio"
-              value="false"
-              checked={stationNeedsCleaning === false}
-              onChange={() => setStationNeedsCleaning(false)}
-            />
-            No
-          </label>
+          <div className="flex flex-row items-center justify-between gap-[1vw]">
+            <div className="w-full">
+              <p className="text-[1vw] text-darkgray-0 font-medium">
+                Pump #2:
+              </p>
+            </div>
+            <div className="w-full flex items-center space-x-[1vw]">
+              <p className="text-[1vw] text-darkgray-0 font-medium">Runs:</p>
+              <label className="flex items-center space-x-[0.2vw]">
+                <input
+                  type="radio"
+                  name="pump2Runs"
+                  checked={pump2Runs}
+                  onChange={() => setPump2Runs(true)}
+                  className="accent-purple-0"
+                />
+                <p className="text-[1vw] text-darkgray-0 font-medium">Yes</p>
+              </label>
+              <label className="flex items-center space-x-[0.2vw]">
+                <input
+                  type="radio"
+                  name="pump2Runs"
+                  className="accent-purple-0"
+                  checked={!pump2Runs}
+                  onChange={() => setPump2Runs(false)}
+                />
+                <p className="text-[1vw] text-darkgray-0 font-medium">No</p>
+              </label>
+            </div>
+            <div className="w-full">
+              <InputField
+                label="Amps:"
+                fieldType="number"
+                value={pump2Amps}
+                onChange={(e) => setPump2Amps(e.target.value)}
+              />
+            </div>
+            <div className="w-full">
+              <InputField
+                label="Contactors:"
+                fieldType="number"
+                value={pump2Contactors}
+                onChange={(e) => setPump2Contactors(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="flex flex-row items-center justify-between gap-[1vw]">
+            <div className="w-full">
+              <p className="text-[1vw] text-darkgray-0 font-medium">
+                Pump #3:
+              </p>
+            </div>
+            <div className="w-full flex items-center space-x-[1vw]">
+              <p className="text-[1vw] text-darkgray-0 font-medium">Runs:</p>
+              <label className="flex items-center space-x-[0.2vw]">
+                <input
+                  type="radio"
+                  name="pump3Runs"
+                  checked={pump3Runs}
+                  onChange={() => setPump3Runs(true)}
+                  className="accent-purple-0"
+                />
+                <p className="text-[1vw] text-darkgray-0 font-medium">Yes</p>
+              </label>
+              <label className="flex items-center space-x-[0.2vw]">
+                <input
+                  type="radio"
+                  name="pump3Runs"
+                  className="accent-purple-0"
+                  checked={!pump3Runs}
+                  onChange={() => setPump3Runs(false)}
+                />
+                <p className="text-[1vw] text-darkgray-0 font-medium">No</p>
+              </label>
+            </div>
+            <div className="w-full">
+              <InputField
+                label="Amps:"
+                fieldType="number"
+                value={pump3Amps}
+                onChange={(e) => setPump3Amps(e.target.value)}
+              />
+            </div>
+            <div className="w-full">
+              <InputField
+                label="Contactors:"
+                fieldType="number"
+                value={pump3Contactors}
+                onChange={(e) => setPump3Contactors(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="flex flex-row items-center justify-between gap-[1vw]">
+            <div className="w-full">
+              <p className="text-[1vw] text-darkgray-0 font-medium">
+                Pump #4:
+              </p>
+            </div>
+            <div className="w-full flex items-center space-x-[1vw]">
+              <p className="text-[1vw] text-darkgray-0 font-medium">Runs:</p>
+              <label className="flex items-center space-x-[0.2vw]">
+                <input
+                  type="radio"
+                  name="pump4Runs"
+                  checked={pump4Runs}
+                  onChange={() => setPump4Runs(true)}
+                  className="accent-purple-0"
+                />
+                <p className="text-[1vw] text-darkgray-0 font-medium">Yes</p>
+              </label>
+              <label className="flex items-center space-x-[0.2vw]">
+                <input
+                  type="radio"
+                  name="pump4Runs"
+                  className="accent-purple-0"
+                  checked={!pump4Runs}
+                  onChange={() => setPump4Runs(false)}
+                />
+                <p className="text-[1vw] text-darkgray-0 font-medium">No</p>
+              </label>
+            </div>
+            <div className="w-full">
+              <InputField
+                label="Amps:"
+                fieldType="number"
+                value={pump4Amps}
+                onChange={(e) => setPump4Amps(e.target.value)}
+              />
+            </div>
+            <div className="w-full">
+              <InputField
+                label="Contactors:"
+                fieldType="number"
+                value={pump4Contactors}
+                onChange={(e) => setPump4Contactors(e.target.value)}
+              />
+            </div>
+          </div>
         </div>
+      </div>
+      <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
+        <div>
 
-        {/* Floats */}
-        {["float1", "float2", "float3", "float4", "float5", "float6", "alarmFloat"].map((float, index) => (
-          <div key={float}>
+          <div className="w-full flex items-center space-x-[1vw]">
+            <p className="text-[1vw] text-darkgray-0 font-medium">Sation Needs Cleaning:</p>
+            <label className="flex items-center space-x-[0.2vw]">
+              <input
+                type="radio"
+                name="stationNeedsCleaningtrue"
+                checked={stationNeedsCleaning}
+                onChange={() => setStationNeedsCleaning(true)}
+                className="accent-purple-0"
+              />
+              <p className="text-[1vw] text-darkgray-0 font-medium">Yes</p>
+            </label>
+            <label className="flex items-center space-x-[0.2vw]">
+              <input
+                type="radio"
+                name="stationsNeedsCleaningfalse"
+                className="accent-purple-0"
+                checked={!stationNeedsCleaning}
+                onChange={() => setStationNeedsCleaning(false)}
+              />
+              <p className="text-[1vw] text-darkgray-0 font-medium">No</p>
+            </label>
+          </div>
+        </div>
+        <div className="mt-[1vw] w-full grid grid-cols-3 gap-[1vw]">
+          <div>
             <SelectField
-              label="float"
-              value={
-                index === 0
-                  ? float1
-                  : index === 1
-                    ? float2
-                    : index === 2
-                      ? float3
-                      : index === 3
-                        ? float4
-                        : index === 4
-                          ? float5
-                          : index === 5
-                            ? float6
-                            : alarmFloat
-              }
-              onChange={(option) =>
-                index === 0
-                  ? setFloat1(option)
-                  : index === 1
-                    ? setFloat2(option)
-                    : index === 2
-                      ? setFloat3(option)
-                      : index === 3
-                        ? setFloat4(option)
-                        : index === 4
-                          ? setFloat5(option)
-                          : index === 5
-                            ? setFloat6(option)
-                            : setAlarmFloat(option)
-              }
+              label="Float 1"
+              value={float1}
+              onChange={(option) => setFloat1(option)}
               options={selectOptions}
             />
           </div>
-        ))}
-
-        <PurpleButton
-          text={isSubmitting ? "Submitting..." : "Submit"}
-          type="submit"
-          disabled={isSubmitting}
-        />
-      </form>
-    </div>
+          <div>
+            <SelectField
+              label="Float 2"
+              value={float2}
+              onChange={(option) => setFloat2(option)}
+              options={selectOptions}
+            />
+          </div>
+          <div>
+            <SelectField
+              label="Float 3"
+              value={float3}
+              onChange={(option) => setFloat3(option)}
+              options={selectOptions}
+            />
+          </div>
+          <div>
+            <SelectField
+              label="Float 4"
+              value={float4}
+              onChange={(option) => setFloat4(option)}
+              options={selectOptions}
+            />
+          </div>
+          <div>
+            <SelectField
+              label="Float 5"
+              value={float5}
+              onChange={(option) => setFloat5(option)}
+              options={selectOptions}
+            />
+          </div>
+          <div>
+            <SelectField
+              label="Float 6"
+              value={float6}
+              onChange={(option) => setFloat6(option)}
+              options={selectOptions}
+            />
+          </div>
+          <div>
+            <SelectField
+              label="Alarm Float"
+              value={alarmFloat}
+              onChange={(option) => setAlarmFloat(option)}
+              options={selectOptions}
+            />
+          </div>
+        </div>
+      </div>
+    </form>
   );
 };
 
