@@ -28,8 +28,8 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ breadcrumb }) => {
 
   if (isLoading)
     return (
-      <div>
-        <Loader />
+      <div className="mt-[1vw]">
+        <Loader text="Loading header..." />
       </div>
     );
   const photo = photosData?.find(

@@ -18,7 +18,11 @@ const AddInspectionChecklistPage: React.FC = () => {
     useGetInspectionByIdQuery(inspectionId as string);
 
   if (isInspectionLoading) {
-    return <Loader />;
+    return (
+      <div className="w-full h-[100vh] flex items-center justify-center">
+        <Loader text="Loading inspection..." />
+      </div>
+    );
   }
 
   type APIError = {

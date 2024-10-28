@@ -143,7 +143,7 @@ const RoutesContent: React.FC = () => {
     <Suspense
       fallback={
         <div className="w-screen h-screen flex flex-row justify-center items-center">
-          <Loader />
+          <Loader text="Loading lazy..." />
         </div>
       }
     >

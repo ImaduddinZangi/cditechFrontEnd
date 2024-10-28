@@ -6,6 +6,7 @@ import InputField from "../Tags/InputField";
 import SelectField, { Option } from "../Tags/SelectField";
 import { useNavigate } from "react-router-dom";
 import OutlinePurpleButton from "../Tags/OutlinePurpleButton";
+import SubmitInvoiceModal from "./Constants/SubmitInvoiceModal";
 
 const selectOptions = [
   { label: "OK", value: "OK" },
@@ -31,7 +32,9 @@ const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({
   inspection,
   onSubmit,
 }) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [inspectionId, setInspectionId] = useState<string>("");
+  const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const [questionIds, setQuestionIds] = useState({
     structure: "",
@@ -202,6 +205,16 @@ const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({
     };
     onSubmit(updatedInspection);
   };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
+
+  const handleModalOpen = (id: string) => {
+    setModalOpen(true);
+    setInspectionId(id);
+  };
+
   return (
     <form onSubmit={handleSubmit}>
       <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
@@ -286,12 +299,13 @@ const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({
             disabled={isSubmitting}
           />
           <PurpleButton
-            text="Don't Save and close"
+            text="Don't Save & close"
             onClick={() => navigate('/manage-inspections')}
             disabled={isSubmitting}
           />
           <OutlinePurpleButton
             text="Save & Submit"
+            onClick={() => handleModalOpen(inspection.id)}
           />
         </div>
       </div>
@@ -577,6 +591,11 @@ const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({
           </div>
         </div>
       </div>
+      <SubmitInvoiceModal
+        isOpen={isModalOpen}
+        onCancel={handleModalClose}
+        inspectionId={inspectionId}
+      />
     </form>
   );
 };
