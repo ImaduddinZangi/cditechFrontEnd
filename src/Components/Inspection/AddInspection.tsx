@@ -117,7 +117,7 @@ const AddInspection: React.FC<AddInspectionProps> = ({
   useEffect(() => {
     if (usersData) {
       const userOptions = usersData.map((user) => ({
-        label: user.username,
+        label: user.username || "N/A",
         value: user.id,
       }));
       setUsers(userOptions);

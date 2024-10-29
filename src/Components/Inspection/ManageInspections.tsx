@@ -192,7 +192,7 @@ const ManageInspections: React.FC = () => {
                       )}
                     </td>
                     <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                      {highlightText(inspection.assignedTo.username, searchTerm)}
+                      {highlightText(inspection.assignedTo?.username || "N/A", searchTerm)}
                     </td>
                     <td className="flex flex-row items-center gap-x-[1vw] py-[1vw] px-[1.5vw] text-center">
                       {inspection.status === "Not-Complete" && (
