@@ -5,6 +5,7 @@ import Loader from "../../Constants/Loader";
 import PurpleButton from "../../Tags/PurpleButton";
 import OutlinePurpleButton from "../../Tags/OutlinePurpleButton";
 import { useNavigate } from "react-router-dom";
+import { useGetInspectionChecklistByIdQuery } from "../../../redux/api/inspectionChecklistApi";
 
 const InspectionDetails: React.FC = () => {
   const { inspectionId } = useParams<{ inspectionId: string }>();
@@ -15,6 +16,14 @@ const InspectionDetails: React.FC = () => {
   } = useGetInspectionByIdQuery(inspectionId || "");
   const navigate = useNavigate();
 
+  const checklistId = inspection?.checklists?.[0]?.id;
+  const { data: checklist } = useGetInspectionChecklistByIdQuery(checklistId || "");
+
+  const getAnswerByText = (questionText: string): string => {
+    const question = checklist?.questions.find(q => q.questionText === questionText);
+    return question?.answer || "N/A";
+  };
+
   if (isLoading) {
     return (
       <div className="w-full h-[80vh]">
@@ -23,7 +32,9 @@ const InspectionDetails: React.FC = () => {
     );
   }
 
-  if (error) return <p>Error loading inspection details</p>;
+  if (error) {
+    return <p>Error loading inspection details</p>;
+  }
 
   return (
     <div>
@@ -31,253 +42,92 @@ const InspectionDetails: React.FC = () => {
         <>
           <div className="grid grid-cols-3 gap-[1vw] p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg">
             <div>
-              <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                Customer Name:
-              </p>
-              <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                {inspection.customer?.name ?? "N/A"}
-              </p>
+              <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">Customer Name:</p>
+              <p className="text-[1vw] text-gray-0 font-medium font-inter">{inspection.customer?.name ?? "N/A"}</p>
             </div>
             <div>
-              <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                Asset:
-              </p>
-              <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                {inspection.asset?.name ?? "N/A"}
-              </p>
+              <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">Asset:</p>
+              <p className="text-[1vw] text-gray-0 font-medium font-inter">{inspection.asset?.name ?? "N/A"}</p>
             </div>
             <div>
-              <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                Completed on:
-              </p>
-              <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                {inspection.completedDate || "Pending"}
-              </p>
+              <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">Completed on:</p>
+              <p className="text-[1vw] text-gray-0 font-medium font-inter">{inspection.completedDate || "Pending"}</p>
             </div>
             <div>
-              <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                Status:
-              </p>
-              <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                {inspection.status}
-              </p>
+              <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">Status:</p>
+              <p className="text-[1vw] text-gray-0 font-medium font-inter">{inspection.status}</p>
             </div>
             <div>
-              <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                Checklist:
-              </p>
-              <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                {inspection.checklists?.[0]?.id ?? "N/A"}
-              </p>
+              <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">Checklist:</p>
+              <p className="text-[1vw] text-gray-0 font-medium font-inter">{checklistId ?? "N/A"}</p>
             </div>
             <div>
-              <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                Inspection ID:
-              </p>
-              <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                {inspection.id}
-              </p>
+              <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">Inspection ID:</p>
+              <p className="text-[1vw] text-gray-0 font-medium font-inter">{inspection.id}</p>
             </div>
           </div>
 
           {/* Score Section */}
-          {inspection.checklists && inspection.checklists.length > 0 && (
+          {checklist && (
             <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                    Overall Score:
-                  </p>
-                  <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.checklists?.[0]?.overallScore ?? "N/A"}
-                  </p>
+                  <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">Overall Score:</p>
+                  <p className="text-[1vw] text-gray-0 font-medium font-inter">{getAnswerByText("overallScore")}</p>
                 </div>
                 <div className="flex space-x-[1vw]">
-                  <PurpleButton
-                    text="Send PDF"
-                    onClick={() => navigate("/inspection-reports")}
-                  />
+                  <PurpleButton text="Send PDF" onClick={() => navigate("/inspection-reports")} />
                   <OutlinePurpleButton text="Print" />
                 </div>
               </div>
+
+              {/* Individual Questions Section */}
               <div className="grid grid-cols-4 gap-[1vw] mt-[1vw]">
-                <div>
-                  <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                    Structure:
-                  </p>
-                  <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.checklists?.[0]?.structure ?? "N/A"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                    Panel:
-                  </p>
-                  <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.checklists?.[0]?.panel ?? "N/A"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                    Pipes:
-                  </p>
-                  <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.checklists?.[0]?.pipes ?? "N/A"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                    Breakers:
-                  </p>
-                  <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.checklists?.[0]?.breakers ?? "N/A"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                    Alarm:
-                  </p>
-                  <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.checklists?.[0]?.alarm ?? "N/A"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                    Alarm Light:
-                  </p>
-                  <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.checklists?.[0]?.alarmLight ?? "N/A"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                    Wires:
-                  </p>
-                  <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.checklists?.[0]?.wires ?? "N/A"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                    Contactors:
-                  </p>
-                  <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.checklists?.[0]?.contactors ?? "N/A"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                    Thermals:
-                  </p>
-                  <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.checklists?.[0]?.thermals ?? "N/A"}
-                  </p>
-                </div>
+                {["structure", "panel", "pipes", "breakers", "alarm", "alarmLight", "wires", "contactors", "thermals"].map((field, index) => (
+                  <div key={index}>
+                    <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">{field.charAt(0).toUpperCase() + field.slice(1)}:</p>
+                    <p className="text-[1vw] text-gray-0 font-medium font-inter">{getAnswerByText(field)}</p>
+                  </div>
+                ))}
               </div>
             </div>
           )}
 
           {/* Pump Section */}
-          {inspection.checklists?.[0]?.pumpScores &&
-            Object.entries(inspection.checklists[0].pumpScores).length > 0 && (
-              <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg">
-                {Object.entries(inspection.checklists[0].pumpScores).map(
-                  ([pumpKey, pump]) => (
-                    <div key={pumpKey} className="flex justify-between">
-                      <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                        {pumpKey}: {pump.pumpName ?? "N/A"}
-                      </p>
-                      <div className="flex flex-row items-center gap-[1vw]">
-                        <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                          Runs:
-                        </p>
-                        <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                          {pump.runs ? "Yes" : "No"}
-                        </p>
-                      </div>
-                      <div className="flex flex-row items-center gap-[1vw]">
-                        <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                          Amps:
-                        </p>
-                        <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                          {pump.amps ?? "N/A"}
-                        </p>
-                      </div>
-                      <div className="flex flex-row items-center gap-[1vw]">
-                        <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                          Contactor:
-                        </p>
-                        <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                          {pump.contactors ?? "N/A"}
-                        </p>
-                      </div>
-                    </div>
-                  )
-                )}
+          {checklist && (
+            <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg">
+              <p className="text-[1vw] text-darkgray-0 font-semibold font-inter mb-[1vw]">Pumps:</p>
+              <div className="grid grid-cols-4 gap-[1vw]">
+                {["pump1", "pump2", "pump3", "pump4"].map((pump, index) => (
+                  <div key={index}>
+                    <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
+                      {pump.charAt(0).toUpperCase() + pump.slice(1)}:
+                    </p>
+                    <p className="text-[1vw] text-gray-0 font-medium font-inter">Runs: {getAnswerByText(`${pump}Runs`)}</p>
+                    <p className="text-[1vw] text-gray-0 font-medium font-inter">Amps: {getAnswerByText(`${pump}Amps`)}</p>
+                    <p className="text-[1vw] text-gray-0 font-medium font-inter">Contactors: {getAnswerByText(`${pump}Contactors`)}</p>
+                  </div>
+                ))}
               </div>
-            )}
+            </div>
+          )}
 
           {/* Station Needs Cleaning */}
-          {inspection.checklists?.[0]?.cleaning !== undefined && (
+          {checklist !== undefined && (
             <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg">
-              <div className="flex flex-row items-center gap-[1vw]">
-                <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                  Station Needs Cleaning:
-                </p>
-                <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                  {inspection.checklists?.[0]?.cleaning ? "Yes" : "No"}
-                </p>
+              <div className="flex space-x-[1vw]">
+                <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">Station Needs Cleaning:</p>
+                <p className="text-[1vw] text-gray-0 font-medium font-inter">{getAnswerByText("stationNeedsCleaning") === "Yes" ? "Yes" : "No"}</p>
               </div>
-              <div className="grid grid-cols-3 gap-[1vw]">
-                <div>
-                  <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                    Float 1:
-                  </p>
-                  <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.checklists?.[0]?.floatScores?.float1 ?? "N/A"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                    Float 2:
-                  </p>
-                  <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.checklists?.[0]?.floatScores?.float2 ?? "N/A"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                    Float 3:
-                  </p>
-                  <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.checklists?.[0]?.floatScores?.float3 ?? "N/A"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                    Float 4:
-                  </p>
-                  <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.checklists?.[0]?.floatScores?.float4 ?? "N/A"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                    Float 5:
-                  </p>
-                  <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.checklists?.[0]?.floatScores?.float5 ?? "N/A"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-                    Alarm Float:
-                  </p>
-                  <p className="text-[1vw] text-gray-0 font-medium font-inter">
-                    {inspection.checklists?.[0]?.floatScores?.alarmFloat ??
-                      "N/A"}
-                  </p>
-                </div>
+
+              {/* Float Scores */}
+              <div className="grid grid-cols-3 gap-[1vw] mt-[1vw]">
+                {["float1", "float2", "float3", "float4", "float5", "alarmFloat"].map((floatField, index) => (
+                  <div key={index}>
+                    <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">{`Float ${index + 1}:`}</p>
+                    <p className="text-[1vw] text-gray-0 font-medium font-inter">{getAnswerByText(floatField)}</p>
+                  </div>
+                ))}
               </div>
             </div>
           )}

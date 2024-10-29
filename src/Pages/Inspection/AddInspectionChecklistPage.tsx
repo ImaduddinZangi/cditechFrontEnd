@@ -40,10 +40,6 @@ const AddInspectionChecklistPage: React.FC = () => {
   ) => {
     try {
       await updateInspection(updatedInspection).unwrap();
-      toast.success("Inspeciton Checklist Updated Successfully!", {
-        onClose: () => navigate("/manage-inspections"),
-        autoClose: 1000,
-      });
     } catch (error) {
       if (isAPIError(error)) {
         toast.error("Error Updating Inspection: " + error.data.message, {

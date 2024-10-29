@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, FormEvent } from "react";
 import { UpdateChecklist, Answer } from "../../redux/features/inspectionChecklistSlice";
 import { Inspection } from "../../redux/features/inspectionSlice";
 import PurpleButton from "../Tags/PurpleButton";
@@ -7,6 +7,7 @@ import SelectField, { Option } from "../Tags/SelectField";
 import { useNavigate } from "react-router-dom";
 import OutlinePurpleButton from "../Tags/OutlinePurpleButton";
 import SubmitInvoiceModal from "./Constants/SubmitInvoiceModal";
+import { toast } from "react-toastify";
 
 const selectOptions = [
   { label: "OK", value: "OK" },
@@ -150,7 +151,7 @@ const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({
     }
   }, [inspection]);
 
-  const handleSubmit = async (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent, openModal: boolean) => {
     event.preventDefault();
     setIsSubmitting(true);
 
@@ -204,19 +205,25 @@ const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({
       checklists: updatedChecklists,
     };
     onSubmit(updatedInspection);
+
+    if (openModal) {
+      toast.success("Inspection Updated Successfully!", {
+        onClose: () => { setModalOpen(true), setInspectionId(inspection.id) }
+      })
+    } else {
+      toast.success("Inspeciton Checklist Updated Successfully!", {
+        onClose: () => navigate("/manage-inspections"),
+        autoClose: 1000,
+      });
+    }
   };
 
   const handleModalClose = () => {
     setModalOpen(false);
   };
 
-  const handleModalOpen = (id: string) => {
-    setModalOpen(true);
-    setInspectionId(id);
-  };
-
   return (
-    <form onSubmit={handleSubmit}>
+    <form>
       <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
         <div className="grid grid-cols-3 gap-[1vw]">
           <div>
@@ -296,6 +303,7 @@ const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({
           <PurpleButton
             text="Save & close"
             type="submit"
+            onEvent={(event: FormEvent)=> handleSubmit(event, false)}
             disabled={isSubmitting}
           />
           <PurpleButton
@@ -305,7 +313,7 @@ const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({
           />
           <OutlinePurpleButton
             text="Save & Submit"
-            onClick={() => handleModalOpen(inspection.id)}
+            onEvent={(event: FormEvent) => handleSubmit(event, true)}
           />
         </div>
       </div>

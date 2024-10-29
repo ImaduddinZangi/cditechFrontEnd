@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import {
   Checklist,
+  GetChecklist,
   UpdateChecklist,
 } from "../features/inspectionChecklistSlice";
 import { Inspection } from "../features/inspectionSlice";
@@ -23,21 +24,21 @@ export const inspectionChecklistApi = createApi({
   endpoints: (builder) => ({
     getInspectionChecklists: builder.query<Checklist[], void>({
       query: () => ({
-        url: "checklists",
+        url: "inspection-checklists",
         method: "GET",
       }),
       providesTags: ["Checklists"],
     }),
-    getInspectionChecklistById: builder.query<Checklist, string>({
+    getInspectionChecklistById: builder.query<GetChecklist, string>({
       query: (checklistId: string) => ({
-        url: `checklists/${checklistId}`,
+        url: `inspection-checklists/${checklistId}`,
         method: "GET",
       }),
       providesTags: (_result, _error, id) => [{ type: "Checklists", id }],
     }),
     createInspectionChecklist: builder.mutation<Checklist, Partial<Checklist>>({
       query: (newChecklist) => ({
-        url: "checklists",
+        url: "inspection-checklists",
         method: "POST",
         body: newChecklist,
       }),
@@ -55,7 +56,7 @@ export const inspectionChecklistApi = createApi({
     }),
     updateInspectionChecklist: builder.mutation<Checklist, Partial<Checklist>>({
       query: ({ id, ...rest }) => ({
-        url: `checklists/${id}`,
+        url: `inspection-checklists/${id}`,
         method: "PATCH",
         body: rest,
       }),
@@ -65,7 +66,7 @@ export const inspectionChecklistApi = createApi({
     }),
     deleteInspectionChecklist: builder.mutation<{ success: boolean }, string>({
       query: (checklistId: string) => ({
-        url: `checklists/${checklistId}`,
+        url: `inspection-checklists/${checklistId}`,
         method: "DELETE",
       }),
       invalidatesTags: (_result, _error, id) => [{ type: "Checklists", id }],

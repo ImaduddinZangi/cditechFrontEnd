@@ -252,12 +252,12 @@ const ManageInspections: React.FC = () => {
         >
           Next
         </button>
+        <SubmitInvoiceModal
+          isOpen={isModalOpen}
+          onCancel={handleModalClose}
+          inspectionId={inspectionId}
+        />
       </div>
-      <SubmitInvoiceModal
-        isOpen={isModalOpen}
-        onCancel={handleModalClose}
-        inspectionId={inspectionId}
-      />
     </div>
   );
 };

@@ -108,13 +108,20 @@ const SubmitInvoiceModal: React.FC<SubmitInvoiceModalProps> = ({
     if (!inspectionId || !inspection) return;
     try {
       setLoading(true);
-      const doc = <MyDocument data={inspection} />;
-      const pdfBlob = await pdf(doc).toBlob();
+
+      // Moved outside the component lifecycle
+      const generatePDF = async (inspectionData: any) => {
+        const doc = <MyDocument data={inspectionData} />;
+        return await pdf(doc).toBlob();
+      };
+
+      const pdfBlob = await generatePDF(inspection);
 
       const pdfFile = new File([pdfBlob], "inspection_report.pdf", {
         type: "application/pdf",
         lastModified: Date.now(),
       });
+
       const formData = new FormData();
       formData.append("file", pdfFile);
       await generateReport({
@@ -126,8 +133,11 @@ const SubmitInvoiceModal: React.FC<SubmitInvoiceModalProps> = ({
     } catch (error) {
       toast.error("Failed to upload PDF");
       throw error;
+    } finally {
+      setLoading(false);
     }
   };
+
 
   const handleActionSubmit = async (actionType: string) => {
     if (!inspectionId || !clientId || !serviceFee?.value) return;

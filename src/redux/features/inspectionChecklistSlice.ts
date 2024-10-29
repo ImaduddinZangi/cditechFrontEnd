@@ -23,6 +23,7 @@ export interface Questions {
   questionText: string;
   questionType: string | boolean;
   options: string[] | null;
+  answer?: string;
 }
 
 export interface Answer {
@@ -41,25 +42,22 @@ export interface UpdateChecklist {
   checklists: EditChecklist[];
 }
 
+export interface GetChecklist {
+  inspectionChecklistId: string;
+  inspectionId: string;
+  templateId: string;
+  completedAt: string;
+  questions: Questions[];
+}
+
 export interface Checklist {
   id?: string;
-  structure: string;
-  panel: string;
-  pipes: string;
-  alarm: string;
-  alarmLight: string;
-  wires: string;
-  breakers: string;
-  contactors: string;
-  thermals: string;
-  overallScore: string;
-  cleaning: boolean;
-  floatScores: FloatScores;
   template?: ChecklistTemplate;
+  questions: Questions[];
+  created_at: string | null;
+  completed_at: string | null;
+  updated_at: string | null;
   answers: Answer[];
-  pumpScores: { [key: string]: PumpData };
-  createdAt?: string;
-  updatedAt?: string;
 }
 
 interface InspectionChecklistState {

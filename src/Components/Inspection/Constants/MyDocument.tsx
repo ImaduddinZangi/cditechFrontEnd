@@ -9,6 +9,7 @@ import {
 } from "@react-pdf/renderer";
 import { getAddressFromLatLng } from "../../../utils/utils";
 import { Inspection } from "../../../redux/features/inspectionSlice";
+import { useGetInspectionChecklistByIdQuery } from "../../../redux/api/inspectionChecklistApi";
 
 const styles = StyleSheet.create({
   page: {
@@ -98,6 +99,8 @@ interface MyDocumentProps {
 
 const MyDocument: React.FC<MyDocumentProps> = ({ data }) => {
   const [address, setAddress] = useState("");
+  const { data: checklist } = useGetInspectionChecklistByIdQuery(data.checklists[0].id as string);
+  console.log("checklist console: ", checklist);
 
   useEffect(() => {
     // Fetch both addresses based on the route coordinates
@@ -115,6 +118,12 @@ const MyDocument: React.FC<MyDocumentProps> = ({ data }) => {
     fetchAddresses();
   }, [data.route]);
 
+  const getAnswerByText = (questionText: string): string => {
+    const question = checklist?.questions.find(q => q.questionText === questionText);
+    return question?.answer || "N/A";
+  };
+
+
   return (
     <Document>
       <Page style={styles.page}>
@@ -124,123 +133,88 @@ const MyDocument: React.FC<MyDocumentProps> = ({ data }) => {
 
           {/* Header Section */}
           <View style={styles.header}>
-            <Text>Monthly Lift Station</Text>
+            <Text>{data.asset.assetType.name || "N/A"}</Text>
             <Text>Inspection Default</Text>
             <Text>
-              Overall Score: {data.checklists[0]?.overallScore || "N/A"}
+              Overall Score: {getAnswerByText("overallScore")}
             </Text>
           </View>
-          <Text>Oct 2, 2024</Text>
+          <Text>{data.scheduledDate || "N/A"}</Text>
         </View>
 
         {/* Address Section */}
         <View style={styles.address}>
           <Text style={styles.fieldLabel}>Address:&nbsp;</Text>
-          <Text>{address}</Text>
+          <Text>{address || "N/A"}</Text>
         </View>
 
         {/* Scores Section */}
         <View style={styles.scoreSection}>
           <View style={styles.scoreRow}>
             <Text style={styles.fieldLabel}>Structure:</Text>
-            <Text>{data.checklists[0]?.structure || "N/A"}</Text>
+            <Text>{getAnswerByText("structure")}</Text>
           </View>
           <View style={styles.scoreRow}>
             <Text style={styles.fieldLabel}>Panel:</Text>
-            <Text>{data.checklists[0]?.panel || "N/A"}</Text>
+            <Text>{getAnswerByText("panel")}</Text>
           </View>
           <View style={styles.scoreRow}>
             <Text style={styles.fieldLabel}>Contactors:</Text>
-            <Text>{data.checklists[0]?.contactors || "N/A"}</Text>
+            <Text>{getAnswerByText("contactors")}</Text>
           </View>
           <View style={styles.scoreRow}>
             <Text style={styles.fieldLabel}>Pipes:</Text>
-            <Text>{data.checklists[0]?.pipes || "N/A"}</Text>
+            <Text>{getAnswerByText("pipes")}</Text>
           </View>
           <View style={styles.scoreRow}>
             <Text style={styles.fieldLabel}>Breakers:</Text>
-            <Text>{data.checklists[0]?.breakers || "N/A"}</Text>
+            <Text>{getAnswerByText("breakers")}</Text>
           </View>
           <View style={styles.scoreRow}>
             <Text style={styles.fieldLabel}>Alarm Light:</Text>
-            <Text>{data.checklists[0]?.alarmLight || "N/A"}</Text>
+            <Text>{getAnswerByText("alarmLight")}</Text>
           </View>
           <View style={styles.scoreRow}>
             <Text style={styles.fieldLabel}>Wires:</Text>
-            <Text>{data.checklists[0]?.wires || "N/A"}</Text>
+            <Text>{getAnswerByText("wires")}</Text>
           </View>
           <View style={styles.scoreRow}>
             <Text style={styles.fieldLabel}>Alarm:</Text>
-            <Text>{data.checklists[0]?.alarm || "N/A"}</Text>
+            <Text>{getAnswerByText("alarm")}</Text>
           </View>
           <View style={styles.scoreRow}>
             <Text style={styles.fieldLabel}>Thermals:</Text>
-            <Text>{data.checklists[0]?.thermals || "N/A"}</Text>
+            <Text>{getAnswerByText("thermals")}</Text>
           </View>
         </View>
 
         {/* Pumps Section */}
         <View style={styles.pumpsSection}>
-          {data.checklists[0]?.pumpScores &&
-          Object.entries(data.checklists[0].pumpScores).length > 0 ? (
-            Object.entries(data.checklists[0].pumpScores).map(
-              ([pumpKey, pump]) => (
-                <View key={pumpKey} style={styles.pumpField}>
-                  <Text>{pump.pumpName}:</Text>
-                  <Text>Runs: {pump.runs ? "Yes" : "No"}</Text>
-                  <Text>Amps: {pump.amps ?? "N/A"}</Text>
-                  <Text>Contactors: {pump.contactors ?? "N/A"}</Text>
-                </View>
-              )
-            )
-          ) : (
-            <Text>No pump data available</Text>
-          )}
+          {["pump1", "pump2", "pump3", "pump4"].map((pump, index) => (
+            <View key={index} style={styles.pumpField}>
+              <Text>{pump}:</Text>
+              <Text>Runs: {getAnswerByText(`${pump}Runs`)}</Text>
+              <Text>Amps: {getAnswerByText(`${pump}Amps`)}</Text>
+              <Text>Contactors: {getAnswerByText(`${pump}Contactors`)}</Text>
+            </View>
+          ))}
         </View>
 
         {/* Float Scores Section */}
         <View style={styles.floatScoreSection}>
-          {data.checklists[0]?.floatScores && (
-            <>
-              <View style={styles.scoreRow}>
-                <Text style={styles.fieldLabel}>Float 1:</Text>
-                <Text>{data.checklists[0].floatScores.float1 || "N/A"}</Text>
-              </View>
-              <View style={styles.scoreRow}>
-                <Text style={styles.fieldLabel}>Float 2:</Text>
-                <Text>{data.checklists[0].floatScores.float2 || "N/A"}</Text>
-              </View>
-              <View style={styles.scoreRow}>
-                <Text style={styles.fieldLabel}>Float 3:</Text>
-                <Text>{data.checklists[0].floatScores.float3 || "N/A"}</Text>
-              </View>
-              <View style={styles.scoreRow}>
-                <Text style={styles.fieldLabel}>Float 4:</Text>
-                <Text>{data.checklists[0].floatScores.float4 || "N/A"}</Text>
-              </View>
-              <View style={styles.scoreRow}>
-                <Text style={styles.fieldLabel}>Float 5:</Text>
-                <Text>{data.checklists[0].floatScores.float5 || "N/A"}</Text>
-              </View>
-              <View style={styles.scoreRow}>
-                <Text style={styles.fieldLabel}>Float 6:</Text>
-                <Text>{data.checklists[0].floatScores.float6 || "N/A"}</Text>
-              </View>
-              <View style={styles.scoreRow}>
-                <Text style={styles.fieldLabel}>Alarm Float:</Text>
-                <Text>
-                  {data.checklists[0].floatScores.alarmFloat || "N/A"}
-                </Text>
-              </View>
-            </>
-          )}
+          {["float1", "float2", "float3", "float4", "float5", "float6", "alarmFloat"].map((floatName, index) => (
+            <View key={index} style={styles.scoreRow}>
+              <Text style={styles.fieldLabel}>{floatName.replace("float", "Float ")}:</Text>
+              <Text>{getAnswerByText(floatName)}</Text>
+            </View>
+          ))}
         </View>
 
         {/* Cleaning and Tech Note Section */}
         <View style={styles.scoreSection}>
           <View style={styles.scoreRow}>
             <Text>Station Needs Cleaning: </Text>
-            <Text>{data.checklists[0]?.cleaning ? "Yes" : "No"}</Text>
+            <Text>{getAnswerByText("stationNeedsCleaning") === "Yes" ? "Yes" : "No"}</Text>
           </View>
           <View style={styles.scoreRow}>
             <Text>Tech Note: </Text>
@@ -252,10 +226,10 @@ const MyDocument: React.FC<MyDocumentProps> = ({ data }) => {
         <View style={styles.footer}>
           <View style={styles.footerRow}>
             <Text>Completed PN:</Text>
-            <Text>Oct 2, 2024</Text>
+            <Text>{data.completedDate || "N/A"}</Text>
           </View>
           <View style={styles.footerRow}>
-            <Text>Completed By: {data.client?.first_name || "N/A"}</Text>
+            <Text>Completed By: {data.assignedTo.username || "N/A"}</Text>
             <Text>Inspection ID: {data.id || "N/A"}</Text>
           </View>
         </View>
