@@ -14,11 +14,12 @@ import Loader from "../Constants/Loader";
 import PurpleButton from "../Tags/PurpleButton";
 import WhiteButton from "../Tags/WhiteButton";
 import { Inspection } from "../../redux/features/inspectionSlice";
+import { useGetInspectionChecklistByIdQuery } from "../../redux/api/inspectionChecklistApi";
+import { GetChecklist } from "../../redux/features/inspectionChecklistSlice";
 
 const GenerateReports: React.FC = () => {
   const [inspections, setInspections] = useState<Inspection[]>([]);
   const clientId = getUserId();
-  const { data: inspectionsData } = useGetInspectionsQuery();
   const [selectedInspectionId, setSelectedInspectionId] = useState<
     string | null
   >(null);
@@ -28,6 +29,8 @@ const GenerateReports: React.FC = () => {
       skip: !selectedInspectionId,
     }
   );
+  const { data: inspectionsData } = useGetInspectionsQuery();
+  const { data: checklist } = useGetInspectionChecklistByIdQuery(inspection?.checklists[0].id as string);
 
   useEffect(() => {
     if (inspectionsData && clientId) {
@@ -60,8 +63,7 @@ const GenerateReports: React.FC = () => {
     if (clientId && selectedInspectionId && inspection) {
       try {
         setLoading(true);
-
-        const doc = <MyDocument data={inspection} />;
+        const doc = <MyDocument data={inspection} checklist={checklist as GetChecklist} />;
         const pdfBlob = await pdf(doc).toBlob();
 
         const pdfFile = new File([pdfBlob], "inspection_report.pdf", {
@@ -137,7 +139,7 @@ const GenerateReports: React.FC = () => {
         <>
           <div className="mb-4 border rounded-lg overflow-hidden shadow-lg">
             <PDFViewer className="w-full h-96">
-              <MyDocument data={inspection} />
+              <MyDocument data={inspection} checklist={checklist as GetChecklist} />
             </PDFViewer>
           </div>
           <div className="flex justify-center space-x-4">
@@ -148,7 +150,7 @@ const GenerateReports: React.FC = () => {
               disabled={loading}
             />
             <PDFDownloadLink
-              document={<MyDocument data={inspection} />}
+              document={<MyDocument data={inspection} checklist={checklist as GetChecklist} />}
               fileName="inspection_report.pdf"
             >
               {({ loading: pdfLoading }) => (

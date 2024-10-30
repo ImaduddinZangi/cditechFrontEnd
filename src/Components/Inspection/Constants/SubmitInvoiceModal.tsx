@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
 import PurpleButton from "../../Tags/PurpleButton";
 import WhiteButton from "../../Tags/WhiteButton";
 import SelectField, { Option } from "../../Tags/SelectField";
@@ -19,6 +18,9 @@ import Loader from "../../Constants/Loader";
 import { getUserId } from "../../../utils/utils";
 import { useGenerateReportMutation } from "../../../redux/api/inspectionReportsApi";
 import { useUpdateInspectionMutation } from "../../../redux/api/inspectionApi";
+import { Inspection } from "../../../redux/features/inspectionSlice";
+import { useGetInspectionChecklistByIdQuery } from "../../../redux/api/inspectionChecklistApi";
+import { GetChecklist } from "../../../redux/features/inspectionChecklistSlice";
 
 interface SubmitInvoiceModalProps {
   isOpen: boolean;
@@ -51,7 +53,8 @@ const SubmitInvoiceModal: React.FC<SubmitInvoiceModalProps> = ({
   const [selectedInvoice, setSelectedInvoice] = useState<Option | null>(null);
   const [existingInvoices, setExistingInvoices] = useState<Option[]>([]);
   const { data: inspectionsData } = useGetInspectionsQuery();
-
+  const { data: checklist } = useGetInspectionChecklistByIdQuery(inspection?.checklists[0].id as string);
+  console.log("inspectionId: ", inspectionId);
   useEffect(() => {
     if (inspectionsData && clientId) {
       const invoices = inspectionsData
@@ -109,12 +112,10 @@ const SubmitInvoiceModal: React.FC<SubmitInvoiceModalProps> = ({
     try {
       setLoading(true);
 
-      // Moved outside the component lifecycle
-      const generatePDF = async (inspectionData: any) => {
-        const doc = <MyDocument data={inspectionData} />;
+      const generatePDF = async (inspectionData: Inspection) => {
+        const doc = <MyDocument data={inspectionData} checklist={checklist as GetChecklist} />;
         return await pdf(doc).toBlob();
       };
-
       const pdfBlob = await generatePDF(inspection);
 
       const pdfFile = new File([pdfBlob], "inspection_report.pdf", {
@@ -196,7 +197,7 @@ const SubmitInvoiceModal: React.FC<SubmitInvoiceModalProps> = ({
     handleActionSubmit("Submit & Add to Existing Invoice");
   };
 
-  return ReactDOM.createPortal(
+  return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
       <div className="bg-white p-[1.5vw] rounded-lg shadow-lg w-[90%] max-w-[50vw]">
         <p className="text-[1.2vw] font-semibold text-darkgray-0 mb-[1vw]">
@@ -285,8 +286,7 @@ const SubmitInvoiceModal: React.FC<SubmitInvoiceModalProps> = ({
           </>
         )}
       </div>
-    </div>,
-    document.body
+    </div>
   );
 };
 

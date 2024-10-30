@@ -4,7 +4,6 @@ import { useGetInspectionByIdQuery } from "../../../redux/api/inspectionApi";
 import Loader from "../../Constants/Loader";
 import PurpleButton from "../../Tags/PurpleButton";
 import OutlinePurpleButton from "../../Tags/OutlinePurpleButton";
-import { useNavigate } from "react-router-dom";
 import { useGetInspectionChecklistByIdQuery } from "../../../redux/api/inspectionChecklistApi";
 
 const InspectionDetails: React.FC = () => {
@@ -14,7 +13,6 @@ const InspectionDetails: React.FC = () => {
     error,
     isLoading,
   } = useGetInspectionByIdQuery(inspectionId || "");
-  const navigate = useNavigate();
 
   const checklistId = inspection?.checklists?.[0]?.id;
   const { data: checklist } = useGetInspectionChecklistByIdQuery(checklistId || "");
@@ -76,7 +74,15 @@ const InspectionDetails: React.FC = () => {
                   <p className="text-[1vw] text-gray-0 font-medium font-inter">{getAnswerByText("overallScore")}</p>
                 </div>
                 <div className="flex space-x-[1vw]">
-                  <PurpleButton text="Send PDF" onClick={() => navigate("/inspection-reports")} />
+                  <PurpleButton
+                    text="Download PDF"
+                    onClick={() => {
+                      window.open(
+                        `https://inspection-point-s3.s3.us-east-2.amazonaws.com/${inspection.pdfFilePath}`,
+                        "_blank"
+                      );
+                    }}
+                  />
                   <OutlinePurpleButton text="Print" />
                 </div>
               </div>

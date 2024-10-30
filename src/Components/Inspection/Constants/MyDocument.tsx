@@ -9,7 +9,7 @@ import {
 } from "@react-pdf/renderer";
 import { getAddressFromLatLng } from "../../../utils/utils";
 import { Inspection } from "../../../redux/features/inspectionSlice";
-import { useGetInspectionChecklistByIdQuery } from "../../../redux/api/inspectionChecklistApi";
+import { GetChecklist } from "../../../redux/features/inspectionChecklistSlice";
 
 const styles = StyleSheet.create({
   page: {
@@ -95,11 +95,11 @@ const styles = StyleSheet.create({
 
 interface MyDocumentProps {
   data: Inspection;
+  checklist: GetChecklist;
 }
 
-const MyDocument: React.FC<MyDocumentProps> = ({ data }) => {
+const MyDocument: React.FC<MyDocumentProps> = ({ data, checklist }) => {
   const [address, setAddress] = useState("");
-  const { data: checklist } = useGetInspectionChecklistByIdQuery(data.checklists[0].id as string);
   console.log("checklist console: ", checklist);
 
   useEffect(() => {
