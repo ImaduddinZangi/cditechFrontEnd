@@ -64,9 +64,10 @@ const pumpOptions: Option[] = [
 interface LiftStationPropertiesFormProps {
     updateProperties: (key: string, value: string) => void;
     properties: Record<string, any>;
+    onPumpCountChange: (count: number) => void;
 }
 
-const LiftStationPropertiesForm: React.FC<LiftStationPropertiesFormProps> = ({ updateProperties, properties }) => {
+const LiftStationPropertiesForm: React.FC<LiftStationPropertiesFormProps> = ({ updateProperties, properties, onPumpCountChange }) => {
     const [pipeDia, setPipeDia] = useState(properties.pipeDia || '');
     const [smart, setSmart] = useState<Option | null>(properties.smart ? { label: properties.smart, value: properties.smart } : null);
     const [size, setSize] = useState(properties.size || '');
@@ -75,7 +76,9 @@ const LiftStationPropertiesForm: React.FC<LiftStationPropertiesFormProps> = ({ u
     const [duty, setDuty] = useState<Option | null>(properties.duty ? { label: properties.duty, value: properties.duty } : null);
     const [rails, setRails] = useState(properties.rails || '');
     const [float, setFloat] = useState(properties.float || '');
-    const [pumps, setPumps] = useState(properties.pumps || '');
+    const [pumps, setPumps] = useState<Option | null>(
+        properties.pumps ? { label: properties.pumps, value: properties.pumps } : null
+    );
     const [power, setPower] = useState(properties.power || '');
     const [latitude, setLatitude] = useState(properties.latitude || '');
     const [longitude, setLongitude] = useState(properties.longitude || '');
@@ -91,7 +94,10 @@ const LiftStationPropertiesForm: React.FC<LiftStationPropertiesFormProps> = ({ u
     useEffect(() => updateProperties('duty', duty?.value || ""), [duty]);
     useEffect(() => updateProperties('rails', rails), [rails]);
     useEffect(() => updateProperties('float', float), [float]);
-    useEffect(() => updateProperties('pumps', pumps), [pumps]);
+    useEffect(() => {
+        updateProperties('pumps', pumps?.value || "");
+        onPumpCountChange(Number(pumps?.value || 0));
+    }, [pumps]);
     useEffect(() => updateProperties('power', power), [power]);
     useEffect(() => updateProperties('latitude', latitude), [latitude]);
     useEffect(() => updateProperties('longitude', longitude), [longitude]);

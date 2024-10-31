@@ -31,22 +31,13 @@ const statusOptions: Option[] = [
   { label: "Maintenance", value: "maintenance" },
 ];
 
-const pumpOptions: Option[] = [
-  { label: "1", value: "1" },
-  { label: "2", value: "2" },
-  { label: "3", value: "3" },
-  { label: "4", value: "4" },
-  { label: "5", value: "5" },
-  { label: "6", value: "6" },
-];
-
 const libraries: ("places" | "drawing")[] = ["places"];
 
 const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
   const [customers, setCustomers] = useState<Option[]>([]);
   const [assetTypes, setAssetTypes] = useState<Option[]>([]);
   const [pumpDataList, setPumpDataList] = useState<Pump[]>([]);
-
+  
   const [name, setName] = useState<string>(initialData?.name || "");
   const [type, setType] = useState<Option | null>(
     initialData?.assetType
@@ -64,11 +55,6 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
       : null
   );
   const [photos, setPhotos] = useState<File[]>([]);
-  const [pumps, setPumps] = useState<Option | null>(
-    initialData?.pumps
-      ? { label: initialData.pumps, value: initialData.pumps }
-      : null
-  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [properties, setProperties] = useState<Record<string, any>>({});
 
@@ -77,6 +63,18 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
       ...prevProps,
       [key]: value,
     }));
+  };
+
+  const handlePumpCountChange = (count: number) => {
+    setPumpDataList(Array(count).fill({}));
+  };
+
+  const handlePumpChange = (index: number, data: Pump) => {
+    setPumpDataList((prevPumpDataList) => {
+      const newPumpDataList = [...prevPumpDataList];
+      newPumpDataList[index] = data;
+      return newPumpDataList;
+    });
   };
 
   const handleOpenModal = () => setIsModalOpen(true);
@@ -127,23 +125,6 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
     }
   }, [assetTypeData, initialData]);
 
-  useEffect(() => {
-    if (type?.label === 'Lift Station') {
-      const numberOfPumps = Number(pumps?.value || 0);
-      setPumpDataList(Array(numberOfPumps).fill({}));
-    } else {
-      setPumpDataList([]);
-    }
-  }, [type, pumps]);
-
-  const handlePumpChange = (index: number, data: Pump) => {
-    setPumpDataList((prevPumpDataList) => {
-      const newPumpDataList = [...prevPumpDataList];
-      newPumpDataList[index] = data;
-      return newPumpDataList;
-    });
-  };
-
   const renderPropertiesForm = () => {
     switch (type?.label) {
       case 'Lift Station':
@@ -151,6 +132,7 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
           <LiftStationPropertiesForm
             updateProperties={updateProperties}
             properties={properties}
+            onPumpCountChange={handlePumpCountChange}
           />
         );
       case 'Grease Trap':
@@ -275,17 +257,6 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
               />
             </div>
           )}
-          {type?.label === 'Lift Station' && (
-            <div>
-              <SelectField
-                label="Number of Pumps"
-                value={pumps}
-                onChange={(option) => setPumps(option)}
-                options={pumpOptions}
-                placeholder="Select number of pumps"
-              />
-            </div>
-          )}
           {type && renderPropertiesForm()}
           {type && (
             <OutlinePurpleButton
@@ -294,19 +265,17 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
             />
           )}
         </div>
-        {type?.label === 'Lift Station' && pumps &&
-          pumpDataList.map((pumpData, index) => (
-            <div key={index}>
-              <p className="text-[1.2vw] my-[1vw] font-semibold font-inter">
-                Pump # {index + 1}
-              </p>
-              <AddPump
-                onChange={(data) => handlePumpChange(index, data)}
-                initialData={pumpData}
-              />
-            </div>
-          ))
-        }
+        {type?.label === 'Lift Station' && pumpDataList.map((pumpData, index) => (
+          <div key={index}>
+            <p className="text-[1.2vw] my-[1vw] font-semibold font-inter">
+              Pump # {index + 1}
+            </p>
+            <AddPump
+              onChange={(data) => handlePumpChange(index, data)}
+              initialData={pumpData}
+            />
+          </div>
+        ))}
         <div className="col-span-2 absolute bottom-0 right-0 flex justify-end space-x-[1vw]">
           <PurpleButton type="submit" text="Save" />
           <WhiteButton type="button" text="Cancel" onClick={handleCancel} />
