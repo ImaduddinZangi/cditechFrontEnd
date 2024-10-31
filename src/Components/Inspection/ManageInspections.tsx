@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useGetInspectionsQuery } from "../../redux/api/inspectionApi";
+import { useGetInspectionsQuery, useMarkInspectionBeginMutation } from "../../redux/api/inspectionApi";
 import { useNavigate } from "react-router-dom";
 import { FiSearch } from "react-icons/fi";
 import PurpleButton from "../Tags/PurpleButton";
@@ -19,6 +19,18 @@ const ManageInspections: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const inspectionsPerPage = 10;
+
+  const [markInspectionBegin] = useMarkInspectionBeginMutation();
+
+  const handleBeginInspection = async (inspectionId: string) => {
+    try {
+      await markInspectionBegin(inspectionId).unwrap();
+      navigate(`/inspection-checklist/${inspectionId}`);
+    } catch (error) {
+      console.error("Failed to mark inspection as begun:", error);
+    }
+  };
+
 
   useEffect(() => {
     if (inspectionsData && clientId) {
@@ -195,20 +207,21 @@ const ManageInspections: React.FC = () => {
                       {highlightText(inspection.assignedTo?.username || "N/A", searchTerm)}
                     </td>
                     <td className="flex flex-row items-center gap-x-[1vw] py-[1vw] px-[1.5vw] text-center">
-                      {inspection.status === "Not-Complete" && (
+                      {(inspection.status === "Not-Complete" || inspection.status === "In-Progress") && (
                         <PurpleButton
                           text="Begin"
-                          onClick={() =>
-                            navigate(`/inspection-checklist/${inspection.id}`)
-                          }
+                          onClick={() => handleBeginInspection(inspection.id)}
                         />
                       )}
-                      {inspection.status !== "Not-Complete" && (
-                        <PurpleButton
-                          text="Submit"
-                          onClick={() => handleModalOpen(inspection.id)}
-                        />
-                      )}
+
+                      {inspection.status !== "Not-Complete"
+                        && inspection.status !== "In-Progress"
+                        && (
+                          <PurpleButton
+                            text="Submit"
+                            onClick={() => handleModalOpen(inspection.id)}
+                          />
+                        )}
                       <WhiteButton
                         text="View"
                         onClick={() =>

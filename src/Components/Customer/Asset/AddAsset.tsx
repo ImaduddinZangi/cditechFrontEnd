@@ -1,8 +1,8 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { getUserId } from "../../../utils/utils";
 import { useGetAssetTypesQuery } from "../../../redux/api/assetTypeApi";
 import { useGetCustomersQuery } from "../../../redux/api/customerApi";
-import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
+import { useJsApiLoader } from "@react-google-maps/api";
 import InputField from "../../Tags/InputField";
 import PurpleButton from "../../Tags/PurpleButton";
 import WhiteButton from "../../Tags/WhiteButton";
@@ -14,9 +14,14 @@ import AddPump from "../Pump/AddPump";
 import AddPhotos from "../AddPhotos";
 import OutlinePurpleButton from "../../Tags/OutlinePurpleButton";
 import { Pump } from "../../../redux/features/pumpSlice";
+import LiftStationPropertiesForm from "./templates/LiftStationPropertiesForm";
+import GreaseTrapPropertiesForm from "./templates/GreaseTrapPropertiesForm";
+import LintTrapPropertiesForm from "./templates/LintTrapPropertiesForm";
+import TreatmentPlantDigesterPropertiesForm from "./templates/TreatmentPlantDigesterPropertiesForm";
+import StormDrainPropertiesForm from "./templates/StormDrainPropertiesForm";
 
 interface AddAssetProps {
-  onSubmit: (assetData: FormData, pumpDataList: Pump[]) => void;
+  onSubmit: (assetData: FormData, pumpDataList?: Pump[]) => void;
   initialData?: Partial<Asset>;
 }
 
@@ -26,63 +31,13 @@ const statusOptions: Option[] = [
   { label: "Maintenance", value: "maintenance" },
 ];
 
-const inspectionIntervalOptions: Option[] = [
-  { label: "Daily", value: "Daily" },
-  { label: "Weekly", value: "Weekly" },
-  { label: "Monthly", value: "Monthly" },
-  { label: "Annually", value: "Annually" },
-];
-
-const smartOptions: Option[] = [
-  { label: "Yes", value: "Yes" },
-  { label: "No", value: "No" },
-];
-
-const sizeOptions: Option[] = [
-  { label: "Small", value: "Small" },
-  { label: "Medium", value: "Medium" },
-  { label: "Large", value: "Large" },
-  { label: "XLarge", value: "XLarge" },
-  { label: "XXLarge", value: "XXLarge" },
-];
-
-const powerOptions: Option[] = [
-  { label: "1 Phase", value: "1 Phase" },
-  { label: "2 Phase", value: "2 Phase" },
-  { label: "3 Phase", value: "3 Phase" },
-  { label: "Wild", value: "Wild" },
-  { label: "Unknown", value: "Unknown" },
-  { label: "Other", value: "Other" },
-];
-
-const materialOptions: Option[] = [
-  { label: "Concrete", value: "Concrete" },
-  { label: "Steel", value: "Steel" },
-  { label: "Fiberglass", value: "Fiberglass" },
-  { label: "Composite", value: "Composite" },
-  { label: "Other", value: "Other" },
-  { label: "Unknown", value: "Unknown" },
-];
-
-const dutyOptions: Option[] = [
-  { label: "Lite", value: "Lite" },
-  { label: "Normal", value: "Normal" },
-  { label: "Heavy", value: "Heavy" },
-  { label: "Severe", value: "Severe" },
-];
-
-const railsOptions: Option[] = [
-  { label: "Yes", value: "Yes" },
-  { label: "No", value: "No" },
-];
-
 const pumpOptions: Option[] = [
-  { label: "6", value: "6" },
-  { label: "5", value: "5" },
-  { label: "4", value: "4" },
-  { label: "3", value: "3" },
-  { label: "2", value: "2" },
   { label: "1", value: "1" },
+  { label: "2", value: "2" },
+  { label: "3", value: "3" },
+  { label: "4", value: "4" },
+  { label: "5", value: "5" },
+  { label: "6", value: "6" },
 ];
 
 const libraries: ("places" | "drawing")[] = ["places"];
@@ -103,65 +58,27 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
       ? { label: initialData.customer.name, value: initialData.customer.id }
       : null
   );
-  const [location, setLocation] = useState<string>(initialData?.location || "");
-  const [latitude, setLatitude] = useState<number>(initialData?.latitude || 0);
-  const [longitude, setLongitude] = useState<number>(
-    initialData?.longitude || 0
-  );
   const [status, setStatus] = useState<Option | null>(
     initialData?.status
       ? { label: initialData.status, value: initialData.status }
       : null
   );
-  const [power, setPower] = useState<Option | null>(
-    initialData?.power
-      ? { label: initialData.power, value: initialData.power }
-      : null
-  );
-  const [inspectionInterval, setInspectionInterval] = useState<Option | null>(
-    initialData?.inspectionInterval
-      ? {
-          label: initialData.inspectionInterval,
-          value: initialData.inspectionInterval,
-        }
-      : null
-  );
-  const [qrCode, setQrCode] = useState<string>(initialData?.qrCode || "");
-  const [nfcCode, setNfcCode] = useState<string>(initialData?.nfcCode || "");
   const [photos, setPhotos] = useState<File[]>([]);
-  const [pipeDia, setPipeDia] = useState<string>(initialData?.pipeDia || "");
-  const [smart, setSmart] = useState<Option | null>(
-    initialData?.smart
-      ? { label: initialData.smart, value: initialData.smart }
-      : null
-  );
-  const [size, setSize] = useState<Option | null>(
-    initialData?.size
-      ? { label: initialData.size, value: initialData.size }
-      : null
-  );
-  const [material, setMaterial] = useState<Option | null>(
-    initialData?.material
-      ? { label: initialData.material, value: initialData.material }
-      : null
-  );
-  const [duty, setDuty] = useState<Option | null>(
-    initialData?.duty
-      ? { label: initialData.duty, value: initialData.duty }
-      : null
-  );
-  const [rails, setRails] = useState<Option | null>(
-    initialData?.rails
-      ? { label: initialData.rails, value: initialData.rails }
-      : null
-  );
   const [pumps, setPumps] = useState<Option | null>(
     initialData?.pumps
       ? { label: initialData.pumps, value: initialData.pumps }
       : null
   );
-  const [floatVal, setFloat] = useState<string>(initialData?.float || "");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [properties, setProperties] = useState<Record<string, any>>({});
+
+  const updateProperties = (key: string, value: any) => {
+    setProperties((prevProps) => ({
+      ...prevProps,
+      [key]: value,
+    }));
+  };
+
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
@@ -175,24 +92,6 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API,
     libraries,
   });
-
-  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
-  const inputRef = useRef<HTMLInputElement | null>(null);
-
-  const onLoad = (autocomplete: google.maps.places.Autocomplete) => {
-    autocompleteRef.current = autocomplete;
-  };
-
-  const onPlaceChanged = () => {
-    if (autocompleteRef.current !== null) {
-      const place = autocompleteRef.current.getPlace();
-      if (place.geometry && place.geometry.location) {
-        setLocation(place.formatted_address || "");
-        setLatitude(place.geometry.location.lat());
-        setLongitude(place.geometry.location.lng());
-      }
-    }
-  };
 
   useEffect(() => {
     if (customersData) {
@@ -229,13 +128,13 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
   }, [assetTypeData, initialData]);
 
   useEffect(() => {
-    if (pumps) {
-      const numberOfPumps = Number(pumps.value);
+    if (type?.label === 'Lift Station') {
+      const numberOfPumps = Number(pumps?.value || 0);
       setPumpDataList(Array(numberOfPumps).fill({}));
     } else {
       setPumpDataList([]);
     }
-  }, [pumps]);
+  }, [type, pumps]);
 
   const handlePumpChange = (index: number, data: Pump) => {
     setPumpDataList((prevPumpDataList) => {
@@ -243,6 +142,48 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
       newPumpDataList[index] = data;
       return newPumpDataList;
     });
+  };
+
+  const renderPropertiesForm = () => {
+    switch (type?.label) {
+      case 'Lift Station':
+        return (
+          <LiftStationPropertiesForm
+            updateProperties={updateProperties}
+            properties={properties}
+          />
+        );
+      case 'Grease Trap':
+        return (
+          <GreaseTrapPropertiesForm
+            updateProperties={updateProperties}
+            properties={properties}
+          />
+        );
+      case 'Lint Trap':
+        return (
+          <LintTrapPropertiesForm
+            updateProperties={updateProperties}
+            properties={properties}
+          />
+        );
+      case 'Treatment Plant Digester':
+        return (
+          <TreatmentPlantDigesterPropertiesForm
+            updateProperties={updateProperties}
+            properties={properties}
+          />
+        );
+      case 'Storm Drain':
+        return (
+          <StormDrainPropertiesForm
+            updateProperties={updateProperties}
+            properties={properties}
+          />
+        );
+      default:
+        return null;
+    }
   };
 
   const handleCancel = () => {
@@ -261,31 +202,21 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
     if (clientId !== undefined && clientId != null) {
       formData.append("clientId", clientId);
     }
-    formData.append("customerId", customerId?.value || "");
-    formData.append("name", name);
-    formData.append("assetType", type?.value || "");
-    formData.append("location", location);
-    formData.append("latitude", latitude.toString());
-    formData.append("longitude", longitude.toString());
-    formData.append("status", status?.value || "");
-    formData.append("inspectionInterval", inspectionInterval?.value || "");
-    formData.append("qrCode", qrCode);
-    formData.append("nfcCode", nfcCode);
-    formData.append("pipeDia", pipeDia);
-    formData.append("smart", smart?.value || "");
-    formData.append("size", size?.value || "");
-    formData.append("material", material?.value || "");
-    formData.append("deleteProtect", "yes");
-    formData.append("duty", duty?.value || "");
-    formData.append("rails", rails?.value || "");
-    formData.append("power", power?.value || "");
-    formData.append("float", floatVal);
-    formData.append("pumps", pumps?.value || "");
+    formData.append('customerId', customerId?.value || '');
+    formData.append('name', name);
+    formData.append('assetType', type?.value || '');
+    formData.append('status', status?.value || '');
+    formData.append('properties', JSON.stringify(properties));
+
     photos.forEach((photo) => {
-      formData.append("photos", photo);
+      formData.append('photos', photo);
     });
 
-    onSubmit(formData, pumpDataList);
+    if (type?.label === 'Lift Station') {
+      onSubmit(formData, pumpDataList);
+    } else {
+      onSubmit(formData);
+    }
   };
 
   if (loadError) return <div>Error loading maps</div>;
@@ -334,23 +265,6 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
           )}
           {type && (
             <div>
-              {isLoaded && (
-                <Autocomplete onLoad={onLoad} onPlaceChanged={onPlaceChanged}>
-                  <InputField
-                    ref={inputRef}
-                    label="Lat/Lng"
-                    name="location"
-                    fieldType="text"
-                    value={location}
-                    placeholder="Enter asset location"
-                    onChange={(e) => setLocation(e.target.value)}
-                  />
-                </Autocomplete>
-              )}
-            </div>
-          )}
-          {type && (
-            <div>
               <SelectField
                 label="Status"
                 value={status}
@@ -361,147 +275,18 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
               />
             </div>
           )}
-          {type && (
+          {type?.label === 'Lift Station' && (
             <div>
               <SelectField
-                label="Inspection Interval"
-                value={inspectionInterval}
-                onChange={(option) => setInspectionInterval(option)}
-                options={inspectionIntervalOptions}
-                placeholder="Select Inspection Interval"
-                required
-              />
-            </div>
-          )}
-          {type && (
-            <div>
-              <InputField
-                label="QR Code"
-                name="qrCode"
-                fieldType="text"
-                value={qrCode}
-                placeholder="Enter QR code"
-                onChange={(e) => setQrCode(e.target.value)}
-              />
-            </div>
-          )}
-          {type && (
-            <div>
-              <InputField
-                label="NFC Code"
-                name="nfcCode"
-                fieldType="text"
-                value={nfcCode}
-                placeholder="Enter NFC code"
-                onChange={(e) => setNfcCode(e.target.value)}
-              />
-            </div>
-          )}
-          {type && (
-            <div>
-              <InputField
-                label="Pipe Diameter"
-                name="pipeDia"
-                fieldType="number"
-                value={pipeDia}
-                placeholder="Enter pipe diameter"
-                onChange={(e) => setPipeDia(e.target.value)}
-              />
-            </div>
-          )}
-          {type && (
-            <div>
-              <SelectField
-                label="Smart"
-                value={smart}
-                onChange={(option) => setSmart(option)}
-                options={smartOptions}
-                required
-              />
-            </div>
-          )}
-          {type && (
-            <div>
-              <SelectField
-                label="Size"
-                value={size}
-                onChange={(option) => setSize(option)}
-                options={sizeOptions}
-                placeholder="Select Size"
-                required
-              />
-            </div>
-          )}
-          {type && (
-            <div>
-              <SelectField
-                label="Material"
-                value={material}
-                onChange={(option) => setMaterial(option)}
-                options={materialOptions}
-                placeholder="Select Material"
-                required
-              />
-            </div>
-          )}
-          {type && (
-            <div>
-              <SelectField
-                label="Duty"
-                name="duty"
-                value={duty}
-                placeholder="Select Duty"
-                onChange={(option) => setDuty(option)}
-                options={dutyOptions}
-              />
-            </div>
-          )}
-          {type && (
-            <div>
-              <SelectField
-                label="Rails"
-                value={rails}
-                onChange={(option) => setRails(option)}
-                options={railsOptions}
-                required
-              />
-            </div>
-          )}
-          {type && (
-            <div>
-              <SelectField
-                label="Power"
-                value={power}
-                onChange={(option) => setPower(option)}
-                options={powerOptions}
-                required
-              />
-            </div>
-          )}
-          {type && (
-            <div>
-              <InputField
-                label="Floats"
-                name="floats"
-                fieldType="number"
-                value={floatVal}
-                placeholder="Enter float"
-                onChange={(e) => setFloat(e.target.value)}
-              />
-            </div>
-          )}
-          {type && (
-            <div>
-              <SelectField
-                label="Pumps"
-                name="pumps"
+                label="Number of Pumps"
                 value={pumps}
-                placeholder="Select pumps"
                 onChange={(option) => setPumps(option)}
                 options={pumpOptions}
+                placeholder="Select number of pumps"
               />
             </div>
           )}
+          {type && renderPropertiesForm()}
           {type && (
             <OutlinePurpleButton
               onClick={handleOpenModal}
@@ -509,19 +294,19 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
             />
           )}
         </div>
-        {pumps &&
+        {type?.label === 'Lift Station' && pumps &&
           pumpDataList.map((pumpData, index) => (
-            <div className="mt-[2vw]">
+            <div key={index}>
               <p className="text-[1.2vw] my-[1vw] font-semibold font-inter">
                 Pump # {index + 1}
               </p>
               <AddPump
-                key={index}
                 onChange={(data) => handlePumpChange(index, data)}
                 initialData={pumpData}
               />
             </div>
-          ))}
+          ))
+        }
         <div className="col-span-2 absolute bottom-0 right-0 flex justify-end space-x-[1vw]">
           <PurpleButton type="submit" text="Save" />
           <WhiteButton type="button" text="Cancel" onClick={handleCancel} />

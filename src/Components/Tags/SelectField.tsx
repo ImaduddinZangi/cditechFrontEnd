@@ -16,6 +16,7 @@ interface SelectFieldProps {
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;
+  className?: string;
 }
 
 const SelectField: React.FC<SelectFieldProps> = ({
@@ -27,6 +28,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
   placeholder = "Select an option",
   required = false,
   disabled = false,
+  className,
 }) => {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +41,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
         );
 
   return (
-    <div>
+    <div className={className}>
       <label
         htmlFor={name}
         className="block text-darkgray-0 font-medium text-[1vw]"

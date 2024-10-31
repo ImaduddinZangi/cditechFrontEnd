@@ -10,6 +10,7 @@ interface InputFieldProps {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   labelClassName?: string;
   fieldClassName?: string;
+  className?: string;
   disabled?: boolean;
   readOnly?: boolean;
 }
@@ -26,13 +27,14 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
       onChange,
       labelClassName,
       fieldClassName,
+      className,
       disabled,
       readOnly
     },
     ref
   ) => {
     return (
-      <div className="w-full">
+      <div className={`w-full ${className}`}>
         {label && (
           <label
             htmlFor={name}
