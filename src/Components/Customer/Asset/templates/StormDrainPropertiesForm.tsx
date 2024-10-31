@@ -134,7 +134,7 @@ const StormDrainPropertiesForm: React.FC<StormDrainPropertiesFormProps> = ({ upd
             <InputField label="Longitude" value={longitude} fieldType="text" onChange={(e) => setLongitude(e.target.value)} className="col-span-1" placeholder='Longitude' />
             <InputField label="QR Code" value={qrCode} fieldType="text" onChange={(e) => setQrCode(e.target.value)} className="col-span-1" placeholder='Enter qr code' />
             <InputField label="NFC ID" value={nfcId} fieldType="text" onChange={(e) => setNfcId(e.target.value)} className="col-span-1" placeholder='Enter nfc code' />
-            <InputField label="Drain Dimensions (Depth*Width*Length in feet)" value={drainDimensions} fieldType="text" onChange={(e) => setDrainDimensions(e.target.value)} className="col-span-1" placeholder='11*22*33' />
+            <InputField label="Drain Dimensions (feet)" value={drainDimensions} fieldType="text" onChange={(e) => setDrainDimensions(e.target.value)} className="col-span-1" placeholder='11*22*33' />
             <InputField label="Connected Asset Line Color" value={connectedAssetLineColor} fieldType="color" onChange={(e) => setConnectedAssetLineColor(e.target.value)} className="col-span-1" />
             {/* <InputField label="Connected Storm Drain Asset IDs (comma-separated)" value={connectedStormDrainAssetIds.join(", ")} fieldType="text" onChange={(e) => setConnectedStormDrainAssetIds(e.target.value.split(", ").slice(0, 5))} className="col-span-1" /> */}
             <div className="flex items-center col-span-1 cursor-pointer">

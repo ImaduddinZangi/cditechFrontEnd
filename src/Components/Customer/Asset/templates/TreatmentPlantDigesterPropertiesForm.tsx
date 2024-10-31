@@ -103,7 +103,7 @@ const TreatmentPlantDigesterPropertiesForm: React.FC<TreatmentPlantDigesterPrope
             />
             <InputField label="Gallons" value={gallons} fieldType="number" onChange={(e) => setGallons(e.target.value)} className="col-span-1" placeholder='Gallons' />
             <InputField label="Connection Size" value={connectionSize} fieldType="text" onChange={(e) => setConnectionSize(e.target.value)} className="col-span-1" placeholder='Connection Size' />
-            <InputField label="Digester Dimensions (000 x 000 x 000)" value={digesterDimensions} fieldType="text" onChange={(e) => setDigesterDimensions(e.target.value)} className="col-span-1" placeholder='123*123*123' />
+            <InputField label="Digester Dimensions" value={digesterDimensions} fieldType="text" onChange={(e) => setDigesterDimensions(e.target.value)} className="col-span-1" placeholder='123*123*123' />
             <InputField label="Primary Treatment Plant Asset ID" value={primaryTreatmentPlantAssetId} fieldType="text" onChange={(e) => setPrimaryTreatmentPlantAssetId(e.target.value)} className="col-span-1" />
             <InputField label="Latitude" value={latitude} fieldType="text" onChange={(e) => setLatitude(e.target.value)} className="col-span-1" placeholder='Latitude' />
             <InputField label="Longitude" value={longitude} fieldType="text" onChange={(e) => setLongitude(e.target.value)} className="col-span-1" placeholder='Longitude' />
