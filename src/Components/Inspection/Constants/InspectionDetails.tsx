@@ -13,9 +13,10 @@ const InspectionDetails: React.FC = () => {
     error,
     isLoading,
   } = useGetInspectionByIdQuery(inspectionId || "");
-
-  const checklistId = inspection?.checklists?.[0]?.id;
-  const { data: checklist } = useGetInspectionChecklistByIdQuery(checklistId || "");
+  const { data: checklist } = useGetInspectionChecklistByIdQuery(
+    inspection?.checklists[0].id as string,
+    { skip: !inspection?.checklists?.[0]?.id }
+  );
 
   const getAnswerByText = (questionText: string): string => {
     const question = checklist?.questions.find(q => q.questionText === questionText);
@@ -57,7 +58,7 @@ const InspectionDetails: React.FC = () => {
             </div>
             <div>
               <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">Checklist:</p>
-              <p className="text-[1vw] text-gray-0 font-medium font-inter">{checklistId ?? "N/A"}</p>
+              <p className="text-[1vw] text-gray-0 font-medium font-inter">{inspection?.checklists[0].id as string ?? "N/A"}</p>
             </div>
             <div>
               <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">Inspection ID:</p>
@@ -102,10 +103,9 @@ const InspectionDetails: React.FC = () => {
           {/* Pump Section */}
           {checklist && (
             <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg">
-              <p className="text-[1vw] text-darkgray-0 font-semibold font-inter mb-[1vw]">Pumps:</p>
-              <div className="grid grid-cols-4 gap-[1vw]">
+              <div className="grid grid-rows-4 gap-[1vw]">
                 {["pump1", "pump2", "pump3", "pump4"].map((pump, index) => (
-                  <div key={index}>
+                  <div key={index} className="flex flex-row items-center justify-between">
                     <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
                       {pump.charAt(0).toUpperCase() + pump.slice(1)}:
                     </p>

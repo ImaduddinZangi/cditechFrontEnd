@@ -53,8 +53,11 @@ const SubmitInvoiceModal: React.FC<SubmitInvoiceModalProps> = ({
   const [selectedInvoice, setSelectedInvoice] = useState<Option | null>(null);
   const [existingInvoices, setExistingInvoices] = useState<Option[]>([]);
   const { data: inspectionsData } = useGetInspectionsQuery();
-  const { data: checklist } = useGetInspectionChecklistByIdQuery(inspection?.checklists[0].id as string);
-  console.log("inspectionId: ", inspectionId);
+  const { data: checklist } = useGetInspectionChecklistByIdQuery(
+    inspection?.checklists[0].id as string,
+    { skip: !isOpen || !inspection?.checklists?.[0]?.id }
+  );
+
   useEffect(() => {
     if (inspectionsData && clientId) {
       const invoices = inspectionsData
@@ -111,7 +114,6 @@ const SubmitInvoiceModal: React.FC<SubmitInvoiceModalProps> = ({
     if (!inspectionId || !inspection) return;
     try {
       setLoading(true);
-
       const generatePDF = async (inspectionData: Inspection) => {
         const doc = <MyDocument data={inspectionData} checklist={checklist as GetChecklist} />;
         return await pdf(doc).toBlob();

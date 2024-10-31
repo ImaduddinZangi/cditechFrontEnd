@@ -8,6 +8,7 @@ import {
   StyleSheet,
 } from "@react-pdf/renderer";
 import { getAddressFromLatLng } from "../../../utils/utils";
+import { format } from "date-fns";
 import { Inspection } from "../../../redux/features/inspectionSlice";
 import { GetChecklist } from "../../../redux/features/inspectionChecklistSlice";
 
@@ -18,6 +19,9 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 18,
+    display: "flex",
+    flexDirection: "column",
+    width: "100%",
     textAlign: "center",
     marginBottom: 10,
     paddingBottom: 20,
@@ -33,7 +37,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     maxWidth: "100%",
-    gap: "7vw",
+    gap: "5vw",
     marginBottom: 10,
     paddingVertical: 5,
     borderBottom: "1 solid #ccc",
@@ -50,7 +54,7 @@ const styles = StyleSheet.create({
   scoreRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 5,
+    marginBottom: 2,
   },
   fieldLabel: {
     fontWeight: "bold",
@@ -81,6 +85,7 @@ const styles = StyleSheet.create({
   pumpField: {
     flexDirection: "row",
     justifyContent: "space-between",
+    marginBottom: 5,
   },
   footerRow: {
     flexDirection: "row",
@@ -100,21 +105,23 @@ interface MyDocumentProps {
 
 const MyDocument: React.FC<MyDocumentProps> = ({ data, checklist }) => {
   const [address, setAddress] = useState("");
-  console.log("checklist console: ", checklist);
 
   useEffect(() => {
-    // Fetch both addresses based on the route coordinates
     const fetchAddresses = async () => {
-      if (data.route && data.route.length >= 2) {
-        const address = await getAddressFromLatLng(
-          data.route[0].latitude,
-          data.route[0].longitude
-        );
-
-        setAddress(address);
+      if (data.route && data.route.length > 0) {
+        try {
+          const address = await getAddressFromLatLng(
+            data.route[0].latitude,
+            data.route[0].longitude
+          );
+          setAddress(address);
+          console.log("The converted address is given as following", address);
+        } catch (error) {
+          console.error("Error fetching address:", error);
+          setAddress("Address not found");
+        }
       }
     };
-
     fetchAddresses();
   }, [data.route]);
 
@@ -123,6 +130,12 @@ const MyDocument: React.FC<MyDocumentProps> = ({ data, checklist }) => {
     return question?.answer || "N/A";
   };
 
+  const formattedScheduledDate = format(
+    new Date(data.scheduledDate),
+    "dd-MMM-yy"
+  );
+
+  const currentDate = format(new Date(), "dd-MMM-yy");
 
   return (
     <Document>
@@ -133,13 +146,13 @@ const MyDocument: React.FC<MyDocumentProps> = ({ data, checklist }) => {
 
           {/* Header Section */}
           <View style={styles.header}>
-            <Text>{data.asset.assetType.name || "N/A"}</Text>
+            <Text style={styles.fieldLabel}>{data.asset.assetType.name || "N/A"}</Text>
             <Text>Inspection Default</Text>
             <Text>
               Overall Score: {getAnswerByText("overallScore")}
             </Text>
           </View>
-          <Text>{data.scheduledDate || "N/A"}</Text>
+          <Text>{formattedScheduledDate || "N/A"}</Text>
         </View>
 
         {/* Address Section */}
@@ -226,7 +239,7 @@ const MyDocument: React.FC<MyDocumentProps> = ({ data, checklist }) => {
         <View style={styles.footer}>
           <View style={styles.footerRow}>
             <Text>Completed PN:</Text>
-            <Text>{data.completedDate || "N/A"}</Text>
+            <Text>{currentDate}</Text>
           </View>
           <View style={styles.footerRow}>
             <Text>Completed By: {data.assignedTo.username || "N/A"}</Text>
