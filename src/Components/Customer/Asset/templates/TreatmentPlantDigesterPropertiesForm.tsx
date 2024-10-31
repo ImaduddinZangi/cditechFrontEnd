@@ -84,7 +84,6 @@ const TreatmentPlantDigesterPropertiesForm: React.FC<TreatmentPlantDigesterPrope
                 className="col-span-1"
                 required
             />
-            <InputField label="Gallons" value={gallons} fieldType="text" onChange={(e) => setGallons(e.target.value)} className="col-span-1" />
             <SelectField
                 label="Material"
                 value={material}
@@ -94,18 +93,6 @@ const TreatmentPlantDigesterPropertiesForm: React.FC<TreatmentPlantDigesterPrope
                 className="col-span-1"
                 required
             />
-            <InputField label="Connection Size" value={connectionSize} fieldType="text" onChange={(e) => setConnectionSize(e.target.value)} className="col-span-1" />
-            <InputField label="Digester Dimensions (000 x 000 x 000)" value={digesterDimensions} fieldType="text" onChange={(e) => setDigesterDimensions(e.target.value)} className="col-span-1" />
-            <InputField label="Primary Treatment Plant Asset ID" value={primaryTreatmentPlantAssetId} fieldType="text" onChange={(e) => setPrimaryTreatmentPlantAssetId(e.target.value)} className="col-span-1" />
-            <InputField label="Latitude" value={latitude} fieldType="text" onChange={(e) => setLatitude(e.target.value)} className="col-span-1" />
-            <InputField label="Longitude" value={longitude} fieldType="text" onChange={(e) => setLongitude(e.target.value)} className="col-span-1" />
-            <InputField label="QR Code" value={qrCode} fieldType="text" onChange={(e) => setQrCode(e.target.value)} className="col-span-1" />
-            <InputField label="NFC ID" value={nfcId} fieldType="text" onChange={(e) => setNfcId(e.target.value)} className="col-span-1" />
-            <InputField label="Primary Plant Operator" value={primaryPlantOperator} fieldType="text" onChange={(e) => setPrimaryPlantOperator(e.target.value)} className="col-span-1" />
-            <InputField label="Operator Contact Name" value={operatorContactName} fieldType="text" onChange={(e) => setOperatorContactName(e.target.value)} className="col-span-1" />
-            <InputField label="Operator Contact Phone" value={operatorContactPhone} fieldType="text" onChange={(e) => setOperatorContactPhone(e.target.value)} className="col-span-1" />
-            <InputField label="Videos (comma-separated URLs)" value={videos.join(", ")} fieldType="text" onChange={(e) => setVideos(e.target.value.split(", ").slice(0, 5))} className="col-span-1" />
-            <InputField label="Files (comma-separated URLs)" value={files.join(", ")} fieldType="text" onChange={(e) => setFiles(e.target.value.split(", ").slice(0, 5))} className="col-span-1" />
             <SelectField
                 label="Condition"
                 value={condition}
@@ -114,6 +101,19 @@ const TreatmentPlantDigesterPropertiesForm: React.FC<TreatmentPlantDigesterPrope
                 placeholder="Select Condition"
                 className="col-span-1"
             />
+            <InputField label="Gallons" value={gallons} fieldType="number" onChange={(e) => setGallons(e.target.value)} className="col-span-1" placeholder='Gallons' />
+            <InputField label="Connection Size" value={connectionSize} fieldType="text" onChange={(e) => setConnectionSize(e.target.value)} className="col-span-1" placeholder='Connection Size' />
+            <InputField label="Digester Dimensions (000 x 000 x 000)" value={digesterDimensions} fieldType="text" onChange={(e) => setDigesterDimensions(e.target.value)} className="col-span-1" placeholder='123*123*123' />
+            <InputField label="Primary Treatment Plant Asset ID" value={primaryTreatmentPlantAssetId} fieldType="text" onChange={(e) => setPrimaryTreatmentPlantAssetId(e.target.value)} className="col-span-1" />
+            <InputField label="Latitude" value={latitude} fieldType="text" onChange={(e) => setLatitude(e.target.value)} className="col-span-1" placeholder='Latitude' />
+            <InputField label="Longitude" value={longitude} fieldType="text" onChange={(e) => setLongitude(e.target.value)} className="col-span-1" placeholder='Longitude' />
+            <InputField label="QR Code" value={qrCode} fieldType="text" onChange={(e) => setQrCode(e.target.value)} className="col-span-1" placeholder='Enter qr code' />
+            <InputField label="NFC ID" value={nfcId} fieldType="text" onChange={(e) => setNfcId(e.target.value)} className="col-span-1" placeholder='Enter nfc code' />
+            <InputField label="Primary Plant Operator" value={primaryPlantOperator} fieldType="text" onChange={(e) => setPrimaryPlantOperator(e.target.value)} className="col-span-1" placeholder='Primary Plan Operator' />
+            <InputField label="Operator Contact Name" value={operatorContactName} fieldType="text" onChange={(e) => setOperatorContactName(e.target.value)} className="col-span-1" placeholder='John Doe' />
+            <InputField label="Operator Contact Phone" value={operatorContactPhone} fieldType="text" onChange={(e) => setOperatorContactPhone(e.target.value)} className="col-span-1" placeholder='+1234567890' />
+            <InputField label="Videos (comma-separated URLs)" value={videos.join(", ")} fieldType="text" onChange={(e) => setVideos(e.target.value.split(", ").slice(0, 5))} className="col-span-1" />
+            <InputField label="Files (comma-separated URLs)" value={files.join(", ")} fieldType="text" onChange={(e) => setFiles(e.target.value.split(", ").slice(0, 5))} className="col-span-1" />
             <div className="flex items-center col-span-1 cursor-pointer">
                 <input
                     type="checkbox"

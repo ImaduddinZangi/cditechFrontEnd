@@ -37,7 +37,7 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
   const [customers, setCustomers] = useState<Option[]>([]);
   const [assetTypes, setAssetTypes] = useState<Option[]>([]);
   const [pumpDataList, setPumpDataList] = useState<Pump[]>([]);
-  
+
   const [name, setName] = useState<string>(initialData?.name || "");
   const [type, setType] = useState<Option | null>(
     initialData?.assetType
@@ -214,13 +214,13 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
       <form className="relative pb-[5vw]" onSubmit={handleSubmit}>
         <div className="grid grid-cols-3 gap-[1vw]">
           <div>
-            <SelectField
-              label="Customer"
-              value={customerId}
-              onChange={(option) => setCustomerId(option)}
-              options={customers}
-              placeholder="Select a customer"
-              required
+            <InputField
+              label="Asset Name"
+              name="name"
+              fieldType="text"
+              value={name}
+              placeholder="Enter asset name"
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
           <div>
@@ -235,13 +235,13 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
           </div>
           {type && (
             <div>
-              <InputField
-                label="Asset Name"
-                name="name"
-                fieldType="text"
-                value={name}
-                placeholder="Enter asset name"
-                onChange={(e) => setName(e.target.value)}
+              <SelectField
+                label="Customer"
+                value={customerId}
+                onChange={(option) => setCustomerId(option)}
+                options={customers}
+                placeholder="Select a customer"
+                required
               />
             </div>
           )}
@@ -277,8 +277,8 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
           </div>
         ))}
         <div className="col-span-2 absolute bottom-0 right-0 flex justify-end space-x-[1vw]">
-          <PurpleButton type="submit" text="Save" />
-          <WhiteButton type="button" text="Cancel" onClick={handleCancel} />
+          <PurpleButton type="submit" text="Save & Close" />
+          <WhiteButton type="button" text="Do not Save & Cancel" onClick={handleCancel} />
         </div>
       </form>
       {isModalOpen && (

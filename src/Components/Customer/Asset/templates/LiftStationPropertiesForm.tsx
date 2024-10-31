@@ -61,6 +61,11 @@ const pumpOptions: Option[] = [
     { label: "1", value: "1" },
 ];
 
+const deleteOptions: Option[] = [
+    { label: "No", value: "No" },
+    { label: "Yes", value: "Yes" },
+]
+
 interface LiftStationPropertiesFormProps {
     updateProperties: (key: string, value: string) => void;
     properties: Record<string, any>;
@@ -72,7 +77,7 @@ const LiftStationPropertiesForm: React.FC<LiftStationPropertiesFormProps> = ({ u
     const [smart, setSmart] = useState<Option | null>(properties.smart ? { label: properties.smart, value: properties.smart } : null);
     const [size, setSize] = useState(properties.size || '');
     const [material, setMaterial] = useState<Option | null>(properties.material ? { label: properties.material, value: properties.material } : null);
-    const [deleteProtect, setDeleteProtect] = useState(properties.deleteProtect || '');
+    const [deleteProtect, setDeleteProtect] = useState<Option | null>(properties.duty ? { label: properties.deleteProtect, value: properties.deleteProtect } : null);
     const [duty, setDuty] = useState<Option | null>(properties.duty ? { label: properties.duty, value: properties.duty } : null);
     const [rails, setRails] = useState(properties.rails || '');
     const [float, setFloat] = useState(properties.float || '');
@@ -90,7 +95,7 @@ const LiftStationPropertiesForm: React.FC<LiftStationPropertiesFormProps> = ({ u
     useEffect(() => updateProperties('smart', smart?.value || ""), [smart]);
     useEffect(() => updateProperties('size', size), [size]);
     useEffect(() => updateProperties('material', material?.value || ""), [material]);
-    useEffect(() => updateProperties('deleteProtect', deleteProtect), [deleteProtect]);
+    useEffect(() => updateProperties('deleteProtect', deleteProtect?.value || ""), [deleteProtect]);
     useEffect(() => updateProperties('duty', duty?.value || ""), [duty]);
     useEffect(() => updateProperties('rails', rails), [rails]);
     useEffect(() => updateProperties('float', float), [float]);
@@ -107,7 +112,6 @@ const LiftStationPropertiesForm: React.FC<LiftStationPropertiesFormProps> = ({ u
 
     return (
         <>
-            <InputField label="Pipe Diameter" value={pipeDia} fieldType='number' onChange={(e) => setPipeDia(e.target.value)} className="col-span-1" />
             <SelectField
                 label="Smart"
                 value={smart}
@@ -134,7 +138,15 @@ const LiftStationPropertiesForm: React.FC<LiftStationPropertiesFormProps> = ({ u
                 className="col-span-1"
                 required
             />
-            <InputField label="Delete Protect" fieldType='text' value={deleteProtect} onChange={(e) => setDeleteProtect(e.target.value)} />
+            <SelectField
+                label="Delete Protect"
+                name="deleteProtect"
+                value={deleteProtect}
+                placeholder="Select delete protect"
+                onChange={(option) => setDeleteProtect(option)}
+                options={deleteOptions}
+                className="col-span-1"
+            />
             <SelectField
                 label="Duty"
                 name="duty"
@@ -152,7 +164,6 @@ const LiftStationPropertiesForm: React.FC<LiftStationPropertiesFormProps> = ({ u
                 className="col-span-1"
                 required
             />
-            <InputField label="Float" fieldType='text' value={float} onChange={(e) => setFloat(e.target.value)} />
             <SelectField
                 label="Power"
                 value={power}
@@ -161,10 +172,6 @@ const LiftStationPropertiesForm: React.FC<LiftStationPropertiesFormProps> = ({ u
                 className="col-span-1"
                 required
             />
-            <InputField label="Latitude" fieldType='text' value={latitude} onChange={(e) => setLatitude(e.target.value)} className="col-span-1" />
-            <InputField label="Longitude" fieldType='text' value={longitude} onChange={(e) => setLongitude(e.target.value)} className="col-span-1" />
-            <InputField label="QR Code" fieldType='text' value={qrCode} onChange={(e) => setQrCode(e.target.value)} className="col-span-1" />
-            <InputField label="NFC ID" fieldType='text' value={nfcId} onChange={(e) => setNfcId(e.target.value)} className="col-span-1" />
             <SelectField
                 label="Inspection Interval"
                 value={inspectionInterval}
@@ -183,6 +190,12 @@ const LiftStationPropertiesForm: React.FC<LiftStationPropertiesFormProps> = ({ u
                 options={pumpOptions}
                 className="col-span-1"
             />
+            <InputField label="Pipe Diameter" value={pipeDia} fieldType='number' onChange={(e) => setPipeDia(e.target.value)} className="col-span-1" placeholder='Pipe dia' />
+            <InputField label="Floats" fieldType='number' value={float} onChange={(e) => setFloat(e.target.value)} placeholder='Floats' />
+            <InputField label="Latitude" fieldType='text' value={latitude} onChange={(e) => setLatitude(e.target.value)} className="col-span-1" placeholder='longitude' />
+            <InputField label="Longitude" fieldType='text' value={longitude} onChange={(e) => setLongitude(e.target.value)} className="col-span-1" placeholder='latitude' />
+            <InputField label="QR Code" fieldType='text' value={qrCode} onChange={(e) => setQrCode(e.target.value)} className="col-span-1" placeholder='Enter qr code' />
+            <InputField label="NFC ID" fieldType='text' value={nfcId} onChange={(e) => setNfcId(e.target.value)} className="col-span-1" placeholder='Enter nfc code' />
         </>
     );
 };

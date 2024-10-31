@@ -66,31 +66,31 @@ const GreaseTrapPropertiesForm: React.FC<GreaseTrapPropertiesFormProps> = ({ upd
                 onChange={(option) => setServiceInterval(option)}
                 options={serviceIntervalOptions}
                 placeholder="Select Service Interval"
-                className="col-span-1" 
+                className="col-span-1"
                 required
             />
-            <InputField label="Gallons" value={gallons} fieldType="number" onChange={(e) => setGallons(e.target.value)} className="col-span-1"  />
             <SelectField
                 label="Material"
                 value={material}
                 onChange={(option) => setMaterial(option)}
                 options={materialOptions}
                 placeholder="Select Material"
-                className="col-span-1" 
+                className="col-span-1"
                 required
             />
-            <InputField label="Latitude" value={latitude} fieldType="text" onChange={(e) => setLatitude(e.target.value)} className="col-span-1"  />
-            <InputField label="Longitude" value={longitude} fieldType="text" onChange={(e) => setLongitude(e.target.value)} className="col-span-1"  />
-            <InputField label="QR Code" value={qrCode} fieldType="text" onChange={(e) => setQrCode(e.target.value)} className="col-span-1"  />
-            <InputField label="NFC ID" value={nfcId} fieldType="text" onChange={(e) => setNfcId(e.target.value)} className="col-span-1"  />
             <SelectField
                 label="Duty"
                 value={duty}
                 onChange={(option) => setDuty(option)}
                 options={dutyOptions}
                 placeholder="Select Duty"
-                className="col-span-1" 
+                className="col-span-1"
             />
+            <InputField label="Gallons" value={gallons} fieldType="number" onChange={(e) => setGallons(e.target.value)} className="col-span-1" placeholder='Gallons' />
+            <InputField label="Latitude" value={latitude} fieldType="text" onChange={(e) => setLatitude(e.target.value)} className="col-span-1" placeholder='Latitude' />
+            <InputField label="Longitude" value={longitude} fieldType="text" onChange={(e) => setLongitude(e.target.value)} className="col-span-1" placeholder='Longitude' />
+            <InputField label="QR Code" value={qrCode} fieldType="text" onChange={(e) => setQrCode(e.target.value)} className="col-span-1" placeholder='Enter qr Code' />
+            <InputField label="NFC ID" value={nfcId} fieldType="text" onChange={(e) => setNfcId(e.target.value)} className="col-span-1" placeholder='Enter nfc code'  />
             <div className="flex items-center col-span-1 cursor-pointer">
                 <input
                     type="checkbox"
