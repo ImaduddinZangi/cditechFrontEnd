@@ -11,7 +11,7 @@ import { useGetAssetsQuery } from "../../redux/api/assetApi";
 import { useGetClientUsersQuery } from "../../redux/api/clientUserApi";
 import { getUserId } from "../../utils/utils";
 import { useNavigate } from "react-router-dom";
-import { Inspection } from "../../redux/features/inspectionSlice";
+import { CreateInspection, Inspection } from "../../redux/features/inspectionSlice";
 import PurpleButton from "../Tags/PurpleButton";
 import WhiteButton from "../Tags/WhiteButton";
 import InputField from "../Tags/InputField";
@@ -19,7 +19,7 @@ import { useGetChecklistTemplatesQuery } from "../../redux/api/checklistTemplate
 import SelectField, { Option } from "../Tags/SelectField";
 
 interface AddInspectionProps {
-  onSubmit: (data: FormData) => void;
+  onSubmit: (data: CreateInspection) => void;
   initialData?: Partial<Inspection>;
 }
 
@@ -66,9 +66,11 @@ const AddInspection: React.FC<AddInspectionProps> = ({
     value: "",
   });
   const [reocurrenceEndDate, setReocurrenceEndDate] = useState<string>(
-    initialData?.reocurrenceEndDate || ""
+    initialData?.reocurrenceEndDate ||
+      new Date(new Date().setFullYear(new Date().getFullYear() + 3))
+        .toISOString()
+        .split("T")[0]
   );
-
   const { data: customersData } = useGetCustomersQuery();
   const { data: assetsData } = useGetAssetsQuery();
   const { data: usersData } = useGetClientUsersQuery();
@@ -145,25 +147,24 @@ const AddInspection: React.FC<AddInspectionProps> = ({
     }
   }, [checklistTemplatesData, initialData]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const formData = new FormData();
-    if (clientId !== undefined && clientId != null) {
-      formData.append("clientId", clientId);
-    }
-    if (serviceFeeId) {
-      const checklistData = [{ templateId: serviceFeeId.value }];
-      formData.append("checklists", JSON.stringify(checklistData));
-    }
-    formData.append("customerId", customerId?.value || "");
-    formData.append("assetId", assetId?.value || "");
-    formData.append("assignedTo", userId?.value || "");
-    formData.append("scheduledDate", scheduledDate);
-    formData.append("inspectionInterval", inspectionInterval?.value || "");
-    formData.append("reocurrenceEndDate", reocurrenceEndDate);
-    formData.append("serviceFeeId", serviceFeeId?.value || "");
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
 
-    onSubmit(formData);
+    const requestData: CreateInspection = {
+      clientId: clientId,
+      customerId: customerId?.value || "",
+      assetId: assetId?.value || "",
+      serviceFeeId: serviceFeeId?.value || "",
+      inspectionInterval: inspectionInterval?.value || "",
+      scheduledDate,
+      assignedTo: userId?.value || "",
+    };
+
+    if (inspectionInterval?.value && inspectionInterval.value !== "One-Time") {
+      requestData.reocurrenceEndDate = reocurrenceEndDate;
+    }
+
+    onSubmit(requestData);
   };
 
   const handleCancel = () => {

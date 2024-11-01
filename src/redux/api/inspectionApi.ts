@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Inspection, EditInspection, SubmitInvoice, SubmitExistingInvoice } from "../features/inspectionSlice";
+import { Inspection, EditInspection, SubmitInvoice, SubmitExistingInvoice, CreateInspection } from "../features/inspectionSlice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_BASE_URL,
@@ -31,11 +31,11 @@ export const inspectionApi = createApi({
       }),
       providesTags: (_result, _error, id) => [{ type: "Inspection", id }],
     }),
-    createInspection: builder.mutation<Inspection, FormData>({
-      query: (formData) => ({
+    createInspection: builder.mutation<Inspection, CreateInspection>({
+      query: (body) => ({
         url: "inspections",
         method: "POST",
-        body: formData,
+        body: body,
       }),
       invalidatesTags: ["Inspection"],
     }),

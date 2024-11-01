@@ -6,6 +6,7 @@ import { useCreateInspectionMutation } from "../../redux/api/inspectionApi";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../Components/Constants/Loader";
+import { CreateInspection } from "../../redux/features/inspectionSlice";
 
 const AddInspectionPage: React.FC = () => {
   const [createInspection] = useCreateInspectionMutation();
@@ -22,10 +23,10 @@ const AddInspectionPage: React.FC = () => {
     return error && error.data && typeof error.data.message === "string";
   };
 
-  const handleSubmit = async (formData: FormData) => {
+  const handleSubmit = async (inspectionData: CreateInspection) => {
     try {
       setLoading(true);
-      await createInspection(formData).unwrap();
+      await createInspection(inspectionData).unwrap();
       toast.success("Inspection added successfully!", {
         autoClose: 1000,
       });

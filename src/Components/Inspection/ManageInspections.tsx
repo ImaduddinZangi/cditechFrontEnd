@@ -213,7 +213,6 @@ const ManageInspections: React.FC = () => {
                           onClick={() => handleBeginInspection(inspection.id)}
                         />
                       )}
-
                       {inspection.status !== "Not-Complete"
                         && inspection.status !== "In-Progress"
                         && (

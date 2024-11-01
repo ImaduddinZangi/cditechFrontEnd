@@ -47,6 +47,17 @@ export interface EditInspection {
   reocurrenceEndDate?: string;
 }
 
+export interface CreateInspection {
+  clientId: string | null;
+  customerId: string;
+  assetId: string;
+  serviceFeeId: string;
+  inspectionInterval: string;
+  scheduledDate: string;
+  assignedTo: string;
+  reocurrenceEndDate?: string;
+}
+
 export interface Inspection {
   id: string;
   inspectionInterval: string;
