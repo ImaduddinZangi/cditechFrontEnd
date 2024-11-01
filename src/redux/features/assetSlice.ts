@@ -3,32 +3,102 @@ import { Customer } from "./customerSlice";
 import { Client } from "./clientSlice";
 import { AssetType } from "./assetTypeSlice";
 
-export interface Asset {
-  id: string;
-  name: string;
-  location: string;
-  latitude: number;
-  longitude: number;
-  status: string;
-  inspectionInterval: string;
+export interface TreatmentPlantDigesterProperties {
+  serviceInterval: 'Weekly' | 'Monthly' | 'Bi-Monthly' | 'Quarterly' | 'Yearly' | 'On-Demand' | 'Not Serviced';
+  gallons: string;
+  material: 'Plastic' | 'Fiberglass' | 'Concrete' | 'Other' | 'Unknown';
+  connectionSize: string;
+  suctionRequired: boolean;
+  digesterDimensions: string;
+  primaryTreatmentPlantAssetId?: string;
+  latitude: string;
+  longitude: string;
   qrCode: string;
-  nfcCode: string;
+  nfcId: string;
+  condition: 'Good' | 'Fair' | 'Rough' | 'Bad' | 'Failing' | 'Other';
+  requireDisposalTicket: boolean;
+  primaryPlantOperator: string;
+  operatorContactName: string;
+  operatorContactPhone: string;
+  videos?: string[];
+  files?: string[];
+}
+
+export interface StormDrainProperties {
+  serviceInterval: 'Weekly' | 'Monthly' | 'Bi-Monthly' | 'Quarterly' | 'Yearly' | 'On-Demand' | 'Not Serviced';
+  drainSize: 'extra small' | 'small' | 'medium' | 'large' | 'extra large' | 'huge' | 'unknown';
+  material: 'Plastic' | 'Fiberglass' | 'Concrete' | 'Other' | 'Unknown';
+  waterIntrusion: boolean;
+  damaged: boolean;
+  internalPipeDia: string;
+  latitude: string;
+  longitude: string;
+  qrCode: string;
+  nfcId: string;
+  drainDimensions: string;
+  duty: 'Light' | 'Normal' | 'Heavy' | 'Severe' | 'Unknown';
+  drainGrateType: 'steel' | 'plastic' | 'hinged steel' | 'other' | 'unknown';
+  connectedAssetLineColor: string;
+  connectedStormDrainAssetIds: string[];
+}
+
+export interface LintTrapProperties {
+  serviceInterval: 'Weekly' | 'Monthly' | 'Bi-Monthly' | 'Quarterly' | 'Yearly' | 'On-Demand' | 'Not Serviced';
+  gallons: string;
+  material: 'Plastic' | 'Fiberglass' | 'Concrete' | 'Other' | 'Unknown';
+  latitude: string;
+  longitude: string;
+  qrCode: string;
+  nfcId: string;
+  duty: 'Light' | 'Normal' | 'Heavy' | 'Severe' | 'Unknown';
+  requireDisposalTicket: boolean;
+  eveningService: boolean;
+  multipleOnSiteTraps: boolean;
+}
+
+export interface LiftStationProperties {
   pipeDia: string;
   smart: string;
   size: string;
-  material: string;
+  material: 'Plastic' | 'Fiberglass' | 'Concrete' | 'Other' | 'Unknown';
   deleteProtect: string;
-  duty: string;
+  duty: 'Light' | 'Normal' | 'Heavy' | 'Severe' | 'Unknown';
   rails: string;
   float: string;
   pumps: string;
   power: string;
+  latitude: string;
+  longitude: string;
+  qrCode: string;
+  nfcId: string;
+  inspectionInterval: 'Weekly' | 'Monthly' | 'Bi-Monthly' | 'Quarterly' | 'Yearly' | 'On-Demand' | 'Not Serviced';
+}
+
+export interface GreaseTrapProperties {
+  serviceInterval: 'Weekly' | 'Monthly' | 'Bi-Monthly' | 'Quarterly' | 'Yearly' | 'On-Demand' | 'Not Serviced';
+  gallons: number;
+  material: 'Plastic' | 'Fiberglass' | 'Concrete' | 'Other' | 'Unknown';
+  latitude: string;
+  longitude: string;
+  qrCode: string;
+  nfcId: string;
+  duty: 'Light' | 'Normal' | 'Heavy' | 'Severe' | 'Unknown';
+  requireDisposalTicket: boolean;
+  eveningService: boolean;
+  multipleOnSiteTraps: boolean;
+}
+
+export interface Asset {
+  id: string;
+  name: string;
+  status: string;
   assetType: AssetType;
-  createdAt: string;
-  updatedAt: string;
   client: Client;
   customer: Customer;
-  photos?: File[];
+  photos: string[];
+  properties: TreatmentPlantDigesterProperties | LiftStationProperties | StormDrainProperties | GreaseTrapProperties | LintTrapProperties;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface AssetState {

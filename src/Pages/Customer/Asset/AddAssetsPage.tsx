@@ -25,30 +25,34 @@ const AddAssetsPage: React.FC = () => {
     return error && error.data && typeof error.data.message === "string";
   };
 
-  const handleAddAsset = async (assetData: FormData, pumpDataList: Pump[]) => {
+  const handleAddAsset = async (assetData: FormData, pumpDataList?: Pump[]) => {
     try {
       setLoading(true);
       const assetResult = await createAsset(assetData).unwrap();
       const assetId = assetResult.id;
-      for (const pumpData of pumpDataList) {
-        const pumpFormData = new FormData();
-        pumpFormData.append("assetId", assetId);
-        pumpFormData.append("name", pumpData.name);
-        if (pumpData.brandId !== undefined) {
-          pumpFormData.append("brandId", pumpData.brandId);
+      
+      if (pumpDataList) {
+        for (const pumpData of pumpDataList) {
+          const pumpFormData = new FormData();
+          pumpFormData.append("assetId", assetId);
+          pumpFormData.append("name", pumpData.name);
+          if (pumpData.brandId !== undefined) {
+            pumpFormData.append("brandId", pumpData.brandId);
+          }
+          pumpFormData.append("serial", pumpData.serial);
+          pumpFormData.append("avgAmps", pumpData.avgAmps);
+          pumpFormData.append("maxAmps", pumpData.maxAmps);
+          pumpFormData.append("hp", pumpData.hp);
+          pumpFormData.append("warranty", pumpData.warranty);
+          pumpFormData.append("installedDate", pumpData.installedDate);
+          pumpData.files?.forEach((photo) => {
+            pumpFormData.append("files", photo);
+          });
+  
+          await createPump(pumpFormData).unwrap();
         }
-        pumpFormData.append("serial", pumpData.serial);
-        pumpFormData.append("avgAmps", pumpData.avgAmps);
-        pumpFormData.append("maxAmps", pumpData.maxAmps);
-        pumpFormData.append("hp", pumpData.hp);
-        pumpFormData.append("warranty", pumpData.warranty);
-        pumpFormData.append("installedDate", pumpData.installedDate);
-        pumpData.files?.forEach((photo) => {
-          pumpFormData.append("files", photo);
-        });
-
-        await createPump(pumpFormData).unwrap();
       }
+      
       console.log("Asset and pumps created successfully");
       toast.success("Asset and pumps added successfully!", {
         onClose: () => navigate("/manage-customers"),
@@ -76,6 +80,7 @@ const AddAssetsPage: React.FC = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <ClientLayout breadcrumb="Add Asset">

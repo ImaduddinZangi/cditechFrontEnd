@@ -8,7 +8,7 @@ import Webcam from "react-webcam";
 interface AddPhotosProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (photos: File[]) => void; // Updated to pass File objects
+  onSubmit: (photos: File[]) => void;
   type: string;
 }
 

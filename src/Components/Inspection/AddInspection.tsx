@@ -1,19 +1,22 @@
+// Reoccurence end date should be default 3 years from the current date
+// Reoccurence end date should be default 3 years from the current date
+// Reoccurence end date should be default 3 years from the current date
+// Reoccurence end date should be default 3 years from the current date
+// Reoccurence end date should be default 3 years from the current date
+// Reoccurence end date should be default 3 years from the current date
+// Reoccurence end date should be default 3 years from the current date
 import React, { useEffect, useState } from "react";
 import { useGetCustomersQuery } from "../../redux/api/customerApi";
 import { useGetAssetsQuery } from "../../redux/api/assetApi";
 import { useGetClientUsersQuery } from "../../redux/api/clientUserApi";
 import { getUserId } from "../../utils/utils";
 import { useNavigate } from "react-router-dom";
-import { Inspection, RoutePoint } from "../../redux/features/inspectionSlice";
+import { Inspection } from "../../redux/features/inspectionSlice";
 import PurpleButton from "../Tags/PurpleButton";
 import WhiteButton from "../Tags/WhiteButton";
 import InputField from "../Tags/InputField";
 import { useGetChecklistTemplatesQuery } from "../../redux/api/checklistTemplateApi";
 import SelectField, { Option } from "../Tags/SelectField";
-import OutlinePurpleButton from "../Tags/OutlinePurpleButton";
-import AddPhotos from "../Customer/AddPhotos";
-import { toast, ToastContainer } from "react-toastify";
-import RouteModal from "./RouteModal";
 
 interface AddInspectionProps {
   onSubmit: (data: FormData) => void;
@@ -35,8 +38,6 @@ const AddInspection: React.FC<AddInspectionProps> = ({
   initialData,
 }) => {
   const [customers, setCustomers] = useState<Option[]>([]);
-  const [route, setRoute] = useState<RoutePoint[]>([]);
-  const [isRouteModalOpen, setIsRouteModalOpen] = useState(false);
   const [customerId, setCustomerId] = useState<Option | null>(
     initialData?.customer
       ? { label: initialData.customer.name, value: initialData.customer.id }
@@ -67,10 +68,6 @@ const AddInspection: React.FC<AddInspectionProps> = ({
   const [reocurrenceEndDate, setReocurrenceEndDate] = useState<string>(
     initialData?.reocurrenceEndDate || ""
   );
-  const [photos, setPhotos] = useState<File[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleOpenModal = () => setIsModalOpen(true);
-  const handleCloseModal = () => setIsModalOpen(false);
 
   const { data: customersData } = useGetCustomersQuery();
   const { data: assetsData } = useGetAssetsQuery();
@@ -148,21 +145,8 @@ const AddInspection: React.FC<AddInspectionProps> = ({
     }
   }, [checklistTemplatesData, initialData]);
 
-  const handlePhotosSubmit = (uploadedPhotos: File[]) => {
-    setPhotos(uploadedPhotos);
-    handleCloseModal();
-  };
-
-  const handleRouteModalSave = (selectedRoute: RoutePoint[]) => {
-    setRoute(selectedRoute);
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (route.length !== 2) {
-      toast.error("The route data is not added.");
-      return;
-    }
     const formData = new FormData();
     if (clientId !== undefined && clientId != null) {
       formData.append("clientId", clientId);
@@ -178,10 +162,6 @@ const AddInspection: React.FC<AddInspectionProps> = ({
     formData.append("inspectionInterval", inspectionInterval?.value || "");
     formData.append("reocurrenceEndDate", reocurrenceEndDate);
     formData.append("serviceFeeId", serviceFeeId?.value || "");
-    formData.append("route", JSON.stringify(route));
-    photos.forEach((photo) => {
-      formData.append("photos", photo);
-    });
 
     onSubmit(formData);
   };
@@ -192,13 +172,6 @@ const AddInspection: React.FC<AddInspectionProps> = ({
 
   return (
     <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
-      <div className="mb-[2vw]">
-        <PurpleButton
-          text="Route"
-          type="button"
-          onClick={() => setIsRouteModalOpen(true)}
-        />
-      </div>
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-2 gap-[1vw]">
           <div>
@@ -249,15 +222,17 @@ const AddInspection: React.FC<AddInspectionProps> = ({
               required
             />
           </div>
-          <div>
-            <InputField
-              label="Reoccurence End Date"
-              fieldType="Date"
-              value={reocurrenceEndDate}
-              onChange={(e) => setReocurrenceEndDate(e.target.value)}
-              required
-            />
-          </div>
+          {inspectionInterval?.value && inspectionInterval.value != "One-Time" &&
+            <div>
+              <InputField
+                label="Reoccurence End Date"
+                fieldType="Date"
+                value={reocurrenceEndDate}
+                onChange={(e) => setReocurrenceEndDate(e.target.value)}
+                required
+              />
+            </div>
+          }
           <div>
             <SelectField
               label="Assigned To"
@@ -268,10 +243,6 @@ const AddInspection: React.FC<AddInspectionProps> = ({
               required
             />
           </div>
-          <OutlinePurpleButton
-            onClick={handleOpenModal}
-            text="Upload Photos"
-          />
         </div>
         <div className="flex justify-end space-x-[1vw] mt-[2vw]">
           <PurpleButton type="submit" text="Save New Inspection" />
@@ -279,30 +250,6 @@ const AddInspection: React.FC<AddInspectionProps> = ({
           <WhiteButton type="button" text="Do Not Save & Cancel" onClick={handleCancel} />
         </div>
       </form>
-      <RouteModal
-        isOpen={isRouteModalOpen}
-        onClose={() => setIsRouteModalOpen(false)}
-        onSave={handleRouteModalSave}
-      />
-      {isModalOpen && (
-        <AddPhotos
-          isOpen={isModalOpen}
-          onClose={handleCloseModal}
-          onSubmit={handlePhotosSubmit}
-          type="Inspection"
-        />
-      )}
-      <ToastContainer
-        position="top-right"
-        autoClose={1000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
     </div>
   );
 };

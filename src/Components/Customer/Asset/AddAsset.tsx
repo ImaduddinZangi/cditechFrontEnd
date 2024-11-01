@@ -26,9 +26,9 @@ interface AddAssetProps {
 }
 
 const statusOptions: Option[] = [
-  { label: "Active", value: "active" },
-  { label: "Inactive", value: "inactive" },
-  { label: "Maintenance", value: "maintenance" },
+  { label: "Active", value: "Active" },
+  { label: "Inactive", value: "Inactive" },
+  { label: "Maintenance", value: "Maintenance" },
 ];
 
 const libraries: ("places" | "drawing")[] = ["places"];
