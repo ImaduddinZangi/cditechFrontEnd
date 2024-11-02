@@ -22,6 +22,7 @@ import invoiceReducer from "./features/invoiceSlice";
 import companyReducer from "./features/companySlice";
 import serviceReducer from "./features/serviceSlice";
 import checklistTemplateReducer from "./features/checklistTemplateSlice";
+import packagesReducer from "./features/packagesSlice"
 
 import { authApi } from "./api/authApi";
 import clientApi from "./api/clientApi";
@@ -43,6 +44,7 @@ import inspectionChecklistApi from "./api/inspectionChecklistApi";
 import companyApi from "./api/companyApi";
 import serviceApi from "./api/serviceApi";
 import checklistTemplateApi from "./api/checklistTemplateApi";
+import packagesApi from "./api/packagesApi";
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -65,6 +67,7 @@ const rootReducer = combineReducers({
   company: companyReducer,
   service: serviceReducer,
   checklistTemplate: checklistTemplateReducer,
+  packages: packagesReducer,
   [authApi.reducerPath]: authApi.reducer,
   [clientApi.reducerPath]: clientApi.reducer,
   [customerApi.reducerPath]: customerApi.reducer,
@@ -85,6 +88,7 @@ const rootReducer = combineReducers({
   [companyApi.reducerPath]: companyApi.reducer,
   [serviceApi.reducerPath]: serviceApi.reducer,
   [checklistTemplateApi.reducerPath]: checklistTemplateApi.reducer,
+  [packagesApi.reducerPath]: packagesApi.reducer,
 });
 
 const store = configureStore({
@@ -109,7 +113,8 @@ const store = configureStore({
       invoiceApi.middleware,
       companyApi.middleware,
       serviceApi.middleware,
-      checklistTemplateApi.middleware
+      checklistTemplateApi.middleware,
+      packagesApi.middleware
     ),
 });
 

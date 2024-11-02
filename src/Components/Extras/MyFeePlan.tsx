@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
-const FeePlan: React.FC = () => {
+const MyFeePlan: React.FC = () => {
   // Sample subscription data
-  const [FeePlan] = useState({
+  const [MyFeePlan] = useState({
     currentPlan: "Unlimited Plus",
     price: "$29.99",
     planStatus: "Active",
@@ -18,41 +18,41 @@ const FeePlan: React.FC = () => {
         {/* First Column */}
         <div>
           <p className="text-darkgray-0 font-semibold">Current Plan:</p>
-          <p className="text-gray-0">{FeePlan.currentPlan}</p>
+          <p className="text-gray-0">{MyFeePlan.currentPlan}</p>
         </div>
         <div>
           <p className="text-darkgray-0 font-semibold">Price:</p>
-          <p className="text-gray-0">{FeePlan.price}</p>
+          <p className="text-gray-0">{MyFeePlan.price}</p>
         </div>
 
         {/* Second Column */}
         <div>
           <p className="text-darkgray-0 font-semibold">Plan Status:</p>
-          <p className="text-gray-0">{FeePlan.planStatus}</p>
+          <p className="text-gray-0">{MyFeePlan.planStatus}</p>
         </div>
         <div>
           <p className="text-darkgray-0 font-semibold">Subscription Date:</p>
-          <p className="text-gray-0">{FeePlan.subscriptionDate}</p>
+          <p className="text-gray-0">{MyFeePlan.subscriptionDate}</p>
         </div>
 
         {/* Third Column */}
         <div>
           <p className="text-darkgray-0 font-semibold">Term:</p>
-          <p className="text-gray-0">{FeePlan.term}</p>
+          <p className="text-gray-0">{MyFeePlan.term}</p>
         </div>
         <div>
           <p className="text-darkgray-0 font-semibold">Next Due Date:</p>
-          <p className="text-gray-0">{FeePlan.nextDueDate}</p>
+          <p className="text-gray-0">{MyFeePlan.nextDueDate}</p>
         </div>
 
         {/* Fourth Column */}
         <div>
           <p className="text-darkgray-0 font-semibold">Payment Method:</p>
-          <p className="text-gray-0">{FeePlan.paymentMethod}</p>
+          <p className="text-gray-0">{MyFeePlan.paymentMethod}</p>
         </div>
       </div>
     </div>
   );
 };
 
-export default FeePlan;
+export default MyFeePlan;

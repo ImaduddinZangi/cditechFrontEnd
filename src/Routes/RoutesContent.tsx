@@ -4,6 +4,7 @@ import ProtectedRoute from "../Middleware/ProtectedRoutes";
 import Error500 from "../Components/Constants/Error500";
 import Error404 from "../Components/Constants/Error404";
 import Loader from "../Components/Constants/Loader";
+import FeePlansPage from "../Pages/Packages/FeePlansPage";
 const ClientSignInPage = lazy(() => import("../Pages/Auth/ClientSignInPage"));
 const ClientDashboardPage = lazy(
   () => import("../Pages/ClientProfile/ClientDashboardPage")
@@ -105,7 +106,7 @@ const ManageServicesPage = lazy(
 const ManageServicePage = lazy(
   () => import("../Pages/Services/ManageServicePage")
 );
-const FeePlanPage = lazy(() => import("../Pages/Extras/FeePlanPage"));
+const MyFeePlanPage = lazy(() => import("../Pages/Extras/MyFeePlanPage"));
 const BackupCodesPage = lazy(() => import("../Pages/Auth/BackupCodesPage"));
 const EnterSMSCodePage = lazy(() => import("../Pages/Auth/EnterSMSCodePage"));
 const OtherOptionsInitialPage = lazy(
@@ -282,10 +283,11 @@ const RoutesContent: React.FC = () => {
           <Route path="/manage-services" element={<ManageServicesPage />} />
           <Route path="/add-service" element={<AddServicePage />} />
 
+          {/* Fee Plans */}
+          <Route path="/fee-plans" element={<FeePlansPage />} />
           {/* EXTRAS */}
           <Route path="/full-view-map" element={<ViewFullMapPage />} />
-
-          <Route path="/my-fee-plan" element={<FeePlanPage />} />
+          <Route path="/my-fee-plan" element={<MyFeePlanPage />} />
         </Route>
 
         {/* Catch-all for 404 errors */}

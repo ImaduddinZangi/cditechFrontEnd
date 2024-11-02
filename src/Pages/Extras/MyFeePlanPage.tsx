@@ -1,13 +1,13 @@
 import React from "react";
 import ClientLayout from "../../Layouts/ClientLayout";
-import FeePlan from "../../Components/Extras/FeePlan";
+import MyFeePlan from "../../Components/Extras/MyFeePlan";
 import PurpleButton from "../../Components/Tags/PurpleButton";
-import FeePlanDetails from "../../Components/Extras/FeePlanDetails";
+import FeePlanDetails from "../../Components/Extras/MyFeePlanDetails";
 
-const FeePlanPage: React.FC = () => {
+const MyFeePlanPage: React.FC = () => {
   return (
     <ClientLayout breadcrumb="My Fee Plan">
-      <FeePlan />
+      <MyFeePlan />
       <div className="m-[2vw] flex flex-row items-center gap-[1vw]">
         <PurpleButton text="View Receipt" />
         <PurpleButton text="Cancel Plan" />
@@ -19,4 +19,4 @@ const FeePlanPage: React.FC = () => {
   );
 };
 
-export default FeePlanPage;
+export default MyFeePlanPage;

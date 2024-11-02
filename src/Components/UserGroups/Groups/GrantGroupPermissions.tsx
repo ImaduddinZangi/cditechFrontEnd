@@ -101,6 +101,10 @@ const defaultPermissions: InternalPermission[] = [
     resource: "logs",
     actions: { create: false, view: false, edit: false, delete: false },
   },
+  {
+    resource: "packages",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
 ];
 
 const GrantGroupPermissions: React.FC<GrantGroupPermissionsProps> = ({
