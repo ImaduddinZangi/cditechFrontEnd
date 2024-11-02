@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ClientSignIn from "../../Components/Auth/ClientSignIn";
 import { useLoginClientMutation } from "../../redux/api/authApi";
 import { useDispatch } from "react-redux";
@@ -7,10 +7,7 @@ import { useNavigate } from "react-router-dom";
 import AuthLayout from "../../Layouts/AuthLayout";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import ReCAPTCHA from "react-google-recaptcha";
 import Loader from "../../Components/Constants/Loader";
-
-const RECAPTCHA_SITE_KEY = "your-site-key-here";
 
 const ClientSignInPage: React.FC = () => {
   const [loginClient] = useLoginClientMutation();
@@ -19,38 +16,35 @@ const ClientSignInPage: React.FC = () => {
   const navigate = useNavigate();
 
   const [failedAttempts, setFailedAttempts] = useState(0);
-  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+  const [captchaText, setCaptchaText] = useState("");
 
-  const resetFailedAttempts = () => setFailedAttempts(0);
-
-  type APIError = {
-    data: {
-      message: string;
-    };
+  const generateCaptchaText = () => {
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let text = "";
+    for (let i = 0; i < 5; i++) {
+      text += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    setCaptchaText(text);
   };
 
-  const isAPIError = (error: any): error is APIError => {
-    return error && error.data && typeof error.data.message === "string";
-  };
+  useEffect(() => {
+    if (failedAttempts >= 3) generateCaptchaText();
+  }, [failedAttempts]);
 
-  const handleRecaptchaChange = (token: string | null) => {
-    setRecaptchaToken(token);
-  };
-
-  const handleLogin = async (email: string, password: string) => {
+  const handleLogin = async (email: string, password: string, userCaptchaInput: string) => {
+    if (failedAttempts >= 3 && userCaptchaInput !== captchaText) {
+      toast.error("CAPTCHA text did not match. Please try again.");
+      return;
+    }
+  
     try {
       setLoading(true);
-      const loginData: any = { email, password };
-      if (failedAttempts >= 3 && recaptchaToken) {
-        loginData.recaptchaToken = recaptchaToken;
-      }
-
-      const result = await loginClient(loginData).unwrap();
+      const result = await loginClient({ email, password }).unwrap();
       dispatch(setToken(result.access_token));
-      resetFailedAttempts();
       if (result.refresh_token) {
         localStorage.setItem("refresh_token", result.refresh_token);
       }
+      setFailedAttempts(0);
       if (result.client) {
         dispatch(setClient(result.client));
         if (result.client.user.two_factor_enabled) {
@@ -68,20 +62,20 @@ const ClientSignInPage: React.FC = () => {
     } catch (error) {
       if (isAPIError(error)) {
         toast.error("Login error: " + error.data.message);
-        setFailedAttempts((prev) => prev + 1);
       } else if (error instanceof Error) {
         toast.error("Login error: " + error.message);
-        setFailedAttempts((prev) => prev + 1);
       } else {
         toast.error("An unknown error occurred");
-        setFailedAttempts((prev) => prev + 1);
       }
-      console.error("Login error:", error);
+      setFailedAttempts((prev) => prev + 1);
     } finally {
       setLoading(false);
     }
   };
-
+  const isAPIError = (error: any): error is { data: { message: string } } => {
+    return error && typeof error === "object" && "data" in error && "message" in (error.data || {});
+  };
+  
   return (
     <AuthLayout>
       {loading ? (
@@ -89,30 +83,13 @@ const ClientSignInPage: React.FC = () => {
           <Loader text="Processing..." />
         </div>
       ) : (
-        <>
-          <ClientSignIn onSubmit={handleLogin} />
-
-          {failedAttempts >= 3 && (
-            <div className="mt-[1vw]">
-              <ReCAPTCHA
-                sitekey={RECAPTCHA_SITE_KEY}
-                onChange={handleRecaptchaChange}
-              />
-            </div>
-          )}
-        </>
+        <ClientSignIn
+          onSubmit={handleLogin}
+          showCaptcha={failedAttempts >= 3}
+          captchaText={captchaText}
+        />
       )}
-      <ToastContainer
-        position="top-right"
-        autoClose={1000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+      <ToastContainer position="top-right" autoClose={1000} />
     </AuthLayout>
   );
 };

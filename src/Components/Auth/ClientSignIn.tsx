@@ -4,16 +4,38 @@ import PurpleButton from "../Tags/PurpleButton";
 import { Link } from "react-router-dom";
 
 interface ClientSignInProps {
-  onSubmit: (email: string, password: string) => void;
+  onSubmit: (email: string, password: string, userCaptchaInput: string) => void;
+  showCaptcha: boolean;
+  captchaText: string;
 }
 
-const ClientSignIn: React.FC<ClientSignInProps> = ({ onSubmit }) => {
+const ClientSignIn: React.FC<ClientSignInProps> = ({
+  onSubmit,
+  showCaptcha,
+  captchaText,
+}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [userCaptchaInput, setUserCaptchaInput] = useState("");
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    onSubmit(email, password);
+    onSubmit(email, password, userCaptchaInput);
+  };
+
+  // Render CAPTCHA as image using a canvas
+  const renderCaptchaImage = () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 100;
+    canvas.height = 40;
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.font = "20px Arial";
+      ctx.fillStyle = "black";
+      ctx.fillText(captchaText, 10, 30);
+    }
+    return canvas.toDataURL();
   };
 
   return (
@@ -51,6 +73,23 @@ const ClientSignIn: React.FC<ClientSignInProps> = ({ onSubmit }) => {
               required
             />
           </div>
+          {showCaptcha && (
+            <div className="captcha-container mt-[1vw]">
+              <img
+                src={renderCaptchaImage()}
+                alt="Captcha"
+                className="captcha-image"
+              />
+              <InputField
+                fieldType="text"
+                value={userCaptchaInput}
+                onChange={(e) => setUserCaptchaInput(e.target.value)}
+                placeholder="Enter CAPTCHA text"
+                fieldClassName="captcha-input"
+                required
+              />
+            </div>
+          )}
           <div className="flex items-center justify-between">
             <div className="flex flex-row items-center">
               <input
