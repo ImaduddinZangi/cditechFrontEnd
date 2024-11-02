@@ -18,7 +18,7 @@ const ManageInspections: React.FC = () => {
   const clientId = getUserId();
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const inspectionsPerPage = 10;
+  const inspectionsPerPage = 15;
 
   const [markInspectionBegin] = useMarkInspectionBeginMutation();
 
@@ -30,7 +30,6 @@ const ManageInspections: React.FC = () => {
       console.error("Failed to mark inspection as begun:", error);
     }
   };
-
 
   useEffect(() => {
     if (inspectionsData && clientId) {

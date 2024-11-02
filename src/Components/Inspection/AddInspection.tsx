@@ -20,6 +20,7 @@ import SelectField, { Option } from "../Tags/SelectField";
 
 interface AddInspectionProps {
   onSubmit: (data: CreateInspection) => void;
+  onSaveAndStart: (data: CreateInspection) => void;
   initialData?: Partial<Inspection>;
 }
 
@@ -36,6 +37,7 @@ const intervalOptions = [
 const AddInspection: React.FC<AddInspectionProps> = ({
   onSubmit,
   initialData,
+  onSaveAndStart,
 }) => {
   const [customers, setCustomers] = useState<Option[]>([]);
   const [customerId, setCustomerId] = useState<Option | null>(
@@ -167,6 +169,25 @@ const AddInspection: React.FC<AddInspectionProps> = ({
     onSubmit(requestData);
   };
 
+  const handleSaveAndStart = (event: React.FormEvent) => {
+    event.preventDefault();
+    const requestData: CreateInspection = {
+      clientId: clientId,
+      customerId: customerId?.value || "",
+      assetId: assetId?.value || "",
+      serviceFeeId: serviceFeeId?.value || "",
+      inspectionInterval: inspectionInterval?.value || "",
+      scheduledDate,
+      assignedTo: userId?.value || "",
+    };
+
+    if (inspectionInterval?.value && inspectionInterval.value !== "One-Time") {
+      requestData.reocurrenceEndDate = reocurrenceEndDate;
+    }
+
+    onSaveAndStart(requestData);
+  };
+
   const handleCancel = () => {
     navigate("/inspection-table");
   };
@@ -247,7 +268,7 @@ const AddInspection: React.FC<AddInspectionProps> = ({
         </div>
         <div className="flex justify-end space-x-[1vw] mt-[2vw]">
           <PurpleButton type="submit" text="Save New Inspection" />
-          <PurpleButton type="button" text="Save & Start First Inspection" />
+          <PurpleButton type="button" text="Save & Start First Inspection" onClick={() => handleSaveAndStart} />
           <WhiteButton type="button" text="Do Not Save & Cancel" onClick={handleCancel} />
         </div>
       </form>
