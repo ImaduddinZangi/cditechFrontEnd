@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   Page,
   Text,
@@ -7,7 +7,7 @@ import {
   Document,
   StyleSheet,
 } from "@react-pdf/renderer";
-import { getAddressFromLatLng } from "../../../utils/utils";
+// import { getAddressFromLatLng } from "../../../utils/utils";
 import { format } from "date-fns";
 import { Inspection } from "../../../redux/features/inspectionSlice";
 import { GetChecklist } from "../../../redux/features/inspectionChecklistSlice";
@@ -104,26 +104,26 @@ interface MyDocumentProps {
 }
 
 const MyDocument: React.FC<MyDocumentProps> = ({ data, checklist }) => {
-  const [address, setAddress] = useState("");
+  // const [address, setAddress] = useState("");
 
-  useEffect(() => {
-    const fetchAddresses = async () => {
-      if (data.route && data.route.length > 0) {
-        try {
-          const address = await getAddressFromLatLng(
-            data.route[0].latitude,
-            data.route[0].longitude
-          );
-          setAddress(address);
-          console.log("The converted address is given as following", address);
-        } catch (error) {
-          console.error("Error fetching address:", error);
-          setAddress("Address not found");
-        }
-      }
-    };
-    fetchAddresses();
-  }, [data.route]);
+  // useEffect(() => {
+  //   const fetchAddresses = async () => {
+  //     if (data.route && data.route.length > 0) {
+  //       try {
+  //         const address = await getAddressFromLatLng(
+  //           data.route[0].latitude,
+  //           data.route[0].longitude
+  //         );
+  //         setAddress(address);
+  //         console.log("The converted address is given as following", address);
+  //       } catch (error) {
+  //         console.error("Error fetching address:", error);
+  //         setAddress("Address not found");
+  //       }
+  //     }
+  //   };
+  //   fetchAddresses();
+  // }, [data.route]);
 
   const getAnswerByText = (questionText: string): string => {
     const question = checklist?.questions.find(q => q.questionText === questionText);
@@ -158,7 +158,7 @@ const MyDocument: React.FC<MyDocumentProps> = ({ data, checklist }) => {
         {/* Address Section */}
         <View style={styles.address}>
           <Text style={styles.fieldLabel}>Address:&nbsp;</Text>
-          <Text>{address || "N/A"}</Text>
+          {/* <Text>{address || "N/A"}</Text> */}
         </View>
 
         {/* Scores Section */}

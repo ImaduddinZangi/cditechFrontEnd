@@ -1,10 +1,3 @@
-// Reoccurence end date should be default 3 years from the current date
-// Reoccurence end date should be default 3 years from the current date
-// Reoccurence end date should be default 3 years from the current date
-// Reoccurence end date should be default 3 years from the current date
-// Reoccurence end date should be default 3 years from the current date
-// Reoccurence end date should be default 3 years from the current date
-// Reoccurence end date should be default 3 years from the current date
 import React, { useEffect, useState } from "react";
 import { useGetCustomersQuery } from "../../redux/api/customerApi";
 import { useGetAssetsQuery } from "../../redux/api/assetApi";
@@ -69,9 +62,9 @@ const AddInspection: React.FC<AddInspectionProps> = ({
   });
   const [reocurrenceEndDate, setReocurrenceEndDate] = useState<string>(
     initialData?.reocurrenceEndDate ||
-      new Date(new Date().setFullYear(new Date().getFullYear() + 3))
-        .toISOString()
-        .split("T")[0]
+    new Date(new Date().setFullYear(new Date().getFullYear() + 3))
+      .toISOString()
+      .split("T")[0]
   );
   const { data: customersData } = useGetCustomersQuery();
   const { data: assetsData } = useGetAssetsQuery();
@@ -169,8 +162,7 @@ const AddInspection: React.FC<AddInspectionProps> = ({
     onSubmit(requestData);
   };
 
-  const handleSaveAndStart = (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleSaveAndStart = () => {
     const requestData: CreateInspection = {
       clientId: clientId,
       customerId: customerId?.value || "",
@@ -189,7 +181,7 @@ const AddInspection: React.FC<AddInspectionProps> = ({
   };
 
   const handleCancel = () => {
-    navigate("/inspection-table");
+    navigate("/manage-inspections");
   };
 
   return (
@@ -244,7 +236,7 @@ const AddInspection: React.FC<AddInspectionProps> = ({
               required
             />
           </div>
-          {inspectionInterval?.value && inspectionInterval.value != "One-Time" &&
+          {inspectionInterval?.value && inspectionInterval.value !== "One-Time" && (
             <div>
               <InputField
                 label="Reoccurence End Date"
@@ -254,7 +246,7 @@ const AddInspection: React.FC<AddInspectionProps> = ({
                 required
               />
             </div>
-          }
+          )}
           <div>
             <SelectField
               label="Assigned To"
@@ -268,7 +260,11 @@ const AddInspection: React.FC<AddInspectionProps> = ({
         </div>
         <div className="flex justify-end space-x-[1vw] mt-[2vw]">
           <PurpleButton type="submit" text="Save New Inspection" />
-          <PurpleButton type="button" text="Save & Start First Inspection" onClick={() => handleSaveAndStart} />
+          <PurpleButton
+            type="button"
+            text="Save & Start First Inspection"
+            onClick={() => handleSaveAndStart()}
+          />
           <WhiteButton type="button" text="Do Not Save & Cancel" onClick={handleCancel} />
         </div>
       </form>

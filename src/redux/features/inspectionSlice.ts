@@ -66,7 +66,6 @@ export interface Inspection {
   pdfFilePath: string | null;
   scheduledDate: string;
   completedDate: string | null;
-  route: RoutePoint[];
   createdAt: string;
   updatedAt: string;
   checklists: Checklist[];
