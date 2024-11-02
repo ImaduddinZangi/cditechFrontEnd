@@ -398,6 +398,7 @@ const AssetDetails: React.FC = () => {
               <p className="text-[1vw] font-semibold">Status:</p>
               <div className="text-[1vw]">
                 <ActiveBadge
+                  half
                   iconColor={
                     asset.status === "Active" || asset.status === "active"
                       ? "bg-green-500"

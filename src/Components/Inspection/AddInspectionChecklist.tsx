@@ -71,16 +71,16 @@ const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({
   });
 
   // Answers state
-  const [structure, setStructure] = useState<Option | null>({ label: "", value: "OK" });
-  const [panel, setPanel] = useState<Option | null>({ label: "", value: "OK" });
-  const [breakers, setBreakers] = useState<Option | null>({ label: "", value: "OK" });
-  const [pipes, setPipes] = useState<Option | null>({ label: "", value: "OK" });
-  const [wires, setWires] = useState<Option | null>({ label: "", value: "OK" });
-  const [contactors, setContactors] = useState<Option | null>({ label: "", value: "OK" });
-  const [alarm, setAlarm] = useState<Option | null>({ label: "", value: "OK" });
-  const [alarmLight, setAlarmLight] = useState<Option | null>({ label: "", value: "OK" });
-  const [thermals, setThermals] = useState<Option | null>({ label: "", value: "OK" });
-  const [overallScore, setOverallScore] = useState<Option | null>({ label: "", value: "A+" });
+  const [structure, setStructure] = useState<Option | null>({ label: "OK", value: "OK" });
+  const [panel, setPanel] = useState<Option | null>({ label: "OK", value: "OK" });
+  const [breakers, setBreakers] = useState<Option | null>({ label: "OK", value: "OK" });
+  const [pipes, setPipes] = useState<Option | null>({ label: "OK", value: "OK" });
+  const [wires, setWires] = useState<Option | null>({ label: "OK", value: "OK" });
+  const [contactors, setContactors] = useState<Option | null>({ label: "OK", value: "OK" });
+  const [alarm, setAlarm] = useState<Option | null>({ label: "OK", value: "OK" });
+  const [alarmLight, setAlarmLight] = useState<Option | null>({ label: "OK", value: "OK" });
+  const [thermals, setThermals] = useState<Option | null>({ label: "OK", value: "OK" });
+  const [overallScore, setOverallScore] = useState<Option | null>({ label: "A+", value: "A+" });
 
   const [pump1Runs, setPump1Runs] = useState(false);
   const [pump1Amps, setPump1Amps] = useState("10");
@@ -100,13 +100,13 @@ const AddInspectionChecklist: React.FC<AddInspectionChecklistProps> = ({
 
   const [stationNeedsCleaning, setStationNeedsCleaning] = useState(false);
 
-  const [float1, setFloat1] = useState<Option | null>({ label: "", value: "OK" });
-  const [float2, setFloat2] = useState<Option | null>({ label: "", value: "OK" });
-  const [float3, setFloat3] = useState<Option | null>({ label: "", value: "OK" });
-  const [float4, setFloat4] = useState<Option | null>({ label: "", value: "OK" });
-  const [float5, setFloat5] = useState<Option | null>({ label: "", value: "OK" });
-  const [float6, setFloat6] = useState<Option | null>({ label: "", value: "OK" });
-  const [alarmFloat, setAlarmFloat] = useState<Option | null>({ label: "", value: "OK" });
+  const [float1, setFloat1] = useState<Option | null>({ label: "OK", value: "OK" });
+  const [float2, setFloat2] = useState<Option | null>({ label: "OK", value: "OK" });
+  const [float3, setFloat3] = useState<Option | null>({ label: "OK", value: "OK" });
+  const [float4, setFloat4] = useState<Option | null>({ label: "OK", value: "OK" });
+  const [float5, setFloat5] = useState<Option | null>({ label: "OK", value: "OK" });
+  const [float6, setFloat6] = useState<Option | null>({ label: "OK", value: "OK" });
+  const [alarmFloat, setAlarmFloat] = useState<Option | null>({ label: "OK", value: "OK" });
 
   useEffect(() => {
     if (inspection.checklists.length > 0) {

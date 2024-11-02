@@ -60,12 +60,7 @@ const AddInspection: React.FC<AddInspectionProps> = ({
     label: "",
     value: "",
   });
-  const [reocurrenceEndDate, setReocurrenceEndDate] = useState<string>(
-    initialData?.reocurrenceEndDate ||
-    new Date(new Date().setFullYear(new Date().getFullYear() + 3))
-      .toISOString()
-      .split("T")[0]
-  );
+  const [reocurrenceEndDate, setReocurrenceEndDate] = useState<string>(initialData?.reocurrenceEndDate || "");
   const { data: customersData } = useGetCustomersQuery();
   const { data: assetsData } = useGetAssetsQuery();
   const { data: usersData } = useGetClientUsersQuery();
@@ -73,6 +68,16 @@ const AddInspection: React.FC<AddInspectionProps> = ({
 
   const clientId = getUserId();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (scheduledDate) {
+      const scheduledDateObj = new Date(scheduledDate);
+      const endDate = new Date(scheduledDateObj.setFullYear(scheduledDateObj.getFullYear() + 3))
+        .toISOString()
+        .split("T")[0];
+      setReocurrenceEndDate(endDate);
+    }
+  }, [scheduledDate]);
 
   useEffect(() => {
     if (customersData) {

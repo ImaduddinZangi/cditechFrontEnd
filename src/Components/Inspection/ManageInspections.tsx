@@ -179,7 +179,7 @@ const ManageInspections: React.FC = () => {
               )}
             {!isLoading &&
               paginatedInspections &&
-              paginatedInspections?.map((inspection) => {
+              paginatedInspections?.map((inspection: Inspection) => {
                 return (
                   <tr
                     key={inspection.id}
@@ -201,42 +201,42 @@ const ManageInspections: React.FC = () => {
                       <ActiveBadge
                         iconColor={
                           inspection.status === "Not-Complete"
-                            ? "bg-gray-0"
+                            ? "bg-dark-0"
                             : inspection.status === "Past-Due"
-                            ? "bg-red-500"
-                            : inspection.status === "In-Progress"
-                            ? "bg-blue-500"
-                            : inspection.status === "Completed Billed"
-                            ? "bg-green-500"
-                            : inspection.status === "Complete Not-Billed"
-                            ? "bg-orange-500"
-                            : "bg-yellow-500"
+                              ? "bg-red-500"
+                              : inspection.status === "In-Progress"
+                                ? "bg-blue-500"
+                                : inspection.status === "Completed Billed"
+                                  ? "bg-green-500"
+                                  : inspection.status === "Complete Not-Billed"
+                                    ? "bg-orange-500"
+                                    : "bg-yellow-500"
                         }
                         bgColor={
                           inspection.status === "Not-Complete"
-                            ? "bg-lightgray-0"
+                            ? "bg-gray-0"
                             : inspection.status === "Past-Due"
-                            ? "bg-red-100"
-                            : inspection.status === "In-Progress"
-                            ? "bg-blue-100"
-                            : inspection.status === "Completed Billed"
-                            ? "bg-green-100"
-                            : inspection.status === "Complete Not-Billed"
-                            ? "bg-orange-100"
-                            : "bg-yellow-100"
+                              ? "bg-red-100"
+                              : inspection.status === "In-Progress"
+                                ? "bg-blue-100"
+                                : inspection.status === "Completed Billed"
+                                  ? "bg-green-100"
+                                  : inspection.status === "Complete Not-Billed"
+                                    ? "bg-orange-100"
+                                    : "bg-yellow-100"
                         }
                         textColor={
                           inspection.status === "Not-Complete"
-                            ? "bg-dark-0"
+                            ? "text-white"
                             : inspection.status === "Past-Due"
-                            ? "bg-red-800"
-                            : inspection.status === "In-Progress"
-                            ? "bg-blue-800"
-                            : inspection.status === "Completed Billed"
-                            ? "bg-green-800"
-                            : inspection.status === "Complete Not-Billed"
-                            ? "bg-orange-800"
-                            : "bg-yellow-800"
+                              ? "text-red-800"
+                              : inspection.status === "In-Progress"
+                                ? "text-blue-800"
+                                : inspection.status === "Completed Billed"
+                                  ? "text-green-800"
+                                  : inspection.status === "Complete Not-Billed"
+                                    ? "text-orange-800"
+                                    : "text-yellow-800"
                         }
                         text={inspection.status}
                       />
