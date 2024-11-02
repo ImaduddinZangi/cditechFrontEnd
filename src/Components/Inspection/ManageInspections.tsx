@@ -8,6 +8,7 @@ import { getUserId } from "../../utils/utils";
 import { Inspection } from "../../redux/features/inspectionSlice";
 import WhiteButton from "../Tags/WhiteButton";
 import SubmitInvoiceModal from "./Constants/SubmitInvoiceModal";
+import ActiveBadge from "../Customer/Constants/ActiveBadge";
 
 const ManageInspections: React.FC = () => {
   const { data: inspectionsData, isLoading } = useGetInspectionsQuery();
@@ -197,10 +198,48 @@ const ManageInspections: React.FC = () => {
                       )}
                     </td>
                     <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                      {highlightText(
-                        inspection.status ? inspection.status : "N/A",
-                        searchTerm
-                      )}
+                      <ActiveBadge
+                        iconColor={
+                          inspection.status === "Not-Complete"
+                            ? "bg-gray-0"
+                            : inspection.status === "Past-Due"
+                            ? "bg-red-500"
+                            : inspection.status === "In-Progress"
+                            ? "bg-blue-500"
+                            : inspection.status === "Completed Billed"
+                            ? "bg-green-500"
+                            : inspection.status === "Complete Not-Billed"
+                            ? "bg-orange-500"
+                            : "bg-yellow-500"
+                        }
+                        bgColor={
+                          inspection.status === "Not-Complete"
+                            ? "bg-lightgray-0"
+                            : inspection.status === "Past-Due"
+                            ? "bg-red-100"
+                            : inspection.status === "In-Progress"
+                            ? "bg-blue-100"
+                            : inspection.status === "Completed Billed"
+                            ? "bg-green-100"
+                            : inspection.status === "Complete Not-Billed"
+                            ? "bg-orange-100"
+                            : "bg-yellow-100"
+                        }
+                        textColor={
+                          inspection.status === "Not-Complete"
+                            ? "bg-dark-0"
+                            : inspection.status === "Past-Due"
+                            ? "bg-red-800"
+                            : inspection.status === "In-Progress"
+                            ? "bg-blue-800"
+                            : inspection.status === "Completed Billed"
+                            ? "bg-green-800"
+                            : inspection.status === "Complete Not-Billed"
+                            ? "bg-orange-800"
+                            : "bg-yellow-800"
+                        }
+                        text={inspection.status}
+                      />
                     </td>
                     <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
                       {highlightText(inspection.assignedTo?.username || "N/A", searchTerm)}

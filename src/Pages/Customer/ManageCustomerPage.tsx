@@ -1,16 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import ClientLayout from "../../Layouts/ClientLayout";
 import DetailedCustomerInfo from "../../Components/Customer/DetailedCustomerInfo";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../redux/store";
 import PurpleButton from "../../Components/Tags/PurpleButton";
 import CustomerExtraDetails from "../../Components/Customer/CustomerExtraDetails";
+import EditCustomerServiceContactModal from "../../Components/Customer/Constants/EditCustomerServiceContactModal";
+import { useGetCustomerByIdQuery } from "../../redux/api/customerApi";
 
 const ManageCustomerPage: React.FC = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const navigate = useNavigate();
   const selectedCustomerId = useAppSelector(
     (state) => state.customer.selectedCustomerId
   );
+
+  const customerId = localStorage.getItem("selectedCustomerId");
+  const {data: customer} = useGetCustomerByIdQuery(customerId as string);
 
   const handleAddAsset = () => {
     navigate("/add-asset");
@@ -36,11 +43,16 @@ const ManageCustomerPage: React.FC = () => {
           />
           <PurpleButton text="Add New Asset" onClick={handleAddAsset} />
           <PurpleButton text="Send to GPS" />
-          <PurpleButton text="Update Service Contact" />
+          <PurpleButton text="Update Service Contact" onClick={() => setIsModalOpen(true)} />
         </div>
         <PurpleButton text="Edit Customer" onClick={handleEditCustomer} />
       </div>
       <CustomerExtraDetails />
+      <EditCustomerServiceContactModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        initialData={customer}
+      />
     </ClientLayout>
   );
 };

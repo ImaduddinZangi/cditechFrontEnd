@@ -2,6 +2,11 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Customer } from "../features/customerSlice";
 import { getUserId } from "../../utils/utils";
 
+export interface ServiceContactUpdate {
+  id: string;
+  service_contact: string;
+}
+
 const clientId = getUserId();
 
 const baseQuery = fetchBaseQuery({
@@ -53,6 +58,16 @@ export const customerApi = createApi({
       }),
       invalidatesTags: (_result, _error, { id }) => [{ type: "Customer", id }],
     }),
+    updateServiceContact: builder.mutation<Customer, Partial<ServiceContactUpdate>>({
+      query: ({ id, ...rest }) => ({
+        url: `client/customers/${id}`,
+        method: "PATCH",
+        body: rest,
+      }),
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: "Customer", id },
+      ],
+    }),
     deleteCustomer: builder.mutation<{ success: boolean }, string>({
       query: (customerId: string) => ({
         url: `client/customers/${customerId}`,
@@ -68,6 +83,7 @@ export const {
   useGetCustomerByIdQuery,
   useCreateCustomerMutation,
   useUpdateCustomerMutation,
+  useUpdateServiceContactMutation,
   useDeleteCustomerMutation,
 } = customerApi;
 

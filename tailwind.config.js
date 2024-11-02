@@ -16,6 +16,8 @@ export default {
       backgroundColor: {
         purple: ["#7F56D9"],
         lightgray: ["#FCFCFD"],
+        gray: ["#475467"],
+        dark: ["#101828"],
         textpurple: ["#6941C6"],
       },
       borderColor: {

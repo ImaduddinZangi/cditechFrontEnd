@@ -36,7 +36,7 @@ const EditCustomerPage: React.FC = () => {
       setLoading(true);
       await updateCustomer({ id: customerId, formData }).unwrap();
       toast.success("Customer updated successfully!", {
-        onClose: () => navigate("/client-dashboard"),
+        onClose: () => navigate("/manage-customer"),
         autoClose: 1000,
       });
     } catch (error) {

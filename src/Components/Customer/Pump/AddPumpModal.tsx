@@ -7,7 +7,6 @@ import SelectField, { Option } from "../../Tags/SelectField";
 import OutlinePurpleButton from "../../Tags/OutlinePurpleButton";
 import AddPhotos from "../AddPhotos";
 import PurpleButton from "../../Tags/PurpleButton";
-import WhiteButton from "../../Tags/WhiteButton";
 import { useParams } from "react-router-dom";
 
 const warrantyOptions = [
@@ -175,11 +174,6 @@ const AddPumpModal: React.FC<AddPumpModalProps> = ({ onEdit, isOpen, onClose, in
                     </div>
                     <div className="flex justify-end space-x-[1vw] mt-[1vw]">
                         <PurpleButton type="submit" text="Save" />
-                        <WhiteButton
-                            type="button"
-                            text="Cancel"
-                            onClick={onClose}
-                        />
                     </div>
                 </form>
             </div>

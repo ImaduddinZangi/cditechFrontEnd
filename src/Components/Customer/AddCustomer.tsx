@@ -44,6 +44,9 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
   const [name, setName] = useState(initialData?.name || "");
   const [email, setEmail] = useState(initialData?.email || "");
   const [gateCode, setGateCode] = useState(initialData?.gate_code || "");
+  const [serviceFirstName, setServiceFirstName] = useState("");
+  const [serviceLastName, setServiceLastName] = useState("");
+  const [serviceContact, setServiceContact] = useState<string>(initialData?.service_contact || "");
   const [phone, setPhone] = useState(initialData?.phone || "");
   const [address, setAddress] = useState(initialData?.address || "");
   const [selectedState, setSelectedState] = useState<Option | null>(null);
@@ -89,12 +92,12 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
     const getCities = (stateValue: string | null): Option[] => {
       return stateValue
         ? (cities as City[])
-            .filter((city) => city.admin1 === stateValue)
-            .map((city) => ({
-              value: city.name,
-              label: city.name,
-              key: `${city.name}-${city.lat}-${city.lng}`,
-            }))
+          .filter((city) => city.admin1 === stateValue)
+          .map((city) => ({
+            value: city.name,
+            label: city.name,
+            key: `${city.name}-${city.lat}-${city.lng}`,
+          }))
         : [];
     };
 
@@ -113,7 +116,10 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
 
       setName(initialData.name ?? "");
       setEmail(initialData.email ?? "");
-      setPhone(initialData.phone ?? "");
+      const serviceContactParts = initialData.service_contact ? initialData.service_contact.split(", ") : [];
+      setServiceFirstName(serviceContactParts[0] ?? "");
+      setServiceLastName(serviceContactParts[1] ?? "");
+      setServiceContact(serviceContactParts[2] ?? "");
       setGateCode(initialData.gate_code ?? "");
       setPreviousProvider(initialData.previousProvider ?? "");
 
@@ -155,6 +161,7 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
 
     const combinedBillingAddress = `${billingZipCode}, ${billingStreetAddress}, ${billingCity?.label}, ${billingState?.label}`;
     const combinedServiceAddress = `${zipCode}, ${serviceAddress}, ${selectedCity?.label}, ${selectedState?.label}`;
+    const combinedServiceContact = `${serviceFirstName}, ${serviceLastName}, ${serviceContact}`;
 
     const formData = new FormData();
     formData.append("name", name);
@@ -167,7 +174,7 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
     formData.append("service_address", combinedServiceAddress);
     formData.append("type", type?.value || "");
     formData.append("status", status?.value || "");
-    formData.append("service_contact", phone);
+    formData.append("service_contact", combinedServiceContact);
     formData.append("previousProvider", previousProvider);
     formData.append("billingContactEmail", billingContactEmail);
     photos.forEach((photo) => {
@@ -204,7 +211,7 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
             />
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-[1.5vw]">
+        <div className="grid grid-cols-3 gap-[1.5vw]">
           <div>
             <SelectField
               label="Customer Status"
@@ -224,6 +231,16 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
               value={address}
               placeholder="123 main street"
               onChange={(e) => setAddress(e.target.value)}
+            />
+          </div>
+          <div>
+            <PhoneInput
+              label="Customer Contact"
+              name="customerContact"
+              value={phone}
+              placeholder="123456789"
+              onChange={setPhone}
+              required
             />
           </div>
         </div>
@@ -361,12 +378,34 @@ const AddCustomer: React.FC<AddCustomerProps> = ({ onSubmit, initialData }) => {
         </div>
         <div className="grid grid-cols-3 gap-[1.5vw]">
           <div>
+            <InputField
+              label="Service First Name"
+              name="serviceFirstName"
+              fieldType="text"
+              value={serviceFirstName}
+              placeholder="Enter service first name"
+              onChange={(e) => setServiceFirstName(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <InputField
+              label="Service Last Name"
+              name="serviceLastName"
+              fieldType="text"
+              value={serviceLastName}
+              placeholder="Enter Service first name"
+              onChange={(e) => setServiceLastName(e.target.value)}
+              required
+            />
+          </div>
+          <div>
             <PhoneInput
               label="Service Contact"
               name="serviceContact"
-              value={phone}
+              value={serviceContact}
               placeholder="123456789"
-              onChange={setPhone}
+              onChange={setServiceContact}
               required
             />
           </div>
