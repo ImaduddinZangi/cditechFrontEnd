@@ -1,8 +1,10 @@
 import React from "react";
+import PurpleButton from "../Tags/PurpleButton";
 
 interface UltimatePackageCardProps {
     title: string;
     price: string;
+    priceType: string;
     features: {
         label: string;
         value: string | number;
@@ -10,9 +12,10 @@ interface UltimatePackageCardProps {
     isBestOffer?: boolean;
 }
 
-const UltimatePackageCard: React.FC<UltimatePackageCardProps> = ({ title, price, features, isBestOffer }) => {
+const UltimatePackageCard: React.FC<UltimatePackageCardProps> = ({ title, price, features, isBestOffer, priceType }) => {
+    const formattedPriceType = priceType.replace(/ly$/, "");
     return (
-        <div className="max-w-xs p-6 rounded-lg shadow-lg text-center relative overflow-hidden bg-gradient-to-br from-purple-500 to-blue-400">
+        <div className="p-6 rounded-lg shadow-lg text-center relative overflow-hidden bg-gradient-to-br from-purple-500 to-blue-400">
             {/* Best Offer Tag */}
             {isBestOffer && (
                 <div className="absolute top-4 right-4 bg-white text-purple-500 font-semibold text-xs px-2 py-1 rounded-full shadow-md">
@@ -40,7 +43,7 @@ const UltimatePackageCard: React.FC<UltimatePackageCardProps> = ({ title, price,
             <h3 className="text-xl font-semibold text-white mb-2">{title}</h3>
             <div className="text-3xl font-bold text-white">
                 {price}
-                <span className="text-base font-normal text-gray-200"> per month</span>
+                <span className="text-base font-normal text-gray-200"> per {formattedPriceType}</span>
             </div>
 
             {/* Features List */}
@@ -52,11 +55,7 @@ const UltimatePackageCard: React.FC<UltimatePackageCardProps> = ({ title, price,
                     </li>
                 ))}
             </ul>
-
-            {/* Get Started Button */}
-            <button className="mt-6 px-4 py-2 w-full text-white bg-blue-600 hover:bg-blue-700 rounded-md font-semibold">
-                Get Started
-            </button>
+            <PurpleButton text="Get Started" className="mt-[2vw] w-full" />
         </div>
     );
 };

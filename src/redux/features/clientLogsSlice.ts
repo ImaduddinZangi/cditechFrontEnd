@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ClientUser } from "./clientUserSlice";
+import { GetClientUser } from "./clientUserSlice";
 
 export interface ClientLogDetails {
     details: string;
@@ -13,7 +13,7 @@ export interface ClientLogs {
     timestamp: string;
     logLevel: string;
     details: ClientLogDetails;
-    user: ClientUser;
+    user: GetClientUser;
 }
 
 interface ClientLogsState {

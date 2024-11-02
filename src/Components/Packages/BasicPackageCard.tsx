@@ -1,17 +1,20 @@
 import React from "react";
+import PurpleButton from "../Tags/PurpleButton";
 
 interface BasicPackageCardProps {
     title: string;
     price: string;
+    priceType: string;
     features: {
         label: string;
         value: string | number;
     }[];
 }
 
-const BasicPackageCard: React.FC<BasicPackageCardProps> = ({ title, price, features }) => {
+const BasicPackageCard: React.FC<BasicPackageCardProps> = ({ title, price, features, priceType }) => {
+    const formattedPriceType = priceType.replace(/ly$/, "");
     return (
-        <div className="max-w-xs p-6 bg-white rounded-lg shadow-lg border border-gray-200 text-center">
+        <div className="p-6 bg-white rounded-lg shadow-lg border border-gray-200 text-center">
             <div className="flex justify-center items-center mb-4">
                 <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
                     <svg
@@ -29,7 +32,7 @@ const BasicPackageCard: React.FC<BasicPackageCardProps> = ({ title, price, featu
             <h3 className="text-xl font-semibold mb-2">{title}</h3>
             <div className="text-3xl font-bold text-gray-800">
                 {price}
-                <span className="text-base font-normal text-gray-500"> per month</span>
+                <span className="text-base font-normal text-gray-500"> per {formattedPriceType}</span>
             </div>
             <ul className="mt-4 text-left space-y-1 text-gray-700">
                 {features.map((feature, index) => (
@@ -39,9 +42,7 @@ const BasicPackageCard: React.FC<BasicPackageCardProps> = ({ title, price, featu
                     </li>
                 ))}
             </ul>
-            <button className="mt-6 px-4 py-2 w-full text-white bg-blue-500 hover:bg-blue-600 rounded-md font-semibold">
-                Get Started
-            </button>
+            <PurpleButton text="Get Started" className="w-full mt-[2vw]" />
         </div>
     );
 };

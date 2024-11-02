@@ -66,11 +66,6 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
           src: "dummy",
           href: "/manage-services",
         },
-        {
-          title: "Pump Brands",
-          src: "dummy",
-          href: "/manage-pump-brands",
-        },
       ],
     },
     {
@@ -286,12 +281,12 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
         {
           title: "My Fee Plan",
           src: "dummy",
-          href: "/my-fee-plan",
+          href: "/fee-plans",
         },
         {
           title: "Log Dashboard",
           src: "dummy",
-          href: "/log-dashboard",
+          href: "/client-logs-dashboard",
         },
         {
           title: "Pump Brands",

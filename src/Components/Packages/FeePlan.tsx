@@ -7,7 +7,7 @@ import { Package } from "../../redux/features/packagesSlice";
 const FeePlan: React.FC = () => {
     const { data: packages } = useGetPackagesQuery();
     const [priceType, setPriceType] = useState<"monthly" | "yearly">("monthly");
-    const [activeTab, setActiveTab] = useState("monthyl");
+    const [activeTab, setActiveTab] = useState<"monthly" | "yearly">("monthly");
 
     const handleTabChange = (type: "monthly" | "yearly") => {
         setPriceType(type);
@@ -18,7 +18,8 @@ const FeePlan: React.FC = () => {
         const price = priceType === "monthly" ? pkg.monthly_price : pkg.yearly_price;
         const packageProps = {
             title: pkg.name,
-            price: `$${price.toFixed(2)}`,
+            price: `$${price}`,
+            priceType: priceType,
             features: [
                 { label: "Customers", value: pkg.customer_limit ?? "Unlimited" },
                 { label: "Assets", value: pkg.asset_limit ?? "Unlimited" },
@@ -69,7 +70,7 @@ const FeePlan: React.FC = () => {
             </div>
 
             {/* Package Cards */}
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <div className="w-full grid gap-[2vw] grid-cols-3 mt-[2vw]">
                 {packages?.map((pkg) => (
                     <div key={pkg.id}>{renderPackageCard(pkg)}</div>
                 ))}

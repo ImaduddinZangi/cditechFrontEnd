@@ -12,7 +12,7 @@ const baseQuery = fetchBaseQuery({
   },
 });
 
-export const ClientLogsApi = createApi({
+export const clientLogsApi = createApi({
   reducerPath: "clientLogsApi",
   baseQuery,
   tagTypes: ["ClientLogs"],
@@ -63,6 +63,6 @@ export const {
   useCreateClientLogsMutation,
   useUpdateClientLogsMutation,
   useDeleteClientLogsMutation,
-} = ClientLogsApi;
+} = clientLogsApi;
 
-export default ClientLogsApi;
+export default clientLogsApi;

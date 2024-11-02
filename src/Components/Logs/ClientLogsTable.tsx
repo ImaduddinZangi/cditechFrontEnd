@@ -1,61 +1,15 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { FiSearch } from "react-icons/fi";
 import PurpleButton from "../Tags/PurpleButton";
-
-interface Log {
-  action: string;
-  dateTime: string;
-  user: string;
-  logLevel: string;
-}
+import Loader from "../Constants/Loader";
+import { useGetClientLogsQuery } from "../../redux/api/clientLogsApi";
 
 const ClientLogsTable: React.FC = React.memo(() => {
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const logsPerPage = 10;
 
-  const logs: Log[] = [
-    {
-      action: "Action/Event",
-      dateTime: "Date/Time",
-      user: "User First, Last",
-      logLevel: "LOG Level",
-    },
-    {
-      action: "Action/Event",
-      dateTime: "Date/Time",
-      user: "User First, Last",
-      logLevel: "LOG Level",
-    },
-    {
-      action: "Action/Event",
-      dateTime: "Date/Time",
-      user: "User First, Last",
-      logLevel: "LOG Level",
-    },
-    {
-      action: "Action/Event",
-      dateTime: "Date/Time",
-      user: "User First, Last",
-      logLevel: "LOG Level",
-    },
-    {
-      action: "Action/Event",
-      dateTime: "Date/Time",
-      user: "User First, Last",
-      logLevel: "LOG Level",
-    },
-    {
-      action: "Action/Event",
-      dateTime: "Date/Time",
-      user: "User First, Last",
-      logLevel: "LOG Level",
-    },
-    {
-      action: "Action/Event",
-      dateTime: "Date/Time",
-      user: "User First, Last",
-      logLevel: "LOG Level",
-    },
-  ];
+  const { data: logs, isLoading } = useGetClientLogsQuery();
 
   const handleSearchChange = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,20 +36,33 @@ const ClientLogsTable: React.FC = React.memo(() => {
     );
   }, []);
 
-  // Memoized filtered logs based on the search term
   const filteredLogs = useMemo(() => {
-    return logs.filter(
+    return logs?.filter(
       (log) =>
         log.action.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        log.dateTime.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        log.user.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      new Date(log.timestamp).toLocaleString().toLowerCase().includes(searchTerm.toLowerCase()) ||
+        log.user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
         log.logLevel.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [searchTerm, logs]);
 
+  const totalPages = Math.ceil((filteredLogs?.length || 0) / logsPerPage);
+  const paginatedData = filteredLogs?.slice(
+    (currentPage - 1) * logsPerPage,
+    currentPage * logsPerPage
+  );
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
+
   return (
     <div className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-lg font-inter">
-      <div className="flex justify-between items-center px-[1.5vw] py-[1vw]">
+      <div className="flex justify-between items-center py-[1vw]">
         <PurpleButton text="Sort Table" />
         <div className="relative">
           <input
@@ -131,14 +98,22 @@ const ClientLogsTable: React.FC = React.memo(() => {
             </tr>
           </thead>
           <tbody className="text-gray-600 text-[1vw] font-light">
-            {filteredLogs.length === 0 ? (
+            {isLoading && (
+              <tr>
+                <td colSpan={4} className="text-center py-[2vw]">
+                  <Loader />
+                </td>
+              </tr>
+            )}
+            {!isLoading && paginatedData?.length === 0 && (
               <tr>
                 <td colSpan={4} className="text-center py-[2vw]">
                   <p className="text-[1.5vw] font-semibold">No logs found</p>
                 </td>
               </tr>
-            ) : (
-              filteredLogs.map((log, index) => (
+            )}
+            {!isLoading &&
+              paginatedData?.map((log, index) => (
                 <tr
                   key={index}
                   className="border-b border-gray-200 hover:bg-gray-100"
@@ -147,19 +122,48 @@ const ClientLogsTable: React.FC = React.memo(() => {
                     {highlightText(log.action, searchTerm)}
                   </td>
                   <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                    {highlightText(log.dateTime, searchTerm)}
+                    {highlightText(new Date(log.timestamp).toLocaleString(), searchTerm)}
                   </td>
                   <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
-                    {highlightText(log.user, searchTerm)}
+                    {highlightText(log.user.username, searchTerm)}
                   </td>
                   <td className="py-[1vw] px-[1.5vw] text-left font-inter font-normal text-[1vw]">
                     {highlightText(log.logLevel, searchTerm)}
                   </td>
                 </tr>
-              ))
-            )}
+              ))}
           </tbody>
         </table>
+        <div className="flex items-center justify-between py-[1vw]">
+          <button
+            onClick={handlePreviousPage}
+            disabled={currentPage === 1}
+            className="px-[1vw] py-[0.5vw] border bg-white text-darkgray-0 rounded-[0.4vw] text-[1vw] font-inter font-medium"
+          >
+            Previous
+          </button>
+          <div className="flex space-x-1">
+            {[...Array(totalPages).keys()].map((page) => (
+              <button
+                key={page}
+                onClick={() => setCurrentPage(page + 1)}
+                className={`${currentPage === page + 1
+                  ? "bg-purple-0 text-white"
+                  : "bg-gray-300 text-gray-600"
+                  } py-1 px-3 rounded`}
+              >
+                {page + 1}
+              </button>
+            ))}
+          </div>
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+            className="px-[1vw] py-[0.5vw] border bg-white text-darkgray-0 rounded-[0.4vw] text-[1vw] font-inter font-medium"
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );
