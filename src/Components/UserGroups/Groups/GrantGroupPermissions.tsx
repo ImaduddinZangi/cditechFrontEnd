@@ -102,7 +102,31 @@ const defaultPermissions: InternalPermission[] = [
     actions: { create: false, view: false, edit: false, delete: false },
   },
   {
-    resource: "packages",
+    resource: "tasks",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
+  {
+    resource: "task-statuses",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
+  {
+    resource: "task-types",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
+  {
+    resource: "task-files",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
+  {
+    resource: "client-task-settings",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
+  {
+    resource: "task-settings",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
+  {
+    resource: "task-status-history",
     actions: { create: false, view: false, edit: false, delete: false },
   },
 ];

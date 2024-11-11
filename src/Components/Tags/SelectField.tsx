@@ -8,11 +8,11 @@ export interface Option {
 }
 
 interface SelectFieldProps {
-  label?: string;
+  label: string;
   name?: string;
-  options?: Option[];
+  options: Option[];
   value?: Option | null;
-  onChange: (option: Option | null) => void;
+  onChange?: (option: Option | null) => void;
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;
@@ -44,7 +44,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
     <div className={className}>
       <label
         htmlFor={name}
-        className="block text-darkgray-0 font-medium text-[1vw]"
+        className="block text-darkgray-0 font-medium text-[1vw] text-inter"
       >
         {label}
         {required && <span className="text-red-500"> *</span>}
@@ -52,7 +52,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
       <Combobox
         value={value}
         onChange={(selectedValue) => {
-          onChange(selectedValue);
+          if (onChange) onChange(selectedValue);
           setIsOpen(false);
           setQuery("");
         }}

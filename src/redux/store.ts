@@ -24,6 +24,10 @@ import serviceReducer from "./features/serviceSlice";
 import checklistTemplateReducer from "./features/checklistTemplateSlice";
 import packagesReducer from "./features/packagesSlice";
 import clientLogsReducer from "./features/clientLogsSlice";
+import taskReducer from "./features/taskSlice";
+import taskTypeReducer from "./features/taskTypeSlice";
+import taskStatusReducer from "./features/taskStatusSlice";
+import taskStatusHistoryReducer from "./features/taskStatusHistorySlice";
 
 import { authApi } from "./api/authApi";
 import clientApi from "./api/clientApi";
@@ -47,6 +51,10 @@ import serviceApi from "./api/serviceApi";
 import checklistTemplateApi from "./api/checklistTemplateApi";
 import packagesApi from "./api/packagesApi";
 import clientLogsApi from "./api/clientLogsApi";
+import taskApi from "./api/taskApi";
+import taskTypeApi from "./api/taskTypeApi";
+import taskStatusApi from "./api/taskStatusApi";
+import taskStatusHistoryApi from "./api/taskStatusHistoryApi";
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -71,6 +79,10 @@ const rootReducer = combineReducers({
   checklistTemplate: checklistTemplateReducer,
   packages: packagesReducer,
   clientLogs: clientLogsReducer,
+  task: taskReducer,
+  taskType: taskTypeReducer,
+  taskStatus: taskStatusReducer,
+  taskStatusHistory: taskStatusHistoryReducer,
   [authApi.reducerPath]: authApi.reducer,
   [clientApi.reducerPath]: clientApi.reducer,
   [customerApi.reducerPath]: customerApi.reducer,
@@ -93,6 +105,10 @@ const rootReducer = combineReducers({
   [checklistTemplateApi.reducerPath]: checklistTemplateApi.reducer,
   [packagesApi.reducerPath]: packagesApi.reducer,
   [clientLogsApi.reducerPath]: clientLogsApi.reducer,
+  [taskApi.reducerPath]: taskApi.reducer,
+  [taskTypeApi.reducerPath]: taskTypeApi.reducer,
+  [taskStatusApi.reducerPath]: taskStatusApi.reducer,
+  [taskStatusHistoryApi.reducerPath]: taskStatusHistoryApi.reducer,
 });
 
 const store = configureStore({
@@ -119,7 +135,11 @@ const store = configureStore({
       serviceApi.middleware,
       checklistTemplateApi.middleware,
       packagesApi.middleware,
-      clientLogsApi.middleware
+      clientLogsApi.middleware,
+      taskApi.middleware,
+      taskTypeApi.middleware,
+      taskStatusApi.middleware,
+      taskStatusHistoryApi.middleware
     ),
 });
 

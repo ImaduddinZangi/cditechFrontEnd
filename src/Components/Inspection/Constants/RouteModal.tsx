@@ -7,9 +7,9 @@ import {
   Autocomplete,
 } from "@react-google-maps/api";
 import { toast } from "react-toastify";
-import PurpleButton from "../Tags/PurpleButton";
-import WhiteButton from "../Tags/WhiteButton";
-import InputField from "../Tags/InputField";
+import PurpleButton from "../../Tags/PurpleButton";
+import WhiteButton from "../../Tags/WhiteButton";
+import InputField from "../../Tags/InputField";
 
 interface RouteModalProps {
   isOpen: boolean;

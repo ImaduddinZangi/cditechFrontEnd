@@ -26,12 +26,11 @@ const AddPumpBrandPage: React.FC = () => {
   const handleAddPumpBrand = async (pumpBrandData: PumpBrand) => {
     try {
       setLoading(true);
-      const result = await createPumpBrand(pumpBrandData).unwrap();
+      await createPumpBrand(pumpBrandData).unwrap();
       toast.success("Pump Brand added successfully!", {
         onClose: () => navigate("/manage-pump-brands"),
         autoClose: 1000,
       });
-      console.log("Pump created successfully", result);
     } catch (error) {
       if (isAPIError(error)) {
         toast.error("Error Adding Pump Brand: " + error.data.message, {

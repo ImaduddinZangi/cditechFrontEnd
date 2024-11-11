@@ -5,7 +5,7 @@ import {
   useUpdateInspectionMutation,
 } from "../../redux/api/inspectionApi";
 import ClientLayout from "../../Layouts/ClientLayout";
-import RouteModal from "../../Components/Inspection/RouteModal";
+import RouteModal from "../../Components/Inspection/Constants/RouteModal";
 import {
   EditInspection,
   Inspection,

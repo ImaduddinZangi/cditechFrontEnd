@@ -4,7 +4,6 @@ import ProtectedRoute from "../Middleware/ProtectedRoutes";
 import Error500 from "../Components/Constants/Error500";
 import Error404 from "../Components/Constants/Error404";
 import Loader from "../Components/Constants/Loader";
-import FeePlansPage from "../Pages/Packages/FeePlansPage";
 const ClientSignInPage = lazy(() => import("../Pages/Auth/ClientSignInPage"));
 const ClientDashboardPage = lazy(
   () => import("../Pages/ClientProfile/ClientDashboardPage")
@@ -138,6 +137,11 @@ const EditPumpPage = lazy(() => import("../Pages/Customer/Pump/EditPumpPage"));
 const AddServicePage = lazy(() => import("../Pages/Services/AddServicePage"));
 const ViewCustomersMapPage = lazy(() => import("../Pages/Customer/ViewCustomersMapPage"));
 const UpdateCompanyPage = lazy(() => import("../Pages/ClientProfile/UpdateCompanyPage"));
+const FeePlansPage = lazy(() => import("../Pages/Packages/FeePlansPage"));
+const TaskDashboardPage = lazy(() => import("../Pages/Tasks/TaskDashboardPage"));
+const AddTaskTypePage = lazy(() => import("../Pages/Tasks/AddTaskTypePage"));
+const AddTaskPage = lazy(() => import("../Pages/Tasks/AddTaskPage"));
+const AddTaskInvoicePage = lazy(() => import("../Pages/Tasks/AddTaskInvoicePage"));
 
 const RoutesContent: React.FC = () => {
   return (
@@ -285,6 +289,13 @@ const RoutesContent: React.FC = () => {
 
           {/* Fee Plans */}
           <Route path="/fee-plans" element={<FeePlansPage />} />
+
+          {/* Tasks */}
+          <Route path="task-dashboard" element={<TaskDashboardPage />} />
+          <Route path="add-task-type" element={<AddTaskTypePage />} />
+          <Route path="add-task" element={<AddTaskPage />} />
+          <Route path="add-task-invoice" element={<AddTaskInvoicePage />} />
+
           {/* EXTRAS */}
           <Route path="/full-view-map" element={<ViewFullMapPage />} />
           <Route path="/my-fee-plan" element={<MyFeePlanPage />} />

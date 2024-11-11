@@ -10,7 +10,7 @@ import InputField from "../Tags/InputField";
 import { useGetChecklistTemplatesQuery } from "../../redux/api/checklistTemplateApi";
 import SelectField, { Option } from "../Tags/SelectField";
 import { toast, ToastContainer } from "react-toastify";
-import RouteModal from "./RouteModal";
+import RouteModal from "./Constants/RouteModal";
 
 interface UpdateInspectionProps {
   onSubmit: (data: EditInspection) => void;
