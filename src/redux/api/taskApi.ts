@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Task } from "../features/taskSlice";
+import { GetTask, Task } from "../features/taskSlice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_BASE_URL,
@@ -17,14 +17,14 @@ export const taskApi = createApi({
   baseQuery,
   tagTypes: ["Task"],
   endpoints: (builder) => ({
-    getTasks: builder.query<Task[], void>({
+    getTasks: builder.query<GetTask[], void>({
       query: () => ({
         url: "tasks",
         method: "GET",
       }),
       providesTags: ["Task"],
     }),
-    getTaskById: builder.query<Task, string>({
+    getTaskById: builder.query<GetTask, string>({
       query: (taskId: string) => ({
         url: `tasks/${taskId}`,
         method: "GET",

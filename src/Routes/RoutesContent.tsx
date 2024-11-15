@@ -142,6 +142,7 @@ const TaskDashboardPage = lazy(() => import("../Pages/Tasks/TaskDashboardPage"))
 const AddTaskTypePage = lazy(() => import("../Pages/Tasks/AddTaskTypePage"));
 const AddTaskPage = lazy(() => import("../Pages/Tasks/AddTaskPage"));
 const AddTaskInvoicePage = lazy(() => import("../Pages/Tasks/AddTaskInvoicePage"));
+const ManageTasksPage = lazy(() => import("../Pages/Tasks/ManageTasksPage"));
 
 const RoutesContent: React.FC = () => {
   return (
@@ -292,6 +293,7 @@ const RoutesContent: React.FC = () => {
 
           {/* Tasks */}
           <Route path="task-dashboard" element={<TaskDashboardPage />} />
+          <Route path="manage-tasks" element={<ManageTasksPage />} />
           <Route path="add-task-type" element={<AddTaskTypePage />} />
           <Route path="add-task" element={<AddTaskPage />} />
           <Route path="add-task-invoice" element={<AddTaskInvoicePage />} />

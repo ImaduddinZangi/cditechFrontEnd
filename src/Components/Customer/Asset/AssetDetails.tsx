@@ -65,8 +65,6 @@ const AssetDetails: React.FC = () => {
     );
   }
 
-
-
   function isGreaseTrapProperties(
     properties: Asset["properties"]
   ): properties is GreaseTrapProperties {

@@ -26,9 +26,9 @@ interface AddAssetProps {
 }
 
 const statusOptions: Option[] = [
-  { label: "Active", value: "Active" },
-  { label: "Inactive", value: "Inactive" },
-  { label: "Maintenance", value: "Maintenance" },
+  { label: "Active", value: "active" },
+  { label: "Inactive", value: "inactive" },
+  { label: "Maintenance", value: "maintenance" },
 ];
 
 const libraries: ("places" | "drawing")[] = ["places"];
@@ -169,7 +169,7 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
   };
 
   const handleCancel = () => {
-    navigate("/customer-table");
+    navigate("/manage-customers");
   };
 
   const handlePhotosSubmit = (uploadedPhotos: File[]) => {

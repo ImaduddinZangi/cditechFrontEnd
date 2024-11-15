@@ -1,4 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { TaskType } from "./taskTypeSlice";
+import { Asset } from "./assetSlice";
+import { GetClientUser } from "./clientUserSlice";
+import { TaskStatus } from "./taskStatusSlice";
 
 export interface Task {
   id?: string;
@@ -15,6 +19,35 @@ export interface Task {
   autoAssignMethod?: 'User Group' | 'Division';
   quickbooksInvoiceNumber?: string;
 }
+
+export interface GetTask {
+  taskId: string;
+  taskPriority: string;
+  taskInterval: string;
+  taskSetId: string;
+  reoccurringEndDate: string;
+  dueDate: string;
+  taskType: TaskType;
+  assets: Asset[];
+  assignedUsers: GetClientUser[];
+  taskStatus: TaskStatus;
+  quickbooksInvoiceNumber: string | null;
+  weather: string | null;
+  id: string;
+  archived: boolean;
+  createdAt: string;
+  updatedAt: string;
+  client: {
+    id: string;
+  };
+  createdByUser: {
+    id: string;
+  };
+  customer: {
+    id: string;
+  };
+}
+
 
 interface TaskState {
   tasks: Task[] | null;

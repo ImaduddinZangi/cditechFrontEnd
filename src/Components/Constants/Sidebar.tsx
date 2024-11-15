@@ -81,7 +81,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
         {
           title: "My Tasks",
           src: "checklist",
-          href: "/my-tasks",
+          href: "/manage-tasks",
         },
         {
           title: "My Task History",
@@ -91,7 +91,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
         {
           title: "Add New Customer Task",
           src: "portfolio",
-          href: "/add-new-customer-task",
+          href: "/add-task",
         },
         {
           title: "Easy Task Editor",

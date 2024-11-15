@@ -4,9 +4,10 @@ import WhiteButton from '../../Tags/WhiteButton';
 import PurpleButton from '../../Tags/PurpleButton';
 import SelectField, { Option } from '../../Tags/SelectField';
 import { useGetAssetsQuery } from '../../../redux/api/assetApi';
-import { Task } from '../../../redux/features/taskSlice';
+import { GetTask, Task } from '../../../redux/features/taskSlice';
 import { useGetTaskTypesQuery } from '../../../redux/api/taskTypeApi';
 import { useGetClientUsersQuery } from '../../../redux/api/clientUserApi';
+import { useGetCustomersQuery } from '../../../redux/api/customerApi';
 
 const intervalOptions = [
     { label: "Daily", value: "Daily" },
@@ -27,14 +28,16 @@ const priorityOptions = [
 
 interface AddTaskProps {
     onSubmit: (data: Task) => void;
-    initialData?: Partial<Task>;
+    initialData?: Partial<GetTask>;
 }
 
 const AddTask: React.FC<AddTaskProps> = ({ onSubmit, initialData }) => {
     const [reoccurringEndDate, setReoccurringEndDate] = useState<string>(initialData?.reoccurringEndDate || "");
     const [dueDate, setDueDate] = useState<string>(initialData?.dueDate || "");
+    const [customers, setCustomers] = useState<Option[]>([]);
+    const [customerId, setCustomerId] = useState<Option | null>(null);
     const [assets, setAssets] = useState<Option[]>([]);
-    const [assetIds, setAssetIds] = useState<string[]>(initialData?.assetIds || []);
+    const [assetIds, setAssetIds] = useState<string[]>([]);
     const [taskTypes, setTaskTypes] = useState<Option[]>([]);
     const [taskTypeId, setTaskTypeId] = useState<Option | null>(null);
     const [users, setUsers] = useState<Option[]>([]);
@@ -45,27 +48,31 @@ const AddTask: React.FC<AddTaskProps> = ({ onSubmit, initialData }) => {
     const { data: assetsData } = useGetAssetsQuery();
     const { data: usersData } = useGetClientUsersQuery();
     const { data: taskTypesData } = useGetTaskTypesQuery();
+    const { data: customersData } = useGetCustomersQuery();
 
-    // Handle asset selection toggle
     const toggleAssetSelection = (assetId: string) => {
-        setAssetIds((prev) => 
+        setAssetIds((prev) =>
             prev.includes(assetId) ? prev.filter((id) => id !== assetId) : [...prev, assetId]
         );
     };
 
-    const handleSubmit = (event: React.FormEvent) => {
-        event.preventDefault();
-        onSubmit({
-            customerId: "", // Assuming customerId will be passed or handled elsewhere
-            taskTypeId: taskTypeId?.value,
-            taskPriority: taskPriority?.value as 'Emergency' | 'High' | 'Normal' | 'Low',
-            taskInterval: taskInterval?.value as 'One-Time' | 'Daily' | 'Bi-Monthly' | 'Monthly' | 'Quarterly' | 'Annual',
-            dueDate,
-            reoccurringEndDate,
-            assetIds,
-            assignedUserIds: userId ? [userId.value] : [],
-        });
-    };
+    useEffect(() => {
+        if (customersData) {
+            const customerOptions = customersData.map((customer) => ({
+                label: customer.name,
+                value: customer.id,
+            }));
+            setCustomers(customerOptions);
+
+            if (initialData?.customer) {
+                const selectedCustomer = customerOptions.find(
+                    (c) => c.value === initialData.customer?.id
+                );
+                setCustomerId(selectedCustomer || null);
+            }
+        }
+
+    }, [customersData, initialData]);
 
     useEffect(() => {
         if (assetsData) {
@@ -88,7 +95,7 @@ const AddTask: React.FC<AddTaskProps> = ({ onSubmit, initialData }) => {
             setTaskTypes(taskTypeOptions);
         }
     }, [taskTypesData]);
-    
+
 
     useEffect(() => {
         if (usersData) {
@@ -100,15 +107,30 @@ const AddTask: React.FC<AddTaskProps> = ({ onSubmit, initialData }) => {
         }
     }, [usersData]);
 
+    const handleSubmit = (event: React.FormEvent) => {
+        event.preventDefault();
+        onSubmit({
+            customerId: customerId?.value || "",
+            taskTypeId: taskTypeId?.value,
+            taskPriority: taskPriority?.value as 'Emergency' | 'High' | 'Normal' | 'Low',
+            taskInterval: taskInterval?.value as 'One-Time' | 'Daily' | 'Bi-Monthly' | 'Monthly' | 'Quarterly' | 'Annual',
+            dueDate,
+            reoccurringEndDate,
+            assetIds,
+            assignedUserIds: userId ? [userId.value] : [],
+        });
+    };
+
     return (
         <form onSubmit={handleSubmit} className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-[0.4vw] font-inter">
             <div className="flex justify-between items-start space-x-4">
                 <div className="w-1/3 space-y-4">
                     <div>
-                        <InputField
-                            label='Customer:'
-                            fieldType='text'
-                            placeholder='Search'
+                        <SelectField
+                            label='Customer'
+                            value={customerId}
+                            onChange={(option) => setCustomerId(option)}
+                            options={customers}
                         />
                     </div>
                     <div className="w-full">

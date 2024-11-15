@@ -416,7 +416,7 @@ const DetailedAssets: React.FC = () => {
       <div className="flex justify-end space-x-[1vw]">
         <OutlinePurpleButton text="Edit Task" />
         <OutlinePurpleButton text="Manage Customer" onClick={() => navigate("/manage-customer")} />
-        <PurpleButton text="Back" onClick={() => navigate("/manage-customers")} />
+        <PurpleButton text="Back" onClick={() => navigate("/manage-customer")} />
       </div>
     </div>
   );
