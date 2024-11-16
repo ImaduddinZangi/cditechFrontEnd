@@ -5,11 +5,13 @@ import Loader from "../../Constants/Loader";
 import { useGetTasksQuery } from "../../../redux/api/taskApi";
 import WhiteButton from "../../Tags/WhiteButton";
 import OutlinePurpleButton from "../../Tags/OutlinePurpleButton";
+import { useNavigate } from "react-router-dom";
 
 const ManageTasks: React.FC = React.memo(() => {
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [currentPage, setCurrentPage] = useState(1);
     const tasksPerPage = 10;
+    const navigate = useNavigate();
 
     const { data: tasks, isLoading } = useGetTasksQuery();
 
@@ -140,7 +142,7 @@ const ManageTasks: React.FC = React.memo(() => {
                                     </td>
                                     <td className="py-[1vw] px-[1.5vw] text-left flex space-x-2">
                                         <WhiteButton text="Begin" />
-                                        <OutlinePurpleButton text="Begin" />
+                                        <OutlinePurpleButton text="View" onClick={() => navigate(`/manage-task/${task.id}`)} />
                                     </td>
                                 </tr>
                             ))}

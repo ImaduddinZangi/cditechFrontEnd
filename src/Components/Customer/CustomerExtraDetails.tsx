@@ -12,12 +12,12 @@ const CustomerExtraDetails: React.FC = () => {
 
   const handleMoreTabsClick = () => {
     setShowMoreTabs(true);
-    setActiveTab("Files"); // Set the first tab of "More Tabs" as the active tab
+    setActiveTab("Files");
   };
 
   const handleLessTabsClick = () => {
     setShowMoreTabs(false);
-    setActiveTab("Assets"); // Reset to the default tabs with "Assets" as the active tab
+    setActiveTab("Assets");
   };
 
   const defaultTabs = (
