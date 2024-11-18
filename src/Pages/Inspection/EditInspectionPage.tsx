@@ -5,7 +5,6 @@ import {
   useUpdateInspectionMutation,
 } from "../../redux/api/inspectionApi";
 import ClientLayout from "../../Layouts/ClientLayout";
-import RouteModal from "../../Components/Inspection/Constants/RouteModal";
 import {
   EditInspection,
   Inspection,
@@ -13,7 +12,6 @@ import {
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../Components/Constants/Loader";
-import PurpleButton from "../../Components/Tags/PurpleButton";
 import UpdateInspection from "../../Components/Inspection/UpdateInspection";
 
 const EditInspectionPage: React.FC = () => {
@@ -25,10 +23,6 @@ const EditInspectionPage: React.FC = () => {
     error,
   } = useGetInspectionByIdQuery(inspectionId || "");
   const [updateInspection] = useUpdateInspectionMutation();
-  const [route, setRoute] = useState<
-    Array<{ latitude: number; longitude: number }>
-  >([]);
-  const [isRouteModalOpen, setIsRouteModalOpen] = useState(false);
   const navigate = useNavigate();
 
   type APIError = {
@@ -72,12 +66,6 @@ const EditInspectionPage: React.FC = () => {
     }
   };
 
-  const handleRouteModalSave = (
-    selectedRoute: Array<{ latitude: number; longitude: number }>
-  ) => {
-    setRoute(selectedRoute);
-  };
-
   if (isLoading)
     return (
       <div>
@@ -98,28 +86,13 @@ const EditInspectionPage: React.FC = () => {
           <Loader text="Processing..." />
         </div>
       ) : (
-        inspection && (
-          <div>
-            <div className="space-x-[1vw] m-[2vw]">
-              <PurpleButton
-                text="Route"
-                type="button"
-                onClick={() => setIsRouteModalOpen(true)}
-              />
-            </div>
-            <UpdateInspection
-              onSubmit={handleSubmit}
-              initialData={initialData}
-            />
-          </div>
-        )
-      )}
-      <RouteModal
-        isOpen={isRouteModalOpen}
-        onClose={() => setIsRouteModalOpen(false)}
-        onSave={handleRouteModalSave}
-        initialRoute={route}
-      />
+        inspection &&
+        <UpdateInspection
+          onSubmit={handleSubmit}
+          initialData={initialData}
+        />
+      )
+      }
       <ToastContainer
         position="top-right"
         autoClose={1000}

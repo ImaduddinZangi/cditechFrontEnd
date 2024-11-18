@@ -29,21 +29,44 @@ const priorityOptions = [
 interface AddTaskProps {
     onSubmit: (data: Task) => void;
     initialData?: Partial<GetTask>;
+    isEditing?: boolean;
 }
 
-const AddTask: React.FC<AddTaskProps> = ({ onSubmit, initialData }) => {
-    const [reoccurringEndDate, setReoccurringEndDate] = useState<string>(initialData?.reoccurringEndDate || "");
-    const [dueDate, setDueDate] = useState<string>(initialData?.dueDate || "");
+const AddTask: React.FC<AddTaskProps> = ({ onSubmit, initialData, isEditing }) => {
+    const [reoccurringEndDate, setReoccurringEndDate] = useState<string>(initialData?.reoccurringEndDate ? new Date(initialData.reoccurringEndDate).toISOString().slice(0, 10) : "");
+    const [dueDate, setDueDate] = useState<string>(
+        initialData?.dueDate ? new Date(initialData.dueDate).toISOString().slice(0, 10) : ""
+    );
     const [customers, setCustomers] = useState<Option[]>([]);
-    const [customerId, setCustomerId] = useState<Option | null>(null);
+    const [customerId, setCustomerId] = useState<Option | null>(
+        initialData?.customer
+            ? { label: initialData.customer.name, value: initialData.customer.id }
+            : null
+    );
     const [assets, setAssets] = useState<Option[]>([]);
-    const [assetIds, setAssetIds] = useState<string[]>([]);
+    const [assetIds, setAssetIds] = useState<string[]>(
+        initialData?.assets?.map((asset) => asset.id) || []
+    );
     const [taskTypes, setTaskTypes] = useState<Option[]>([]);
-    const [taskTypeId, setTaskTypeId] = useState<Option | null>(null);
+    const [taskTypeId, setTaskTypeId] = useState<Option | null>(
+        initialData?.taskType
+            ? { label: initialData.taskType.name, value: initialData.taskType.id as string }
+            : null
+    );
     const [users, setUsers] = useState<Option[]>([]);
-    const [userId, setUserId] = useState<Option | null>(null);
-    const [taskInterval, setTaskInterval] = useState<Option | null>(null);
-    const [taskPriority, setTaskPriority] = useState<Option | null>(null);
+    const [assignedUserIds, setAssignedUserIds] = useState<string[]>(
+        initialData?.assignedUsers?.map((user) => user.id) || []
+    );
+    const [taskInterval, setTaskInterval] = useState<Option | null>(
+        initialData?.taskInterval
+            ? { label: initialData.taskInterval, value: initialData.taskInterval }
+            : null
+    );
+    const [taskPriority, setTaskPriority] = useState<Option | null>(
+        initialData?.taskPriority
+            ? { label: initialData.taskPriority, value: initialData.taskPriority }
+            : null
+    );
 
     const { data: assetsData } = useGetAssetsQuery();
     const { data: usersData } = useGetClientUsersQuery();
@@ -53,6 +76,12 @@ const AddTask: React.FC<AddTaskProps> = ({ onSubmit, initialData }) => {
     const toggleAssetSelection = (assetId: string) => {
         setAssetIds((prev) =>
             prev.includes(assetId) ? prev.filter((id) => id !== assetId) : [...prev, assetId]
+        );
+    };
+
+    const toggleUserSelection = (userId: string) => {
+        setAssignedUserIds((prev) =>
+            prev.includes(userId) ? prev.filter((id) => id !== userId) : [...prev, userId]
         );
     };
 
@@ -71,7 +100,6 @@ const AddTask: React.FC<AddTaskProps> = ({ onSubmit, initialData }) => {
                 setCustomerId(selectedCustomer || null);
             }
         }
-
     }, [customersData, initialData]);
 
     useEffect(() => {
@@ -86,16 +114,20 @@ const AddTask: React.FC<AddTaskProps> = ({ onSubmit, initialData }) => {
 
     useEffect(() => {
         if (taskTypesData) {
-            const taskTypeOptions = taskTypesData
-                .filter((taskType) => taskType.id !== undefined)
-                .map((taskType) => ({
-                    label: taskType.name,
-                    value: taskType.id as string,
-                }));
+            const taskTypeOptions = taskTypesData.map((taskType) => ({
+                label: taskType.name,
+                value: taskType.id as string,
+            }));
             setTaskTypes(taskTypeOptions);
-        }
-    }, [taskTypesData]);
 
+            if (initialData?.taskType) {
+                const selectedTaskType = taskTypeOptions.find(
+                    (c) => c.value === initialData.taskType?.id
+                );
+                setTaskTypeId(selectedTaskType || null);
+            }
+        }
+    }, [taskTypesData, initialData]);
 
     useEffect(() => {
         if (usersData) {
@@ -117,88 +149,104 @@ const AddTask: React.FC<AddTaskProps> = ({ onSubmit, initialData }) => {
             dueDate,
             reoccurringEndDate,
             assetIds,
-            assignedUserIds: userId ? [userId.value] : [],
+            assignedUserIds,
         });
     };
 
     return (
         <form onSubmit={handleSubmit} className="p-[1.5vw] m-[2vw] bg-white shadow-lg rounded-[0.4vw] font-inter">
-            <div className="flex justify-between items-start space-x-4">
-                <div className="w-1/3 space-y-4">
-                    <div>
-                        <SelectField
-                            label='Customer'
-                            value={customerId}
-                            onChange={(option) => setCustomerId(option)}
-                            options={customers}
-                        />
-                    </div>
-                    <div className="w-full">
-                        <label className="block text-darkgray-0 font-semibold mb-[1vw]">Task Assets</label>
-                        <div className='border p-[1vw] space-y-[1vw] rounded-[0.4vw] h-[63vh] overflow-y-auto'>
-                            {assets.map((asset) => (
-                                <WhiteButton
-                                    key={asset.value}
-                                    text={asset.label}
-                                    icon={!assetIds.includes(asset.value) && <span className="text-lg font-bold">+</span>}
-                                    className='w-full'
-                                    onClick={() => toggleAssetSelection(asset.value)}
-                                />
-                            ))}
-                        </div>
+            <div className="flex justify-between items-start space-x-[1vw]">
+                <div className="w-1/3 space-y-[1vw]">
+                    <SelectField
+                        label="Customer"
+                        value={customerId}
+                        onChange={(option) => setCustomerId(option)}
+                        options={customers}
+                    />
+                    <label className="block text-darkgray-0 font-semibold mb-[1vw]">Task Assets</label>
+                    <div className="border p-[1vw] space-y-[1vw] rounded-[0.4vw] h-[63vh] overflow-y-auto">
+                        {assets.map((asset) => (
+                            <WhiteButton
+                                key={asset.value}
+                                text={asset.label}
+                                icon={!assetIds.includes(asset.value) && <span className="text-lg font-bold">+</span>}
+                                className={`w-full ${assetIds.includes(asset.value) ? 'bg-gray-200' : ''}`}
+                                onClick={() => toggleAssetSelection(asset.value)}
+                            />
+                        ))}
                     </div>
                 </div>
                 <div className="w-2/3 border p-[1vw] rounded-[0.4vw]">
-                    <div className='grid grid-cols-2 gap-[1vw]'>
-                        <div className="flex flex-col space-y-[1vw]">
+                    <div className="grid grid-cols-2 gap-[1vw]">
+                        <div className='flex flex-col gap-[1vw]'>
                             <SelectField
-                                label='Task Type'
+                                label="Task Type"
                                 value={taskTypeId}
                                 onChange={(option) => setTaskTypeId(option)}
-                                placeholder='Select task type'
                                 options={taskTypes}
+                                placeholder="Select task type"
                             />
                             <SelectField
-                                label='Task Interval'
+                                label="Task Interval"
                                 value={taskInterval}
                                 onChange={(option) => setTaskInterval(option)}
                                 options={intervalOptions}
-                                placeholder='Select interval'
                             />
                             <InputField
-                                label='Task Due Date:'
-                                fieldType='date'
+                                label="Task Due Date:"
+                                fieldType="date"
                                 value={dueDate}
                                 onChange={(e) => setDueDate(e.target.value)}
                                 required
                             />
                             <InputField
-                                label='Task End Date:'
-                                fieldType='date'
+                                label="Task End Date:"
+                                fieldType="date"
                                 value={reoccurringEndDate}
                                 onChange={(e) => setReoccurringEndDate(e.target.value)}
                             />
                             <SelectField
-                                label='Assign To User'
-                                value={userId}
-                                onChange={(option) => setUserId(option)}
+                                label="Assign To User"
                                 options={users}
-                                placeholder='Select user'
+                                placeholder="Select Users"
+                                onChange={(option) => option && toggleUserSelection(option.value)}
                             />
+                            {users.length > 0 && assignedUserIds.length > 0 && (
+                                <div className="col-span-2">
+                                    <label className="block text-darkgray-0 font-medium text-[1vw] text-inter">Assigned Users</label>
+                                    <ul>
+                                        {assignedUserIds.map((id) => {
+                                            const user = users.find((user) => user.value === id);
+                                            return (
+                                                <li key={id} className="flex items-center justify-between">
+                                                    <span className='block text-gray-0 text-[1vw] text-inter'>{user?.label}</span>
+                                                    <button
+                                                        type="button"
+                                                        className="text-red-500 hover:text-red-700 text-[1vw] w-[5vw]"
+                                                        onClick={() => toggleUserSelection(id)}
+                                                    >
+                                                        Remove
+                                                    </button>
+                                                </li>
+                                            );
+                                        })}
+                                    </ul>
+                                </div>
+                            )}
                         </div>
-                        <div className="flex flex-col">
+                        <div>
                             <SelectField
-                                label='Task Priority'
+                                label="Task Priority"
                                 value={taskPriority}
                                 onChange={(option) => setTaskPriority(option)}
-                                placeholder='Select priority'
                                 options={priorityOptions}
+                                placeholder="Select priority"
                             />
                         </div>
                     </div>
                     <div className="w-full flex justify-end space-x-[1vw] mt-[1vw]">
-                        <PurpleButton type="submit" text='Save and Create New Task' />
-                        <WhiteButton text='Cancel Go Back' />
+                        <PurpleButton type="submit" text={isEditing ? "Update and Save" : "Save and Create New Task"} />
+                        <WhiteButton text="Cancel Go Back" />
                     </div>
                 </div>
             </div>

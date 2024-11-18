@@ -3,6 +3,8 @@ import { TaskType } from "./taskTypeSlice";
 import { Asset } from "./assetSlice";
 import { GetClientUser } from "./clientUserSlice";
 import { TaskStatus } from "./taskStatusSlice";
+import { Customer } from "./customerSlice";
+import { Client } from "./clientSlice";
 
 export interface Task {
   id?: string;
@@ -37,15 +39,9 @@ export interface GetTask {
   archived: boolean;
   createdAt: string;
   updatedAt: string;
-  client: {
-    id: string;
-  };
-  createdByUser: {
-    id: string;
-  };
-  customer: {
-    id: string;
-  };
+  client: Client;
+  createdByUser: GetClientUser;
+  customer: Customer;
 }
 
 

@@ -37,7 +37,6 @@ const AddAsset: React.FC<AddAssetProps> = ({ onSubmit, initialData }) => {
   const [customers, setCustomers] = useState<Option[]>([]);
   const [assetTypes, setAssetTypes] = useState<Option[]>([]);
   const [pumpDataList, setPumpDataList] = useState<Pump[]>([]);
-
   const [name, setName] = useState<string>(initialData?.name || "");
   const [type, setType] = useState<Option | null>(
     initialData?.assetType

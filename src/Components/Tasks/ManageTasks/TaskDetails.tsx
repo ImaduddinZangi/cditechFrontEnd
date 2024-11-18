@@ -87,7 +87,7 @@ const TaskDetails: React.FC = () => {
                 </div>
             )}
             <div className="flex justify-end space-x-[1vw]">
-                <OutlinePurpleButton text="Edit Task" />
+                <OutlinePurpleButton text="Edit Task" onClick={() => navigate(`/edit-task/${task?.id}`)} />
                 <OutlinePurpleButton text="Manage Customer" onClick={() => navigate("/manage-customer")} />
                 <PurpleButton text="Back" onClick={() => navigate("/manage-tasks")} />
             </div>

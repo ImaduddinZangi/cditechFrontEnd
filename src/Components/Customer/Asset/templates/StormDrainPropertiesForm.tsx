@@ -179,7 +179,7 @@ const StormDrainPropertiesForm: React.FC<StormDrainPropertiesFormProps> = ({ upd
                 />
                 {assets.length > 0 && connectedStormDrainAssetIds.length > 0 && (
                     <div className="col-span-1">
-                        <label className="block text-gray-0 font-medium text-[1vw] text-inter">Selected Storm Drain Assets</label>
+                        <label className="block text-darkgray-0 font-medium text-[1vw] text-inter">Selected Storm Drain Assets</label>
                         <ul>
                             {connectedStormDrainAssetIds.map((id) => {
                                 const asset = assets.find((asset) => asset.value === id);

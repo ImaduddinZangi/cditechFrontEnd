@@ -54,13 +54,15 @@ const AddInspection: React.FC<AddInspectionProps> = ({
   const [serviceFees, setserviceFees] = useState<Option[]>([]);
   const [serviceFeeId, setServiceFeeId] = useState<Option | null>(null);
   const [scheduledDate, setScheduledDate] = useState<string>(
-    initialData?.scheduledDate || ""
+    initialData?.scheduledDate ? new Date(initialData.scheduledDate).toISOString().slice(0, 10) : ""
   );
   const [inspectionInterval, setinspectionInterval] = useState<Option | null>({
     label: "",
     value: "",
   });
-  const [reocurrenceEndDate, setReocurrenceEndDate] = useState<string>(initialData?.reocurrenceEndDate || "");
+  const [reocurrenceEndDate, setReocurrenceEndDate] = useState<string>(
+    initialData?.reocurrenceEndDate ? new Date(initialData.reocurrenceEndDate).toISOString().slice(0, 10) : ""
+  );
   const { data: customersData } = useGetCustomersQuery();
   const { data: assetsData } = useGetAssetsQuery();
   const { data: usersData } = useGetClientUsersQuery();

@@ -141,6 +141,7 @@ const FeePlansPage = lazy(() => import("../Pages/Packages/FeePlansPage"));
 const TaskDashboardPage = lazy(() => import("../Pages/Tasks/TaskDashboardPage"));
 const AddTaskTypePage = lazy(() => import("../Pages/Tasks/AddTaskTypePage"));
 const AddTaskPage = lazy(() => import("../Pages/Tasks/AddTaskPage"));
+const EditTaskPage = lazy(() => import("../Pages/Tasks/EditTaskPage"));
 const AddTaskInvoicePage = lazy(() => import("../Pages/Tasks/AddTaskInvoicePage"));
 const ManageTasksPage = lazy(() => import("../Pages/Tasks/ManageTasksPage"));
 const ManageTaskPage = lazy(() => import("../Pages/Tasks/ManageTaskPage"));
@@ -300,6 +301,7 @@ const RoutesContent: React.FC = () => {
           <Route path="manage-task/:taskId" element={<ManageTaskPage />} />
           <Route path="add-task-type" element={<AddTaskTypePage />} />
           <Route path="add-task" element={<AddTaskPage />} />
+          <Route path="edit-task/:taskId" element={<EditTaskPage />} />
           <Route path="add-task-invoice" element={<AddTaskInvoicePage />} />
 
           {/* Maps */}
