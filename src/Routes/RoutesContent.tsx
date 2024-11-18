@@ -135,7 +135,7 @@ const ClientUsersSessionsTablePage = lazy(
 );
 const EditPumpPage = lazy(() => import("../Pages/Customer/Pump/EditPumpPage"));
 const AddServicePage = lazy(() => import("../Pages/Services/AddServicePage"));
-const ViewCustomersMapPage = lazy(() => import("../Pages/Customer/ViewCustomersMapPage"));
+// const ViewCustomersMapPage = lazy(() => import("../Pages/Customer/ViewCustomersMapPage"));
 const UpdateCompanyPage = lazy(() => import("../Pages/ClientProfile/UpdateCompanyPage"));
 const FeePlansPage = lazy(() => import("../Pages/Packages/FeePlansPage"));
 const TaskDashboardPage = lazy(() => import("../Pages/Tasks/TaskDashboardPage"));
@@ -144,6 +144,8 @@ const AddTaskPage = lazy(() => import("../Pages/Tasks/AddTaskPage"));
 const AddTaskInvoicePage = lazy(() => import("../Pages/Tasks/AddTaskInvoicePage"));
 const ManageTasksPage = lazy(() => import("../Pages/Tasks/ManageTasksPage"));
 const ManageTaskPage = lazy(() => import("../Pages/Tasks/ManageTaskPage"));
+const CustomersMapPage = lazy(() => import("../Pages/Customer/CustomersMapPage"));
+const AssetsMapPage = lazy(() => import("../Pages/Customer/AssetsMapPage"));
 
 const RoutesContent: React.FC = () => {
   return (
@@ -194,7 +196,7 @@ const RoutesContent: React.FC = () => {
             element={<EditCustomerPage />}
           />
           <Route path="/manage-customers" element={<ManageCustomersPage />} />
-          <Route path="/customers-map" element={<ViewCustomersMapPage />} />
+          {/* <Route path="/customers-map" element={<ViewCustomersMapPage />} /> */}
 
           {/* Asset */}
           <Route path="/add-asset" element={<AddAssetsPage />} />
@@ -299,6 +301,10 @@ const RoutesContent: React.FC = () => {
           <Route path="add-task-type" element={<AddTaskTypePage />} />
           <Route path="add-task" element={<AddTaskPage />} />
           <Route path="add-task-invoice" element={<AddTaskInvoicePage />} />
+
+          {/* Maps */}
+          <Route path="customers-map" element={<CustomersMapPage />} />
+          <Route path="assets-map" element={<AssetsMapPage />} />
 
           {/* EXTRAS */}
           <Route path="/full-view-map" element={<ViewFullMapPage />} />

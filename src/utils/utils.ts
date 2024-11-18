@@ -39,3 +39,17 @@ export const getAddressFromLatLng = async (lat: number, lng: number) => {
     return "Error fetching address";
   }
 };
+
+export const getLatLngFromAddress = async (address: string): Promise<{ lat: number; lng: number } | null> => {
+  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+  const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
+
+  try {
+    const response = await axios.get(url);
+    const location = response.data.results[0]?.geometry?.location;
+    return location || null;
+  } catch (error) {
+    console.error('Error fetching coordinates:', error);
+    return null;
+  }
+};

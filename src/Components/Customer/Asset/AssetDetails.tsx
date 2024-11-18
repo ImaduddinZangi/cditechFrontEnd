@@ -71,7 +71,6 @@ const AssetDetails: React.FC = () => {
     return (properties as GreaseTrapProperties).duty !== undefined;
   }
 
-
   const renderProperties = (asset: Asset) => {
     const { properties, assetType } = asset;
 
@@ -110,7 +109,7 @@ const AssetDetails: React.FC = () => {
               </div>
               <div className="col-span-1">
                 <p className="text-[1vw] font-semibold">Lat/Lng:</p>
-                <p className="text-[1vw]">{`${properties.latitude}/${properties.latitude}` || "N/A"}</p>
+                <p className="text-[1vw]">{`${properties.latitude}/${properties.longitude}` || "N/A"}</p>
               </div>
               <div className="col-span-1">
                 <p className="text-[1vw] font-semibold">QR Code:</p>
@@ -175,7 +174,7 @@ const AssetDetails: React.FC = () => {
               </div>
               <div className="col-span-1">
                 <p className="text-[1vw] font-semibold">Lat/Lng:</p>
-                <p className="text-[1vw]">{`${properties.latitude}/${properties.latitude}` || "N/A"}</p>
+                <p className="text-[1vw]">{`${properties.latitude}/${properties.longitude}` || "N/A"}</p>
               </div>
               <div className="col-span-1">
                 <p className="text-[1vw] font-semibold">QR Code:</p>
@@ -240,7 +239,7 @@ const AssetDetails: React.FC = () => {
               </div>
               <div className="col-span-1">
                 <p className="text-[1vw] font-semibold">Lat/Lng:</p>
-                <p className="text-[1vw]">{`${properties.latitude}/${properties.latitude}` || "N/A"}</p>
+                <p className="text-[1vw]">{`${properties.latitude}/${properties.longitude}` || "N/A"}</p>
               </div>
               <div className="col-span-1">
                 <p className="text-[1vw] font-semibold">Require Disposal Ticket:</p>
@@ -301,7 +300,7 @@ const AssetDetails: React.FC = () => {
               </div>
               <div className="col-span-1">
                 <p className="text-[1vw] font-semibold">Lat/Lng:</p>
-                <p className="text-[1vw]">{`${properties.latitude}/${properties.latitude}` || "N/A"}</p>
+                <p className="text-[1vw]">{`${properties.latitude}/${properties.longitude}` || "N/A"}</p>
               </div>
               <div className="col-span-1">
                 <p className="text-[1vw] font-semibold">QR Code:</p>
@@ -351,7 +350,7 @@ const AssetDetails: React.FC = () => {
                 </div>
                 <div className="col-span-1">
                   <p className="text-[1vw] font-semibold">Lat/Lng:</p>
-                  <p className="text-[1vw]">{`${properties.latitude}/${properties.latitude}` || "N/A"}</p>
+                  <p className="text-[1vw]">{`${properties.latitude}/${properties.longitude}` || "N/A"}</p>
                 </div>
                 <div className="col-span-1">
                   <p className="text-[1vw] font-semibold">Require Disposal Ticket:</p>

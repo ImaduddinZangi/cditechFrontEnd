@@ -30,7 +30,6 @@ const AddAssetsPage: React.FC = () => {
       setLoading(true);
       const assetResult = await createAsset(assetData).unwrap();
       const assetId = assetResult.id;
-      
       if (pumpDataList) {
         for (const pumpData of pumpDataList) {
           const pumpFormData = new FormData();
@@ -48,44 +47,35 @@ const AddAssetsPage: React.FC = () => {
           pumpData.files?.forEach((photo) => {
             pumpFormData.append("files", photo);
           });
-  
           await createPump(pumpFormData).unwrap();
         }
       }
-      
-      console.log("Asset and pumps created successfully");
-      toast.success("Asset and pumps added successfully!", {
-        onClose: () => navigate("/manage-customers"),
-        autoClose: 1000,
-      });
+      toast.success("Asset added successfully!");
+      console.log("Asset created successfully");
+      setTimeout(() => {
+        navigate("/manage-customers");
+      }, 1000);
     } catch (error) {
       if (isAPIError(error)) {
-        toast.error("Error Adding Asset/Pumps: " + error.data.message, {
-          onClose: () => navigate("/error/500"),
-          autoClose: 1000,
-        });
+        toast.error("Error Adding Asset: " + error.data.message);
       } else if (error instanceof Error) {
-        toast.error("Error Adding Asset/Pumps: " + error.message, {
-          onClose: () => navigate("/error/500"),
-          autoClose: 1000,
-        });
+        toast.error("Error Adding Asset: " + error.message);
       } else {
-        toast.error("An unknown error occurred", {
-          onClose: () => navigate("/error/500"),
-          autoClose: 1000,
-        });
+        toast.error("An unknown error occurred");
       }
-      console.error("Error Adding Asset/Pumps:", error);
+      setTimeout(() => {
+        navigate("/error/500");
+      }, 1000);
     } finally {
       setLoading(false);
     }
   };
-  
+
 
   return (
     <ClientLayout breadcrumb="Add Asset">
       {loading ? (
-       <div className="w-full h-[70vh] flex items-center justify-center">
+        <div className="w-full h-[70vh] flex items-center justify-center">
           <Loader text="Processing..." />
         </div>
       ) : (

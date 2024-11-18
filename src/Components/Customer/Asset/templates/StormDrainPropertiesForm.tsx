@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import InputField from '../../../Tags/InputField';
 import SelectField, { Option } from '../../../Tags/SelectField';
+import { useGetAssetsQuery } from '../../../../redux/api/assetApi';
 
 const serviceIntervalOptions: Option[] = [
     { label: 'Weekly', value: 'Weekly' },
@@ -66,7 +67,8 @@ const StormDrainPropertiesForm: React.FC<StormDrainPropertiesFormProps> = ({ upd
     const [duty, setDuty] = useState<Option | null>(properties.duty ? { label: properties.duty, value: properties.duty } : null);
     const [drainGrateType, setDrainGrateType] = useState<Option | null>(properties.drainGrateType ? { label: properties.drainGrateType, value: properties.drainGrateType } : null);
     const [connectedAssetLineColor, setConnectedAssetLineColor] = useState(properties.connectedAssetLineColor || '');
-    // const [connectedStormDrainAssetIds, setConnectedStormDrainAssetIds] = useState(properties.connectedStormDrainAssetIds || []);
+    const [connectedStormDrainAssetIds, setConnectedStormDrainAssetIds] = useState<string[]>(properties.connectedStormDrainAssetIds || []);
+    const [assets, setAssets] = useState<Option[]>([]);
 
     useEffect(() => updateProperties('serviceInterval', serviceInterval?.value || ""), [serviceInterval]);
     useEffect(() => updateProperties('drainSize', drainSize?.value || ""), [drainSize]);
@@ -82,7 +84,44 @@ const StormDrainPropertiesForm: React.FC<StormDrainPropertiesFormProps> = ({ upd
     useEffect(() => updateProperties('duty', duty?.value || ""), [duty]);
     useEffect(() => updateProperties('drainGrateType', drainGrateType?.value || ""), [drainGrateType]);
     useEffect(() => updateProperties('connectedAssetLineColor', connectedAssetLineColor), [connectedAssetLineColor]);
-    // useEffect(() => updateProperties('connectedStormDrainAssetIds', connectedStormDrainAssetIds), [connectedStormDrainAssetIds]);
+    useEffect(() => updateProperties('connectedStormDrainAssetIds', connectedStormDrainAssetIds), [connectedStormDrainAssetIds]);
+
+    const { data: assetsData } = useGetAssetsQuery();
+
+    useEffect(() => {
+        if (assetsData) {
+            const stormDrainAssets = assetsData.filter((asset) => asset.assetType?.name === 'Storm Drain');
+            const assetOptions = stormDrainAssets.map((asset) => ({
+                label: asset.name,
+                value: asset.id,
+            }));
+            setAssets(assetOptions);
+
+            if (stormDrainAssets.length === 0) {
+                setConnectedStormDrainAssetIds([]);
+                updateProperties('connectedStormDrainAssetIds', undefined);
+            }
+        }
+    }, [assetsData]);
+
+    useEffect(() => {
+        if (connectedStormDrainAssetIds.length > 0) {
+            updateProperties('connectedStormDrainAssetIds', connectedStormDrainAssetIds);
+        } else {
+            updateProperties('connectedStormDrainAssetIds', undefined);
+        }
+    }, [connectedStormDrainAssetIds]);
+
+    const handleAddAsset = (assetId: string) => {
+        setConnectedStormDrainAssetIds((prev) => {
+            if (!prev.includes(assetId)) return [...prev, assetId];
+            return prev;
+        });
+    };
+
+    const handleRemoveAsset = (assetId: string) => {
+        setConnectedStormDrainAssetIds((prev) => prev.filter((id) => id !== assetId));
+    };
 
     return (
         <>
@@ -129,6 +168,38 @@ const StormDrainPropertiesForm: React.FC<StormDrainPropertiesFormProps> = ({ upd
                 placeholder="Select Drain Grate Type"
                 className="col-span-1"
             />
+            <>
+                <SelectField
+                    label="Connected Storm Drain Assets"
+                    options={assets}
+                    placeholder="Select Storm Drain Asset"
+                    onChange={(option) => option && handleAddAsset(option.value)}
+                    className="col-span-1"
+                    disabled={assets.length === 0}
+                />
+                {assets.length > 0 && connectedStormDrainAssetIds.length > 0 && (
+                    <div className="col-span-1">
+                        <label className="block text-gray-0 font-medium text-[1vw] text-inter">Selected Storm Drain Assets</label>
+                        <ul>
+                            {connectedStormDrainAssetIds.map((id) => {
+                                const asset = assets.find((asset) => asset.value === id);
+                                return (
+                                    <li key={id} className="flex items-center justify-between">
+                                        <span className='block text-gray-0 text-[1vw] text-inter'>{asset?.label}</span>
+                                        <button
+                                            type="button"
+                                            className="text-red-500 hover:text-red-700 text-[1vw] w-[5vw]"
+                                            onClick={() => handleRemoveAsset(id)}
+                                        >
+                                            Remove
+                                        </button>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </div>
+                )}
+            </>
             <InputField label="Internal Pipe Diameter (inches)" value={internalPipeDia} fieldType="number" onChange={(e) => setInternalPipeDia(e.target.value)} className="col-span-1" placeholder='Enter Pipe Dia' />
             <InputField label="Latitude" value={latitude} fieldType="text" onChange={(e) => setLatitude(e.target.value)} className="col-span-1" placeholder='Latitude' />
             <InputField label="Longitude" value={longitude} fieldType="text" onChange={(e) => setLongitude(e.target.value)} className="col-span-1" placeholder='Longitude' />
@@ -136,7 +207,6 @@ const StormDrainPropertiesForm: React.FC<StormDrainPropertiesFormProps> = ({ upd
             <InputField label="NFC ID" value={nfcId} fieldType="text" onChange={(e) => setNfcId(e.target.value)} className="col-span-1" placeholder='Enter nfc code' />
             <InputField label="Drain Dimensions (feet)" value={drainDimensions} fieldType="text" onChange={(e) => setDrainDimensions(e.target.value)} className="col-span-1" placeholder='11*22*33' />
             <InputField label="Connected Asset Line Color" value={connectedAssetLineColor} fieldType="color" onChange={(e) => setConnectedAssetLineColor(e.target.value)} className="col-span-1" />
-            {/* <InputField label="Connected Storm Drain Asset IDs (comma-separated)" value={connectedStormDrainAssetIds.join(", ")} fieldType="text" onChange={(e) => setConnectedStormDrainAssetIds(e.target.value.split(", ").slice(0, 5))} className="col-span-1" /> */}
             <div className="flex items-center col-span-1 cursor-pointer">
                 <input
                     type="checkbox"
