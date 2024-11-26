@@ -28,6 +28,7 @@ import taskReducer from "./features/taskSlice";
 import taskTypeReducer from "./features/taskTypeSlice";
 import taskStatusReducer from "./features/taskStatusSlice";
 import taskStatusHistoryReducer from "./features/taskStatusHistorySlice";
+import taskSettingsReducer from "./features/taskSettingsSlice";
 
 import { authApi } from "./api/authApi";
 import clientApi from "./api/clientApi";
@@ -55,6 +56,7 @@ import taskApi from "./api/taskApi";
 import taskTypeApi from "./api/taskTypeApi";
 import taskStatusApi from "./api/taskStatusApi";
 import taskStatusHistoryApi from "./api/taskStatusHistoryApi";
+import taskSettingsApi from "./api/taskSettingsApi";
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -83,6 +85,7 @@ const rootReducer = combineReducers({
   taskType: taskTypeReducer,
   taskStatus: taskStatusReducer,
   taskStatusHistory: taskStatusHistoryReducer,
+  taskSettings: taskSettingsReducer,
   [authApi.reducerPath]: authApi.reducer,
   [clientApi.reducerPath]: clientApi.reducer,
   [customerApi.reducerPath]: customerApi.reducer,
@@ -109,6 +112,7 @@ const rootReducer = combineReducers({
   [taskTypeApi.reducerPath]: taskTypeApi.reducer,
   [taskStatusApi.reducerPath]: taskStatusApi.reducer,
   [taskStatusHistoryApi.reducerPath]: taskStatusHistoryApi.reducer,
+  [taskSettingsApi.reducerPath]: taskSettingsApi.reducer,
 });
 
 const store = configureStore({
@@ -139,7 +143,8 @@ const store = configureStore({
       taskApi.middleware,
       taskTypeApi.middleware,
       taskStatusApi.middleware,
-      taskStatusHistoryApi.middleware
+      taskStatusHistoryApi.middleware,
+      taskSettingsApi.middleware
     ),
 });
 
