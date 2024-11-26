@@ -66,7 +66,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ breadcrumb }) => {
             {client?.first_name}, {client?.last_name}
           </p>
           <p className="text-gray-0 text-[1vw] font-inter">
-            {client?.company.company_name}
+            {client?.company?.company_name}
           </p>
           <p className="text-gray-0 text-[1vw] font-inter">
             {client?.userGroups?.find(() => true)?.name || "No group assigned"}

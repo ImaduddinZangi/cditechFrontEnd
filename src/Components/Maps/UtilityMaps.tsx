@@ -10,7 +10,11 @@ interface UtilityMapsProps {
         lng: number;
         label: string;
     }>;
-    lines?: Array<{ start: { lat: number; lng: number }; end: { lat: number; lng: number } }>;
+    lines?: Array<{
+        start: { lat: number; lng: number };
+        end: { lat: number; lng: number };
+        color: string;
+    }>;
 }
 
 const containerStyle = {
@@ -24,8 +28,11 @@ const center = {
 };
 
 const UtilityMaps: React.FC<UtilityMapsProps> = ({ mapType, data, lines = [] }) => {
+
+    console.log("lat/lng: ", lines);
+
     const { isLoaded } = useJsApiLoader({
-        googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || "",
+        googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API || "",
     });
 
     if (!isLoaded) {
@@ -46,7 +53,7 @@ const UtilityMaps: React.FC<UtilityMapsProps> = ({ mapType, data, lines = [] }) 
                 center={center}
                 zoom={10}
                 options={{
-                    mapTypeId: google.maps.MapTypeId.SATELLITE,
+                    mapTypeId: google.maps.MapTypeId.HYBRID,
                     fullscreenControl: false,
                     streetViewControl: false,
                     mapTypeControl: true,
@@ -57,7 +64,12 @@ const UtilityMaps: React.FC<UtilityMapsProps> = ({ mapType, data, lines = [] }) 
                     <Marker
                         key={item.id}
                         position={{ lat: item.lat, lng: item.lng }}
-                        label={item.label}
+                        label={{
+                            text: item.label,
+                            color: "black",
+                            fontSize: "12px",
+                            fontWeight: "bold",
+                        }}
                     />
                 ))}
 
@@ -67,7 +79,7 @@ const UtilityMaps: React.FC<UtilityMapsProps> = ({ mapType, data, lines = [] }) 
                         key={index}
                         path={[line.start, line.end]}
                         options={{
-                            strokeColor: "#FF0000",
+                            strokeColor: line.color,
                             strokeOpacity: 0.8,
                             strokeWeight: 2,
                         }}

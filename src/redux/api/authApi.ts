@@ -16,21 +16,27 @@ interface LoginRequest {
 }
 
 export interface ClientRegisterRequest {
+  name: string;
   first_name: string;
   last_name: string;
-  name: string;
   email: string;
   password: string;
-  industry: string;
-  phone: string;
-  address: string;
+  company_contact: string;
+  company_address: string;
   company_name: string;
   company_type: string;
-  billing_address: string;
-  payment_method: string;
-  custom_portal_url: string;
-  next_bill_date: string;
-  account_status: string;
+  billingContact?: string;
+  billing_address?: string;
+  industry?: string;
+  company_logo?: string;
+  payment_method?: string;
+  account_status?: string;
+  custom_portal_url?: string;
+  next_bill_date?: string;
+  tax_exempt?: boolean;
+  protected?: boolean;
+  email_verified?: boolean;
+  website?: string;
 }
 
 const baseQuery = fetchBaseQuery({

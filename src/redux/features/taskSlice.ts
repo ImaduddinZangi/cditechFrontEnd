@@ -6,10 +6,19 @@ import { TaskStatus } from "./taskStatusSlice";
 import { Customer } from "./customerSlice";
 import { Client } from "./clientSlice";
 
+export interface UpdateTask {
+  taskId: string;
+  statusId: string;
+  clientId: string;
+  userId: string;
+  location?: string;
+  delayedReason?: string;
+}
+
 export interface Task {
   id?: string;
   customerId: string;
-  taskTypeId?: string; 
+  taskTypeId?: string;
   taskPriority?: 'Emergency' | 'High' | 'Normal' | 'Low';
   taskInterval: 'One-Time' | 'Daily' | 'Bi-Monthly' | 'Monthly' | 'Quarterly' | 'Annual';
   dueDate: string;

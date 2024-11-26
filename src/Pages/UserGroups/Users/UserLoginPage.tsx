@@ -29,7 +29,7 @@ const ClientSignInPage: React.FC = () => {
       dispatch(setToken(result.access_token));
       if (result.client) {
         // dispatch(setClientUser(result.user));
-        if (result.client.user.two_factor_enabled) {
+        if (result.client.user?.two_factor_enabled) {
           toast.success("Login successful!", {
             onClose: () => navigate("/client-dashboard"),
             autoClose: 1000,

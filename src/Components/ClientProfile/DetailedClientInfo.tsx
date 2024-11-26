@@ -36,7 +36,7 @@ const DetailedClientInfo: React.FC = () => {
               Industry:
             </p>
             <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {client.company.industry}
+              {client.company?.industry}
             </p>
           </div>
           <div>
@@ -68,7 +68,7 @@ const DetailedClientInfo: React.FC = () => {
               Billing Address:
             </p>
             <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {client.company.billing_address}
+              {client.company?.billing_address}
             </p>
           </div>
           <div>
@@ -92,7 +92,7 @@ const DetailedClientInfo: React.FC = () => {
               Payment method:
             </p>
             <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">
-              {client.company.payment_method}
+              {client.company?.payment_method}
             </p>
           </div>
           <div>

@@ -75,8 +75,8 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
   const [industry, setIndustry] = useState<Option | null>(null);
   const [companyWebsite, setCompanyWebsite] = useState<string>("");
   const [companyType, setCompanyType] = useState<Option | null>(null);
-  const [phone, setPhone] = useState<string>("");
-  const [billingPhone, setBillingPhone] = useState<string>("");
+  const [companyContact, setCompanyContact] = useState<string>("");
+  const [billingContact, setBillingContact] = useState<string>("");
   const [paymentMethod, setPaymentMethod] = useState<Option | null>(null);
   const [nextBillDate, setNextBillDate] = useState<string>("");
 
@@ -120,16 +120,16 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
       setBillingCity(selectedCity);
       setBillingState(selectedState);
       setBillingZipCode(companyZipCode);
-      setBillingPhone(phone);
+      setBillingContact(companyContact);
     } else {
       setBillingAddress("");
       setBillingAddressLine2("");
       setBillingCity(null);
       setBillingState(null);
       setBillingZipCode("");
-      setBillingPhone("");
+      setBillingContact("");
     }
-  }, [sameAsCompanyAddress, companyAddress, companyAddressLine2, selectedCity, selectedState, companyZipCode, phone]);
+  }, [sameAsCompanyAddress, companyAddress, companyAddressLine2, selectedCity, selectedState, companyZipCode, companyContact]);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -143,8 +143,6 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
       : `${billingAddress}, ${
           billingAddressLine2 ? billingAddressLine2 + ", " : ""
         } ${billingCity?.label}, ${billingState?.label}, ${billingZipCode}`;
-
-    const combinedPhones = `Company: ${phone}, Billing: ${billingPhone}`;
     const name = `${firstName} ${lastName}`;
 
     const clientRegisterRequest = {
@@ -154,15 +152,15 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
       email: companyEmail,
       password,
       industry: industry?.value || "",
-      phone: combinedPhones,
-      address: companyFullAddress,
+      company_contact: companyContact,
+      billingContact,
+      company_address: companyFullAddress,
       company_name: companyName,
       company_type: companyType?.value || "",
       billing_address: billingFullAddress,
       payment_method: paymentMethod?.value || "",
       custom_portal_url: companyWebsite,
       next_bill_date: nextBillDate,
-      account_status: "inactive",
     };
 
     onSubmit(clientRegisterRequest);
@@ -275,9 +273,9 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
               <div>
                 <PhoneInput
                   label="Phone"
-                  name="phone"
-                  value={phone}
-                  onChange={setPhone}
+                  name="companyContact"
+                  value={companyContact}
+                  onChange={setCompanyContact}
                   required
                 />
               </div>
@@ -343,9 +341,9 @@ const AddClient: React.FC<AddClientProps> = ({ onSubmit }) => {
               <div>
                 <PhoneInput
                   label="Phone"
-                  name="billingPhone"
-                  value={billingPhone}
-                  onChange={setBillingPhone}
+                  name="billingContact"
+                  value={billingContact}
+                  onChange={setBillingContact}
                   required
                 />
               </div>

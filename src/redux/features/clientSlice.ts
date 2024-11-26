@@ -1,35 +1,50 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Company } from "./companySlice";
+import { Customer } from "./customerSlice";
+import { UserGroup } from "./userGroupSlice";
+import { Asset } from "./assetSlice";
+import { Photo } from "../api/uploadPhotosApi";
+import { Inspection } from "./inspectionSlice";
+import { Invoice } from "./invoiceSlice";
+import { Service } from "./serviceSlice";
+import { Task } from "./taskSlice";
+import { TaskType } from "./taskTypeSlice";
+import { TaskStatus } from "./taskStatusSlice";
+import { TaskSettings } from "./taskSettingsSlice";
 
 export interface Client {
   id: string;
-  first_name: string;
-  last_name: string;
+  first_name?: string;
+  last_name?: string;
   email: string;
-  phone: string;
-  address: string;
-  billing_address: string;
-  company_name: string;
-  company_type: string;
-  industry: string;
-  company_logo: string | null;
-  payment_method: string;
-  account_status: string;
-  custom_portal_url: string;
+  phone?: string;
+  address?: string;
+  account_status: 'Active' | 'Disabled' | 'Fraud' | 'Inactive';
   tax_exempt: boolean;
   protected: boolean;
   email_verified: boolean;
-  next_bill_date: string;
-  quickbooksAccessToken: string | null;
-  quickbooksRefreshToken: string | null;
-  quickbooksRealmId: string | null;
-  quickbooksTokenExpiresIn: number | null;
-  quickbooksState: string | null;
+  next_bill_date?: string;
+  quickbooksAccessToken?: string | null;
+  quickbooksRefreshToken?: string | null;
+  quickbooksRealmId?: string | null;
+  quickbooksTokenExpiresIn?: string | null;
+  quickbooksState?: string | null;
   created_at: string;
   updated_at: string;
-  user: User;
-  userGroups: UserGroups[];
-  company: Company;
+  user?: User;
+  users?: User[];
+  customers?: Customer[];
+  userGroups?: UserGroup[];
+  company?: Company;
+  assets?: Asset[];
+  photos?: Photo[];
+  inspections?: Inspection[];
+  invoices?: Invoice[];
+  serviceFees?: Service[];
+  tasks?: Task[];
+  taskSettings?: TaskSettings;
+  taskTypes?: TaskType[];
+  taskStatuses?: TaskStatus[];
 }
 
 interface User {
@@ -55,16 +70,6 @@ interface User {
   quickbooks_sync_date: string | null;
   created_at: string;
   updated_at: string;
-}
-
-interface UserGroups {
-  id: string;
-  name: string;
-  description: string;
-  isDefaultAdminGroup: boolean;
-  color: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
 interface ClientState {
