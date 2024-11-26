@@ -102,6 +102,10 @@ const defaultPermissions: InternalPermission[] = [
     actions: { create: false, view: false, edit: false, delete: false },
   },
   {
+    resource: "sessions",
+    actions: { create: false, view: false, edit: false, delete: false },
+  },
+  {
     resource: "tasks",
     actions: { create: false, view: false, edit: false, delete: false },
   },
@@ -209,21 +213,27 @@ const GrantGroupPermissions: React.FC<GrantGroupPermissionsProps> = ({
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     if (groupId) {
-      const formattedPermissions = permissions.map((perm) => {
-        const allowedActions = Object.entries(perm.actions)
-          .filter(([_, isAllowed]) => isAllowed)
-          .map(([action]) => action);
-        return {
-          resource: perm.resource,
-          actions: allowedActions,
-        };
-      });
-      onSubmit(groupId.value, formattedPermissions, hexColor);
+      const formattedPermissions = permissions
+        .map((perm) => {
+          const allowedActions = Object.entries(perm.actions)
+            .filter(([_, isAllowed]) => isAllowed)
+            .map(([action]) => action);
+          return allowedActions.length > 0
+            ? { resource: perm.resource, actions: allowedActions }
+            : null;
+        })
+        .filter((perm) => perm !== null);
+
+      if (formattedPermissions.length === 0) {
+        alert("No permissions selected.");
+        return;
+      }
+
+      onSubmit(groupId.value, formattedPermissions as { resource: string; actions: string[] }[], hexColor);
     } else {
       alert("Please select a user group");
     }
   };
-
 
   const handleCancel = () => {
     navigate("/user-group-table");
