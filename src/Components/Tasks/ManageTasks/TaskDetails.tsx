@@ -10,6 +10,11 @@ const TaskDetails: React.FC = () => {
     const { data: task, isLoading, error } = useGetTaskByIdQuery(taskId || "");
     const navigate = useNavigate();
 
+    const formatTimestamp = (timestamp: string): string => {
+        const date = new Date(timestamp);
+        return date.toLocaleString();
+    };
+
     if (isLoading) {
         return (
             <div className="w-full h-[70vh] flex items-center justify-center">
@@ -36,7 +41,7 @@ const TaskDetails: React.FC = () => {
                     </div>
                     <div>
                         <p className="text-[1vw] text-gray-0 font-medium font-inter">Due Date:</p>
-                        <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">{task.dueDate}</p>
+                        <p className="text-[1vw] text-darkgray-0 font-semibold font-inter">{formatTimestamp(task.dueDate)}</p>
                     </div>
                     <div>
                         <p className="text-[1vw] text-gray-0 font-medium font-inter">Task ID:</p>

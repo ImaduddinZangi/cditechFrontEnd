@@ -24,6 +24,7 @@ import serviceReducer from "./features/serviceSlice";
 import checklistTemplateReducer from "./features/checklistTemplateSlice";
 import packagesReducer from "./features/packagesSlice";
 import clientLogsReducer from "./features/clientLogsSlice";
+import clientSessionsReducer from "./features/clientSessionsSlice";
 import taskReducer from "./features/taskSlice";
 import taskTypeReducer from "./features/taskTypeSlice";
 import taskStatusReducer from "./features/taskStatusSlice";
@@ -57,6 +58,7 @@ import taskTypeApi from "./api/taskTypeApi";
 import taskStatusApi from "./api/taskStatusApi";
 import taskStatusHistoryApi from "./api/taskStatusHistoryApi";
 import taskSettingsApi from "./api/taskSettingsApi";
+import clientSessionsApi from "./api/clientSessionsApi";
 
 const rootReducer = combineReducers({
   user: userReducer,
@@ -81,6 +83,7 @@ const rootReducer = combineReducers({
   checklistTemplate: checklistTemplateReducer,
   packages: packagesReducer,
   clientLogs: clientLogsReducer,
+  clientSessions: clientSessionsReducer,
   task: taskReducer,
   taskType: taskTypeReducer,
   taskStatus: taskStatusReducer,
@@ -108,6 +111,7 @@ const rootReducer = combineReducers({
   [checklistTemplateApi.reducerPath]: checklistTemplateApi.reducer,
   [packagesApi.reducerPath]: packagesApi.reducer,
   [clientLogsApi.reducerPath]: clientLogsApi.reducer,
+  [clientSessionsApi.reducerPath]: clientSessionsApi.reducer,
   [taskApi.reducerPath]: taskApi.reducer,
   [taskTypeApi.reducerPath]: taskTypeApi.reducer,
   [taskStatusApi.reducerPath]: taskStatusApi.reducer,
@@ -144,7 +148,8 @@ const store = configureStore({
       taskTypeApi.middleware,
       taskStatusApi.middleware,
       taskStatusHistoryApi.middleware,
-      taskSettingsApi.middleware
+      taskSettingsApi.middleware,
+      clientSessionsApi.middleware
     ),
 });
 

@@ -11,6 +11,11 @@ export interface ClientLogs {
     id: string;
     action: string;
     timestamp: string;
+    ip_address: string;
+    gps_location: string;
+    device_type: string;
+    browser_type: string;
+    ip_location: string;
     logLevel: string;
     details: ClientLogDetails;
     user: GetClientUser;

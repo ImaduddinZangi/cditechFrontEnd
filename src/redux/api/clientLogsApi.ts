@@ -25,8 +25,8 @@ export const clientLogsApi = createApi({
       providesTags: ["ClientLogs"],
     }),
     getClientLogsById: builder.query<ClientLogs, string>({
-      query: (ClientLogsId: string) => ({
-        url: `logs/${ClientLogsId}`,
+      query: (clientLogsId: string) => ({
+        url: `logs/${clientLogsId}`,
         method: "GET",
       }),
       providesTags: (_result, _error, id) => [{ type: "ClientLogs", id }],
@@ -48,8 +48,8 @@ export const clientLogsApi = createApi({
       invalidatesTags: (_result, _error, { id }) => [{ type: "ClientLogs", id }],
     }),
     deleteClientLogs: builder.mutation<{ success: boolean }, string>({
-      query: (ClientLogsId: string) => ({
-        url: `logs/${ClientLogsId}`,
+      query: (clientLogsId: string) => ({
+        url: `logs/${clientLogsId}`,
         method: "DELETE",
       }),
       invalidatesTags: (_result, _error, id) => [{ type: "ClientLogs", id }],

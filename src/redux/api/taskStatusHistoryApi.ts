@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { TaskStatusHistory } from "../features/taskStatusHistorySlice";
+import { GetTaskStatusHistory, TaskStatusHistory } from "../features/taskStatusHistorySlice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_BASE_URL,
@@ -17,20 +17,22 @@ export const taskStatusHistoryApi = createApi({
   baseQuery,
   tagTypes: ["TaskStatusHistory"],
   endpoints: (builder) => ({
-    getTaskStatusHistories: builder.query<TaskStatusHistory[], void>({
-      query: () => ({
-        url: "task-status-histories",
+    getTaskStatusHistories: builder.query<GetTaskStatusHistory[], string>({
+      query: (taskId: string) => ({
+        url: `tasks/${taskId}/status-history`,
         method: "GET",
       }),
       providesTags: ["TaskStatusHistory"],
     }),
-    getTaskStatusHistoryById: builder.query<TaskStatusHistory, string>({
-      query: (taskStatusHistoryId: string) => ({
-        url: `task-status-histories/${taskStatusHistoryId}`,
+    getTaskStatusHistoryById: builder.query<GetTaskStatusHistory, { taskId: string; taskStatusHistoryId: string }>({
+      query: ({ taskId, taskStatusHistoryId }) => ({
+        url: `tasks/${taskId}/status-history/${taskStatusHistoryId}`,
         method: "GET",
       }),
-      providesTags: (_result, _error, id) => [{ type: "TaskStatusHistory", id }],
-    }),
+      providesTags: (_result, _error, { taskId, taskStatusHistoryId }) => [
+        { type: "TaskStatusHistory", id: `${taskId}-${taskStatusHistoryId}` },
+      ],
+    }),    
     createTaskStatusHistory: builder.mutation<TaskStatusHistory, Partial<TaskStatusHistory>>({
       query: (newTaskStatusHistory) => ({
         url: "task-status-histories",

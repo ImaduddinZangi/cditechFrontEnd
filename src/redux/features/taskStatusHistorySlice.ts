@@ -1,4 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { GetClientUser } from "./clientUserSlice";
+import { TaskStatus } from "./taskStatusSlice";
 
 export interface TaskStatusHistory {
   id?: string;
@@ -6,6 +8,15 @@ export interface TaskStatusHistory {
   taskId: string;
   location?: string;
   delayedReason?: string;
+}
+
+export interface GetTaskStatusHistory {
+  id: string;
+  createdAt: string;
+  location: string;
+  delayedReason: string;
+  taskStatus: TaskStatus;
+  createdByUser: GetClientUser;
 }
 
 interface TaskStatusHistoryState {

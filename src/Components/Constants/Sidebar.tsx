@@ -52,23 +52,6 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
       ],
     },
     {
-      title: "Extras",
-      src: "dummy",
-      isDropdown: true,
-      dropdownItems: [
-        {
-          title: "Client Profile",
-          src: "dummy",
-          href: "/client-profile",
-        },
-        {
-          title: "Services",
-          src: "dummy",
-          href: "/manage-services",
-        },
-      ],
-    },
-    {
       title: "Tasks",
       src: "clipboard",
       isDropdown: true,
@@ -200,7 +183,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
         {
           title: "Services",
           src: "dummy",
-          href: "/services",
+          href: "/manage-services",
         },
       ],
     },

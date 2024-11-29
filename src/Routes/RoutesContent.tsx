@@ -5,6 +5,7 @@ import Error500 from "../Components/Constants/Error500";
 import Error404 from "../Components/Constants/Error404";
 import Loader from "../Components/Constants/Loader";
 const ClientSignInPage = lazy(() => import("../Pages/Auth/ClientSignInPage"));
+const UserSignInPage = lazy(() => import("../Pages/Auth/UserSignInPage"));
 const ClientDashboardPage = lazy(
   () => import("../Pages/ClientProfile/ClientDashboardPage")
 );
@@ -164,6 +165,7 @@ const RoutesContent: React.FC = () => {
         {/* Authentication */}
         <Route path="/" element={<ClientSignInPage />} />
         <Route path="/client-login" element={<ClientSignInPage />} />
+        <Route path="/user-login" element={<UserSignInPage />} />
         <Route path="/management-login" element={<ManagementSignInPage />} />
         <Route
           path="/client-registration"
