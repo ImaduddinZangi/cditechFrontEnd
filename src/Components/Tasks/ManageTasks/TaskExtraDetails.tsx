@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import TaskAssets from "./constants/TaskAssets";
-import TaskStatusHistory from "./constants/TaskStatusHistory";
+import TaskStatusHistory from "../ManageTaskStatuses/TaskStatusHistory";
+import TaskInvoice from "../ManageTaskInvoices/TaskInvoice";
 
 const TaskExtraDetails: React.FC = () => {
     const [activeTab, setActiveTab] = useState("Assets");
@@ -8,6 +9,21 @@ const TaskExtraDetails: React.FC = () => {
     const handleTabClick = (tab: string) => {
         setActiveTab(tab);
     };
+
+    const sampleInvoice = {
+        id: 25493,
+        customerName: "Wenders Store 4739",
+        customerEmail: "bob@gmail.com",
+        subtotal: 459,
+        tax: 0,
+        total: 459,
+        createdDate: "06-05-2024",
+        dueDate: "06-05-2024",
+        terms: "Due on Receipt",
+        customerAddress: "89001 Overseas HWY, Miami, FL 33070",
+        sentStatus: "Not-Sent",
+        invoiceStatus: "Past-Due",
+      };
 
     const tabs = [
         "Assets",
@@ -37,10 +53,10 @@ const TaskExtraDetails: React.FC = () => {
                     </button>
                 ))}
             </div>
-            <div className="mt-[1vw]">
+            <div className="mt-[1vw] font-inter">
                 {activeTab === "Assets" && <TaskAssets />}
                 {activeTab === "Status History" && <TaskStatusHistory />}
-                {activeTab === "Task Invoice" && <div>Task Invoice Content</div>}
+                {activeTab === "Task Invoice" && <TaskInvoice invoice={sampleInvoice} />}
                 {activeTab === "Photos" && (
                     <div>Task Photos Content</div>
                 )}

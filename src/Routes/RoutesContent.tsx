@@ -4,6 +4,7 @@ import ProtectedRoute from "../Middleware/ProtectedRoutes";
 import Error500 from "../Components/Constants/Error500";
 import Error404 from "../Components/Constants/Error404";
 import Loader from "../Components/Constants/Loader";
+import TaskSettingsPage from "../Pages/Tasks/TaskSettingsPage";
 const ClientSignInPage = lazy(() => import("../Pages/Auth/ClientSignInPage"));
 const UserSignInPage = lazy(() => import("../Pages/Auth/UserSignInPage"));
 const ClientDashboardPage = lazy(
@@ -144,6 +145,7 @@ const AddTaskTypePage = lazy(() => import("../Pages/Tasks/AddTaskTypePage"));
 const AddTaskPage = lazy(() => import("../Pages/Tasks/AddTaskPage"));
 const EditTaskPage = lazy(() => import("../Pages/Tasks/EditTaskPage"));
 const AddTaskInvoicePage = lazy(() => import("../Pages/Tasks/AddTaskInvoicePage"));
+const ManageTaskInvoicesPage = lazy(() => import("../Pages/Tasks/ManageTaskInvoicesPage"));
 const ManageTasksPage = lazy(() => import("../Pages/Tasks/ManageTasksPage"));
 const ManageTaskPage = lazy(() => import("../Pages/Tasks/ManageTaskPage"));
 const CustomersMapPage = lazy(() => import("../Pages/Customer/CustomersMapPage"));
@@ -305,6 +307,8 @@ const RoutesContent: React.FC = () => {
           <Route path="add-task" element={<AddTaskPage />} />
           <Route path="edit-task/:taskId" element={<EditTaskPage />} />
           <Route path="add-task-invoice" element={<AddTaskInvoicePage />} />
+          <Route path="manage-task-invoices" element={<ManageTaskInvoicesPage />} />
+          <Route path="task-settings" element={<TaskSettingsPage />} />
 
           {/* Maps */}
           <Route path="customers-map" element={<CustomersMapPage />} />

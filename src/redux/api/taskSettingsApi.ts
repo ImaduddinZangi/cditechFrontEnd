@@ -3,7 +3,7 @@ import { TaskSettings } from "../features/taskSettingsSlice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_BASE_URL,
-  prepareHeaders: (headers: Headers, {}: { getState: () => any }) => {
+  prepareHeaders: (headers: Headers, { }: { getState: () => any }) => {
     const token = localStorage.getItem("token");
     if (token) {
       headers.set("Authorization", `Bearer ${token}`);
@@ -17,7 +17,7 @@ export const taskSettingsApi = createApi({
   baseQuery,
   tagTypes: ["TaskSettings"],
   endpoints: (builder) => ({
-    getTaskSettings: builder.query<TaskSettings[], void>({
+    getTaskSettings: builder.query<TaskSettings, void>({
       query: () => ({
         url: "task-settings",
         method: "GET",
@@ -40,10 +40,10 @@ export const taskSettingsApi = createApi({
       invalidatesTags: ["TaskSettings"],
     }),
     updateTaskSettings: builder.mutation<TaskSettings, Partial<TaskSettings>>({
-      query: ({ id, ...rest }) => ({
-        url: `task-settings/${id}`,
+      query: (body) => ({
+        url: `task-settings`,
         method: "PATCH",
-        body: rest,
+        body: body,
       }),
       invalidatesTags: (_result, _error, { id }) => [{ type: "TaskSettings", id }],
     }),

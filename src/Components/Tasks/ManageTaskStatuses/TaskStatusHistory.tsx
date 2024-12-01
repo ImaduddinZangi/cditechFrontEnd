@@ -1,5 +1,5 @@
 import React from "react";
-import { useGetTaskStatusHistoriesQuery } from "../../../../redux/api/taskStatusHistoryApi";
+import { useGetTaskStatusHistoriesQuery } from "../../../redux/api/taskStatusHistoryApi";
 import { useParams } from "react-router-dom";
 
 const TaskStatusHistory: React.FC = () => {

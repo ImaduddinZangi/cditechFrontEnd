@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import ClientLayout from '../../Layouts/ClientLayout'
-import AddTaskInvoice from '../../Components/Tasks/ManageTasks/AddTaskInvoice'
+import AddTaskInvoice from '../../Components/Tasks/ManageTaskInvoices/AddTaskInvoice'
 import { TaskType } from '../../redux/features/taskTypeSlice';
 import { toast, ToastContainer } from 'react-toastify';
 import Loader from '../../Components/Constants/Loader';

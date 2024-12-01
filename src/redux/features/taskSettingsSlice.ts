@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Client } from "./clientSlice";
 
 export interface TaskSettings {
-    id: string;
+    id?: string;
     client: Client;
     autoAssignUsersToTask: boolean;
     maxInProgressTasksPerUser: number;
@@ -14,8 +14,8 @@ export interface TaskSettings {
     automaticTaskInvoiceCreation: boolean;
     taskInvoiceTheme?: string;
     taskWeather: boolean;
-    createdAt: string;
-    updatedAt: string;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 interface TaskSettingsState {
